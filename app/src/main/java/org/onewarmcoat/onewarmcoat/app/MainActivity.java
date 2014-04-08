@@ -86,7 +86,11 @@ public class MainActivity extends Activity
 
             //these get added every time, should probably fix that
             actionBar.addTab(actionBar.newTab()
-                    .setText("Find Dropoff Location")
+                    .setText("Pickup")
+                    .setTabListener(this));
+
+            actionBar.addTab(actionBar.newTab()
+                    .setText("Dropoff")
                     .setTabListener(this));
 
             actionBar.addTab(actionBar.newTab()
