@@ -1,20 +1,29 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.donate;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 
-public class PickUpFragment extends Fragment {
+public class PickUpFragment extends Fragment{
+
     private OnFragmentInteractionListener mListener;
 
-    public PickUpFragment() {
-        // Required empty public constructor
+//    public PickUpFragment() {
+//        // Required empty public constructor
+//        int i = 1;
+//    }
+
+    public static PickUpFragment newInstance() {
+        // strange. I can't use a constructor, I have to define this newInstance method and
+        // call this in order to get a usable instance of this fragment.
+        PickUpFragment f = new PickUpFragment();
+        return f;
     }
 
     @Override
