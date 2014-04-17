@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -14,9 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.onewarmcoat.onewarmcoat.app.fragments.DonateFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.NavigationDrawerFragment;
+
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActionBar.TabListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -79,26 +81,12 @@ public class MainActivity extends Activity
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
 
-        //in donor, create tabs
-        if(mTitle == getString(R.string.title_donate)){
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-            actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-
-            //these get added every time, should probably fix that
-            actionBar.addTab(actionBar.newTab()
-                    .setText("Pickup")
-                    .setTabListener(this));
-
-            actionBar.addTab(actionBar.newTab()
-                    .setText("Dropoff")
-                    .setTabListener(this));
-
-            actionBar.addTab(actionBar.newTab()
-                    .setText("Cash Donation")
-                    .setTabListener(this));
-        }else {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        }
+//        //in donor, create tabs
+//        if(mTitle == getString(R.string.title_donate)){
+//
+//        }else {
+//            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//        }
 
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
@@ -128,21 +116,6 @@ public class MainActivity extends Activity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
     }
 
     /**

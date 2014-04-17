@@ -1,52 +1,24 @@
-package org.onewarmcoat.onewarmcoat.app;
+package org.onewarmcoat.onewarmcoat.app.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.onewarmcoat.onewarmcoat.app.MainActivity;
+import org.onewarmcoat.onewarmcoat.app.R;
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DonateFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DonateFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
-public class DonateFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+public class DonateFragment extends Fragment implements ActionBar.TabListener {
+    
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DonateFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DonateFragment newInstance(String param1, String param2) {
-        DonateFragment fragment = new DonateFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
     public DonateFragment() {
         // Required empty public constructor
     }
@@ -54,10 +26,6 @@ public class DonateFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -66,6 +34,23 @@ public class DonateFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_donate, container, false);
 
+        ActionBar actionBar = getActivity().getActionBar();
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+
+        //these get added every time, should probably fix that
+        actionBar.addTab(actionBar.newTab()
+                .setText("Pickup")
+                .setTabListener(this));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("Dropoff")
+                .setTabListener(this));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText("Cash Donation")
+                .setTabListener(this));
 
         return root;
     }
@@ -80,8 +65,13 @@ public class DonateFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        ActionBar actionBar = getActivity().getActionBar();
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         //this is ghetto, but just placeholder
-        ((MainActivity) activity).onSectionAttached(2);
+//        ((MainActivity) activity).onSectionAttached(2);
+
 //        try {
 //            mListener = (OnFragmentInteractionListener) activity;
 //        } catch (ClassCastException e) {
@@ -93,7 +83,27 @@ public class DonateFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        ActionBar actionBar = getActivity().getActionBar();
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         mListener = null;
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+        Log.d("donatefrag", "tabunselected");
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
     }
 
     /**
