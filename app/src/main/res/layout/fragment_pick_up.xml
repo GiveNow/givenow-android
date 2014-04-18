@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.donate.PickUpFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <fragment
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="pickup fragment!" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
