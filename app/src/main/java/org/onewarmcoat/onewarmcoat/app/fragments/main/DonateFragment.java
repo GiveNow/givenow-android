@@ -80,11 +80,6 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-
-        ParseObject testObject = new ParseObject("WhichView");
-        testObject.put("userIs", "Donating");
-        testObject.saveInBackground();
-
 //        ActionBar actionBar = getActivity().getActionBar();
 //
 //        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

@@ -7,8 +7,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+
+import java.util.HashMap;
 
 public class CashFragment extends Fragment {
 
@@ -32,6 +39,15 @@ public class CashFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_cash, container, false);
 
+        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), new FunctionCallback<String>() {
+            @Override
+            public void done(String result, ParseException e) {
+                if (e == null) {
+                    // result is "Hello world!"
+                    Toast.makeText(getActivity(), "What does the server say?  " + result, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return v;
     }
