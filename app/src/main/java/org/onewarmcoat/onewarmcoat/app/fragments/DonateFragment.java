@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.parse.ParseObject;
 
+import org.onewarmcoat.onewarmcoat.app.fragments.donate.CashFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.donate.PickUpFragment;
 
 
@@ -33,7 +34,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 
         pickupFragment = PickUpFragment.newInstance();
 //        dropoffFragment = DropOffFragment.newInstance(); //TODO
-//        cashFragment = CashFragment.newInstance(); //TODO
+        cashFragment = CashFragment.newInstance(); //TODO
     }
 
     @Override
@@ -46,9 +47,9 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 //            case 1: //Dropoff
 //                frag = dropoffFragment;
 //                break;
-//            case 2: //Donate Cash
-//                frag = cashFragment;
-//                break;
+            case 2: //Donate Cash
+                frag = cashFragment;
+                break;
             default:
                 Log.d("DonateFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
                 frag = SuperAwesomeCardFragment.newInstance(position);
