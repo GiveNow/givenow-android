@@ -70,6 +70,8 @@ public class PickUpFragment extends Fragment
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pick_up, container, false);
 
+//        Button btnMarker = (Button) v.findViewById(R.id.btnMarker);
+//        btnMarker.setBackground(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
         return v;
     }
@@ -148,6 +150,11 @@ public class PickUpFragment extends Fragment
             Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
 
         }
+
+//        MarkerOptions marker = new MarkerOptions();
+//        marker.anchor(0.5f, 0.5f);
+//        map.addMarker(marker);
+
     }
     /*
      * Called by Location Services when the request to connect the client
