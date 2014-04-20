@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.parse.Parse;
+
 import org.onewarmcoat.onewarmcoat.app.fragments.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.VolunteerFragment;
 
@@ -44,6 +46,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //all API initialization should be done in some function
+        Parse.initialize(this, "59auZqm4QfvdrnqRKD0OsT9ZwTehkmlqLEexQ3wL", "q6tM18L2hX7hkaw7BNxZGywdwSqguC1qcfPLNw71");
+
+        //TODO: create a setupViews function to wrap all of this
         donateFragment = new DonateFragment();
         volunteerFragment = new VolunteerFragment();
 

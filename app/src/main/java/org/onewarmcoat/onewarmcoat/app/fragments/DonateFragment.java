@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.parse.ParseObject;
+
 import org.onewarmcoat.onewarmcoat.app.fragments.donate.PickUpFragment;
 
 
@@ -74,6 +76,11 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+
+        ParseObject testObject = new ParseObject("WhichView");
+        testObject.put("userIs", "Donating");
+        testObject.saveInBackground();
 
 //        ActionBar actionBar = getActivity().getActionBar();
 //

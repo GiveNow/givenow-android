@@ -3,6 +3,8 @@ package org.onewarmcoat.onewarmcoat.app.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.parse.ParseObject;
+
 public class VolunteerFragment extends PageSlidingTabStripFragment {
 
     @Override
@@ -18,6 +20,10 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        ParseObject testObject = new ParseObject("WhichView");
+        testObject.put("userIs", "Volunteer");
+        testObject.saveInBackground();
 
 //        ActionBar actionBar = getActivity().getActionBar();
 //
