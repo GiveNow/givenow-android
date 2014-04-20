@@ -1,12 +1,10 @@
-package org.onewarmcoat.onewarmcoat.app.fragments.donate;
+package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.IntentSender;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,30 +20,32 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.fragments.ErrorDialogFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.GoogleMapFragment;
 
 public class PickUpFragment extends Fragment
         implements
+        GoogleMapFragment.OnGoogleMapFragmentListener,
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
-    private MapFragment mapFragment;
-    private GoogleMap map;
-    private LocationClient mLocationClient;
     /*
      * Define a request code to send to Google Play services This code is
      * returned in Activity.onActivityResult
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private GoogleMap mGoogleMap;
+    private MapFragment mapFragment;
+    private LocationClient mLocationClient;
 
-    private OnFragmentInteractionListener mListener;
 
-//    public PickUpFragment() {
-//        // Required empty public constructor
-//        int i = 1;
-//    }
+    public PickUpFragment() {
+        // Required empty public constructor
+    }
 
     public static PickUpFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
@@ -57,19 +57,11 @@ public class PickUpFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mLocationClient = new LocationClient(getActivity(), this, this);
-        mapFragment = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
-        if (mapFragment != null) {
-            map = mapFragment.getMap();
-            if (map != null) {
-                Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
-                map.setMyLocationEnabled(true);
-            } else {
-                Toast.makeText(getActivity(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
-        }
+        mapFragment = GoogleMapFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_container, mapFragment, "MAP").commit();
     }
 
     @Override
@@ -82,33 +74,19 @@ public class PickUpFragment extends Fragment
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /*
- * Called when the Activity becomes visible.
- */
+     * Called when the Fragment becomes visible.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -120,7 +98,7 @@ public class PickUpFragment extends Fragment
     }
 
     /*
-     * Called when the Activity is no longer visible.
+     * Called when the Fragment is no longer visible.
      */
     @Override
     public void onStop() {
@@ -155,6 +133,22 @@ public class PickUpFragment extends Fragment
         }
     }
 
+    @Override
+    public void onMapReady(GoogleMap map) {
+        mGoogleMap = map;
+        if (mapFragment != null) {
+//            map = mapFragment.getMap();
+            if (map != null) {
+                Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+                map.setMyLocationEnabled(true);
+            } else {
+                Toast.makeText(getActivity(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+
+        }
+    }
     /*
      * Called by Location Services when the request to connect the client
      * finishes successfully. At this point, you can request the current
@@ -167,9 +161,12 @@ public class PickUpFragment extends Fragment
         if (location != null) {
             Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraPosition startCameraPosition = new CameraPosition.Builder()
+                    .bearing(0.0f)
+                    .target(new LatLng(0, 0)).build();
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-            if (map != null) {
-                map.animateCamera(cameraUpdate);
+            if (mGoogleMap != null) {
+                mGoogleMap.animateCamera(cameraUpdate);
             } else {
                 Toast.makeText(getActivity(), "map is null, can't move camera!", Toast.LENGTH_SHORT).show();
             }
@@ -185,7 +182,7 @@ public class PickUpFragment extends Fragment
     @Override
     public void onDisconnected() {
         // Display the connection status
-        Toast.makeText(getActivity(), "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Disconnected from location services. Please re-connect.", Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -193,9 +190,8 @@ public class PickUpFragment extends Fragment
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-		/*
-		 * Google Play services can resolve some errors it detects. If the error
-		 * has a resolution, try sending an Intent to start a Google Play
+        /* Google Play services can resolve some errors it detects. If the error
+         * has a resolution, try sending an Intent to start a Google Play
 		 * services activity that can resolve error.
 		 */
         if (connectionResult.hasResolution()) {
@@ -203,10 +199,8 @@ public class PickUpFragment extends Fragment
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(getActivity(),
                         CONNECTION_FAILURE_RESOLUTION_REQUEST);
-				/*
-				 * Thrown if Google Play services canceled the original
-				 * PendingIntent
-				 */
+                /* Thrown if Google Play services canceled the original
+                 * PendingIntent */
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
                 e.printStackTrace();
@@ -215,46 +209,6 @@ public class PickUpFragment extends Fragment
             Toast.makeText(getActivity(),
                     "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
-    }
-
-
-    // Define a DialogFragment that displays the error dialog
-    public static class ErrorDialogFragment extends DialogFragment {
-
-        // Global field to contain the error dialog
-        private Dialog mDialog;
-
-        // Default constructor. Sets the dialog field to null
-        public ErrorDialogFragment() {
-            super();
-            mDialog = null;
-        }
-
-        // Set the dialog to display
-        public void setDialog(Dialog dialog) {
-            mDialog = dialog;
-        }
-
-        // Return a Dialog to the DialogFragment.
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return mDialog;
-        }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.fragments;
+package org.onewarmcoat.onewarmcoat.app.fragments.main;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,8 +7,10 @@ import android.util.Log;
 
 import com.parse.ParseObject;
 
-import org.onewarmcoat.onewarmcoat.app.fragments.donate.CashFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.donate.PickUpFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
 
 
 public class DonateFragment extends PageSlidingTabStripFragment {
@@ -17,15 +19,15 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     private Fragment dropoffFragment;
     private Fragment cashFragment;
 
-    @Override
-    protected String[] getTitles() {
-        return new String[]{"PickUp", "DropOff", "Donate Cash"};
+    public DonateFragment() {
+        // Required empty public constructor
     }
     
 //    private OnFragmentInteractionListener mListener;
 
-    public DonateFragment() {
-        // Required empty public constructor
+    @Override
+    protected String[] getTitles() {
+        return new String[]{"PickUp", "DropOff", "Donate Cash"};
     }
 
     @Override

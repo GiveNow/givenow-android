@@ -2,35 +2,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.DonateFragment">
+    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+    <FrameLayout
+        android:id="@android:id/tabcontent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+        <LinearLayout
+            android:id="@+id/tab1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="donate fragment!"
-                        android:id="@+id/button"
-                        android:layout_gravity="center_horizontal" />
-                </LinearLayout>
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="donate fragment!" />
+        </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-                </LinearLayout>
+        <LinearLayout
+            android:id="@+id/tab2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"></LinearLayout>
 
-            </FrameLayout>
+    </FrameLayout>
 </FrameLayout>

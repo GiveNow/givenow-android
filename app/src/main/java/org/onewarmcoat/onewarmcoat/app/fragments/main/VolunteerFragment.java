@@ -1,9 +1,11 @@
-package org.onewarmcoat.onewarmcoat.app.fragments;
+package org.onewarmcoat.onewarmcoat.app.fragments.main;
 
 import android.app.Activity;
 import android.os.Bundle;
 
 import com.parse.ParseObject;
+
+import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
 

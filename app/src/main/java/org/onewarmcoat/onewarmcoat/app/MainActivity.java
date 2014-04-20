@@ -16,9 +16,8 @@ import android.widget.ListView;
 
 import com.parse.Parse;
 
-import org.onewarmcoat.onewarmcoat.app.fragments.DonateFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.VolunteerFragment;
-
+import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 
 public class MainActivity extends Activity {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -189,17 +188,6 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    // The click listener for ListView in the navigation drawer
-    private class DrawerItemClickListener implements
-            ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            selectItem(position);
-        }
-    }
-
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -218,6 +206,7 @@ public class MainActivity extends Activity {
 
         switch (position) {
             case 0: //Donate
+                //TODO: donateFragment seems to get instantiated a second time when I switch to this position. Why?
                 getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.content,
@@ -245,6 +234,16 @@ public class MainActivity extends Activity {
         }
 
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    // The click listener for ListView in the navigation drawer
+    private class DrawerItemClickListener implements
+            ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            selectItem(position);
+        }
     }
 
     /**

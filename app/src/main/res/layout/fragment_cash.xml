@@ -2,37 +2,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.donate.CashFragment">
+    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment">
 
     <Button
+        android:id="@+id/btn_donate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/donate_cash_button"
-        android:id="@+id/btn_donate"
         android:layout_below="@+id/tv_donate_msg"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="30dp"
+        android:text="@string/donate_cash_button" />
 
     <TextView
+        android:id="@+id/tv_donate_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/donate_cash_motivational"
-        android:id="@+id/tv_donate_msg"
         android:layout_below="@+id/et_donate_amount"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="150dp"
+        android:text="@string/donate_cash_motivational"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
+        android:id="@+id/et_donate_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/et_donate_amount"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
+        android:ems="10"
+        android:gravity="center"
         android:hint="$100"
-        android:gravity="center" />
+        android:inputType="number" />
 
 </RelativeLayout>
