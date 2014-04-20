@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.parse.FunctionCallback;
@@ -17,7 +19,7 @@ import org.onewarmcoat.onewarmcoat.app.R;
 
 import java.util.HashMap;
 
-public class CashFragment extends Fragment {
+public class CashFragment extends Fragment implements OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
@@ -39,15 +41,8 @@ public class CashFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_cash, container, false);
 
-        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), new FunctionCallback<String>() {
-            @Override
-            public void done(String result, ParseException e) {
-                if (e == null) {
-                    // result is "Hello world!"
-                    Toast.makeText(getActivity(), "What does the server say?  " + result, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        Button b = (Button) v.findViewById(R.id.btn_donate);
+        b.setOnClickListener(this);
 
         return v;
     }
@@ -84,6 +79,28 @@ public class CashFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_donate:
+                setupStripe(v);
+                break;
+        }
+    }
+
+    public void setupStripe(View view) {
+        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), new FunctionCallback<String>() {
+            @Override
+            public void done(String result, ParseException e) {
+                if (e == null) {
+                    // result is "Hello world!"
+                    Toast.makeText(getActivity(), "What does the server say?  " + result, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
 
