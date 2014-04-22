@@ -1,28 +1,111 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment">
 
     <FrameLayout
+        android:id="@+id/flMapLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnSetPickup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp">
 
         <FrameLayout
-            android:id="@+id/map_container"
+            android:id="@+id/flMapContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical">
 
-        <ImageButton
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginRight="55dp"
+            android:background="@drawable/menu_dropdown_panel_onewarmcoat"
+            android:hint="Address"
+            android:inputType="textPostalAddress"
+            android:minHeight="60dp"
+            android:padding="15dp"
+            android:textSize="14sp" />
+
+        <ImageView
             android:id="@+id/btnMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/ic_marker"
-            android:baselineAlignBottom="false"
-            android:clickable="false"
-            android:text="New Button" />
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/ic_marker" />
 
     </FrameLayout>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/btnSetPickup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="1dp"
+        android:background="#ff246d9e"
+        android:text="@string/set_pickup_location_label"
+        android:textColor="#ffffffff" />
+
+    <RelativeLayout
+        android:id="@+id/rlPickupDetailContainer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#ff5a8eb0"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btnSubmitPickup"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvPickupDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Pickup Date"
+                android:textAllCaps="true"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Spinner
+                android:id="@+id/spinnerPickupDates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnSubmitPickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="1dp"
+            android:background="#ff246d9e"
+            android:text="@string/submit_pickup_label"
+            android:textColor="#ffffffff" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_name"
+    style="@android:style/Theme.Dialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <!--<TextView-->
+    <!--android:id="@+id/tvNameLabel" android:text="Your name"-->
+    <!--android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Your name"
+        android:imeOptions="actionDone"
+        android:inputType="text" />
+
+    <!--<TextView-->
+    <!--android:id="@+id/tvPhoneLabel" android:text="Your phone number"-->
+    <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"/>-->
+
+    <EditText
+        android:id="@+id/etPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Your phone number"
+        android:imeOptions="actionDone"
+        android:inputType="phone" />
+
+    <TextView
+        android:id="@+id/tvDisclaimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="This information will only be used in case we have trouble locating your donated items."
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <CheckBox
+        android:id="@+id/cbReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:checked="true"
+        android:text="Remind me the day before the pickup." />
+</LinearLayout>
