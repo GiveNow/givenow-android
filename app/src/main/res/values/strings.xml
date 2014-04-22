@@ -15,5 +15,7 @@
     <string name="drawer_close">close drawer</string>
     <string name="donate_cash_button">Donate to One Warm Coat</string>
     <string name="donate_cash_motivational"> . . . arbitrary motivational message</string>
+    <string name="set_pickup_location_label">Set Pickup Location</string>
+    <string name="submit_pickup_label">Schedule Pickup!</string>
 
 </resources>
