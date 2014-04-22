@@ -14,6 +14,11 @@ import android.widget.Toast;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.stripe.android.Stripe;
+import com.stripe.android.TokenCallback;
+import com.stripe.android.model.Card;
+import com.stripe.android.model.Token;
+import com.stripe.exception.AuthenticationException;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 
@@ -91,15 +96,42 @@ public class CashFragment extends Fragment implements OnClickListener {
     }
 
     public void setupStripe(View view) {
-        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), new FunctionCallback<String>() {
-            @Override
-            public void done(String result, ParseException e) {
-                if (e == null) {
-                    // result is "Hello world!"
-                    Toast.makeText(getActivity(), "What does the server say?  " + result, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        Card card = new Card("4242-4242-4242-4242", 12, 2014, "123");
+
+        try {
+            Stripe stripe = new Stripe("pk_test_T2v8tseWb9m0K2Qa9tCrJUE5");
+
+            stripe.createToken(
+                    card,
+                    new TokenCallback() {
+                        public void onSuccess(Token token) {
+                            // Send token to your server
+                            Toast.makeText(getActivity(), token.toString(), Toast.LENGTH_LONG).show();
+
+                            HashMap<String, Object> params = new HashMap<String, Object>();
+                            params.put("token", token.getId());
+                            ParseCloud.callFunctionInBackground("hello", params, new FunctionCallback<String>() {
+                                @Override
+                                public void done(String result, ParseException e) {
+                                    if (e == null) {
+                                        // result is "Hello world!"
+                                        Toast.makeText(getActivity(), "What does the server say?  " + result, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                        public void onError(Exception error) {
+                            // Show localized error message
+                            Toast.makeText(getActivity(),
+                                    error.getMessage(),
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                    }
+            );
+        } catch (AuthenticationException e1) {
+            e1.printStackTrace();
+        }
 
     }
 
