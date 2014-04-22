@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -103,7 +104,13 @@ public class MainActivity extends Activity {
         selectItem(0);
     }
 
-//    @Override
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //check for any request codes, then call super, so fragments can catch the result
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //    @Override
 //    public void onNavigationDrawerItemSelected(int position) {
 //        // update the main content by replacing fragments
 //        FragmentManager fragmentManager = getFragmentManager();

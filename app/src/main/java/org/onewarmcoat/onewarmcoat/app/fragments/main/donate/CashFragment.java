@@ -2,8 +2,10 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,10 +27,16 @@ import org.onewarmcoat.onewarmcoat.app.R;
 
 import java.util.HashMap;
 
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
+
 public class CashFragment extends Fragment implements OnClickListener {
 
     private OnFragmentInteractionListener mListener;
     private EditText etDonateAmount;
+    private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
+    public static final int MY_SCAN_REQUEST_CODE = 01234;
+    private Stripe stripe;
 
     public static CashFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
@@ -88,9 +96,15 @@ public class CashFragment extends Fragment implements OnClickListener {
         switch (v.getId()) {
             case R.id.btn_donate:
                 if(validateInput()) {
-                    //check if user has a Stripe account
-                    //pop Card.io dialog
-                    setupStripe();
+                    //check if user has a Stripe token - Parse query
+                    if(false){
+                        Token token = null; //token back from Parse
+                        chargeStripeToken(token);
+                    }else{
+                        //user doesn't have a stored Stripe token
+                        //pop Card.io dialog
+                        getCardDetails();
+                    }
                 }
                 break;
         }
@@ -116,40 +130,109 @@ public class CashFragment extends Fragment implements OnClickListener {
         return false;
     }
 
-    public void setupStripe() {
-        Card card = new Card("4242-4242-4242-4242", 12, 2014, "123");
-
-        try {
-            Stripe stripe = new Stripe("pk_test_T2v8tseWb9m0K2Qa9tCrJUE5");
-
-            stripe.createToken(
-                    card,
-                    new TokenCallback() {
-                        public void onSuccess(Token token) {
-                            // Send token to your server
-
-                            HashMap<String, Object> params = new HashMap<String, Object>();
-                            params.put("token", token.getId());
-                            params.put("amount", etDonateAmount.getText().toString());
-                            ParseCloud.callFunctionInBackground("stripe_charge_customer", params, new FunctionCallback<String>() {
-                                @Override
-                                public void done(String result, ParseException e) {
-                                    if (e == null) {
-                                        Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        }
-                        public void onError(Exception error) {
-                            // Show localized error message
-                            Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-            );
-        } catch (AuthenticationException e1) {
-            e1.printStackTrace();
+    private void getCardDetails() {
+        if(!CardIOActivity.canReadCardWithCamera()){
+            Toast.makeText(getActivity(), "whyyyyyyyy??", Toast.LENGTH_SHORT).show();
         }
 
+        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+
+        // required for authentication with card.io
+        scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, MY_CARDIO_APP_TOKEN);
+
+        // customize these values to suit your needs.
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: true
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
+
+        Toast.makeText(getActivity(), "Starting Card.io Intent wheeeee", Toast.LENGTH_SHORT).show();
+
+        // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
+        startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == MY_SCAN_REQUEST_CODE){
+            String resultDisplayStr;
+            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+
+                // Never log a raw card number. Avoid displaying it, but if necessary use getFormattedCardNumber()
+                resultDisplayStr = "Card Number: " + scanResult.getRedactedCardNumber() + "\n";
+
+                // Do something with the raw number, e.g.:
+                // myService.setCardNumber( scanResult.cardNumber );
+
+                if (scanResult.isExpiryValid()) {
+                    resultDisplayStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
+                }
+
+                if (scanResult.cvv != null) {
+                    // Never log or display a CVV
+                    resultDisplayStr += "CVV has " + scanResult.cvv.length() + " digits.\n";
+                }
+
+                if (scanResult.postalCode != null) {
+                    resultDisplayStr += "Postal Code: " + scanResult.postalCode + "\n";
+                }
+
+                newStripeCard(scanResult);
+            }
+            else {
+                resultDisplayStr = "Scan was canceled.";
+            }
+            // do something with resultDisplayStr, maybe display it in a textView
+            Toast.makeText(getActivity(), resultDisplayStr, Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public void newStripeCard(CreditCard cc) {
+        Card card = new Card(cc.cardNumber, cc.expiryMonth, cc.expiryYear, cc.cvv);
+
+        if(card.validateCard()) {
+            try {
+                Stripe stripe = new Stripe("pk_test_T2v8tseWb9m0K2Qa9tCrJUE5");
+
+                stripe.createToken(
+                        card,
+                        new TokenCallback() {
+                            public void onSuccess(Token token) {
+                                chargeStripeToken(token);
+                            }
+
+                            public void onError(Exception error) {
+                                // Show localized error message
+                                Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                );
+            } catch (AuthenticationException e) {
+                e.printStackTrace();
+            }
+        }else {
+            Toast.makeText(getActivity(), "Credit card invalid :(", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void chargeStripeToken(Token token) {
+        // Send token to server to charge
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("token", token.getId());
+        params.put("amount", etDonateAmount.getText().toString());
+        //we also ideally want a name - profile data, which has a default value
+
+        //need to call a different function to create new stripe customer (if we have authority/info to do so)
+        ParseCloud.callFunctionInBackground("stripe_charge_customer", params, new FunctionCallback<String>() {
+            @Override
+            public void done(String result, ParseException e) {
+                if (e == null) {
+                    Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
 
