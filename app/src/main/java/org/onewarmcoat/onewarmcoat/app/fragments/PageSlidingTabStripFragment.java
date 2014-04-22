@@ -48,35 +48,12 @@ public class PageSlidingTabStripFragment extends Fragment {
 		ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
 		MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager(), getTitles());
 		pager.setAdapter(adapter);
+
+        // Determines how many pages can be offscreen before the viewpager starts destroying fragments it's hosting.
+        // http://stackoverflow.com/questions/11852604/why-is-my-fragment-oncreate-being-called-extensively-whenever-i-page-through-my
+        pager.setOffscreenPageLimit(adapter.getCount() - 1);
+
 		tabs.setViewPager(pager);
-
-	}
-
-	public class MyPagerAdapter extends FragmentPagerAdapter {
-
-        private String[] mtitles;
-
-		public MyPagerAdapter(android.app.FragmentManager fm, String[] titles) {
-			super(fm);
-            mtitles = titles;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return mtitles[position];
-		}
-
-		@Override
-		public int getCount() {
-			return mtitles.length;
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-            //TODO: is this fragment being created anew each time?
-            //TODO: here is where i create the PickupFragment, DropOffFragment and CashFragment depending on position.
-            return getFragmentForPosition(position);
-		}
 
 	}
 
@@ -102,5 +79,33 @@ public class PageSlidingTabStripFragment extends Fragment {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public class MyPagerAdapter extends FragmentPagerAdapter {
+
+        private String[] mtitles;
+
+        public MyPagerAdapter(android.app.FragmentManager fm, String[] titles) {
+            super(fm);
+            mtitles = titles;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mtitles[position];
+        }
+
+        @Override
+        public int getCount() {
+            return mtitles.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            //TODO: is this fragment being created anew each time?
+            //TODO: here is where i create the PickupFragment, DropOffFragment and CashFragment depending on position.
+            return getFragmentForPosition(position);
+        }
+
     }
 }

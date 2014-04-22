@@ -42,14 +42,15 @@
         android:gravity="center_horizontal"
         android:text="This information will only be used in case we have trouble locating your donated items."
         android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-    <CheckBox
-        android:id="@+id/cbReminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:checked="true"
-        android:text="Remind me the day before the pickup." />
+    <!--<CheckBox-->
+    <!--android:id="@+id/cbReminder"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:checked="true"-->
+    <!--android:text="Remind me the day before the pickup." />-->
 </LinearLayout>

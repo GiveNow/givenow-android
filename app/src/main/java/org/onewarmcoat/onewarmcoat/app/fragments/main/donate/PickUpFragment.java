@@ -32,6 +32,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.ErrorDialogFragment;
@@ -40,6 +42,7 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.ConfirmPickupDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,13 +53,15 @@ public class PickUpFragment extends Fragment
         implements
         GoogleMapFragment.OnGoogleMapFragmentListener,
         GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener {
+        GooglePlayServicesClient.OnConnectionFailedListener,
+        ConfirmPickupDialog.ConfirmPickupDialogListener {
 
     /*
      * Define a request code to send to Google Play services This code is
      * returned in Activity.onActivityResult
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
     @InjectView(R.id.btnSetPickup)
     Button btnSetPickup;
     @InjectView(R.id.btnSubmitPickup)
@@ -69,6 +74,7 @@ public class PickUpFragment extends Fragment
     RelativeLayout rlPickupDetailContainer;
     @InjectView(R.id.spinnerPickupDates)
     Spinner spinnerPickupDates;
+
     private GoogleMap mGoogleMap;
     private MapFragment mapFragment;
     private LocationClient mLocationClient;
@@ -223,9 +229,25 @@ public class PickUpFragment extends Fragment
     }
 
     private void showConfirmPickupDialog() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         ConfirmPickupDialog confirmPickupDialog = ConfirmPickupDialog.newInstance("Confirm Pickup");
         confirmPickupDialog.show(fm, "fragment_confirm_pickup_dialog");
+
+    }
+
+
+    @Override
+    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+        LatLng pos = mGoogleMap.getCameraPosition().target;
+
+        ParseObject pickupRequest = new ParseObject("PickupRequest"); //table name
+        pickupRequest.put("location", new ParseGeoPoint(pos.latitude, pos.longitude)); //guessing it is relatively easy to get
+        pickupRequest.put("pickupDate", new Date()); //obviously, this will just be now
+        pickupRequest.put("name", name);
+        pickupRequest.saveInBackground();
+
+        Toast.makeText(getActivity(), "Pickup Confirmed! Saved " + name + " and " + phoneNumber + " to Parse!", Toast.LENGTH_LONG).show();
+
     }
 
     @Override

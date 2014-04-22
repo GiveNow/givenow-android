@@ -5,8 +5,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.parse.ParseObject;
-
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment;
@@ -25,6 +23,11 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     
 //    private OnFragmentInteractionListener mListener;
 
+    public static DonateFragment newInstance() {
+        DonateFragment f = new DonateFragment();
+        return f;
+    }
+
     @Override
     protected String[] getTitles() {
         return new String[]{"PickUp", "DropOff", "Donate Cash"};
@@ -36,7 +39,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 
         pickupFragment = PickUpFragment.newInstance();
 //        dropoffFragment = DropOffFragment.newInstance(); //TODO
-        cashFragment = CashFragment.newInstance(); //TODO
+        cashFragment = CashFragment.newInstance();
     }
 
     @Override
@@ -95,8 +98,14 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
+
 
 //        ActionBar actionBar = getActivity().getActionBar();
 //

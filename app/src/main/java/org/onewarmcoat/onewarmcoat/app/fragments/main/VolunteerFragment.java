@@ -3,11 +3,18 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.parse.ParseObject;
-
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
+
+    public VolunteerFragment() {
+        // Required empty public constructor
+    }
+
+    public static VolunteerFragment newInstance() {
+        VolunteerFragment f = new VolunteerFragment();
+        return f;
+    }
 
     @Override
     protected String[] getTitles() {
