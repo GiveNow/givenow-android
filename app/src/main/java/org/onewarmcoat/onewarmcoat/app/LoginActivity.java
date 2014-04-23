@@ -3,12 +3,10 @@ package org.onewarmcoat.onewarmcoat.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -67,7 +65,6 @@ public class LoginActivity extends Activity {
      * @param v
      */
     public void anonLogin(View v) {
-        Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
         ParseAnonymousUtils.logIn(new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {

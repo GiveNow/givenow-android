@@ -15,14 +15,20 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.DonationsAdapter;
 import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 
-/**
- * Created by atam on 4/22/2014.
- */
 public class ProfileFragment extends Fragment {
 
     private TextView usernameTV;
     private TextView phonenoTV;
     private ListView historyLV;
+
+    public ProfileFragment() {
+        // Required empty public constructor
+    }
+
+    public static ProfileFragment newInstance() {
+        ProfileFragment f = new ProfileFragment();
+        return f;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +50,7 @@ public class ProfileFragment extends Fragment {
                     // Access the array of results here
                     //String firstItemId = itemList.get(0).getObjectId();
                     //Toast.makeText(TodoItemsActivity.this, firstItemId, Toast.LENGTH_SHORT).show();
-                    String currentUser = itemList.get(0).getDonorId();
+                    String currentUser = itemList.get(0).getDonor();
                     usernameTV.setText(currentUser);
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
