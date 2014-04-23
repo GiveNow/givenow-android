@@ -8,13 +8,14 @@ import android.util.Log;
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.DropOffLocationsFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
 
 
 public class DonateFragment extends PageSlidingTabStripFragment {
 
     private PickUpFragment pickupFragment;
-    private Fragment dropoffFragment;
+    private DropOffLocationsFragment dropoffLocationsFragment;
     private CashFragment cashFragment;
 
     public DonateFragment() {
@@ -38,7 +39,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
         super.onCreate(savedInstanceState);
 
         pickupFragment = PickUpFragment.newInstance();
-//        dropoffFragment = DropOffFragment.newInstance(); //TODO
+        dropoffLocationsFragment = DropOffLocationsFragment.newInstance();
         cashFragment = CashFragment.newInstance();
     }
 
@@ -49,9 +50,9 @@ public class DonateFragment extends PageSlidingTabStripFragment {
             case 0: //Pickup
                 frag = pickupFragment;
                 break;
-//            case 1: //Dropoff
-//                frag = dropoffFragment;
-//                break;
+            case 1: //Dropoff
+                frag = dropoffLocationsFragment;
+                break;
             case 2: //Donate Cash
                 frag = cashFragment;
                 break;
@@ -72,7 +73,6 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 //        return root;
 //    }
 
-//    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);

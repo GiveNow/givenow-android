@@ -64,6 +64,8 @@ public class PickUpFragment extends MapHostingFragment implements
     public void onMapReady(GoogleMap map) {
         super.onMapReady(map);
         mGoogleMap.getUiSettings().setCompassEnabled(false);
+        //TODO: should we disable zoom controls? i only disabled them because its not nice to have them partially obscured by the pickup details overlay.
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
 
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override

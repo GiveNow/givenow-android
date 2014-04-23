@@ -6,12 +6,13 @@ import android.util.Log;
 
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.DropOffLocationsFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
 
     private PickUpRequestsFragment pickUpRequestsFragment;
-//    private DropOffLocationsFragment dropOffLocationsFragment;
+    private DropOffLocationsFragment dropOffLocationsFragment;
 
     public VolunteerFragment() {
         // Required empty public constructor
@@ -32,7 +33,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
         super.onCreate(savedInstanceState);
 
         pickUpRequestsFragment = PickUpRequestsFragment.newInstance();
-//        dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
+        dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
     }
 
     @Override
@@ -42,9 +43,9 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
             case 0: //PickUp Requests
                 frag = pickUpRequestsFragment;
                 break;
-//            case 1: //Drop Off Locations
-//                frag = dropOffLocationsFragment;
-//                break;
+            case 1: //Drop Off Locations
+                frag = dropOffLocationsFragment;
+                break;
             default:
                 Log.d("DonateFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
                 frag = SuperAwesomeCardFragment.newInstance(position);
