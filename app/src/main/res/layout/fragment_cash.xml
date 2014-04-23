@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ff03ca00"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment">
 
     <Button
@@ -27,12 +28,26 @@
         android:id="@+id/et_donate_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
+        android:layout_alignEnd="@+id/btn_donate"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:gravity="center"
         android:hint="$100"
         android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:text="Donate"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ffffffff"
+        android:textSize="100sp"
+        android:typeface="normal" />
 
 </RelativeLayout>

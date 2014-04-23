@@ -145,6 +145,9 @@ public class PickUpFragment extends MapHostingFragment implements
 ////            addrString = ""
 //
 //        }
+
+        //TODO: do something with the name and phone number from the dialog fragment
+        // phone number: get current
         ParseObject pickupRequest = new ParseObject("PickupRequest"); //table name
         pickupRequest.put("location", new ParseGeoPoint(pos.latitude, pos.longitude)); //guessing it is relatively easy to get
         pickupRequest.put("pickupDate", new Date()); //obviously, this will just be now

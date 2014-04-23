@@ -15,14 +15,20 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.DonationsAdapter;
 import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 
-/**
- * Created by atam on 4/22/2014.
- */
 public class ProfileFragment extends Fragment {
 
     private TextView usernameTV;
     private TextView phonenoTV;
     private ListView historyLV;
+
+    public ProfileFragment() {
+        // Required empty public constructor
+    }
+
+    public static ProfileFragment newInstance() {
+        ProfileFragment f = new ProfileFragment();
+        return f;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

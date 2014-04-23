@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,10 +15,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
@@ -55,31 +54,31 @@ public class MainActivity extends Activity {
         //all API initialization should be done in some function
         //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
 
-        Donation row1 = new Donation("Alex", "Misc", 100);
-        row1.saveInBackground();
-
-        Donation row2 = new Donation("Afik", "Coats", 20);
-        row2.saveInBackground();
-
-        Donation row3 = new Donation("Craig", "Cash", 10);
-        row3.saveInBackground();
-
-        Donation row4 = new Donation("Carl", "Cash", 50);
-        row4.saveInBackground();
-
-        Donation row5 = new Donation("Alex", "Cash", 40);
-        row5.saveInBackground();
-
-        Donation row6 = new Donation("Alex", "Cash", 60);
-        row6.saveInBackground();
-
-        Donation row7 = new Donation("Alex", "Coats", 45);
-        row7.saveInBackground();
+//        Donation row1 = new Donation("Alex", "Misc", 100);
+//        row1.saveInBackground();
+//
+//        Donation row2 = new Donation("Afik", "Coats", 20);
+//        row2.saveInBackground();
+//
+//        Donation row3 = new Donation("Craig", "Cash", 10);
+//        row3.saveInBackground();
+//
+//        Donation row4 = new Donation("Carl", "Cash", 50);
+//        row4.saveInBackground();
+//
+//        Donation row5 = new Donation("Alex", "Cash", 40);
+//        row5.saveInBackground();
+//
+//        Donation row6 = new Donation("Alex", "Cash", 60);
+//        row6.saveInBackground();
+//
+//        Donation row7 = new Donation("Alex", "Coats", 45);
+//        row7.saveInBackground();
 
         //TODO: create a setupViews function to wrap all of this
         donateFragment = DonateFragment.newInstance();
         volunteerFragment = VolunteerFragment.newInstance();
-        profileFragment = new ProfileFragment();
+        profileFragment = ProfileFragment.newInstance();
 //        mNavigationDrawerFragment = (NavigationDrawerFragment)
 //                getFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        mTitle = getTitle();
@@ -237,50 +236,58 @@ public class MainActivity extends Activity {
     }
 
     private void selectItem(int position) {
-
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         switch (position) {
             case 0: //Donate
-                //TODO: donateFragment seems to get instantiated a second time when I switch to this position. Why?
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.content,
-                                donateFragment,
-                                donateFragment.TAG).commit();
+                if (profileFragment.isAdded()) {
+                    ft.hide(profileFragment);
+                }
+                if (volunteerFragment.isAdded()) {
+                    ft.hide(volunteerFragment);
+                }
+                if (donateFragment.isAdded()) {
+                    ft.show(donateFragment);
+                } else {
+                    ft.add(R.id.content,
+                            donateFragment,
+                            donateFragment.TAG);
+                }
                 break;
             case 1: //Volunteer
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.content,
-                                volunteerFragment,
-                                volunteerFragment.TAG).commit();
+                if (profileFragment.isAdded()) {
+                    ft.hide(profileFragment);
+                }
+                if (donateFragment.isAdded()) {
+                    ft.hide(donateFragment);
+                }
+                if (volunteerFragment.isAdded()) {
+                    ft.show(volunteerFragment);
+                } else {
+                    ft.add(R.id.content,
+                            volunteerFragment,
+                            volunteerFragment.TAG);
+                }
                 break;
             case 2: // Profile
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.content,
-                                profileFragment
-                        ).commit();
-                Toast.makeText(this, "PROFILE CASE!", Toast.LENGTH_LONG);
-                break;
-            case 3: //Sign Out
-                ParseUser.logOut();
-                ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
-                //take user to login screen
-                finish();
+                if (volunteerFragment.isAdded()) {
+                    ft.hide(volunteerFragment);
+                }
+                if (donateFragment.isAdded()) {
+                    ft.hide(donateFragment);
+                }
+                if (profileFragment.isAdded()) {
+                    ft.show(profileFragment);
+                } else {
+                    ft.add(R.id.content,
+                            profileFragment);
+                }
                 break;
             default:
-
-//                Fragment fragment = new PlanetFragment();
-//                Bundle args = new Bundle();
-//                args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//                fragment.setArguments(args);
-//
-//                getFragmentManager().beginTransaction()
-//                        .add(R.id.content, fragment).commit();
                 Log.d("MainActivity", "default case hit in selectItem, weird position number!");
                 break;
         }
-
+        ft.commit();
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -293,47 +300,5 @@ public class MainActivity extends Activity {
             selectItem(position);
         }
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-//    public static class PlaceholderFragment extends Fragment {
-//        /**
-//         * The fragment argument representing the section number for this
-//         * fragment.
-//         */
-//        private static final String ARG_SECTION_NUMBER = "section_number";
-//
-//        /**
-//         * Returns a new instance of this fragment for the given section
-//         * number.
-//         */
-//        public static PlaceholderFragment newInstance(int sectionNumber) {
-//            PlaceholderFragment fragment = new PlaceholderFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//            fragment.setArguments(args);
-//            return fragment;
-//        }
-//
-//        public PlaceholderFragment() {
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-//            return rootView;
-//        }
-//
-//        @Override
-//        public void onAttach(Activity activity) {
-//            super.onAttach(activity);
-//            ((MainActivity) activity).onSectionAttached(
-//                    getArguments().getInt(ARG_SECTION_NUMBER));
-//        }
-//    }
 
 }
