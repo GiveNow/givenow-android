@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
@@ -49,23 +50,34 @@ public class DropOffLocationsFragment extends MapHostingFragment {
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
 
-        ParseQuery query = new ParseQuery("DropOffAgency");
-
-        //TODO: Restrict query to a geobox so the phone doesnt explode
-        query.findInBackground(new FindCallback() {
+        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
-            public void done(List list, ParseException e) {
-                for (Object item : list) {
-                    ParseObject it = (ParseObject) item;
-                    ParseGeoPoint geoPoint = it.getParseGeoPoint("agencyGeoLocation");
-                    MarkerOptions marker = new MarkerOptions();
-                    LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                    marker.position(ll);
-                    marker.title(it.getString("agencyName"));
-                    marker.snippet(it.getString("agencyAddress"));
-                    marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    map.addMarker(marker);
-                }
+            public void onCameraChange(CameraPosition cameraPosition) {
+                LatLng pos = mGoogleMap.getCameraPosition().target;
+                ParseGeoPoint geoPoint = new ParseGeoPoint(pos.latitude, pos.longitude);
+
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("DropOffAgency");
+                // Restrict query to the 20 nearest locations so the phone doesn't explode
+                query.whereNear("agencyGeoLocation", geoPoint);
+                query.setLimit(20);
+
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List list, ParseException e) {
+                        for (Object item : list) {
+                            ParseObject it = (ParseObject) item;
+                            ParseGeoPoint geoPoint = it.getParseGeoPoint("agencyGeoLocation");
+                            MarkerOptions marker = new MarkerOptions();
+                            LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                            marker.position(ll);
+                            marker.title(it.getString("agencyName"));
+                            marker.snippet(it.getString("agencyAddress"));
+                            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            //TODO: don't place the same markers on top of markers we already got?
+                            map.addMarker(marker);
+                        }
+                    }
+                });
             }
         });
 

@@ -109,7 +109,7 @@ public class PickUpFragment extends MapHostingFragment implements
 
         // populate possible dates in spinner
         ArrayList<CharSequence> dates_list = new ArrayList<CharSequence>();
-        dates_list.add("Example Date!");
+        dates_list.add("Wednesday, 4/30/2014");
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_item, dates_list);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
