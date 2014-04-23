@@ -2,6 +2,7 @@ package org.onewarmcoat.onewarmcoat.app.customModels;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 /**
  * Created by atam on 4/22/2014.
@@ -12,28 +13,28 @@ public class Donation extends ParseObject {
         super();
     }
 
-    public Donation(String donorId, String donationName, int donationVal) {
+    public Donation(ParseUser donor, String donationType, int donationValue) {
         super();
-        setDonorId(donorId);
-        setDonationName(donationName);
-        setDonationValue(donationVal);
+        setDonor(donor);
+        setdonationType(donationType);
+        setDonationValue(donationValue);
     }
 
-    public String getDonorId() {
-        return getString("donorId");
+    public String getDonor() {
+        return getString("donor");
     }
 
-    public void setDonorId(String dId) {
-        put("donorID", dId);
+    public void setDonor(ParseUser donor) {
+        put("donor", donor);
 
     }
 
-    public String getDonationName() {
-        return getString("donationName");
+    public String getdonationType() {
+        return getString("donationType");
     }
 
-    public void setDonationName(String donationName) {
-        put("donationName", donationName);
+    public void setdonationType(String donationType) {
+        put("donationType", donationType);
 
     }
 
@@ -41,8 +42,8 @@ public class Donation extends ParseObject {
         return getInt("donationValue");
     }
 
-    public void setDonationValue(int donationVal) {
-        put("donationValue", donationVal);
+    public void setDonationValue(int donationValue) {
+        put("donationValue", donationValue);
     }
 
 }

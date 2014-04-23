@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment {
                     // Access the array of results here
                     //String firstItemId = itemList.get(0).getObjectId();
                     //Toast.makeText(TodoItemsActivity.this, firstItemId, Toast.LENGTH_SHORT).show();
-                    String currentUser = itemList.get(0).getDonorId();
+                    String currentUser = itemList.get(0).getDonor();
                     usernameTV.setText(currentUser);
                 } else {
                     Log.d("item", "Error: " + e.getMessage());

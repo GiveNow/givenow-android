@@ -23,8 +23,8 @@ public class DonationsAdapter extends ParseQueryAdapter {
             public ParseQuery create() {
                 ParseQuery<ParseObject> query = new ParseQuery("Donation");
                 //REPLACE HARDCODED donorID LATER
-                //query.whereEqualTo("donorID", "Alex");
-                query.whereEqualTo("donorID", ParseUser.getCurrentUser().getUsername());
+                //query.whereEqualTo("donor", "Alex");
+                query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 return query;
             }
         });
@@ -46,9 +46,9 @@ public class DonationsAdapter extends ParseQueryAdapter {
         donationDateView.setText(dateStr);
 
 
-        TextView donationNameView = (TextView) v.findViewById(R.id.donationName);
-        String donationName = object.getString("donationName");
-        donationNameView.setText(donationName);
+        TextView donationTypeView = (TextView) v.findViewById(R.id.donationType);
+        String donationType = object.getString("donationType");
+        donationTypeView.setText(donationType);
 
         TextView donationValueView = (TextView) v.findViewById(R.id.donationValue);
         Number donationVal = object.getNumber("donationValue");

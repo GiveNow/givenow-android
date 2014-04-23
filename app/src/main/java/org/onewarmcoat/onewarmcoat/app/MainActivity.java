@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
@@ -54,26 +55,11 @@ public class MainActivity extends Activity {
         //all API initialization should be done in some function
         //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
 
-//        Donation row1 = new Donation("Alex", "Misc", 100);
-//        row1.saveInBackground();
-//
-//        Donation row2 = new Donation("Afik", "Coats", 20);
-//        row2.saveInBackground();
-//
-//        Donation row3 = new Donation("Craig", "Cash", 10);
-//        row3.saveInBackground();
-//
-//        Donation row4 = new Donation("Carl", "Cash", 50);
-//        row4.saveInBackground();
-//
-//        Donation row5 = new Donation("Alex", "Cash", 40);
-//        row5.saveInBackground();
-//
-//        Donation row6 = new Donation("Alex", "Cash", 60);
-//        row6.saveInBackground();
-//
-//        Donation row7 = new Donation("Alex", "Coats", 45);
-//        row7.saveInBackground();
+        Donation row6 = new Donation(ParseUser.getCurrentUser(), "Cash", 6000);
+        row6.saveInBackground();
+
+        Donation row7 = new Donation(ParseUser.getCurrentUser(), "Coats", 45244);
+        row7.saveInBackground();
 
         //TODO: create a setupViews function to wrap all of this
         donateFragment = DonateFragment.newInstance();
@@ -282,6 +268,12 @@ public class MainActivity extends Activity {
                     ft.add(R.id.content,
                             profileFragment);
                 }
+                break;
+            case 3: //Sign Out
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
+                //take user to login screen
+                finish();
                 break;
             default:
                 Log.d("MainActivity", "default case hit in selectItem, weird position number!");
