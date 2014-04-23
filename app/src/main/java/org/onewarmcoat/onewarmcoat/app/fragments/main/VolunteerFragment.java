@@ -1,11 +1,17 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
+
+    private PickUpRequestsFragment pickUpRequestsFragment;
+//    private DropOffLocationsFragment dropOffLocationsFragment;
 
     public VolunteerFragment() {
         // Required empty public constructor
@@ -24,33 +30,27 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pickUpRequestsFragment = PickUpRequestsFragment.newInstance();
+//        dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-//        ActionBar actionBar = getActivity().getActionBar();
-//
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        //this is ghetto, but just placeholder
-//        ((MainActivity) activity).onSectionAttached(2);
-
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+    protected Fragment getFragmentForPosition(int position) {
+        Fragment frag;
+        switch (position) {
+            case 0: //PickUp Requests
+                frag = pickUpRequestsFragment;
+                break;
+//            case 1: //Drop Off Locations
+//                frag = dropOffLocationsFragment;
+//                break;
+            default:
+                Log.d("DonateFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
+                frag = SuperAwesomeCardFragment.newInstance(position);
+                break;
+        }
+        return frag;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-//        ActionBar actionBar = getActivity().getActionBar();
-//
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//        mListener = null;
-    }
 }

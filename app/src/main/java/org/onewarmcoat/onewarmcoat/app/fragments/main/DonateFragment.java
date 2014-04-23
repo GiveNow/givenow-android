@@ -13,9 +13,9 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
 
 public class DonateFragment extends PageSlidingTabStripFragment {
 
-    private Fragment pickupFragment;
+    private PickUpFragment pickupFragment;
     private Fragment dropoffFragment;
-    private Fragment cashFragment;
+    private CashFragment cashFragment;
 
     public DonateFragment() {
         // Required empty public constructor
