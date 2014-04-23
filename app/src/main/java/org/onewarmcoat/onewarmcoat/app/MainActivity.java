@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
@@ -260,6 +261,13 @@ public class MainActivity extends Activity {
                                 profileFragment
                         ).commit();
                 Toast.makeText(this, "PROFILE CASE!", Toast.LENGTH_LONG);
+                break;
+            case 3: //Sign Out
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
+                //take user to login screen
+                finish();
+                break;
             default:
 
 //                Fragment fragment = new PlanetFragment();

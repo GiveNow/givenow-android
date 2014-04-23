@@ -3,10 +3,12 @@ package org.onewarmcoat.onewarmcoat.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -17,17 +19,22 @@ import com.parse.ParseUser;
 
 public class LoginActivity extends Activity {
 
-    public String username;
-    //public String userphone;
-    //private EditText usernameET;
-    //private EditText phoneET;
-    //static final String FILENAME = "UniqueId_file";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //init Parse
+        Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
+
+        //if current user is null, then let them login, otherwise go straight to MainActivity
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            //auto-login user
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+        }
+        //else, user sees the login
     }
 
 
@@ -60,13 +67,6 @@ public class LoginActivity extends Activity {
      * @param v
      */
     public void anonLogin(View v) {
-        /*usernameET = (EditText) v.findViewById(R.id.usernameET);
-        username = usernameET.getText().toString();*/
-
-        /*phoneET = (EditText) findViewById(R.id.phoneET);
-        Editable ed = phoneET.getText();
-        if (ed != null)
-            userphone = ed.toString();*/
         Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
         ParseAnonymousUtils.logIn(new LogInCallback() {
             @Override
@@ -75,8 +75,6 @@ public class LoginActivity extends Activity {
                     Log.d("MyApp", "Anonymous login failed.");
                 } else {
                     Log.d("MyApp", "Anonymous user logged in.");
-                    String uniqueId = ParseUser.getCurrentUser().getUsername();
-
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }

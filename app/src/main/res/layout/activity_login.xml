@@ -14,14 +14,15 @@
         android:layout_height="wrap_content"
         android:text="@string/login_greeting" />
 
-
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loginTV"
         android:onClick="anonLogin"
-        android:text="@string/login_label"></Button>
+        android:text="@string/login_label"
+        android:layout_below="@+id/loginTV"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
