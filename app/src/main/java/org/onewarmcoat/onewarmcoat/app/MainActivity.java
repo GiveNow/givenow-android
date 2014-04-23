@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -23,8 +24,10 @@ import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements PickUpRequestsFragment.OnMarkerClickListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -282,6 +285,15 @@ public class MainActivity extends Activity {
         }
 
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    // dTitle and dAddr come from OnMarkerClick handler
+    @Override
+    public void onMarkerClicked(String dTitle, String dAddr) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ConfirmPickupLocationFragment confirmationPickupFrag = ConfirmPickupLocationFragment.newInstance(dTitle, dAddr);
+        ft.replace(R.id.content, confirmationPickupFrag);
+        ft.commit();
     }
 
     // The click listener for ListView in the navigation drawer

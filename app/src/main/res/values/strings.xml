@@ -21,6 +21,8 @@
     <string name="login_greeting">Login anonymously using your phone number</string>
     <string name="hello_world">Hello world!</string>
     <string name="login_label">Login Anonymously</string>
+    <string name="confirm_pickup">Are you sure you want to pick up here?</string>
+    <string name="confirm">Confirm</string>
 
 
 </resources>

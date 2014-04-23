@@ -1,5 +1,6 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -22,7 +24,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
+
 public class PickUpRequestsFragment extends MapHostingFragment {
+
+    private OnMarkerClickListener listener;
 
     public PickUpRequestsFragment() {
         // Required empty public constructor
@@ -33,6 +38,17 @@ public class PickUpRequestsFragment extends MapHostingFragment {
         // call this in order to get a usable instance of this fragment.
         PickUpRequestsFragment f = new PickUpRequestsFragment();
         return f;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnMarkerClickListener) {
+            listener = (OnMarkerClickListener) activity;
+        } else {
+            throw new ClassCastException(activity.toString()
+                    + " must implement MyListFragment.OnMarkerClickListener");
+        }
     }
 
     @Override
@@ -68,6 +84,32 @@ public class PickUpRequestsFragment extends MapHostingFragment {
             }
         });
 
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                                         /* in this callback function, when a marker on the map is
+                                         clicked, use fragment mgr to replace current fragment
+                                          */
+                                         @Override
+                                         public boolean onMarkerClick(Marker marker) {
+                                             String selectedTitle = marker.getTitle();
+                                             String selectedAddr = marker.getSnippet();
+                                             /*Intent toMainActivity = new Intent(getActivity().getBaseContext(),
+                                                                                MainActivity.class);
+                                             toMainActivity.putExtra("donorName", selectedTitle);
+                                             toMainActivity.putExtra("donorAddress", selectedAddr);
+                                             getActivity().startActivity(toMainActivity);
+                                             // containing activity now has these arguments
+                                             FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                                             ft.replace(R.id.content, new ConfirmPickupLocationFragment());
+                                             return true;*/
+                                             listener.onMarkerClicked(selectedTitle, selectedAddr);
+                                             return true;
+                                         }
+                                     }
+        );
 
+    }
+
+    public interface OnMarkerClickListener {
+        public void onMarkerClicked(String dTitle, String dAddr);
     }
 }
