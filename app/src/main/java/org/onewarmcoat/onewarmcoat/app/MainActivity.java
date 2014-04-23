@@ -14,10 +14,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.parse.Parse;
+import com.parse.ParseObject;
 
+import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 
 public class MainActivity extends Activity {
@@ -40,19 +43,42 @@ public class MainActivity extends Activity {
     private String[] mDrawerTitles;
     private DonateFragment donateFragment;
     private VolunteerFragment volunteerFragment;
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ParseObject.registerSubclass(Donation.class);
         //all API initialization should be done in some function
-        Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
+        //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
+
+        Donation row1 = new Donation("Alex", "Misc", 100);
+        row1.saveInBackground();
+
+        Donation row2 = new Donation("Afik", "Coats", 20);
+        row2.saveInBackground();
+
+        Donation row3 = new Donation("Craig", "Cash", 10);
+        row3.saveInBackground();
+
+        Donation row4 = new Donation("Carl", "Cash", 50);
+        row4.saveInBackground();
+
+        Donation row5 = new Donation("Alex", "Cash", 40);
+        row5.saveInBackground();
+
+        Donation row6 = new Donation("Alex", "Cash", 60);
+        row6.saveInBackground();
+
+        Donation row7 = new Donation("Alex", "Coats", 45);
+        row7.saveInBackground();
 
         //TODO: create a setupViews function to wrap all of this
         donateFragment = DonateFragment.newInstance();
         volunteerFragment = VolunteerFragment.newInstance();
-
+        profileFragment = new ProfileFragment();
 //        mNavigationDrawerFragment = (NavigationDrawerFragment)
 //                getFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        mTitle = getTitle();
@@ -227,6 +253,13 @@ public class MainActivity extends Activity {
                                 volunteerFragment,
                                 volunteerFragment.TAG).commit();
                 break;
+            case 2: // Profile
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content,
+                                profileFragment
+                        ).commit();
+                Toast.makeText(this, "PROFILE CASE!", Toast.LENGTH_LONG);
             default:
 
 //                Fragment fragment = new PlanetFragment();
