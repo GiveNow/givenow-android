@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
+
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
 
@@ -49,7 +51,9 @@ public class ConfirmPickupLocationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // get anon donorID assoc with name or addr
-                Donation row1 = new Donation("xZyy12", "Misc", 100);
+                //Donation row1 = new Donation("xZyy12", "Misc", 100);
+                //this is actually volunteer user . . . should be getting user object from the pickupRequest table, and putting in here
+                Donation row1 = new Donation(ParseUser.getCurrentUser(), "Misc", 100);
                 row1.saveInBackground();
             }
         });

@@ -57,11 +57,11 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
         //all API initialization should be done in some function
         //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
 
-        Donation row6 = new Donation(ParseUser.getCurrentUser(), "Cash", 6000);
-        row6.saveInBackground();
-
-        Donation row7 = new Donation(ParseUser.getCurrentUser(), "Coats", 45244);
-        row7.saveInBackground();
+//        Donation row6 = new Donation(ParseUser.getCurrentUser(), "Cash", 6000);
+//        row6.saveInBackground();
+//
+//        Donation row7 = new Donation(ParseUser.getCurrentUser(), "Coats", 45244);
+//        row7.saveInBackground();
 
         //TODO: create a setupViews function to wrap all of this
         donateFragment = DonateFragment.newInstance();
