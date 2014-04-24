@@ -13,7 +13,7 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.DonationsAdapter;
-import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 public class ProfileFragment extends Fragment {
 

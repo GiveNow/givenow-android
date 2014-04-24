@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 public class ConfirmPickupLocationFragment extends Fragment {
 

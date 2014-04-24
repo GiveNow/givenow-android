@@ -31,7 +31,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class PickUpFragment extends MapHostingFragment implements
-        ConfirmPickupDialog.ConfirmPickupDialogListener {
+        ConfirmPickupDialogFragment.ConfirmPickupDialogListener {
 
     @InjectView(R.id.etAddress)
     EditText etAddress;
@@ -126,8 +126,8 @@ public class PickUpFragment extends MapHostingFragment implements
 
     private void showConfirmPickupDialog() {
         FragmentManager fm = getChildFragmentManager();
-        ConfirmPickupDialog confirmPickupDialog = ConfirmPickupDialog.newInstance("Confirm Pickup");
-        confirmPickupDialog.show(fm, "fragment_confirm_pickup_dialog");
+        ConfirmPickupDialogFragment confirmPickupDialogFragment = ConfirmPickupDialogFragment.newInstance("Confirm Pickup");
+        confirmPickupDialogFragment.show(fm, "fragment_confirm_pickup_dialog");
     }
 
     @Override

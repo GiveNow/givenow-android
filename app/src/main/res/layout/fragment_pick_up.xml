@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:layout_marginRight="55dp"
+            android:alpha="0.85"
             android:background="@drawable/menu_dropdown_panel_onewarmcoat"
             android:hint="Address"
             android:inputType="textPostalAddress"
@@ -51,7 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_margin="1dp"
         android:background="#ff246d9e"
         android:text="@string/set_pickup_location_label"
         android:textColor="#ffffffff" />
@@ -83,11 +83,12 @@
                 android:gravity="center_vertical"
                 android:text="Pickup Date"
                 android:textAllCaps="true"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffffff" />
 
             <Spinner
                 android:id="@+id/spinnerPickupDates"
-                style="@android:style/Widget.Holo.Light.Spinner"
+                style="@style/SpinnerItem_example"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

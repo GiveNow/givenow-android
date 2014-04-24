@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app;
+package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -19,12 +19,13 @@ import android.widget.ListView;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import org.onewarmcoat.onewarmcoat.app.customModels.Donation;
+import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 public class MainActivity extends Activity implements PickUpRequestsFragment.OnMarkerClickListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -200,9 +201,9 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
             }
 
 //            case R.id.action_contact:
-                // QuickContactFragment dialog = new QuickContactFragment();
-                // dialog.show(getSupportFragmentManager(), "QuickContactFragment");
-                // return true;
+            // QuickContactFragment dialog = new QuickContactFragment();
+            // dialog.show(getSupportFragmentManager(), "QuickContactFragment");
+            // return true;
 
         }
 
@@ -288,9 +289,15 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
     // dTitle and dAddr come from OnMarkerClick handler
     @Override
     public void onMarkerClicked(String dTitle, String dAddr) {
+        //TODO: move this to Volunteer Fragment, its rightful home
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         ConfirmPickupLocationFragment confirmationPickupFrag = ConfirmPickupLocationFragment.newInstance(dTitle, dAddr);
-        ft.replace(R.id.content, confirmationPickupFrag);
+//        if (volunteerFragment.isAdded()) {
+        ft.hide(volunteerFragment);
+//        }
+        ft.add(R.id.content, confirmationPickupFrag);
+        ft.addToBackStack("markerdetail");
         ft.commit();
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.onewarmcoat.onewarmcoat.app" >
+    package="org.onewarmcoat.onewarmcoat.app">
 
     <permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
 
@@ -40,11 +40,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.onewarmcoat.onewarmcoat.app.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"></activity>
 
         <activity
-            android:name="org.onewarmcoat.onewarmcoat.app.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

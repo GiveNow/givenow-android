@@ -1,12 +1,9 @@
-package org.onewarmcoat.onewarmcoat.app.customModels;
+package org.onewarmcoat.onewarmcoat.app.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-/**
- * Created by atam on 4/22/2014.
- */
 @ParseClassName("Donation")
 public class Donation extends ParseObject {
     public Donation() {
