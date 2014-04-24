@@ -79,6 +79,7 @@ public class PickUpRequestsFragment extends MapHostingFragment {
                     marker.title(it.getString("name"));
                     marker.snippet(it.getString("address"));
                     marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    //**create a HashMap <marker.getId(), item> so we can lookup pickupRequest details
                     map.addMarker(marker);
                 }
             }
@@ -92,15 +93,11 @@ public class PickUpRequestsFragment extends MapHostingFragment {
                                          public boolean onMarkerClick(Marker marker) {
                                              String selectedTitle = marker.getTitle();
                                              String selectedAddr = marker.getSnippet();
-                                             /*Intent toMainActivity = new Intent(getActivity().getBaseContext(),
-                                                                                MainActivity.class);
-                                             toMainActivity.putExtra("donorName", selectedTitle);
-                                             toMainActivity.putExtra("donorAddress", selectedAddr);
-                                             getActivity().startActivity(toMainActivity);
-                                             // containing activity now has these arguments
-                                             FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                                             ft.replace(R.id.content, new ConfirmPickupLocationFragment());
-                                             return true;*/
+
+                                             //pass value & type
+                                             //pass phone number    
+                                             //**this is not going to work, save a HashMap <marker.getId(), item>
+
                                              listener.onMarkerClicked(selectedTitle, selectedAddr);
                                              return true;
                                          }
