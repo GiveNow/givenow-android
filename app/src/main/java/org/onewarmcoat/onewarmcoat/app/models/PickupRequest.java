@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.customModels;
+package org.onewarmcoat.onewarmcoat.app.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

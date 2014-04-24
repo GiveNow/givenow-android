@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app;
+package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import com.parse.Parse;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+
+import org.onewarmcoat.onewarmcoat.app.R;
 
 
 public class LoginActivity extends Activity {
