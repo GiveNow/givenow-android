@@ -31,7 +31,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 
     @Override
     protected String[] getTitles() {
-        return new String[]{"PickUp", "DropOff", "Donate Cash"};
+        return new String[]{"Schedule PickUp", "DropOff", "Donate Cash"};
     }
 
     @Override
