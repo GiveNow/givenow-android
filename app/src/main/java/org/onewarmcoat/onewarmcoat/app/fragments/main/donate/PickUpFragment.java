@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
@@ -153,6 +154,11 @@ public class PickUpFragment extends MapHostingFragment implements
         pickupRequest.put("pickupDate", new Date()); //obviously, this will just be now
         pickupRequest.put("name", name);
         pickupRequest.put("address", addrString);
+        pickupRequest.put("phoneNumber", phoneNumber);
+        pickupRequest.put("donor", ParseUser.getCurrentUser());
+        pickupRequest.put("donationType", "Coat");
+        pickupRequest.put("donationValue", 218);
+        pickupRequest.put("donation", "");
         pickupRequest.saveInBackground();
 
         Toast.makeText(getActivity(), "Pickup Confirmed! Saved " + name + " and " + phoneNumber + " to Parse!", Toast.LENGTH_LONG).show();
