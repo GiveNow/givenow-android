@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -25,7 +25,6 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 public class MainActivity extends Activity implements PickUpRequestsFragment.OnMarkerClickListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -54,7 +53,20 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ParseObject.registerSubclass(Donation.class);
+        initializeFragments();
+        initializeDrawer();
+        if (savedInstanceState == null) {
+            //create fragments
+            initializeFragments();
+            selectItem(0);
+        } else {
+            // restore fragments
+            donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+            volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+            profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
+            Log.d("MainActivity", "Fragments restored");
+        }
+
         //all API initialization should be done in some function
         //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
 
@@ -64,11 +76,16 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //        Donation row7 = new Donation(ParseUser.getCurrentUser(), "Coats", 45244);
 //        row7.saveInBackground();
 
-        //TODO: create a setupViews function to wrap all of this
+    }
+
+    private void initializeFragments() {
         donateFragment = DonateFragment.newInstance();
         volunteerFragment = VolunteerFragment.newInstance();
         profileFragment = ProfileFragment.newInstance();
-//        mNavigationDrawerFragment = (NavigationDrawerFragment)
+    }
+
+    private void initializeDrawer() {
+        //        mNavigationDrawerFragment = (NavigationDrawerFragment)
 //                getFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        mTitle = getTitle();
 //
@@ -115,8 +132,6 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        selectItem(0);
     }
 
     @Override
@@ -225,6 +240,11 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
     }
 
     private void selectItem(int position) {
+//        if (profileFragment == null) {
+//
+//        }
+        Fragment fragmentInContainer = getFragmentManager().findFragmentById(R.id.content);
+        //TODO: hide fragment in container, simplify code
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         switch (position) {
@@ -238,9 +258,11 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 if (donateFragment.isAdded()) {
                     ft.show(donateFragment);
                 } else {
+                    Log.d("MainActivity", "Adding donateFragment to content.");
                     ft.add(R.id.content,
                             donateFragment,
-                            donateFragment.TAG);
+//                            donateFragment.TAG);
+                            "don");
                 }
                 break;
             case 1: //Volunteer
@@ -253,9 +275,11 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 if (volunteerFragment.isAdded()) {
                     ft.show(volunteerFragment);
                 } else {
+                    Log.d("MainActivity", "Adding volunteerFragment to content.");
                     ft.add(R.id.content,
                             volunteerFragment,
-                            volunteerFragment.TAG);
+//                            volunteerFragment.TAG);
+                            "vol");
                 }
                 break;
             case 2: // Profile
@@ -268,8 +292,11 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 if (profileFragment.isAdded()) {
                     ft.show(profileFragment);
                 } else {
+                    Log.d("MainActivity", "Adding profileFragment to content.");
                     ft.add(R.id.content,
-                            profileFragment);
+                            profileFragment,
+//                            profileFragment.TAG);
+                            "prof");
                 }
                 break;
             case 3: //Sign Out

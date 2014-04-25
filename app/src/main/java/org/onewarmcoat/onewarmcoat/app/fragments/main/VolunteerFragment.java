@@ -47,7 +47,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
                 frag = dropOffLocationsFragment;
                 break;
             default:
-                Log.d("DonateFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
+                Log.d("VolunteerFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
                 frag = SuperAwesomeCardFragment.newInstance(position);
                 break;
         }

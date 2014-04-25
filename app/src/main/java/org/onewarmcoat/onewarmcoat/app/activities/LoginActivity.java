@@ -12,9 +12,11 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 
 public class LoginActivity extends Activity {
@@ -26,6 +28,7 @@ public class LoginActivity extends Activity {
 
         //init Parse
         Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
+        ParseObject.registerSubclass(Donation.class);
 
         //if current user is null, then let them login, otherwise go straight to MainActivity
         ParseUser currentUser = ParseUser.getCurrentUser();
