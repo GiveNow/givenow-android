@@ -38,9 +38,43 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pickupFragment = PickUpFragment.newInstance();
-        dropoffLocationsFragment = DropOffLocationsFragment.newInstance();
-        cashFragment = CashFragment.newInstance();
+        if (savedInstanceState == null) {
+            //create fragments
+            pickupFragment = PickUpFragment.newInstance();
+            dropoffLocationsFragment = DropOffLocationsFragment.newInstance();
+            cashFragment = CashFragment.newInstance();
+            Log.w("DonateFragment", "onCreate: Fragments created");
+        }
+//        else {
+//            // restore fragments
+//            pickupFragment = (PickUpFragment) getFragmentManager()..findFragmentByTag("don");
+//            dropoffLocationsFragment = (DropOffLocationsFragment) getFragmentManager().findFragmentByTag("vol");
+//            cashFragment = (CashFragment) getFragmentManager().findFragmentByTag("prof");
+//            Log.d("MainActivity", "Fragments restored");
+//        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getChildFragmentManager().putFragment(outState, "pickupFragment", pickupFragment);
+        getChildFragmentManager().putFragment(outState, "dropoffLocationsFragment", dropoffLocationsFragment);
+        getChildFragmentManager().putFragment(outState, "cashFragment", cashFragment);
+        Log.w("DonateFragment", "onSaveInstanceState: Fragments saved");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle inState) {
+        super.onActivityCreated(inState);
+        Log.d("DonateFragment", "onActivityCreated called.");
+        if (inState != null) {
+            // ain't reaching here for some reason
+            pickupFragment = (PickUpFragment) getChildFragmentManager().getFragment(inState, "pickupFragment");
+            dropoffLocationsFragment = (DropOffLocationsFragment) getChildFragmentManager().getFragment(inState, "dropoffLocationsFragment");
+            cashFragment = (CashFragment) getChildFragmentManager().getFragment(inState, "cashFragment");
+            Log.w("DonateFragment", "onActivityCreated: Fragments restored");
+        }
+
     }
 
     @Override
