@@ -1,15 +1,21 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -24,7 +30,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class DropOffLocationsFragment extends MapHostingFragment {
+public class DropOffLocationsFragment extends MapHostingFragment implements GoogleMap.OnInfoWindowClickListener {
 
     public DropOffLocationsFragment() {
         // Required empty public constructor
@@ -51,6 +57,7 @@ public class DropOffLocationsFragment extends MapHostingFragment {
     @Override
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
+        map.setOnInfoWindowClickListener(this);
 
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -89,5 +96,18 @@ public class DropOffLocationsFragment extends MapHostingFragment {
         });
 
 
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        LatLng ll = marker.getPosition();
+        String uriBegin = "geo:" + ll.latitude + "," + ll.longitude;
+        String query = marker.getTitle() + ", " + marker.getSnippet();
+        String encodedQuery = Uri.encode( query  );
+        String uriString = uriBegin + "?q=" + encodedQuery;
+        Uri uri = Uri.parse( uriString );
+
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri );
+        startActivity( intent );
     }
 }
