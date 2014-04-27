@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -25,7 +25,6 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 public class MainActivity extends Activity implements PickUpRequestsFragment.OnMarkerClickListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -45,6 +44,8 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mDrawerTitles;
+
+    private Fragment mCurrentFragment;
     private DonateFragment donateFragment;
     private VolunteerFragment volunteerFragment;
     private ProfileFragment profileFragment;
@@ -54,7 +55,22 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ParseObject.registerSubclass(Donation.class);
+        initializeFragments();
+        initializeDrawer();
+        if (savedInstanceState == null) {
+            //create fragments
+            initializeFragments();
+            mCurrentFragment = null;
+            selectItem(0);
+        }
+//        else {
+//            // restore fragments
+//            donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+//            volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+//            profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
+//            Log.d("MainActivity", "Fragments restored");
+//        }
+
         //all API initialization should be done in some function
         //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
 
@@ -64,11 +80,35 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //        Donation row7 = new Donation(ParseUser.getCurrentUser(), "Coats", 45244);
 //        row7.saveInBackground();
 
-        //TODO: create a setupViews function to wrap all of this
-        donateFragment = DonateFragment.newInstance();
-        volunteerFragment = VolunteerFragment.newInstance();
-        profileFragment = ProfileFragment.newInstance();
-//        mNavigationDrawerFragment = (NavigationDrawerFragment)
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        getFragmentManager().putFragment(outState, "donateFragment", donateFragment);
+//        getFragmentManager().putFragment(outState, "volunteerFragment", volunteerFragment);
+//        getFragmentManager().putFragment(outState, "profileFragment", profileFragment);
+        getFragmentManager().putFragment(outState, "mCurrentFragment", mCurrentFragment);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle inState) {
+        super.onRestoreInstanceState(inState);
+//        donateFragment = (DonateFragment) getFragmentManager().getFragment(inState, "donateFragment");
+//        volunteerFragment = (VolunteerFragment) getFragmentManager().getFragment(inState, "volunteerFragment");
+//        profileFragment = (ProfileFragment) getFragmentManager().getFragment(inState, "profileFragment");
+        mCurrentFragment = getFragmentManager().getFragment(inState, "mCurrentFragment");
+        Log.w("MainActivity", "onRestoreInstanceState Fragments restored");
+    }
+
+    private void initializeFragments() {
+//        donateFragment = DonateFragment.newInstance();
+//        volunteerFragment = VolunteerFragment.newInstance();
+//        profileFragment = ProfileFragment.newInstance();
+    }
+
+    private void initializeDrawer() {
+        //        mNavigationDrawerFragment = (NavigationDrawerFragment)
 //                getFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        mTitle = getTitle();
 //
@@ -115,8 +155,6 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        selectItem(0);
     }
 
     @Override
@@ -225,52 +263,98 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
     }
 
     private void selectItem(int position) {
+//        if (profileFragment == null) {
+//
+//        }
+
+        //TODO: hide fragment in container, simplify code
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+
+//        Fragment fragmentInContainer = getFragmentManager().findFragmentById(R.id.content);
+//        if (fragmentInContainer != null) {
+//            ft.hide(fragmentInContainer);
+//            //after more than 1 fragment is added to the container, the wrong (maybe top most fragment)
+//            // becomes the one in the container??!
+//        }
+
+        if (mCurrentFragment == null) {
+            // do nothing?
+        } else {
+            ft.hide(mCurrentFragment);
+        }
+
         switch (position) {
             case 0: //Donate
-                if (profileFragment.isAdded()) {
-                    ft.hide(profileFragment);
-                }
-                if (volunteerFragment.isAdded()) {
-                    ft.hide(volunteerFragment);
-                }
-                if (donateFragment.isAdded()) {
-                    ft.show(donateFragment);
-                } else {
+                DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+                if (donateFragment == null) {
+                    donateFragment = DonateFragment.newInstance();
+                    Log.w("MainActivity", "Adding donateFragment to content.");
                     ft.add(R.id.content,
                             donateFragment,
-                            donateFragment.TAG);
+//                            donateFragment.TAG);
+                            "don");
+                } else {
+                    ft.show(donateFragment);
                 }
+                mCurrentFragment = donateFragment;
+//                if (donateFragment.isAdded()) {
+//                    ft.show(donateFragment);
+//                } else {
+//                    Log.d("MainActivity", "Adding donateFragment to content.");
+//                    ft.add(R.id.content,
+//                            donateFragment,
+////                            donateFragment.TAG);
+//                            "don");
+//                }
                 break;
             case 1: //Volunteer
-                if (profileFragment.isAdded()) {
-                    ft.hide(profileFragment);
-                }
-                if (donateFragment.isAdded()) {
-                    ft.hide(donateFragment);
-                }
-                if (volunteerFragment.isAdded()) {
-                    ft.show(volunteerFragment);
-                } else {
+                VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+                if (volunteerFragment == null) {
+                    volunteerFragment = VolunteerFragment.newInstance();
+                    Log.w("MainActivity", "Adding volunteerFragment to content.");
                     ft.add(R.id.content,
                             volunteerFragment,
-                            volunteerFragment.TAG);
+//                            volunteerFragment.TAG);
+                            "vol");
+                } else {
+                    ft.show(volunteerFragment);
                 }
+                mCurrentFragment = volunteerFragment;
+
+//                if (volunteerFragment.isAdded()) {
+//                    ft.show(volunteerFragment);
+//                } else {
+//                    Log.d("MainActivity", "Adding volunteerFragment to content.");
+//                    ft.add(R.id.content,
+//                            volunteerFragment,
+////                            volunteerFragment.TAG);
+//                            "vol");
+//                }
                 break;
             case 2: // Profile
-                if (volunteerFragment.isAdded()) {
-                    ft.hide(volunteerFragment);
-                }
-                if (donateFragment.isAdded()) {
-                    ft.hide(donateFragment);
-                }
-                if (profileFragment.isAdded()) {
-                    ft.show(profileFragment);
-                } else {
+                ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
+                if (profileFragment == null) {
+                    profileFragment = ProfileFragment.newInstance();
+                    Log.w("MainActivity", "Adding profileFragment to content.");
                     ft.add(R.id.content,
-                            profileFragment);
+                            profileFragment,
+//                            profileFragment.TAG);
+                            "prof");
+                } else {
+                    ft.show(profileFragment);
                 }
+                mCurrentFragment = profileFragment;
+
+//                if (profileFragment.isAdded()) {
+//                    ft.show(profileFragment);
+//                } else {
+//                    Log.d("MainActivity", "Adding profileFragment to content.");
+//                    ft.add(R.id.content,
+//                            profileFragment,
+////                            profileFragment.TAG);
+//                            "prof");
+//                }
                 break;
             case 3: //Sign Out
                 ParseUser.logOut();

@@ -17,6 +17,8 @@ import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 public class ProfileFragment extends Fragment {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     private TextView usernameTV;
     private TextView phonenoTV;
     private ListView historyLV;
