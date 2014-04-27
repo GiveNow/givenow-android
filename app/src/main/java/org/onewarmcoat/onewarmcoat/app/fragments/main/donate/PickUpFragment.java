@@ -3,6 +3,7 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 import android.app.FragmentManager;
 import android.location.Address;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -53,12 +53,19 @@ public class PickUpFragment extends MapHostingFragment implements
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.w(((Object) this).getClass().getSimpleName(), "onCreate!!!");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pick_up, container, false);
         ButterKnife.inject(this, v);
 
+        Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
         return v;
     }
 

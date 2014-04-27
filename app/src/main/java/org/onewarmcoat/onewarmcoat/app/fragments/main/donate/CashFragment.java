@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,10 +32,10 @@ import io.card.payment.CreditCard;
 
 public class CashFragment extends Fragment implements OnClickListener {
 
+    public static final int MY_SCAN_REQUEST_CODE = 01234;
+    private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
     private OnFragmentInteractionListener mListener;
     private EditText etDonateAmount;
-    private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
-    public static final int MY_SCAN_REQUEST_CODE = 01234;
     private Stripe stripe;
 
     public static CashFragment newInstance() {
@@ -60,7 +60,7 @@ public class CashFragment extends Fragment implements OnClickListener {
         b.setOnClickListener(this);
 
         etDonateAmount = (EditText) v.findViewById(R.id.et_donate_amount);
-
+        Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
         return v;
     }
 

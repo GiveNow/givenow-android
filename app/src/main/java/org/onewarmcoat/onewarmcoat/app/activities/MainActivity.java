@@ -45,10 +45,11 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
     private CharSequence mTitle;
     private String[] mDrawerTitles;
 
-    private Fragment mCurrentFragment;
-    private DonateFragment donateFragment;
-    private VolunteerFragment volunteerFragment;
-    private ProfileFragment profileFragment;
+    //    private Fragment mCurrentFragment;
+//    private DonateFragment donateFragment;
+//    private VolunteerFragment volunteerFragment;
+//    private ProfileFragment profileFragment;
+    private int mSelectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +61,14 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
         if (savedInstanceState == null) {
             //create fragments
             initializeFragments();
-            mCurrentFragment = null;
-            selectItem(0);
+//            mCurrentFragment = null;
+            mSelectedItem = 0;
+            selectItem(mSelectedItem);
         }
+//        else {
+//            mCurrentFragment = getFragmentManager().getFragment(savedInstanceState, "mCurrentFragment");
+
+//        }
 //        else {
 //            // restore fragments
 //            donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
@@ -70,6 +76,7 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //            profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
 //            Log.d("MainActivity", "Fragments restored");
 //        }
+
 
         //all API initialization should be done in some function
         //Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
@@ -88,7 +95,8 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //        getFragmentManager().putFragment(outState, "donateFragment", donateFragment);
 //        getFragmentManager().putFragment(outState, "volunteerFragment", volunteerFragment);
 //        getFragmentManager().putFragment(outState, "profileFragment", profileFragment);
-        getFragmentManager().putFragment(outState, "mCurrentFragment", mCurrentFragment);
+//        getFragmentManager().putFragment(outState, "mCurrentFragment", mCurrentFragment);
+        outState.putInt("mSelectedItem", mSelectedItem);
     }
 
     @Override
@@ -97,8 +105,10 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //        donateFragment = (DonateFragment) getFragmentManager().getFragment(inState, "donateFragment");
 //        volunteerFragment = (VolunteerFragment) getFragmentManager().getFragment(inState, "volunteerFragment");
 //        profileFragment = (ProfileFragment) getFragmentManager().getFragment(inState, "profileFragment");
-        mCurrentFragment = getFragmentManager().getFragment(inState, "mCurrentFragment");
-        Log.w("MainActivity", "onRestoreInstanceState Fragments restored");
+//        mCurrentFragment = getFragmentManager().getFragment(inState, "mCurrentFragment");
+//        Log.w("MainActivity", "onRestoreInstanceState Fragments restored");
+        mSelectedItem = inState.getInt("mSelectedItem");
+        selectItem(mSelectedItem);
     }
 
     private void initializeFragments() {
@@ -263,11 +273,8 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
     }
 
     private void selectItem(int position) {
-//        if (profileFragment == null) {
-//
-//        }
+        //exTODO: hide fragment in container, simplify code
 
-        //TODO: hide fragment in container, simplify code
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
@@ -275,17 +282,33 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //        if (fragmentInContainer != null) {
 //            ft.hide(fragmentInContainer);
 //            //after more than 1 fragment is added to the container, the wrong (maybe top most fragment)
-//            // becomes the one in the container??!
+//            // becomes the one in the container??! this might work if i use replace instead of add, but fuck?!?!
 //        }
 
-        if (mCurrentFragment == null) {
-            // do nothing?
-        } else {
-            ft.hide(mCurrentFragment);
-        }
+        // aaand this way of doing this is fucked too, because then i have to do allll the boookkeeping of keeping track of what's selected and whats the current fragment. WHAT A WASTE OF THREE HOURS
+//        if (mCurrentFragment == null) {
+//            // do nothing?
+//            Log.w(((Object) this).getClass().getSimpleName(), "selectItem: mCurrentFragment == null");
+//        } else {
+//            if (mSelectedItem == position) {
+//                Log.d(((Object) this).getClass().getSimpleName(), "Selected item is the same as requested position.");
+//            } else {
+//                ft.hide(mCurrentFragment);
+//            }
+//        }
 
+        //here is the retarded way of doing fragment hiding, in all its shitty glory. BUT IT WORKS
+        Fragment don = getFragmentManager().findFragmentByTag("don");
+        Fragment vol = getFragmentManager().findFragmentByTag("vol");
+        Fragment prof = getFragmentManager().findFragmentByTag("prof");
         switch (position) {
             case 0: //Donate
+                if (vol != null) {
+                    ft.hide(vol);
+                }
+                if (prof != null) {
+                    ft.hide(prof);
+                }
                 DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
                 if (donateFragment == null) {
                     donateFragment = DonateFragment.newInstance();
@@ -297,7 +320,8 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 } else {
                     ft.show(donateFragment);
                 }
-                mCurrentFragment = donateFragment;
+
+//                mCurrentFragment = donateFragment;
 //                if (donateFragment.isAdded()) {
 //                    ft.show(donateFragment);
 //                } else {
@@ -309,6 +333,12 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //                }
                 break;
             case 1: //Volunteer
+                if (don != null) {
+                    ft.hide(don);
+                }
+                if (prof != null) {
+                    ft.hide(prof);
+                }
                 VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
                 if (volunteerFragment == null) {
                     volunteerFragment = VolunteerFragment.newInstance();
@@ -320,7 +350,7 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 } else {
                     ft.show(volunteerFragment);
                 }
-                mCurrentFragment = volunteerFragment;
+//                mCurrentFragment = volunteerFragment;
 
 //                if (volunteerFragment.isAdded()) {
 //                    ft.show(volunteerFragment);
@@ -333,6 +363,12 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
 //                }
                 break;
             case 2: // Profile
+                if (vol != null) {
+                    ft.hide(vol);
+                }
+                if (don != null) {
+                    ft.hide(don);
+                }
                 ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
                 if (profileFragment == null) {
                     profileFragment = ProfileFragment.newInstance();
@@ -344,7 +380,7 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 } else {
                     ft.show(profileFragment);
                 }
-                mCurrentFragment = profileFragment;
+//                mCurrentFragment = profileFragment;
 
 //                if (profileFragment.isAdded()) {
 //                    ft.show(profileFragment);
@@ -367,6 +403,7 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 break;
         }
         ft.commit();
+        mSelectedItem = position;
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -378,7 +415,7 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
         ConfirmPickupLocationFragment confirmationPickupFrag = ConfirmPickupLocationFragment.newInstance(dTitle, dAddr);
 //        if (volunteerFragment.isAdded()) {
-        ft.hide(volunteerFragment);
+//        ft.hide(volunteerFragment);
 //        }
         ft.add(R.id.content, confirmationPickupFrag);
         ft.addToBackStack("markerdetail");

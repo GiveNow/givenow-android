@@ -2,7 +2,6 @@ package org.onewarmcoat.onewarmcoat.app.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.adapters.SmartFragmentStatePagerAdapter;
 
 import java.lang.reflect.Field;
 
@@ -30,7 +30,6 @@ public class PageSlidingTabStripFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public class PageSlidingTabStripFragment extends Fragment {
         }
     }
 
-    public class MyPagerAdapter extends FragmentPagerAdapter {
+    public class MyPagerAdapter extends SmartFragmentStatePagerAdapter {
 
         private String[] mtitles;
 

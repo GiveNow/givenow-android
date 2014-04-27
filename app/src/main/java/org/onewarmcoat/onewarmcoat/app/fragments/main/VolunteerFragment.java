@@ -32,8 +32,12 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pickUpRequestsFragment = PickUpRequestsFragment.newInstance();
-        dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
+        if (savedInstanceState == null) {
+            //create fragments
+            pickUpRequestsFragment = PickUpRequestsFragment.newInstance();
+            dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
+            Log.w("VolunteerFragment", "onCreate: Fragments created");
+        }
     }
 
     @Override
@@ -47,7 +51,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
                 frag = dropOffLocationsFragment;
                 break;
             default:
-                Log.d("VolunteerFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
+                Log.w("VolunteerFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
                 frag = SuperAwesomeCardFragment.newInstance(position);
                 break;
         }

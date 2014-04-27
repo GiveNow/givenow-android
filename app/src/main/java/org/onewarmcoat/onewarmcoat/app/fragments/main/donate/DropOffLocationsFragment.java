@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class DropOffLocationsFragment extends MapHostingFragment {
         View v = inflater.inflate(R.layout.fragment_drop_off, container, false);
         ButterKnife.inject(this, v);
 
+        Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
         return v;
     }
 
