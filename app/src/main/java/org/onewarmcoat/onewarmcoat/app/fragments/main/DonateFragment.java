@@ -52,6 +52,8 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 //            cashFragment = (CashFragment) getFragmentManager().findFragmentByTag("prof");
 //            Log.d("MainActivity", "Fragments restored");
 //        }
+//        setRetainInstance(true); // coupled with changing MyPagerAdapter to extent FragmentPagerAdapter, this seems to work differently but causes subfragment fuckery (they disappear on orientation change)
+
     }
 
     @Override
@@ -66,7 +68,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     @Override
     public void onActivityCreated(Bundle inState) {
         super.onActivityCreated(inState);
-        Log.d("DonateFragment", "onActivityCreated called.");
+        Log.w("DonateFragment", "onActivityCreated called.");
         if (inState != null) {
             // ain't reaching here for some reason
             pickupFragment = (PickUpFragment) getChildFragmentManager().getFragment(inState, "pickupFragment");
@@ -74,7 +76,6 @@ public class DonateFragment extends PageSlidingTabStripFragment {
             cashFragment = (CashFragment) getChildFragmentManager().getFragment(inState, "cashFragment");
             Log.w("DonateFragment", "onActivityCreated: Fragments restored");
         }
-
     }
 
     @Override
@@ -91,7 +92,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
                 frag = cashFragment;
                 break;
             default:
-                Log.d("DonateFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
+                Log.w("DonateFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
                 frag = SuperAwesomeCardFragment.newInstance(position);
                 break;
         }

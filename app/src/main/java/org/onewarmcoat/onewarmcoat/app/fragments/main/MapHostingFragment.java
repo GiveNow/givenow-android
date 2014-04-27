@@ -22,7 +22,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -55,15 +54,44 @@ public class MapHostingFragment extends Fragment
 
     @InjectView(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
+    private boolean mZoomToLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mLocationClient = new LocationClient(getActivity(), this, this);
-        mapFragment = GoogleMapFragment.newInstance();
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.flMapContainer, mapFragment, "MAP").commit();
+        if (savedInstanceState == null) {
+            mapFragment = GoogleMapFragment.newInstance();
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.flMapContainer, mapFragment, "MAP").commit();
+            mZoomToLocation = true;
+        } else {
+            Log.w(((Object) this).getClass().getSimpleName(), "loading framgent");
+//            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(savedInstanceState, "mapFragment");
+//            mapFragment = (GoogleMapFragment) getFragmentManager().getFragment(savedInstanceState, ((Object) this).getClass().getSimpleName());
+//            mapFragment = (GoogleMapFragment) getChildFragmentManager().findFragmentById(R.id.flMapContainer);
+//            mapFragment = savedInstanceState.getParcelable("mapFragment");
+            Log.w(((Object) this).getClass().getSimpleName(), "fragment loaded");
+            mZoomToLocation = false;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getChildFragmentManager().putFragment(outState, "mapFragment", mapFragment);
+        Log.w(((Object) this).getClass().getSimpleName(), "onSaveInstanceState: Fragments saved");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle inState) {
+        super.onActivityCreated(inState);
+        Log.w(((Object) this).getClass().getSimpleName(), "onActivityCreated called.");
+        if (inState != null) {
+            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(inState, "mapFragment");
+            Log.w(((Object) this).getClass().getSimpleName(), "onActivityCreated: Fragments restored");
+        }
     }
 
     @Override
@@ -90,7 +118,6 @@ public class MapHostingFragment extends Fragment
 
         mGoogleMap = map;
         if (mapFragment != null) {
-//            map = mapFragment.getMap();
             if (map != null) {
                 Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
                 map.setMyLocationEnabled(true);
@@ -188,19 +215,22 @@ public class MapHostingFragment extends Fragment
         // Display the connection status
         Location location = mLocationClient.getLastLocation();
         if (location != null) {
-            Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraPosition startCameraPosition = new CameraPosition.Builder()
-                    .bearing(0.0f)
-                    .target(new LatLng(0, 0)).build();
+//            CameraPosition startCameraPosition = new CameraPosition.Builder()
+//                    .bearing(0.0f)
+//                    .target(new LatLng(0, 0)).build();
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
             if (mGoogleMap != null) {
-                mGoogleMap.animateCamera(cameraUpdate);
+                if (mZoomToLocation) {
+                    mGoogleMap.animateCamera(cameraUpdate);
+                    mZoomToLocation = false;
+                }
             } else {
                 Toast.makeText(getActivity(), "map is null, can't move camera!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Current location was null, enable GPS!", Toast.LENGTH_SHORT).show();
         }
     }
 

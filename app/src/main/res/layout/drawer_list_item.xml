@@ -24,6 +24,6 @@
     android:paddingRight="16dp"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
 
-    android:textColor="#fff" />
+    android:textColor="#000" />
 
     <!--android:background="?android:attr/activatedBackgroundIndicator"-->
