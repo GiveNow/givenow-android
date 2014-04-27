@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment {
         String currentUsername = currentUser.getUsername();
         usernameTV.setText(currentUsername);*/
 
-        ParseObject.registerSubclass(Donation.class);
+//        ParseObject.registerSubclass(Donation.class);
         /*ParseQuery<Donation> query = ParseQuery.getQuery(Donation.class);
         query.whereEqualTo("donorId", "Alex");
         query.findInBackground(new FindCallback<Donation>() {

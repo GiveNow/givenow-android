@@ -17,6 +17,7 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 
 public class LoginActivity extends Activity {
@@ -29,6 +30,7 @@ public class LoginActivity extends Activity {
         //init Parse
         Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
         ParseObject.registerSubclass(Donation.class);
+        ParseObject.registerSubclass(PickupRequest.class);
 
         //register exception handler for crazy google maps bug that seems to crash occasionally and doesn't appear to have a solution
         //StackOverflow link: http://stackoverflow.com/questions/19624437/random-nullpointerexception-on-google-maps-api-v2/19627149#19627149

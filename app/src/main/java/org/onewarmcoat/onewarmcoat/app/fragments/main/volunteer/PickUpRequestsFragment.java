@@ -19,6 +19,7 @@ import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
 
@@ -65,19 +66,18 @@ public class PickUpRequestsFragment extends MapHostingFragment {
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
 
-        ParseQuery query = new ParseQuery("PickupRequest");
+        ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
-        query.findInBackground(new FindCallback() {
+        query.findInBackground(new FindCallback<PickupRequest>() {
             @Override
-            public void done(List list, ParseException e) {
-                for (Object item : list) {
-                    ParseObject it = (ParseObject) item;
-                    ParseGeoPoint geoPoint = it.getParseGeoPoint("location");
+            public void done(List<PickupRequest> list, ParseException e) {
+                for (PickupRequest item : list) {
+                    ParseGeoPoint geoPoint = item.getLocation();
                     MarkerOptions marker = new MarkerOptions();
                     LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
                     marker.position(ll);
-                    marker.title(it.getString("name"));
-                    marker.snippet(it.getString("address"));
+                    marker.title(item.getName());
+                    marker.snippet(item.getAddresss());
                     marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     //**create a HashMap <marker.getId(), item> so we can lookup pickupRequest details
                     map.addMarker(marker);
@@ -86,22 +86,22 @@ public class PickUpRequestsFragment extends MapHostingFragment {
         });
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                         /* in this callback function, when a marker on the map is
-                                         clicked, use fragment mgr to replace current fragment
-                                          */
-                                         @Override
-                                         public boolean onMarkerClick(Marker marker) {
-                                             String selectedTitle = marker.getTitle();
-                                             String selectedAddr = marker.getSnippet();
+                 /* in this callback function, when a marker on the map is
+                 clicked, use fragment mgr to replace current fragment
+                  */
+                 @Override
+                 public boolean onMarkerClick(Marker marker) {
+                     String selectedTitle = marker.getTitle();
+                     String selectedAddr = marker.getSnippet();
 
-                                             //pass value & type
-                                             //pass phone number
-                                             //**this is not going to work, save a HashMap <marker.getId(), item>
+                     //pass value & type
+                     //pass phone number
+                     //**this is not going to work, save a HashMap <marker.getId(), item>
 
-                                             listener.onMarkerClicked(selectedTitle, selectedAddr);
-                                             return true;
-                                         }
-                                     }
+                     listener.onMarkerClicked(selectedTitle, selectedAddr);
+                     return true;
+                 }
+            }
         );
 
     }

@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -149,16 +150,16 @@ public class PickUpFragment extends MapHostingFragment implements
 
         //TODO: do something with the name and phone number from the dialog fragment
         // phone number: get current
-        ParseObject pickupRequest = new ParseObject("PickupRequest"); //table name
-        pickupRequest.put("location", new ParseGeoPoint(pos.latitude, pos.longitude)); //guessing it is relatively easy to get
-        pickupRequest.put("pickupDate", new Date()); //obviously, this will just be now
-        pickupRequest.put("name", name);
-        pickupRequest.put("address", addrString);
-        pickupRequest.put("phoneNumber", phoneNumber);
-        pickupRequest.put("donor", ParseUser.getCurrentUser());
-        pickupRequest.put("donationType", "Coat");
-        pickupRequest.put("donationValue", 218);
-        pickupRequest.put("donation", "");
+        PickupRequest pickupRequest = new PickupRequest(
+            new ParseGeoPoint(pos.latitude, pos.longitude),
+            new Date(), //TODO: Fix this date
+            name,
+            addrString,
+            phoneNumber,
+            ParseUser.getCurrentUser(),
+            "Coat",
+            218
+        );
         pickupRequest.saveInBackground();
 
         Toast.makeText(getActivity(), "Pickup Confirmed! Saved " + name + " and " + phoneNumber + " to Parse!", Toast.LENGTH_LONG).show();
