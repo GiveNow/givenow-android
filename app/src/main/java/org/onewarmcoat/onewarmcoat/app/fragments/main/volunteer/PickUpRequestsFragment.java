@@ -95,7 +95,7 @@ public class PickUpRequestsFragment extends MapHostingFragment {
                                              String selectedAddr = marker.getSnippet();
 
                                              //pass value & type
-                                             //pass phone number    
+                                             //pass phone number
                                              //**this is not going to work, save a HashMap <marker.getId(), item>
 
                                              listener.onMarkerClicked(selectedTitle, selectedAddr);
