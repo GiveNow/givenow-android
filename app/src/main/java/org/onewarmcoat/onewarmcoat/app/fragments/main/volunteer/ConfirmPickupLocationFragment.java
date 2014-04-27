@@ -7,25 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
-public class ConfirmPickupLocationFragment extends Fragment {
-
+public class ConfirmPickupLocationFragment extends Fragment implements View.OnClickListener {
+    private static PickupRequest pickupRequest;
 
     public ConfirmPickupLocationFragment() {
 
     }
 
     // keeps name and addr in bundle 'memory' for retrieval later in onCreateView
-    public static ConfirmPickupLocationFragment newInstance(String name, String addr) {
+    public static ConfirmPickupLocationFragment newInstance(PickupRequest pickupRequest) {
         ConfirmPickupLocationFragment f = new ConfirmPickupLocationFragment();
         Bundle args = new Bundle();
-        args.putString("pickupName", name);
-        args.putString("pickupAddr", addr);
+        args.putSerializable("pickupRequest", pickupRequest);
         f.setArguments(args);
         return f;
     }
@@ -36,28 +37,41 @@ public class ConfirmPickupLocationFragment extends Fragment {
         /* name could be anything ("My Clothes", "Two Fur Coats", "Alex Tam", etc
          * name originated from scraped javascript
          */
-        String name = getArguments().getString("pickupName");
-        String addr = getArguments().getString("pickupAddr");
+        pickupRequest = (PickupRequest) getArguments().getSerializable("pickupRequest");
 
         TextView donorNameTV = (TextView) fragmentView.findViewById(R.id.donorNameTV);
-        donorNameTV.setText(name);
+        donorNameTV.setText(pickupRequest.getName());
 
         TextView donorAddressTV = (TextView) fragmentView.findViewById(R.id.donorAddressTV);
-        donorAddressTV.setText(addr);
+        donorAddressTV.setText(pickupRequest.getAddresss());
 
 
         Button driverConfirmationBtn = (Button) fragmentView.findViewById(R.id.driverConfirmationBtn);
-        driverConfirmationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // get anon donorID assoc with name or addr
-                //Donation row1 = new Donation("xZyy12", "Misc", 100);
-                //this is actually volunteer user . . . should be getting user object from the pickupRequest table, and putting in here
-                Donation row1 = new Donation(ParseUser.getCurrentUser(), "Misc", 100);
-                row1.saveInBackground();
-            }
-        });
+        driverConfirmationBtn.setOnClickListener(this);
         return fragmentView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.driverConfirmationBtn:
+                //this should be set when the volunteer confirms pickup
+//                Donation row1 = new Donation(pickupRequest.getDonor(), "Coat", 100);
+//                row1.saveInBackground();
+
+                //set the pending volunteer on the PickupRequest.  This marks the pickup request as pending, and not shown on the map to other volunteers
+                pickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
+                pickupRequest.saveInBackground();
+                Toast.makeText(getActivity(), "saved the current volunteer as pending", Toast.LENGTH_SHORT).show();
+
+                //launch congrats fragment, waiting for user to confirm
+
+                //need to re-draw pin in new color
+
+                //TODO: fix this, need to not use child fragments
+                getActivity().getFragmentManager().popBackStack();
+                break;
+        }
     }
 
     @Override

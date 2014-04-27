@@ -3,10 +3,13 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.IntentSender;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -137,7 +140,9 @@ public class MapHostingFragment extends Fragment
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = gcd.getFromLocation(pos.latitude, pos.longitude, 1);
+            if(isOnline()) {
+                addresses = gcd.getFromLocation(pos.latitude, pos.longitude, 1);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,6 +208,15 @@ public class MapHostingFragment extends Fragment
 
             return false;
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 
     /*

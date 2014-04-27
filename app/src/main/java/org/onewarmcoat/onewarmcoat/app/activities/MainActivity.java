@@ -26,7 +26,7 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
 
-public class MainActivity extends Activity implements PickUpRequestsFragment.OnMarkerClickListener {
+public class MainActivity extends Activity {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -402,24 +402,10 @@ public class MainActivity extends Activity implements PickUpRequestsFragment.OnM
                 Log.d("MainActivity", "default case hit in selectItem, weird position number!");
                 break;
         }
+        ft.addToBackStack(String.valueOf(position));
         ft.commit();
         mSelectedItem = position;
         mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    // dTitle and dAddr come from OnMarkerClick handler
-    @Override
-    public void onMarkerClicked(String dTitle, String dAddr) {
-        //TODO: move this to Volunteer Fragment, its rightful home
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-        ConfirmPickupLocationFragment confirmationPickupFrag = ConfirmPickupLocationFragment.newInstance(dTitle, dAddr);
-//        if (volunteerFragment.isAdded()) {
-//        ft.hide(volunteerFragment);
-//        }
-        ft.add(R.id.content, confirmationPickupFrag);
-        ft.addToBackStack("markerdetail");
-        ft.commit();
     }
 
     // The click listener for ListView in the navigation drawer

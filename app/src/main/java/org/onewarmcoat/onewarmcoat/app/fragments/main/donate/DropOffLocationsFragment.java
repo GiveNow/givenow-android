@@ -59,6 +59,7 @@ public class DropOffLocationsFragment extends MapHostingFragment {
                 ParseGeoPoint geoPoint = new ParseGeoPoint(pos.latitude, pos.longitude);
 
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("DropOffAgency");
+                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
                 // Restrict query to the 20 nearest locations so the phone doesn't explode
                 query.whereNear("agencyGeoLocation", geoPoint);
                 query.setLimit(20);
@@ -66,6 +67,10 @@ public class DropOffLocationsFragment extends MapHostingFragment {
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List list, ParseException e) {
+                        if(list == null){
+                            return;
+                        }
+
                         for (Object item : list) {
                             ParseObject it = (ParseObject) item;
                             ParseGeoPoint geoPoint = it.getParseGeoPoint("agencyGeoLocation");

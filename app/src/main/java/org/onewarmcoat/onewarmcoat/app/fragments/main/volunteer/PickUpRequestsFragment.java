@@ -2,35 +2,41 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.ConfirmPickupDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 
 
-public class PickUpRequestsFragment extends MapHostingFragment {
+public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>, ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>, ClusterManager.OnClusterItemClickListener<PickupRequest>, ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
-    private OnMarkerClickListener listener;
+//    private OnMarkerClickListener listener;
     private ClusterManager<PickupRequest> mClusterManager;
 
     public PickUpRequestsFragment() {
@@ -47,12 +53,6 @@ public class PickUpRequestsFragment extends MapHostingFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof OnMarkerClickListener) {
-            listener = (OnMarkerClickListener) activity;
-        } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implement MyListFragment.OnMarkerClickListener");
-        }
     }
 
     @Override
@@ -69,59 +69,91 @@ public class PickUpRequestsFragment extends MapHostingFragment {
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
 
-
         mClusterManager = new ClusterManager<PickupRequest>(getActivity(), map);
+        mClusterManager.setRenderer(new PickupRequestRenderer(map));
         map.setOnCameraChangeListener(mClusterManager);
+        map.setOnMarkerClickListener(mClusterManager);
+        map.setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
 
         ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
         query.findInBackground(new FindCallback<PickupRequest>() {
             @Override
             public void done(List<PickupRequest> list, ParseException e) {
+                if(list == null){
+                    return;
+                }
+
                 for (PickupRequest item : list) {
-                    ParseGeoPoint geoPoint = item.getLocation();
-                    MarkerOptions marker = new MarkerOptions();
-                    LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                    marker.position(ll);
-                    marker.title(item.getName());
-                    marker.snippet(item.getAddresss());
-                    marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                    //**create a HashMap <marker.getId(), item> so we can lookup pickupRequest details
-//                    map.addMarker(marker);
+                    //default clustering setup
                     mClusterManager.addItem(item);
+                    mClusterManager.cluster();
                 }
             }
         });
 
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                 /* in this callback function, when a marker on the map is
-                 clicked, use fragment mgr to replace current fragment
-                  */
-                 @Override
-                 public boolean onMarkerClick(Marker marker) {
-                     String selectedTitle = marker.getTitle();
-                     String selectedAddr = marker.getSnippet();
+    }
 
-                     //pass value & type
-                     //pass phone number
-                     //**this is not going to work, save a HashMap <marker.getId(), item>
+    @Override
+    public boolean onClusterClick(Cluster<PickupRequest> pickupRequestCluster) {
+        return false;
+    }
 
-                     listener.onMarkerClicked(selectedTitle, selectedAddr);
-
-
-
-//                     FragmentManager fm = getChildFragmentManager();
-//                     ConfirmPickupLocationFragment confirmPickupLocattionFragment = ConfirmPickupLocationFragment.newInstance(selectedTitle, selectedAddr);
-//                     confirmPickupLocattionFragment.(fm, "fragment_confirm_pickup_location");
-
-                     return true;
-                 }
-            }
-        );
+    @Override
+    public void onClusterInfoWindowClick(Cluster<PickupRequest> pickupRequestCluster) {
 
     }
 
-    public interface OnMarkerClickListener {
-        public void onMarkerClicked(String dTitle, String dAddr);
+    @Override
+    public boolean onClusterItemClick(PickupRequest pickupRequest) {
+        Toast.makeText(getActivity(), "clicked on a marker, need to launch child fragment here", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+
+        //this should just pass the pickupRequest
+        ConfirmPickupLocationFragment confirmPickupLocationFragment = ConfirmPickupLocationFragment.newInstance(pickupRequest);
+
+        ft.add(R.id.flMapContainer, confirmPickupLocationFragment);
+        ft.addToBackStack("pickupConfirmation");
+        ft.commit();
+    }
+
+    private class PickupRequestRenderer extends DefaultClusterRenderer<PickupRequest> {
+        private final IconGenerator mIconGenerator = new IconGenerator(getActivity());
+
+        public PickupRequestRenderer(GoogleMap map) {
+            super(getActivity(), map, mClusterManager);
+
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View customMarker = inflater.inflate(R.layout.custom_marker, null);
+            mIconGenerator.setContentView(customMarker);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(PickupRequest pickupRequest, MarkerOptions markerOptions) {
+            //draw marker with OneWarmCoat icon, and number of coats
+            Bitmap icon = mIconGenerator.makeIcon(String.valueOf(pickupRequest.getName().length()));
+
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+            //set the title to the users name, and snippet to be number of coats
+            markerOptions.title(pickupRequest.getName());
+            markerOptions.snippet("10 coats!");
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            // always be clustering
+            return cluster.getSize() > 2;
+        }
     }
 }

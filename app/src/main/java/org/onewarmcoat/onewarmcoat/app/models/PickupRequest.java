@@ -8,20 +8,21 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Data model for a post.
  */
 @ParseClassName("PickupRequest")
-public class PickupRequest extends ParseObject implements ClusterItem {
+public class PickupRequest extends ParseObject implements ClusterItem, Serializable {
     public PickupRequest() {
         // A default constructor is required.
     }
 
     //Full constructor, not sure if it will ever actually be used.
     public PickupRequest(ParseGeoPoint location, Date pickupDate, String name, String address, String phoneNumber,
-                         ParseUser donor, String donationType, double donationValue, Donation donation, ParseUser volunteer) {
+                         ParseUser donor, String donationType, double donationValue, ParseUser pendingVolunteer, Donation donation, ParseUser confirmedVolunteer) {
         super();
         setLocation(location);
         setPickupDate(pickupDate);
@@ -31,8 +32,9 @@ public class PickupRequest extends ParseObject implements ClusterItem {
         setDonor(donor);
         setDonationType(donationType);
         setDonationValue(donationValue);
+        setPendingVolunteer(pendingVolunteer);
         setDonation(donation);
-        setVolunteer(volunteer);
+        setconfirmedVolunteer(confirmedVolunteer);
     }
 
     //Normal use case, the donation and volunteer shouldn't exist.
@@ -66,7 +68,12 @@ public class PickupRequest extends ParseObject implements ClusterItem {
     }
 
     public String getName() {
-        return getString("name");
+        String name = getString("name");
+
+        if(name == null || name.isEmpty()){
+            name = "Anonymous";
+        }
+        return name;
     }
 
     public void setName(String value) {
@@ -113,6 +120,14 @@ public class PickupRequest extends ParseObject implements ClusterItem {
         put("donationValue", value);
     }
 
+    public ParseUser getPendingVolunteer() {
+        return getParseUser("pendingVolunteer");
+    }
+
+    public void setPendingVolunteer(ParseUser value) {
+        put("pendingVolunteer", value);
+    }
+
     public Donation getDonation() {
         return (Donation) getParseObject("donation");
     }
@@ -121,20 +136,23 @@ public class PickupRequest extends ParseObject implements ClusterItem {
         put("donation", donation);
     }
 
-    public ParseUser getVolunteer() {
-        return getParseUser("volunteer");
+    public ParseUser getConfirmedVolunteer() {
+        return getParseUser("confirmedVolunteer");
     }
 
-    public void setVolunteer(ParseUser value) {
-        put("volunteer", value);
+    public void setconfirmedVolunteer(ParseUser value) {
+        put("confirmedVolunteer", value);
     }
 
     public static ParseQuery<PickupRequest> getQuery() {
-        return ParseQuery.getQuery(PickupRequest.class);
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        return q;
     }
 
     public static ParseQuery<PickupRequest> getAllActiveRequests() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         return q.whereDoesNotExist("volunteer");
     }
 
