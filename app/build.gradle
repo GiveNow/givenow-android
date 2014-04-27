@@ -23,6 +23,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    applicationVariants.all { variant ->
+        // This is an annoying hack to get around the fact that the Gradle plugin does not support
+        // having libraries with different minSdkVersions. Play Services has a min version of 9 (Gingerbread)
+        // but Android Maps Utils supports 8 (Froyo) still
+        variant.processManifest.doFirst {
+            File manifestFile = file("${buildDir}/exploded-aar/com.google.maps.android/android-maps-utils/0.3/AndroidManifest.xml")
+            if (manifestFile.exists()) {
+                println("Replacing minSdkVersion in Android Maps Utils")
+                String content = manifestFile.getText('UTF-8')
+                content = content.replaceAll(/minSdkVersion="8"/, 'minSdkVersion=\"9\"')
+                manifestFile.write(content, 'UTF-8')
+                println(content)
+            }
+        }
+    }
 }
 
 dependencies {
@@ -32,6 +48,8 @@ dependencies {
 
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.jakewharton:butterknife:5.0.+'
+    compile 'com.google.maps.android:android-maps-utils:0.3+'
+    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/Parse-1.4.3/Parse-1.4.3.jar')

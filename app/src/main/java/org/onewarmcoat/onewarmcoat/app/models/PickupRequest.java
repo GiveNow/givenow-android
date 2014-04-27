@@ -1,5 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.models;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -12,7 +14,7 @@ import java.util.Date;
  * Data model for a post.
  */
 @ParseClassName("PickupRequest")
-public class PickupRequest extends ParseObject {
+public class PickupRequest extends ParseObject implements ClusterItem {
     public PickupRequest() {
         // A default constructor is required.
     }
@@ -135,4 +137,13 @@ public class PickupRequest extends ParseObject {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
         return q.whereDoesNotExist("volunteer");
     }
+
+    @Override
+    public LatLng getPosition() {
+        ParseGeoPoint loc = getLocation();
+        LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
+        return ll;
+    }
+
+
 }

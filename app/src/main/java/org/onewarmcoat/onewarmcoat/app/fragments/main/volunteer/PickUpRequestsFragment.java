@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -29,6 +31,7 @@ import butterknife.ButterKnife;
 public class PickUpRequestsFragment extends MapHostingFragment {
 
     private OnMarkerClickListener listener;
+    private ClusterManager<PickupRequest> mClusterManager;
 
     public PickUpRequestsFragment() {
         // Required empty public constructor
@@ -66,6 +69,10 @@ public class PickUpRequestsFragment extends MapHostingFragment {
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
 
+
+        mClusterManager = new ClusterManager<PickupRequest>(getActivity(), map);
+        map.setOnCameraChangeListener(mClusterManager);
+
         ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
         query.findInBackground(new FindCallback<PickupRequest>() {
@@ -80,7 +87,8 @@ public class PickUpRequestsFragment extends MapHostingFragment {
                     marker.snippet(item.getAddresss());
                     marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     //**create a HashMap <marker.getId(), item> so we can lookup pickupRequest details
-                    map.addMarker(marker);
+//                    map.addMarker(marker);
+                    mClusterManager.addItem(item);
                 }
             }
         });
@@ -99,6 +107,13 @@ public class PickUpRequestsFragment extends MapHostingFragment {
                      //**this is not going to work, save a HashMap <marker.getId(), item>
 
                      listener.onMarkerClicked(selectedTitle, selectedAddr);
+
+
+
+//                     FragmentManager fm = getChildFragmentManager();
+//                     ConfirmPickupLocationFragment confirmPickupLocattionFragment = ConfirmPickupLocationFragment.newInstance(selectedTitle, selectedAddr);
+//                     confirmPickupLocattionFragment.(fm, "fragment_confirm_pickup_location");
+
                      return true;
                  }
             }
