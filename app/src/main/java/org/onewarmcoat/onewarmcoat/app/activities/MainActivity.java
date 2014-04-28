@@ -23,8 +23,6 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
 
 public class MainActivity extends Activity {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -44,11 +42,6 @@ public class MainActivity extends Activity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mDrawerTitles;
-
-    //    private Fragment mCurrentFragment;
-//    private DonateFragment donateFragment;
-//    private VolunteerFragment volunteerFragment;
-//    private ProfileFragment profileFragment;
     private int mSelectedItem;
 
     @Override
@@ -70,40 +63,20 @@ public class MainActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        getFragmentManager().putFragment(outState, "donateFragment", donateFragment);
-//        getFragmentManager().putFragment(outState, "volunteerFragment", volunteerFragment);
-//        getFragmentManager().putFragment(outState, "profileFragment", profileFragment);
-//        getFragmentManager().putFragment(outState, "mCurrentFragment", mCurrentFragment);
         outState.putInt("mSelectedItem", mSelectedItem);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle inState) {
         super.onRestoreInstanceState(inState);
-//        donateFragment = (DonateFragment) getFragmentManager().getFragment(inState, "donateFragment");
-//        volunteerFragment = (VolunteerFragment) getFragmentManager().getFragment(inState, "volunteerFragment");
-//        profileFragment = (ProfileFragment) getFragmentManager().getFragment(inState, "profileFragment");
-//        mCurrentFragment = getFragmentManager().getFragment(inState, "mCurrentFragment");
-//        Log.w("MainActivity", "onRestoreInstanceState Fragments restored");
         mSelectedItem = inState.getInt("mSelectedItem");
         selectItem(mSelectedItem);
     }
 
     private void initializeFragments() {
-//        donateFragment = DonateFragment.newInstance();
-//        volunteerFragment = VolunteerFragment.newInstance();
-//        profileFragment = ProfileFragment.newInstance();
     }
 
     private void initializeDrawer() {
-        //        mNavigationDrawerFragment = (NavigationDrawerFragment)
-//                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-//        mTitle = getTitle();
-//
-//        // Set up the drawer.
-//        mNavigationDrawerFragment.setUp(
-//                R.id.navigation_drawer,
-//                (DrawerLayout) findViewById(R.id.drawer_layout));
         mTitle = mDrawerTitle = getTitle();
         mDrawerTitles = getResources().getStringArray(R.array.drawer_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -151,64 +124,9 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    //    @Override
-//    public void onNavigationDrawerItemSelected(int position) {
-//        // update the main content by replacing fragments
-//        FragmentManager fragmentManager = getFragmentManager();
-//
-////        if(position == 1){
-////            fragmentManager.beginTransaction()
-////                    .replace(R.id.container, new DonateFragment())
-////                    .commit();
-////        }else {
-////            fragmentManager.beginTransaction()
-////                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-////                    .commit();
-////        }
-//    }
-
-//    public void onSectionAttached(int number) {
-//        switch (number) {
-//            case 1:
-//                mTitle = getString(R.string.title_volunteer);
-//                break;
-//            case 2:
-//                mTitle = getString(R.string.title_donate);
-//                break;
-//            case 3:
-//                mTitle = getString(R.string.title_profile);
-//                break;
-//            case 4:
-//                mTitle = getString(R.string.title_sign_out);
-//                break;
-//        }
-//    }
-
-//    public void restoreActionBar() {
-//        ActionBar actionBar = getActionBar();
-//
-////        //in donor, create tabs
-////        if(mTitle == getString(R.string.title_donate)){
-////
-////        }else {
-////            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-////        }
-//
-//        actionBar.setDisplayShowTitleEnabled(true);
-//        actionBar.setTitle(mTitle);
-//    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-//            // Only show items in the action bar relevant to this screen
-//            // if the drawer is not showing. Otherwise, let the drawer
-//            // decide what to show in the action bar.
-//            getMenuInflater().inflate(R.menu.main, menu);
-//            restoreActionBar();
-//            return true;
-//        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -225,12 +143,6 @@ public class MainActivity extends Activity {
                 }
                 break;
             }
-
-//            case R.id.action_contact:
-            // QuickContactFragment dialog = new QuickContactFragment();
-            // dialog.show(getSupportFragmentManager(), "QuickContactFragment");
-            // return true;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -256,25 +168,6 @@ public class MainActivity extends Activity {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
-//        Fragment fragmentInContainer = getFragmentManager().findFragmentById(R.id.content);
-//        if (fragmentInContainer != null) {
-//            ft.hide(fragmentInContainer);
-//            //after more than 1 fragment is added to the container, the wrong (maybe top most fragment)
-//            // becomes the one in the container??! this might work if i use replace instead of add, but fuck?!?!
-//        }
-
-        // aaand this way of doing this is fucked too, because then i have to do allll the boookkeeping of keeping track of what's selected and whats the current fragment. WHAT A WASTE OF THREE HOURS
-//        if (mCurrentFragment == null) {
-//            // do nothing?
-//            Log.w(((Object) this).getClass().getSimpleName(), "selectItem: mCurrentFragment == null");
-//        } else {
-//            if (mSelectedItem == position) {
-//                Log.d(((Object) this).getClass().getSimpleName(), "Selected item is the same as requested position.");
-//            } else {
-//                ft.hide(mCurrentFragment);
-//            }
-//        }
-
         //here is the retarded way of doing fragment hiding, in all its shitty glory. BUT IT WORKS
         Fragment don = getFragmentManager().findFragmentByTag("don");
         Fragment vol = getFragmentManager().findFragmentByTag("vol");
@@ -298,17 +191,6 @@ public class MainActivity extends Activity {
                 } else {
                     ft.show(donateFragment);
                 }
-
-//                mCurrentFragment = donateFragment;
-//                if (donateFragment.isAdded()) {
-//                    ft.show(donateFragment);
-//                } else {
-//                    Log.d("MainActivity", "Adding donateFragment to content.");
-//                    ft.add(R.id.content,
-//                            donateFragment,
-////                            donateFragment.TAG);
-//                            "don");
-//                }
                 break;
             case 1: //Volunteer
                 if (don != null) {
@@ -328,17 +210,6 @@ public class MainActivity extends Activity {
                 } else {
                     ft.show(volunteerFragment);
                 }
-//                mCurrentFragment = volunteerFragment;
-
-//                if (volunteerFragment.isAdded()) {
-//                    ft.show(volunteerFragment);
-//                } else {
-//                    Log.d("MainActivity", "Adding volunteerFragment to content.");
-//                    ft.add(R.id.content,
-//                            volunteerFragment,
-////                            volunteerFragment.TAG);
-//                            "vol");
-//                }
                 break;
             case 2: // Profile
                 if (vol != null) {
@@ -358,17 +229,6 @@ public class MainActivity extends Activity {
                 } else {
                     ft.show(profileFragment);
                 }
-//                mCurrentFragment = profileFragment;
-
-//                if (profileFragment.isAdded()) {
-//                    ft.show(profileFragment);
-//                } else {
-//                    Log.d("MainActivity", "Adding profileFragment to content.");
-//                    ft.add(R.id.content,
-//                            profileFragment,
-////                            profileFragment.TAG);
-//                            "prof");
-//                }
                 break;
             case 3: //Sign Out
                 ParseUser.logOut();

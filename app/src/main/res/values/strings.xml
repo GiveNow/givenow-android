@@ -23,6 +23,9 @@
     <string name="login_label">Login Anonymously</string>
     <string name="confirm_pickup">Are you sure you want to pick up here?</string>
     <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="donation_history">Donation History</string>
+    <string name="pickup_history">Pickup History</string>
 
 
 </resources>

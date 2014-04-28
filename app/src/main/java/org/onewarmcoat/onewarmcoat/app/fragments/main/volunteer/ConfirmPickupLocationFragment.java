@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class ConfirmPickupLocationFragment extends Fragment implements View.OnClickListener {
@@ -69,6 +68,10 @@ public class ConfirmPickupLocationFragment extends Fragment implements View.OnCl
                 //need to re-draw pin in new color
 
                 //TODO: fix this, need to not use child fragments
+                getActivity().getFragmentManager().popBackStack();
+                break;
+
+            case R.id.cancelBtn:
                 getActivity().getFragmentManager().popBackStack();
                 break;
         }

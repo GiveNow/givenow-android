@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -25,10 +23,8 @@ import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.ConfirmPickupDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -36,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>, ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>, ClusterManager.OnClusterItemClickListener<PickupRequest>, ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
-//    private OnMarkerClickListener listener;
+    //    private OnMarkerClickListener listener;
     private ClusterManager<PickupRequest> mClusterManager;
 
     public PickUpRequestsFragment() {
@@ -84,7 +80,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
         query.findInBackground(new FindCallback<PickupRequest>() {
             @Override
             public void done(List<PickupRequest> list, ParseException e) {
-                if(list == null){
+                if (list == null) {
                     return;
                 }
 
@@ -111,6 +107,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     @Override
     public boolean onClusterItemClick(PickupRequest pickupRequest) {
         Toast.makeText(getActivity(), "clicked on a marker, need to launch child fragment here", Toast.LENGTH_SHORT).show();
+
         return false;
     }
 

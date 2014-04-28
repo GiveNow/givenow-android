@@ -5,21 +5,53 @@
     android:layout_height="match_parent"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment">
 
+    <ImageView
+        android:id="@+id/silhouette"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/default_profile" />
+
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/silhouette" />
 
     <TextView
         android:id="@+id/phoneno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username" />
+        android:layout_below="@id/username"
+
+        android:layout_toRightOf="@id/silhouette" />
+
+    <TextView
+        android:id="@+id/donationsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/silhouette"
+        android:text="@string/donation_history"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/donations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/phoneno"></ListView>
+        android:layout_below="@id/donationsTitle"
+        android:layout_marginBottom="50dp" />
+
+    <TextView
+        android:id="@+id/pickupsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/donations"
+        android:text="@string/pickup_history"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/pickups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pickupsTitle" />
 
 </RelativeLayout>

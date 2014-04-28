@@ -4,26 +4,31 @@
     android:layout_height="fill_parent"
     android:layout_centerVertical="true">
 
-
     <TextView
-        android:id="@+id/donationDate"
+        android:id="@+id/pickupDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
 
     <TextView
-        android:id="@+id/donationType"
+        android:id="@+id/pickupAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/donationDate" />
+        android:layout_toRightOf="@id/pickupDate" />
 
     <TextView
-        android:id="@+id/donationValue"
+        android:id="@+id/numItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/donationType" />
+        android:layout_toRightOf="@id/pickupAddress" />
+
+    <TextView
+        android:id="@+id/itemType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/numItems" />
 
 </RelativeLayout>

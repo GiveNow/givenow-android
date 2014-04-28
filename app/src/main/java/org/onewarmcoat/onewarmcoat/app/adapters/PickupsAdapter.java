@@ -16,20 +16,20 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class DonationsAdapter extends ParseQueryAdapter {
+public class PickupsAdapter extends ParseQueryAdapter {
 
     ParseUser foundUser;
 
-    //public DonationsAdapter(Context context, final ParseUser donor) {
-    public DonationsAdapter(Context context) {
+    public PickupsAdapter(Context context) {
+
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
 
-                ParseQuery<ParseObject> query = new ParseQuery("Donation");
+                ParseQuery<ParseObject> query = new ParseQuery("PickupRequest");
                 //REPLACE HARDCODED donorID LATER
                 //query.whereEqualTo("donor", "Alex");
                 String currentUsername = ParseUser.getCurrentUser().getUsername();
-                query.whereEqualTo("donor", ParseUser.getCurrentUser());
+                query.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
                 //query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 return query;
             }
@@ -39,26 +39,29 @@ public class DonationsAdapter extends ParseQueryAdapter {
     @Override
     public View getItemView(ParseObject object, View v, ViewGroup parent) {
         if (v == null) {
-            v = View.inflate(getContext(), R.layout.history_item, null);
+            v = View.inflate(getContext(), R.layout.pickup_history_item, null);
         }
 
         super.getItemView(object, v, parent);
 
-        TextView donationDateView = (TextView) v.findViewById(R.id.donationDate);
-
+        TextView pickupDateView = (TextView) v.findViewById(R.id.pickupDate);
         Date d = object.getCreatedAt();
         String dateStr = DateFormat.getInstance().format(d);
         //String dateStr = object.getString("createdAt");
-        donationDateView.setText(dateStr);
+        pickupDateView.setText(dateStr);
 
+        TextView pickupAddressView = (TextView) v.findViewById(R.id.pickupAddress);
+        String pickupAddress = object.getString("address");
+        pickupAddressView.setText(pickupAddress);
 
-        TextView donationTypeView = (TextView) v.findViewById(R.id.donationType);
-        String donationType = object.getString("donationType");
-        donationTypeView.setText(donationType);
+        TextView numItemsView = (TextView) v.findViewById(R.id.numItems);
+        Number numItems = object.getNumber("donationValue");
+        numItemsView.setText(numItems.toString());
 
-        TextView donationValueView = (TextView) v.findViewById(R.id.donationValue);
-        Number donationVal = object.getNumber("donationValue");
-        donationValueView.setText(donationVal.toString());
+        TextView itemTypeView = (TextView) v.findViewById(R.id.itemType);
+        String itemType = object.getString("donationType");
+        numItemsView.setText(itemType.toString());
+
 
         return v;
     }
