@@ -2,33 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_centerVertical="true">
+    android:layout_centerVertical="true"
+    android:layout_weight="7">
+
 
     <TextView
         android:id="@+id/pickupDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_weight="2"
+        android:gravity="left"
+        android:padding="2dip" />
 
     <TextView
         android:id="@+id/pickupAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/pickupDate" />
+        android:layout_toRightOf="@id/pickupDate"
+        android:layout_weight="3"
+        android:gravity="left"
+        android:padding="2dip" />
 
     <TextView
         android:id="@+id/numItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/pickupAddress" />
+        android:layout_toRightOf="@id/pickupAddress"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:padding="2dip" />
 
     <TextView
         android:id="@+id/itemType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/numItems" />
+        android:layout_toRightOf="@id/numItems"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:padding="2dip" />
 
 </RelativeLayout>

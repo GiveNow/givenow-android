@@ -56,11 +56,12 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
         TextView numItemsView = (TextView) v.findViewById(R.id.numItems);
         Number numItems = object.getNumber("donationValue");
-        numItemsView.setText(numItems.toString());
+        String numItemsStr = numItems.toString();
+        numItemsView.setText(numItemsStr);
 
         TextView itemTypeView = (TextView) v.findViewById(R.id.itemType);
         String itemType = object.getString("donationType");
-        numItemsView.setText(itemType.toString());
+        itemTypeView.setText(itemType.toString());
 
 
         return v;
