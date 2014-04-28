@@ -24,6 +24,7 @@ import com.stripe.android.model.Token;
 import com.stripe.exception.AuthenticationException;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 
 import java.util.HashMap;
 
@@ -97,9 +98,8 @@ public class CashFragment extends Fragment implements OnClickListener {
             case R.id.btn_donate:
                 if(validateInput()) {
                     //check if user has a Stripe token - Parse query
-                    if(false){
-                        Token token = null; //token back from Parse
-                        chargeStripeToken(token);
+                    if(CharityUserHelper.hasStripeCustomerId()){
+                        chargeStripeCustomer();
                     }else{
                         //user doesn't have a stored Stripe token
                         //pop Card.io dialog
@@ -222,7 +222,29 @@ public class CashFragment extends Fragment implements OnClickListener {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("token", token.getId());
         params.put("amount", etDonateAmount.getText().toString());
+
+        params.put("user_name", CharityUserHelper.getName());
         //we also ideally want a name - profile data, which has a default value
+
+        //need to call a different function to create new stripe customer (if we have authority/info to do so)
+        ParseCloud.callFunctionInBackground("stripe_charge", params, new FunctionCallback<String>() {
+            @Override
+            public void done(String stripeCustomerId, ParseException e) {
+                if (e == null) {
+//                    Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+                    CharityUserHelper.setStripeCustomerId(stripeCustomerId);
+
+                    Toast.makeText(getActivity(), CharityUserHelper.getStripeCustomerId(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void chargeStripeCustomer() {
+        // Send customer ID to server to charge
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("stripeCustomer", CharityUserHelper.getStripeCustomerId());
+        params.put("amount", etDonateAmount.getText().toString());
 
         //need to call a different function to create new stripe customer (if we have authority/info to do so)
         ParseCloud.callFunctionInBackground("stripe_charge_customer", params, new FunctionCallback<String>() {
