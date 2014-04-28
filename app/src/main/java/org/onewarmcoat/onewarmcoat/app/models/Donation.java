@@ -6,6 +6,10 @@ import com.parse.ParseUser;
 
 @ParseClassName("Donation")
 public class Donation extends ParseObject {
+    public static final String CASH = "Cash";
+    public static final String COAT = "Coat";
+    public static final String Misc = "Misc";
+
     public Donation() {
         super();
     }

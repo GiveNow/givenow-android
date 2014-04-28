@@ -56,7 +56,7 @@ public class ConfirmPickupLocationFragment extends Fragment implements View.OnCl
         switch (v.getId()) {
             case R.id.driverConfirmationBtn:
                 //this should be set when the volunteer confirms pickup
-//                Donation row1 = new Donation(pickupRequest.getDonor(), "Coat", 100);
+//                Donation row1 = new Donation(pickupRequest.getDonor(), Donation.COAT, 100);
 //                row1.saveInBackground();
 
                 //set the pending volunteer on the PickupRequest.  This marks the pickup request as pending, and not shown on the map to other volunteers

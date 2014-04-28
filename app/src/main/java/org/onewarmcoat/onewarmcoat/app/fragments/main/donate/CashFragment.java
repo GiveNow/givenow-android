@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
@@ -25,6 +26,7 @@ import com.stripe.exception.AuthenticationException;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 import java.util.HashMap;
 
@@ -37,7 +39,6 @@ public class CashFragment extends Fragment implements OnClickListener {
     private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
     private OnFragmentInteractionListener mListener;
     private EditText etDonateAmount;
-    private Stripe stripe;
 
     public static CashFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
@@ -221,7 +222,8 @@ public class CashFragment extends Fragment implements OnClickListener {
         // Send token to server to charge
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("token", token.getId());
-        params.put("amount", etDonateAmount.getText().toString());
+        final String amount = etDonateAmount.getText().toString();
+        params.put("amount", amount);
 
         params.put("user_name", CharityUserHelper.getName());
         //we also ideally want a name - profile data, which has a default value
@@ -235,6 +237,8 @@ public class CashFragment extends Fragment implements OnClickListener {
                     CharityUserHelper.setStripeCustomerId(stripeCustomerId);
 
                     Toast.makeText(getActivity(), CharityUserHelper.getStripeCustomerId(), Toast.LENGTH_LONG).show();
+
+                    storeDonation(amount);
                 }
             }
         });
@@ -244,7 +248,8 @@ public class CashFragment extends Fragment implements OnClickListener {
         // Send customer ID to server to charge
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("stripeCustomer", CharityUserHelper.getStripeCustomerId());
-        params.put("amount", etDonateAmount.getText().toString());
+        final String amount = etDonateAmount.getText().toString();
+        params.put("amount", amount);
 
         //need to call a different function to create new stripe customer (if we have authority/info to do so)
         ParseCloud.callFunctionInBackground("stripe_charge_customer", params, new FunctionCallback<String>() {
@@ -252,9 +257,16 @@ public class CashFragment extends Fragment implements OnClickListener {
             public void done(String result, ParseException e) {
                 if (e == null) {
                     Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
+
+                    storeDonation(amount);
                 }
             }
         });
+    }
+
+    private void storeDonation(String amount){
+        Donation donation = new Donation(ParseUser.getCurrentUser(), Donation.CASH, Integer.parseInt(amount));
+        donation.saveInBackground();
     }
 
 
