@@ -16,7 +16,7 @@
     <string name="donate_cash_button">Donate by Credit Card</string>
     <string name="donate_cash_motivational"> . . . arbitrary motivational message</string>
     <string name="set_pickup_location_label">Set Pickup Location</string>
-    <string name="submit_pickup_label">Schedule Pickup!</string>
+    <string name="submit_pickup_label">Submit Pickup Request</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_greeting">Login anonymously using your phone number</string>
     <string name="hello_world">Hello world!</string>

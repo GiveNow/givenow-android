@@ -38,17 +38,28 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     //Normal use case, the donation and volunteer shouldn't exist.
-    public PickupRequest(ParseGeoPoint location, Date pickupDate, String name, String address, String phoneNumber,
+    public PickupRequest(ParseGeoPoint location, String name, String address, String phoneNumber,
                          ParseUser donor, String donationType, double donationValue) {
         super();
         setLocation(location);
-        setPickupDate(pickupDate);
         setName(name);
         setAddress(address);
         setPhoneNumber(phoneNumber);
         setDonor(donor);
         setDonationType(donationType);
         setDonationValue(donationValue);
+    }
+
+    public static ParseQuery<PickupRequest> getQuery() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        return q;
+    }
+
+    public static ParseQuery<PickupRequest> getAllActiveRequests() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        return q.whereDoesNotExist("volunteer");
     }
 
     public ParseGeoPoint getLocation() {
@@ -70,7 +81,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public String getName() {
         String name = getString("name");
 
-        if(name == null || name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             name = "Anonymous";
         }
         return name;
@@ -142,18 +153,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public void setconfirmedVolunteer(ParseUser value) {
         put("confirmedVolunteer", value);
-    }
-
-    public static ParseQuery<PickupRequest> getQuery() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        return q;
-    }
-
-    public static ParseQuery<PickupRequest> getAllActiveRequests() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        return q.whereDoesNotExist("volunteer");
     }
 
     @Override

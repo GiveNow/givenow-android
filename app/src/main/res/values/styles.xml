@@ -9,4 +9,7 @@
     <style name="SpinnerItem_example" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:textColor">#000000</item>
     </style>
+
+    <color name="shadow_dark">#5000</color>
+    <color name="shadow_light">#0000</color>
 </resources>

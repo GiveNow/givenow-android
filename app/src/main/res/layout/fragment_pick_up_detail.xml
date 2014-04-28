@@ -1,0 +1,272 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpDetailFragment">
+
+    <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+        android:id="@+id/rlAddressContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/shadow_light">
+
+        <LinearLayout
+            android:id="@+id/llConfirmInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="#ffdde8ed"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivInfo"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/iconmonstr_info_6_icon_256" />
+
+            <TextView
+                android:id="@+id/tvInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:text="Please verify your address is correct."
+                android:textAllCaps="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ff266e9f"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAddress"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/llConfirmInfo"
+            android:background="#ffdde8ed"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivAddress"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/iconmonstr_location_17_icon_256" />
+
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:inputType="textPostalAddress"
+                android:textColor="#ff266e9f" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="5dp"
+            android:layout_below="@id/llAddress"
+            android:background="@drawable/drop_shadow" />
+    </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/btnSubmitPickup"
+        android:layout_below="@+id/rlAddressContainer"
+        android:layout_marginTop="-5dp"
+        android:orientation="vertical">
+
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/imageView2"-->
+        <!--android:layout_below="@+id/rlAddressContainer"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_weight="1"-->
+        <!--android:src="@drawable/transparent_rect"-->
+        <!--android:scaleType="matrix"-->
+        <!--android:adjustViewBounds="false"-->
+        <!--android:cropToPadding="false" />        -->
+        <org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView
+            android:id="@+id/agrv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+            android:id="@+id/rlPickupDetailContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginLeft="0dp"
+            android:minHeight="100dp">
+
+            <RelativeLayout
+                android:id="@+id/rlInnerPickupDetailContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="110dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#ffdde8ed">
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <RelativeLayout
+                        android:id="@+id/rlNumberCoats"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#ffffffff"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvNumCoats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:text="# of coats"
+                            android:textAllCaps="true"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#ff266e9f"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/llNumCoatsValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true">
+
+                            <TextView
+                                android:id="@+id/tvNumCoatsValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="0"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="#ff266e9f" />
+
+                            <ImageView
+                                android:id="@+id/ivNumberPickerEdit"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="0"
+                                android:padding="8dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/iconmonstr_edit_icon_256" />
+
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlValueContainer"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="1dp"
+                        android:layout_weight="1"
+                        android:background="#ffffffff"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:text="Estimated Value"
+                            android:textAllCaps="true"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#ff266e9f"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/llValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true">
+
+                            <TextView
+                                android:id="@+id/tvDollar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:text="$"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="#ff818181" />
+
+                            <EditText
+                                android:id="@+id/etEstimatedValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:hint="Optional"
+                                android:inputType="numberDecimal"
+                                android:orientation="horizontal"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textColor="#ff266e9f" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvValueExplainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:text="For your records"
+                            android:textAllCaps="true"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#ff868686"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSubmitPickup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#ff246d9e"
+        android:text="@string/submit_pickup_label"
+        android:textColor="#ffffffff" />
+
+
+</RelativeLayout>
