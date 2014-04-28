@@ -234,7 +234,7 @@ public class MapHostingFragment extends Fragment
 //            CameraPosition startCameraPosition = new CameraPosition.Builder()
 //                    .bearing(0.0f)
 //                    .target(new LatLng(0, 0)).build();
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
             if (mGoogleMap != null) {
                 if (mZoomToLocation) {
                     mGoogleMap.animateCamera(cameraUpdate);

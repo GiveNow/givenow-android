@@ -1,45 +1,32 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
-import android.app.FragmentManager;
+import android.app.Activity;
 import android.location.Address;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
-import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class PickUpFragment extends MapHostingFragment implements
-        ConfirmPickupDialogFragment.ConfirmPickupDialogListener {
+public class PickUpFragment extends MapHostingFragment {
 
     @InjectView(R.id.etAddress)
     EditText etAddress;
-    @InjectView(R.id.rlPickupDetailContainer)
-    RelativeLayout rlPickupDetailContainer;
-    @InjectView(R.id.spinnerPickupDates)
-    Spinner spinnerPickupDates;
+
+    private PickUpDetailInteractionListener mListener;
 
     public PickUpFragment() {
         // Required empty public constructor
@@ -73,8 +60,6 @@ public class PickUpFragment extends MapHostingFragment implements
     public void onMapReady(GoogleMap map) {
         super.onMapReady(map);
         mGoogleMap.getUiSettings().setCompassEnabled(false);
-        //TODO: should we disable zoom controls? i only disabled them because its not nice to have them partially obscured by the pickup details overlay.
-        //mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
 
         mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -83,94 +68,74 @@ public class PickUpFragment extends MapHostingFragment implements
                     // save cpu cycles, only recalculate if we're not pressed, ie the user lifted their finger off
                     Address address = reverseGeocodeAddress();
                     if (address != null) {
-                        etAddress.setText(address.getAddressLine(0));
+                        setAddressFieldText(address.getAddressLine(0));
+                        mListener.updateAddress(address);
                     }
                 } else {
-                    rlPickupDetailContainer.setVisibility(View.GONE);
+                    //can remove the detail fragment here, but per uber UX we keep it displayed
                 }
-                //hacky way to make the map resize itself above the button
-//                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.MATCH_PARENT);
-//                lp.addRule(RelativeLayout.ABOVE, R.id.btnSetPickup);
-//                flMapLayout.setLayoutParams(lp);
             }
         });
 
     }
 
+    public void setAddressFieldText(String text) {
+        etAddress.setText(text);
+    }
+
     @OnClick(R.id.btnSetPickup)
     protected void onSetPickup(View view) {
         Address address = reverseGeocodeAddress();
+
+        String addrString = "";
         if (address != null) {
-            etAddress.setText(address.getAddressLine(0));
+            addrString = address.getAddressLine(0);
+            setAddressFieldText(addrString);
         }
+        LatLng pos = mGoogleMap.getCameraPosition().target;
 
         // zoom in map
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f));
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
+            @Override
+            public void onFinish() {
 
-        //show date layout
-        //hacky way to make the map resize itself above the detail layout
-//        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT);
-//        lp.addRule(RelativeLayout.ABOVE, R.id.rlPickupDetailContainer);
-//        flMapLayout.setLayoutParams(lp);
-        rlPickupDetailContainer.setVisibility(View.VISIBLE);
+            }
 
-        // populate possible dates in spinner
-        ArrayList<CharSequence> dates_list = new ArrayList<CharSequence>();
-        dates_list.add("Wednesday, 4/30/2014");
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getActivity(), android.R.layout.simple_spinner_item, dates_list);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinnerPickupDates.setAdapter(adapter);
-    }
+            @Override
+            public void onCancel() {
 
-    @OnClick(R.id.btnSubmitPickup)
-    protected void onSubmitPickup(View v) {
-        //spawn a dialogfragment
-        showConfirmPickupDialog();
-    }
+            }
+        });
 
-    private void showConfirmPickupDialog() {
-        FragmentManager fm = getChildFragmentManager();
-        ConfirmPickupDialogFragment confirmPickupDialogFragment = ConfirmPickupDialogFragment.newInstance("Confirm Pickup");
-        confirmPickupDialogFragment.show(fm, "fragment_confirm_pickup_dialog");
+        //hide on-map address field
+//        etAddress.setVisibility(View.INVISIBLE);
+
+        //show detail layout
+        mListener.onLaunchPickUpDetail(addrString, pos.latitude, pos.longitude);
     }
 
     @Override
-    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
-        LatLng pos = mGoogleMap.getCameraPosition().target;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (PickUpDetailInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnLaunchPickUpDetailListener");
+        }
 
-        String addrString = etAddress.getText().toString();
+    }
 
-//        String addrString = "";
-//        if (address != null){
-//            for (int i = 0; i < address.getMaxAddressLineIndex(); i++ ){
-//                addrString += ", " + address.getAddressLine(i);
-//            }
-////            Parcel parcel = new Parcel();
-////            address.writeToParcel(parcel, 0);
-////            addrString = ""
-//
-//        }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 
-        //TODO: do something with the name and phone number from the dialog fragment
-        // phone number: get current
-        PickupRequest pickupRequest = new PickupRequest(
-            new ParseGeoPoint(pos.latitude, pos.longitude),
-            new Date(), //TODO: Fix this date
-            name,
-            addrString,
-            phoneNumber,
-            ParseUser.getCurrentUser(),
-            "Coat",
-            218
-        );
-        pickupRequest.saveInBackground();
+    // Container Activity must implement this interface
+    public interface PickUpDetailInteractionListener {
+        public void onLaunchPickUpDetail(String addr, double lat, double lng);
 
-        Toast.makeText(getActivity(), "Pickup Confirmed! Saved " + name + " and " + phoneNumber + " to Parse!", Toast.LENGTH_LONG).show();
-
+        public void updateAddress(Address address);
     }
 
 }

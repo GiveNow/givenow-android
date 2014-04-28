@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -23,8 +24,11 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpDetailFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements
+        PickUpFragment.PickUpDetailInteractionListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -43,6 +47,7 @@ public class MainActivity extends Activity {
     private CharSequence mTitle;
     private String[] mDrawerTitles;
     private int mSelectedItem;
+    private PickUpDetailFragment pickUpDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,10 +245,25 @@ public class MainActivity extends Activity {
                 Log.d("MainActivity", "default case hit in selectItem, weird position number!");
                 break;
         }
-        ft.addToBackStack(String.valueOf(position));
+//        ft.addToBackStack(String.valueOf(position));
         ft.commit();
         mSelectedItem = position;
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    public void onLaunchPickUpDetail(String address, double lat, double lng) {
+        pickUpDetailFragment = PickUpDetailFragment.newInstance(address, lat, lng);
+        getFragmentManager().beginTransaction()
+                .add(R.id.content, pickUpDetailFragment,
+                        "PickUpDetailFragment")
+                .addToBackStack("PickUpDetailFragment")
+                .commit();
+    }
+
+    public void updateAddress(Address address) {
+        if (pickUpDetailFragment != null) {
+            pickUpDetailFragment.setAddressFieldText(address.getAddressLine(0));
+        }
     }
 
     // The click listener for ListView in the navigation drawer
@@ -255,5 +275,6 @@ public class MainActivity extends Activity {
             selectItem(position);
         }
     }
+
 
 }
