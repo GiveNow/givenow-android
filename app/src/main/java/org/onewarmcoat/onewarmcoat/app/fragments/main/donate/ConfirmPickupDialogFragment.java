@@ -56,8 +56,9 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
+        //this crashes all of the things
+//        getDialog().getWindow().setSoftInputMode(
+//                WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
         super.onDismiss(dialog);
     }
 
