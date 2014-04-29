@@ -4,9 +4,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -39,7 +44,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     //Normal use case, the donation and volunteer shouldn't exist.
     public PickupRequest(ParseGeoPoint location, String name, String address, String phoneNumber,
-                         ParseUser donor, String donationType, double donationValue) {
+                         ParseUser donor, String donationType, double donationValue, int numberOfCoats) {
         super();
         setLocation(location);
         setName(name);
@@ -48,6 +53,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         setDonor(donor);
         setDonationType(donationType);
         setDonationValue(donationValue);
+        setNumberOfCoats(numberOfCoats);
     }
 
     public static ParseQuery<PickupRequest> getQuery() {
@@ -59,7 +65,65 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public static ParseQuery<PickupRequest> getAllActiveRequests() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
         q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        return q.whereDoesNotExist("volunteer");
+        q.whereDoesNotExist("pendingVolunteer");
+        return q;
+    }
+
+    public static ParseQuery<PickupRequest> getMyPendingPickups() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
+        return q;
+    }
+
+    public static ParseQuery<PickupRequest> getMyConfirmedPickups() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
+        return q;
+    }
+
+    public static ParseQuery<PickupRequest> getMyCompletedPickups() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
+        q.whereExists("donation");
+        return q;
+    }
+
+    /*
+    All Pickup Requests that I have made, which currently have a pending volunteer, but no confirmed volunteer
+     */
+    public static ParseQuery<PickupRequest> getMyPendingRequests() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("donor", ParseUser.getCurrentUser());
+        q.whereExists("pendingVolunteer");
+        q.whereDoesNotExist("confirmedVolunteer");
+        return q;
+    }
+
+    /*
+    All Pickup Requests that I have made, which currently have a volunteer confirmed to be completing the pickup
+     */
+    public static ParseQuery<PickupRequest> getMyConfirmedRequests() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("donor", ParseUser.getCurrentUser());
+        q.whereExists("confirmedVolunteer");
+        q.whereDoesNotExist("donation");
+        return q;
+    }
+
+    /*
+    All Pickup Requests that I have made, which were successfully delivered to the charity as a donation
+     */
+    public static ParseQuery<PickupRequest> getMyCompletedRequests() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("donor", ParseUser.getCurrentUser());
+        q.whereExists("donation");
+        return q;
     }
 
     public ParseGeoPoint getLocation() {
@@ -131,6 +195,19 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("donationValue", value);
     }
 
+    public int getNumberOfCoats() {
+        int coats = getInt("numberOfCoats");
+
+        if (coats < 1) {
+            coats = 1;
+        }
+        return coats;
+    }
+
+    public void setNumberOfCoats(int numCoats) {
+        put("numberOfCoats", numCoats);
+    }
+
     public ParseUser getPendingVolunteer() {
         return getParseUser("pendingVolunteer");
     }
@@ -162,5 +239,47 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return ll;
     }
 
+    public void generatePendingVolunteerAssignedNotif() {
+        //send pickup response back to donor
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", this.getDonor());
 
+        //create Parse Data
+        JSONObject data = new JSONObject();
+        try {
+            data.put("title", "Pickup Request Confirmed");
+            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        push.setData(data);
+//      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+        push.sendInBackground();
+    }
+
+    public void generateVolunteerConfirmedNotif() {
+        //send pickup response back to donor
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", this.getPendingVolunteer());
+
+        //create Parse Data
+        JSONObject data = new JSONObject();
+        try {
+            data.put("title", "Pickup Request Ready");
+            data.put("alert", CharityUserHelper.getFirstName() + " is available to have their donation picked up.");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        push.setData(data);
+//      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+        push.sendInBackground();
+    }
 }

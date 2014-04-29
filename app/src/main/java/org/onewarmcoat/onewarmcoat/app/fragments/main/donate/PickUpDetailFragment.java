@@ -257,7 +257,8 @@ public class PickUpDetailFragment extends Fragment implements
                 phoneNumber,
                 ParseUser.getCurrentUser(),
                 "Coat",
-                donationValue
+                donationValue,
+                numcoats
         );
         pickupRequest.saveInBackground();
 

@@ -148,7 +148,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
         @Override
         protected void onBeforeClusterItemRendered(PickupRequest pickupRequest, MarkerOptions markerOptions) {
             //draw marker with OneWarmCoat icon, and number of coats
-            Bitmap icon = mIconGenerator.makeIcon(String.valueOf(pickupRequest.getName().length()));
+            Bitmap icon = mIconGenerator.makeIcon(String.valueOf(pickupRequest.getNumberOfCoats()));
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats

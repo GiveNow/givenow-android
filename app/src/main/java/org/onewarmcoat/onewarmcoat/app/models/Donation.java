@@ -14,11 +14,19 @@ public class Donation extends ParseObject {
         super();
     }
 
-    public Donation(ParseUser donor, String donationType, int donationValue) {
+    public Donation(ParseUser donor, String donationType, double donationValue) {
         super();
         setDonor(donor);
         setdonationType(donationType);
         setDonationValue(donationValue);
+    }
+
+    public Donation(ParseUser donor, String donationType, double donationValue, int numberOfCoats) {
+        super();
+        setDonor(donor);
+        setdonationType(donationType);
+        setDonationValue(donationValue);
+        setNumberOfCoats(numberOfCoats);
     }
 
     public String getDonor() {
@@ -39,12 +47,25 @@ public class Donation extends ParseObject {
 
     }
 
-    public int getDonationValue() {
-        return getInt("donationValue");
+    public double getDonationValue() {
+        return getDouble("donationValue");
     }
 
-    public void setDonationValue(int donationValue) {
-        put("donationValue", donationValue);
+    public void setDonationValue(double value) {
+        put("donationValue", value);
+    }
+
+    public int getNumberOfCoats() {
+        int coats = getInt("numberOfCoats");
+
+        if (coats < 1) {
+            coats = 1;
+        }
+        return coats;
+    }
+
+    public void setNumberOfCoats(int numCoats) {
+        put("numberOfCoats", numCoats);
     }
 
 }

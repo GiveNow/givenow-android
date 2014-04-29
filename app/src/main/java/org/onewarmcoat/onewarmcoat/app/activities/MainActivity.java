@@ -17,7 +17,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -80,6 +84,45 @@ public class MainActivity extends Activity implements
         super.onRestoreInstanceState(inState);
         mSelectedItem = inState.getInt("mSelectedItem");
         selectItem(mSelectedItem);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ParseQuery<PickupRequest> query = PickupRequest.getMyPendingRequests();
+
+        //only want to get 1 at a time (there shouldn't be more than 1 anyway)
+        query.getFirstInBackground(new GetCallback<PickupRequest>() {
+            @Override
+            public void done(PickupRequest pickupRequest, ParseException e) {
+                if (pickupRequest != null) {
+                    Toast.makeText(getBaseContext(), "found pickup confirmation = " + pickupRequest.getNumberOfCoats() + pickupRequest.getDonationType(), Toast.LENGTH_LONG).show();
+                    Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
+
+                    //show dialog to user
+
+
+                    // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
+
+                    //**this works, just needs to be in the accept callback from the dialog
+//                    pickupRequest.generateVolunteerConfirmedNotif();
+//                    pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
+//                    pickupRequest.saveInBackground();
+                }
+            }
+        });
+    }
+
+    //stupid helper method, can go away whenever
+    private String getId(ParseUser volunteer) {
+        String id = null;
+
+        if(volunteer != null){
+            id = volunteer.getObjectId();
+        }
+
+        return id;
     }
 
     private void initializeFragments() {

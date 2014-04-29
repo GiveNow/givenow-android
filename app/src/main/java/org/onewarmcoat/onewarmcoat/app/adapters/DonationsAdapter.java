@@ -28,7 +28,7 @@ public class DonationsAdapter extends ParseQueryAdapter {
                 ParseQuery<ParseObject> query = new ParseQuery("Donation");
                 //REPLACE HARDCODED donorID LATER
                 //query.whereEqualTo("donor", "Alex");
-                String currentUsername = ParseUser.getCurrentUser().getUsername();
+//                String currentUsername = ParseUser.getCurrentUser().getUsername();
                 query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 //query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 return query;

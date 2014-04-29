@@ -9,15 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseInstallation;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
@@ -78,25 +72,7 @@ public class ConfirmPickupLocationFragment extends Fragment {
         pickupRequest.saveInBackground();
         Toast.makeText(getActivity(), "saved the current volunteer as pending", Toast.LENGTH_SHORT).show();
 
-        //send pickup response back to donor
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", pickupRequest.getDonor());
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", "Pickup Request Confirmed");
-            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-//                push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
-        push.sendInBackground();
+        pickupRequest.generatePendingVolunteerAssignedNotif();
 
         //launch congrats fragment, waiting for user to confirm
 
