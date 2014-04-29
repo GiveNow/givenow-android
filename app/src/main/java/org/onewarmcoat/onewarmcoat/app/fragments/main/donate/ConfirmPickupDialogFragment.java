@@ -46,11 +46,19 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return super.onCreateView(inflater, container, savedInstanceState);
-//        View view = inflater.inflate(R.layout.fragment_confirm_pickup_dialog, container);
-//        ButterKnife.inject(this, view);
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
 
-//        return view;
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
+        super.onDismiss(dialog);
     }
 
     @Override

@@ -77,6 +77,8 @@ public class PickUpFragment extends MapHostingFragment {
             }
         });
 
+        //TODO: Add a listener to etAddress to go to inputted addresses
+
     }
 
     public void setAddressFieldText(String text) {

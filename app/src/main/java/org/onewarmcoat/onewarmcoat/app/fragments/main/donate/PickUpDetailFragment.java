@@ -117,6 +117,7 @@ public class PickUpDetailFragment extends Fragment implements
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
+                            //HACKITY HACKITY
                             fm.popBackStack();
                         }
 
@@ -246,6 +247,7 @@ public class PickUpDetailFragment extends Fragment implements
             donationValue = 0.0;
         }
 
+        //TODO: create numcoats column in Parse
         int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
         PickupRequest pickupRequest = new PickupRequest(
