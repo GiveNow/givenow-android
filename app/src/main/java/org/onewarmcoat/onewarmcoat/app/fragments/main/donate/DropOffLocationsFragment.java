@@ -86,7 +86,7 @@ public class DropOffLocationsFragment extends MapHostingFragment implements Goog
                             marker.position(ll);
                             marker.title(it.getString("agencyName"));
                             marker.snippet(it.getString("agencyAddress"));
-                            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                             //TODO: don't place the same markers on top of markers we already got?
                             map.addMarker(marker);
                         }

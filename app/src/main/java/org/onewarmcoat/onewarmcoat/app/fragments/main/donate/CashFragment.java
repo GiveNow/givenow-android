@@ -183,6 +183,9 @@ public class CashFragment extends Fragment implements OnClickListener {
             else {
                 resultDisplayStr = "Scan was canceled.";
             }
+
+
+            //TODO: This data like last 4, expiration, etc should get stored too.
             // do something with resultDisplayStr, maybe display it in a textView
             Toast.makeText(getActivity(), resultDisplayStr, Toast.LENGTH_LONG).show();
 

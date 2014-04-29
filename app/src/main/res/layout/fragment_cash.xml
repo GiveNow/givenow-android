@@ -1,40 +1,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ff03ca00"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#ff7ba8ff"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment">
 
     <Button
         android:id="@+id/btn_donate"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_donate_msg"
+        android:text="@string/donate_cash_button"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="@string/donate_cash_button" />
+        android:background="#ff246d9e"
+        android:textColor="#ffffffff"/>
 
     <TextView
         android:id="@+id/tv_donate_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/donate_cash_motivational"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/et_donate_amount"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
-        android:text="@string/donate_cash_motivational"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginTop="120dp" />
 
     <EditText
         android:id="@+id/et_donate_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/btn_donate"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="50dp"
         android:ems="10"
         android:gravity="center"
-        android:hint="$100"
-        android:inputType="number" />
+        android:hint="$10"
+        android:inputType="number"
+        android:textSize="30sp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:id="@+id/textView"
@@ -47,7 +52,7 @@
         android:text="Donate"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffffffff"
-        android:textSize="100sp"
+        android:textSize="80sp"
         android:typeface="normal" />
 
 </RelativeLayout>

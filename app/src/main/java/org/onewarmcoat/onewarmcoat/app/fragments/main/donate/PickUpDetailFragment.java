@@ -246,6 +246,7 @@ public class PickUpDetailFragment extends Fragment implements
             donationValue = 0.0;
         }
 
+        int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
         PickupRequest pickupRequest = new PickupRequest(
                 new ParseGeoPoint(mLat, mLng),
