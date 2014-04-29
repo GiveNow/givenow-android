@@ -88,16 +88,4 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
         void onFinishConfirmPickupDialog(String name, String phoneNumber);
     }
 
-//    @Override
-//    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//        if (EditorInfo.IME_ACTION_DONE == actionId) {
-//            // Return input text to activity
-//            ConfirmPickupDialogListener listener = (ConfirmPickupDialogListener) getParentFragment();
-//            listener.onFinishConfirmPickupDialog(etName.getText().toString(), etPhone.getText().toString());
-//            dismiss();
-//            return true;
-//        }
-//        return false;
-//
-//    }
 }

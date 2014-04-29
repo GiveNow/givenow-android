@@ -2,6 +2,7 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.DonationsAdapter;
 import org.onewarmcoat.onewarmcoat.app.adapters.PickupsAdapter;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class ProfileFragment extends Fragment {
     private TextView phoneTV;
     private ListView historyLV;
     private ListView pickupHistoryLV;
+    private String readableUsername;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -56,9 +59,13 @@ public class ProfileFragment extends Fragment {
         ParseUser currentUser = ParseUser.getCurrentUser();
         String objId = currentUser.getObjectId();
         String currUsername = currentUser.getUsername();
-        // FOR DEBUGGING PURPOSES
+
         usernameTV = (TextView) rootView.findViewById(R.id.username);
-        usernameTV.setText(currUsername);
+        setReadableName("donor", currentUser);
+        setReadableName("confirmedVolunteer", currentUser);
+
+        /*prev 2 calls were ASYNCHRONOUS, so this needs to be in callback or may not be set in time
+        usernameTV.setText(readableUsername);*/
 
         /*String email = currentUser.getEmail();
         emailTV.setText(email);*/
@@ -68,9 +75,9 @@ public class ProfileFragment extends Fragment {
         String phoneNum = currentUser.get("phone").toString();
         phoneTV.setText(phoneNum);*/
 
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("objectId", objId);
-        query.findInBackground(new FindCallback<ParseUser>() {
+        ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
+        userQuery.whereEqualTo("objectId", objId);
+        userQuery.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
                     String phoneNum = objects.get(0).getString("phone");
@@ -91,5 +98,25 @@ public class ProfileFragment extends Fragment {
         pickupHistoryLV.setAdapter(pickupAdapter);
 
         return rootView;
+    }
+
+    public void setReadableName(String columnName, ParseUser currentUser) {
+        ParseQuery<PickupRequest> query = ParseQuery.getQuery(PickupRequest.class);
+        query.whereEqualTo(columnName, currentUser);
+
+        // Execute the find asynchronously
+        query.findInBackground(new FindCallback<PickupRequest>() {
+            public void done(List<PickupRequest> itemList, ParseException e) {
+                if (e == null) {
+                    if (itemList.size() != 0) {
+                        readableUsername = itemList.get(0).getString("name");
+                        usernameTV.setText(readableUsername);
+                    }
+
+                } else {
+                    Log.d("item", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 }
