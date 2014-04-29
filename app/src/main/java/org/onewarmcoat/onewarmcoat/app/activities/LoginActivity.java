@@ -9,15 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.parse.LogInCallback;
-import com.parse.Parse;
+import com.parse.ParseAnalytics;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseObject;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
-import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 
 public class LoginActivity extends Activity {
@@ -27,10 +25,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //init Parse
-        Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
-        ParseObject.registerSubclass(Donation.class);
-        ParseObject.registerSubclass(PickupRequest.class);
+        ParseAnalytics.trackAppOpened(getIntent());
 
         //register exception handler for crazy google maps bug that seems to crash occasionally and doesn't appear to have a solution
         //StackOverflow link: http://stackoverflow.com/questions/19624437/random-nullpointerexception-on-google-maps-api-v2/19627149#19627149
@@ -82,6 +77,12 @@ public class LoginActivity extends Activity {
                 if (e != null) {
                     Log.d("MyApp", "Anonymous login failed.");
                 } else {
+                    //at this point we know we have a valid Parse User, so subscribe to your own Push Notif channel
+                    //and this way we only subscribe once per user
+                    ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+                    installation.put("user", ParseUser.getCurrentUser());
+                    installation.saveInBackground();
+
                     Log.d("MyApp", "Anonymous user logged in.");
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);

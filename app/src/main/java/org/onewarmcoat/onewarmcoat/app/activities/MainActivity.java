@@ -26,9 +26,12 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class MainActivity extends Activity implements
-        PickUpFragment.PickUpDetailInteractionListener {
+        PickUpFragment.PickUpDetailInteractionListener, PickUpRequestsFragment.ConfirmPickupInteractionListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -48,6 +51,7 @@ public class MainActivity extends Activity implements
     private String[] mDrawerTitles;
     private int mSelectedItem;
     private PickUpDetailFragment pickUpDetailFragment;
+    private ConfirmPickupLocationFragment confirmPickupLocationFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,6 +268,15 @@ public class MainActivity extends Activity implements
         if (pickUpDetailFragment != null) {
             pickUpDetailFragment.setAddressFieldText(address.getAddressLine(0));
         }
+    }
+
+    public void onLaunchConfirmPickup(PickupRequest pickupRequest) {
+        confirmPickupLocationFragment = ConfirmPickupLocationFragment.newInstance(pickupRequest);
+        getFragmentManager().beginTransaction()
+                .add(R.id.content, confirmPickupLocationFragment,
+                        "ConfirmPickupLocationFragment")
+                .addToBackStack("ConfirmPickupLocationFragment")
+                .commit();
     }
 
     // The click listener for ListView in the navigation drawer

@@ -1,8 +1,6 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,10 +28,13 @@ import java.util.List;
 import butterknife.ButterKnife;
 
 
-public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>, ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>, ClusterManager.OnClusterItemClickListener<PickupRequest>, ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
+public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
+        ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>, ClusterManager.OnClusterItemClickListener<PickupRequest>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
     //    private OnMarkerClickListener listener;
     private ClusterManager<PickupRequest> mClusterManager;
+    private ConfirmPickupInteractionListener mListener;
 
     public PickUpRequestsFragment() {
         // Required empty public constructor
@@ -49,6 +50,12 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        try {
+            mListener = (ConfirmPickupInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ConfirmPickupInteractionListener");
+        }
     }
 
     @Override
@@ -113,16 +120,18 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
 
     @Override
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
-        FragmentManager fm = getChildFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+        mListener.onLaunchConfirmPickup(pickupRequest);
 
-        //this should just pass the pickupRequest
-        ConfirmPickupLocationFragment confirmPickupLocationFragment = ConfirmPickupLocationFragment.newInstance(pickupRequest);
-
-        ft.add(R.id.flMapContainer, confirmPickupLocationFragment);
-        ft.addToBackStack("pickupConfirmation");
-        ft.commit();
+//        FragmentManager fm = getChildFragmentManager();
+//        FragmentTransaction ft = fm.beginTransaction();
+//        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+//
+//        //this should just pass the pickupRequest
+//        ConfirmPickupLocationFragment confirmPickupLocationFragment = ConfirmPickupLocationFragment.newInstance(pickupRequest);
+//
+//        ft.add(R.id.flMapContainer, confirmPickupLocationFragment);
+//        ft.addToBackStack("pickupConfirmation");
+//        ft.commit();
     }
 
     private class PickupRequestRenderer extends DefaultClusterRenderer<PickupRequest> {
@@ -152,5 +161,10 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
             // always be clustering
             return cluster.getSize() > 2;
         }
+    }
+
+    // Container Activity must implement this interface
+    public interface ConfirmPickupInteractionListener {
+        public void onLaunchConfirmPickup(PickupRequest pickupRequest);
     }
 }

@@ -65,10 +65,16 @@ public class MapHostingFragment extends Fragment
 
         mLocationClient = new LocationClient(getActivity(), this, this);
         if (savedInstanceState == null) {
-            mapFragment = GoogleMapFragment.newInstance();
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.flMapContainer, mapFragment, "MAP").commit();
-            mZoomToLocation = true;
+
+            //TODO: putting this try/catch to handle the Google Maps bug
+            try {
+                mapFragment = GoogleMapFragment.newInstance();
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.flMapContainer, mapFragment, "MAP").commit();
+                mZoomToLocation = true;
+            }catch(NullPointerException npe){
+                npe.printStackTrace();
+            }
         } else {
             Log.w(((Object) this).getClass().getSimpleName(), "loading framgent");
 //            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(savedInstanceState, "mapFragment");

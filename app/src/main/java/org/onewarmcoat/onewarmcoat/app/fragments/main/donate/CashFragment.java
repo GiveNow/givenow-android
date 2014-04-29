@@ -5,10 +5,8 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,15 +28,22 @@ import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 import java.util.HashMap;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
-public class CashFragment extends Fragment implements OnClickListener {
+public class CashFragment extends Fragment {
 
     public static final int MY_SCAN_REQUEST_CODE = 01234;
     private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
-    private OnFragmentInteractionListener mListener;
-    private EditText etDonateAmount;
+
+    @InjectView(R.id.et_donate_amount)
+    EditText etDonateAmount;
+
+    @InjectView(R.id.btn_donate)
+    Button btnDonate;
 
     public static CashFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
@@ -57,12 +62,10 @@ public class CashFragment extends Fragment implements OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_cash, container, false);
+        ButterKnife.inject(this, v);
 
-        Button b = (Button) v.findViewById(R.id.btn_donate);
-        b.setOnClickListener(this);
-
-        etDonateAmount = (EditText) v.findViewById(R.id.et_donate_amount);
-        Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
+        //to allow layout resize with keyboard
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return v;
     }
 
@@ -74,7 +77,6 @@ public class CashFragment extends Fragment implements OnClickListener {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /*
@@ -93,21 +95,17 @@ public class CashFragment extends Fragment implements OnClickListener {
         super.onStop();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_donate:
-                if(validateInput()) {
-                    //check if user has a Stripe token - Parse query
-                    if(CharityUserHelper.hasStripeCustomerId()){
-                        chargeStripeCustomer();
-                    }else{
-                        //user doesn't have a stored Stripe token
-                        //pop Card.io dialog
-                        getCardDetails();
-                    }
-                }
-                break;
+    @OnClick(R.id.btn_donate)
+    public void onDonate(Button b) {
+        if(validateInput()) {
+            //check if user has a Stripe token - Parse query
+            if(CharityUserHelper.hasStripeCustomerId()){
+                chargeStripeCustomer();
+            }else{
+                //user doesn't have a stored Stripe token
+                //pop Card.io dialog
+                getCardDetails();
+            }
         }
     }
 

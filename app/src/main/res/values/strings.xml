@@ -26,6 +26,8 @@
     <string name="cancel">Cancel</string>
     <string name="donation_history">Donation History</string>
     <string name="pickup_history">Pickup History</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="address">Anonymous Address</string>
 
 
 </resources>

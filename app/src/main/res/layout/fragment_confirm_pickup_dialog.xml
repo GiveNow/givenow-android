@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:hint="Your name"
         android:imeOptions="actionDone"
-        android:inputType="text" />
+        android:inputType="textCapWords" />
 
     <!--<TextView-->
     <!--android:id="@+id/tvPhoneLabel" android:text="Your phone number"-->

@@ -1,7 +1,5 @@
 package org.onewarmcoat.onewarmcoat.app.models;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 public class CharityUserHelper {
@@ -44,5 +42,10 @@ public class CharityUserHelper {
             return false;
         }
         return true;
+    }
+
+    public static String getFirstName() {
+        //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
+        return CharityUserHelper.getName().split(" ")[0];
     }
 }
