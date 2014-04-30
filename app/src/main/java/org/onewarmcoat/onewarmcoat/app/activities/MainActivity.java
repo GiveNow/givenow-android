@@ -75,6 +75,9 @@ public class MainActivity extends Activity implements
             mSelectedItem = 0;
             selectItem(mSelectedItem);
         }
+
+        //TODO: Open Navigation drawer on first launch to hint user that navigation drawer exists, per google UX design spec
+
     }
 
     @Override

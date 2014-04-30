@@ -84,6 +84,6 @@ public class ConfirmPickupLocationFragment extends Fragment {
 
     @OnClick(R.id.cancelBtn)
     public void onCancel(Button b) {
-//        getActivity().getFragmentManager().popBackStack();
+        getActivity().getFragmentManager().popBackStack();
     }
 }

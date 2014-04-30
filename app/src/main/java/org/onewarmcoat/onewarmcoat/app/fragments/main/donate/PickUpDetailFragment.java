@@ -3,6 +3,9 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -16,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -42,6 +46,7 @@ public class PickUpDetailFragment extends Fragment implements
     private static final String ARG_ADDRESS = "addr";
     private static final String ARG_LAT = "lat";
     private static final String ARG_LNG = "lng";
+
     @InjectView(R.id.rlAddressContainer)
     SlidingRelativeLayout rlAddressContainer;
     @InjectView(R.id.rlPickupDetailContainer)
@@ -54,6 +59,10 @@ public class PickUpDetailFragment extends Fragment implements
     EditText etEstimatedValue;
     @InjectView(R.id.tvNumCoatsValue)
     TextView tvNumCoatsValue;
+
+    @InjectView(R.id.btnSubmitPickup)
+    Button btnSubmitPickup;
+
     private String mAddress;
     private double mLat;
     private double mLng;
@@ -219,6 +228,13 @@ public class PickUpDetailFragment extends Fragment implements
     @Override
     public void onFinishNumberPickerDialog(int value) {
         tvNumCoatsValue.setText(String.valueOf(value));
+        btnSubmitPickup.setEnabled(true);
+        ObjectAnimator btnAnim = ObjectAnimator.ofObject(btnSubmitPickup, "backgroundColor", new ArgbEvaluator(),
+          /*LightBlue*/0xFF3D89C2, /*Blue*/0xff246d9e);
+        btnAnim.setDuration(700).setRepeatCount(ValueAnimator.INFINITE);
+        btnAnim.setRepeatMode(ValueAnimator.REVERSE);
+        btnAnim.start();
+
     }
 
     @Override
@@ -260,9 +276,13 @@ public class PickUpDetailFragment extends Fragment implements
 
     @OnClick(R.id.btnSubmitPickup)
     protected void onSubmitPickup(View v) {
-        //spawn a dialogfragment
-        //TODO: populate name + phone number from current user
-        showConfirmPickupDialog();
+        if (tvNumCoatsValue.getText().toString().equals("0")) {
+            //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
+        } else {
+            //spawn a dialogfragment
+            //TODO: populate name + phone number from current user
+            showConfirmPickupDialog();
+        }
     }
 
     private void showConfirmPickupDialog() {
@@ -282,7 +302,6 @@ public class PickUpDetailFragment extends Fragment implements
             donationValue = 0.0;
         }
 
-        //TODO: create numcoats column in Parse
         int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
         mPickupRequest = new PickupRequest(

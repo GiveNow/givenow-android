@@ -1,7 +1,6 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,12 +31,12 @@ import butterknife.ButterKnife;
 
 
 public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
-        ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>, ClusterManager.OnClusterItemClickListener<PickupRequest>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest>, AcceptPickupDialogFragment.AcceptPickupDialogListener {
+        ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
     //    private OnMarkerClickListener listener;
     private ClusterManager<PickupRequest> mClusterManager;
-    //private ConfirmPickupInteractionListener mListener;
+    private ConfirmPickupInteractionListener mListener;
     private PickupRequest selectedPickupReq;
 
     public PickUpRequestsFragment() {
@@ -54,12 +53,12 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        /*try {
+        try {
             mListener = (ConfirmPickupInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ConfirmPickupInteractionListener");
-        }*/
+        }
     }
 
     @Override
@@ -70,7 +69,6 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
         ButterKnife.inject(this, v);
 
         return v;
-
     }
 
     @Override
@@ -84,7 +82,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
         map.setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterInfoWindowClickListener(this);
-        mClusterManager.setOnClusterItemClickListener(this);
+//        mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
 
         ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
@@ -116,30 +114,31 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
 
     }
 
-    @Override
-    public boolean onClusterItemClick(PickupRequest pickupRequest) {
-        Toast.makeText(getActivity(), "clicked on a marker, need to launch child fragment here", Toast.LENGTH_SHORT).show();
+//    @Override
+//    public boolean onClusterItemClick(PickupRequest pickupRequest) {
+//        Toast.makeText(getActivity(), "clicked on a marker, need to launch child fragment here", Toast.LENGTH_SHORT).show();
+//
+//        return false;
+//    }
 
-        selectedPickupReq = pickupRequest;
-        String n = pickupRequest.getName();
-        FragmentManager fm = getChildFragmentManager();
-        /*FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);*/
-
-        AcceptPickupDialogFragment acceptDialogFragment = AcceptPickupDialogFragment.newInstance(pickupRequest);
-        /*ft.add(R.id.flMapContainer, acceptDialogFragment);
-        ft.addToBackStack("acceptPickupDialog");
-        ft.commit();*/
-        acceptDialogFragment.show(fm, "acceptPickupDialog");
-
-        return true;
-    }
+//        selectedPickupReq = pickupRequest;
+//        String n = pickupRequest.getName();
+//        FragmentManager fm = getChildFragmentManager();
+//        /*FragmentTransaction ft = fm.beginTransaction();
+//        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);*/
+//
+//        AcceptPickupDialogFragment acceptDialogFragment = AcceptPickupDialogFragment.newInstance(pickupRequest);
+//        /*ft.add(R.id.flMapContainer, acceptDialogFragment);
+//        ft.addToBackStack("acceptPickupDialog");
+//        ft.commit();*/
+//        acceptDialogFragment.show(fm, "acceptPickupDialog");
+//
+//        return true;
+//    }
 
     @Override
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
-
-
-        //mListener.chConfirmPickup(pickupRequest);
+        mListener.onLaunchConfirmPickup(pickupRequest);
 
 //        FragmentManager fm = getChildFragmentManager();
 //        FragmentTransaction ft = fm.beginTransaction();
@@ -153,14 +152,16 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
 //        ft.commit();
     }
 
-    @Override
-    public void onConfirmAcceptDialog() {
-        Double donationValue = selectedPickupReq.getDonationValue();
-        String donationType = selectedPickupReq.getDonationType();
-        ParseUser donor = selectedPickupReq.getDonor();
-        Donation newDonation = new Donation(donor, donationType, donationValue);
-        newDonation.saveInBackground();
-    }
+//    @Override
+//    public void onConfirmAcceptDialog() {
+//        // donation gets saved. 
+//        // this should happen after volunteer says he picked up the donation
+//        Double donationValue = selectedPickupReq.getDonationValue();
+//        String donationType = selectedPickupReq.getDonationType();
+//        ParseUser donor = selectedPickupReq.getDonor();
+//        Donation newDonation = new Donation(donor, donationType, donationValue);
+//        newDonation.saveInBackground();
+//    }
 
     // Container Activity must implement this interface
     public interface ConfirmPickupInteractionListener {
@@ -186,7 +187,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats
             markerOptions.title(pickupRequest.getName());
-            markerOptions.snippet("10 coats!");
+            markerOptions.snippet("Tap to accept this request!");
         }
 
         @Override

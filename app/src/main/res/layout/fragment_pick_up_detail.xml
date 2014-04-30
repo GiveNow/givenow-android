@@ -264,7 +264,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="#ff246d9e"
+        android:background="@android:color/darker_gray"
+        android:enabled="false"
         android:text="@string/submit_pickup_label"
         android:textColor="#ffffffff" />
 
