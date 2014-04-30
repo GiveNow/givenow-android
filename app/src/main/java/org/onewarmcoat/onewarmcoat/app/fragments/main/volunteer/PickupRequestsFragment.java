@@ -32,7 +32,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
     private ClusterManager<PickupRequest> mClusterManager;
-    private ConfirmPickupInteractionListener mListener;
+    private PickupRequestDetailInteractionListener mListener;
     private PickupRequest selectedPickupReq;
 
     public PickupRequestsFragment() {
@@ -50,10 +50,10 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (ConfirmPickupInteractionListener) activity;
+            mListener = (PickupRequestDetailInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement ConfirmPickupInteractionListener");
+                    + " must implement PickupRequestDetailInteractionListener");
         }
     }
 
@@ -112,7 +112,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     @Override
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
-        mListener.onLaunchConfirmPickup(pickupRequest);
+        mListener.onLaunchPickupRequestDetail(pickupRequest);
     }
 
 //    @Override
@@ -129,8 +129,8 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 //    }
 
     // Container Activity must implement this interface
-    public interface ConfirmPickupInteractionListener {
-        public void onLaunchConfirmPickup(PickupRequest pickupRequest);
+    public interface PickupRequestDetailInteractionListener {
+        public void onLaunchPickupRequestDetail(PickupRequest pickupRequest);
     }
 
     private class PickupRequestRenderer extends DefaultClusterRenderer<PickupRequest> {

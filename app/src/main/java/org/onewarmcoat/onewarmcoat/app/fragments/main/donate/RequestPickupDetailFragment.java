@@ -133,7 +133,7 @@ public class RequestPickupDetailFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.pickup_detail_menu, menu);
+        inflater.inflate(R.menu.request_pickup_detail_menu, menu);
     }
 
     @Override

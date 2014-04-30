@@ -1,58 +1,111 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:layout_alignParentBottom="true"
-    android:background="#ff7ba8ff"
+    android:layout_alignParentLeft="true"
+    android:background="#ffdee8ee"
+    android:gravity="center"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="Donate"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffffff"
+            android:textSize="80sp"
+            android:typeface="normal" />
+
+        <TextView
+            android:id="@+id/tv_donate_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
+            android:layout_weight="0.05"
+            android:gravity="center"
+            android:text="@string/donate_cash_motivational"
+            android:textAllCaps="true"
+            android:textColor="#ff818181"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_donate_msg"
+            android:layout_weight="0.20"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="Provide any person in need with a warm coat, free of charge."
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ff4b83a8"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView2"
+            android:gravity="center"
+            android:text="Please help by donating a coat or making a financial contribution today.  Your generous donations will help One Warm Coat provide a warmer winter for your neighbors in need." />
+
+        <EditText
+            android:id="@+id/et_donate_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tvTaxIDNumber"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="0.10"
+            android:ems="10"
+            android:gravity="center_horizontal|bottom"
+            android:hint="$10"
+            android:inputType="number"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/tvTaxIDNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="0.05"
+            android:gravity="center"
+            android:text="Our non-profit 501(c)3 Tax ID is #74-3045243."
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_donate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/donate_cash_button"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="#ff246d9e"
-        android:textColor="#ffffffff"/>
-
-    <TextView
-        android:id="@+id/tv_donate_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/donate_cash_motivational"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/et_donate_amount"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp" />
-
-    <EditText
-        android:id="@+id/et_donate_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="$10"
-        android:inputType="number"
-        android:textSize="30sp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:text="Donate"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffffffff"
-        android:textSize="80sp"
-        android:typeface="normal" />
+        android:background="#ff246d9e"
 
+        android:text="@string/donate_cash_button"
+        android:textColor="#ffffffff" />
 </RelativeLayout>

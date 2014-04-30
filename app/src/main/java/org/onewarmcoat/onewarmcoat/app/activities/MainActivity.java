@@ -36,7 +36,7 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFr
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class MainActivity extends Activity implements
-        RequestPickupFragment.PickUpDetailInteractionListener, PickupRequestsFragment.ConfirmPickupInteractionListener {
+        RequestPickupFragment.PickUpDetailInteractionListener, PickupRequestsFragment.PickupRequestDetailInteractionListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -324,7 +324,7 @@ public class MainActivity extends Activity implements
         }
     }
 
-    public void onLaunchConfirmPickup(PickupRequest pickupRequest) {
+    public void onLaunchPickupRequestDetail(PickupRequest pickupRequest) {
         pickupRequestDetailFragment = PickupRequestDetailFragment.newInstance(pickupRequest);
         getFragmentManager().beginTransaction()
                 .add(R.id.content, pickupRequestDetailFragment,
