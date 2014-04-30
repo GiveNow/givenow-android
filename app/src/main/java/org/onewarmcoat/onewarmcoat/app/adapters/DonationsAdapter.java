@@ -25,12 +25,14 @@ public class DonationsAdapter extends ParseQueryAdapter {
         super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
             public ParseQuery create() {
 
-                ParseQuery<ParseObject> query = new ParseQuery("Donation");
+                //ParseQuery<ParseObject> query = new ParseQuery("Donation");
                 //REPLACE HARDCODED donorID LATER
                 //query.whereEqualTo("donor", "Alex");
 //                String currentUsername = ParseUser.getCurrentUser().getUsername();
-                query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 //query.whereEqualTo("donor", ParseUser.getCurrentUser());
+                //query.whereEqualTo("donor", ParseUser.getCurrentUser());
+                ParseQuery<ParseObject> query = new ParseQuery("PickupRequest");
+                query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 return query;
             }
         });
