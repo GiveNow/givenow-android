@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.stripe.android.model.Token;
 import com.stripe.exception.AuthenticationException;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.helpers.AmountOnFocusChangeListener;
+import org.onewarmcoat.onewarmcoat.app.helpers.NumericRangeFilter;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
@@ -37,8 +40,9 @@ import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
 public class CashFragment extends Fragment {
-
     public static final int MY_SCAN_REQUEST_CODE = 01234;
+    static final InputFilter[] FILTERS = new InputFilter[]{new NumericRangeFilter()};
+    static final View.OnFocusChangeListener ON_FOCUS = new AmountOnFocusChangeListener();
     private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
 
     @InjectView(R.id.et_donate_amount)
@@ -46,6 +50,8 @@ public class CashFragment extends Fragment {
 
     @InjectView(R.id.btn_donate)
     Button btnDonate;
+
+    //TODO: ACHTUNG: When using windowSoftInputMode="adjustPan", can't type in the etDonateAmount edittext more than once, because then its obscured.
 
     public static CashFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
@@ -146,10 +152,11 @@ public class CashFragment extends Fragment {
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
 
-        Toast.makeText(getActivity(), "Starting Card.io Intent wheeeee", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "Starting Card.io Intent wheeeee", Toast.LENGTH_SHORT).show();
 
         // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
         startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
+        getActivity().overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_to_bottom);
     }
 
     @Override
