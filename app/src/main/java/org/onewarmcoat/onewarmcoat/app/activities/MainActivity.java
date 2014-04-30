@@ -109,6 +109,10 @@ public class MainActivity extends Activity implements
 //                    pickupRequest.generateVolunteerConfirmedNotif();
 //                    pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
 //                    pickupRequest.saveInBackground();
+
+                    //onCancel need to remove pendingVolunteer
+//                    pickupRequest.remove("pendingVolunteer");
+//                    pickupRequest.saveInBackground();
                 }
             }
         });
