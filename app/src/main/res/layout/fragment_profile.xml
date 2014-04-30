@@ -17,21 +17,24 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/silhouette" />
+        android:layout_below="@id/silhouette"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/phoneno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/username"
-        android:layout_toRightOf="@id/silhouette" />
+        android:layout_marginBottom="5dp" />
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="48dip"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/silhouette" />
+        android:layout_below="@+id/silhouette"
+        android:layout_marginTop="15dp" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

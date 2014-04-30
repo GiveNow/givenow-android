@@ -36,5 +36,9 @@
     <string name="pickupRequest_submittedDialog_title">Pickup Request Submitted!</string>
     <string name="pickupRequest_submittedDialog_message">You\'ll be notified when a volunteer is ready to pick up your donation!</string>
     <string name="action_cancel">Cancel</string>
+    <string name="addrHdr">Address</string>
+    <string name="itypeHdr">Type</string>
+    <string name="cashValHdr">Value</string>
+    <string name="dateHdr">Pickup Date</string>
 
 </resources>
