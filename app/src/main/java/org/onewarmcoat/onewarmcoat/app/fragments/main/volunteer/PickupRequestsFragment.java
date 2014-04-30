@@ -31,7 +31,6 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
         ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
-    //    private OnMarkerClickListener listener;
     private ClusterManager<PickupRequest> mClusterManager;
     private ConfirmPickupInteractionListener mListener;
     private PickupRequest selectedPickupReq;
@@ -111,53 +110,22 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     }
 
-//    @Override
-//    public boolean onClusterItemClick(PickupRequest pickupRequest) {
-//        Toast.makeText(getActivity(), "clicked on a marker, need to launch child fragment here", Toast.LENGTH_SHORT).show();
-//
-//        return false;
-//    }
-
-//        selectedPickupReq = pickupRequest;
-//        String n = pickupRequest.getName();
-//        FragmentManager fm = getChildFragmentManager();
-//        /*FragmentTransaction ft = fm.beginTransaction();
-//        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);*/
-//
-//        AcceptPickupDialogFragment acceptDialogFragment = AcceptPickupDialogFragment.newInstance(pickupRequest);
-//        /*ft.add(R.id.flMapContainer, acceptDialogFragment);
-//        ft.addToBackStack("acceptPickupDialog");
-//        ft.commit();*/
-//        acceptDialogFragment.show(fm, "acceptPickupDialog");
-//
-//        return true;
-//    }
-
     @Override
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
         mListener.onLaunchConfirmPickup(pickupRequest);
-
-//        FragmentManager fm = getChildFragmentManager();
-//        FragmentTransaction ft = fm.beginTransaction();
-//        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-//
-//        //this should just pass the pickupRequest
-//        ConfirmPickupLocationFragment confirmPickupLocationFragment = ConfirmPickupLocationFragment.newInstance(pickupRequest);
-//
-//        ft.add(R.id.flMapContainer, confirmPickupLocationFragment);
-//        ft.addToBackStack("pickupConfirmation");
-//        ft.commit();
     }
 
 //    @Override
 //    public void onConfirmAcceptDialog() {
-//        // donation gets saved. 
+//        // donation gets saved.
 //        // this should happen after volunteer says he picked up the donation
 //        Double donationValue = selectedPickupReq.getDonationValue();
 //        String donationType = selectedPickupReq.getDonationType();
 //        ParseUser donor = selectedPickupReq.getDonor();
 //        Donation newDonation = new Donation(donor, donationType, donationValue);
 //        newDonation.saveInBackground();
+//        selectedPickupReq.setDonation(newDonation);
+//        selectedPickupReq.saveInBackground();
 //    }
 
     // Container Activity must implement this interface
