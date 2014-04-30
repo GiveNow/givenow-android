@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -60,6 +61,9 @@ public class MainActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+//        requestWindowFeature(Window.FEATURE_PROGRESS);
+
         setContentView(R.layout.activity_main);
 
         initializeFragments();
@@ -108,6 +112,10 @@ public class MainActivity extends Activity implements
                     //**this works, just needs to be in the accept callback from the dialog
 //                    pickupRequest.generateVolunteerConfirmedNotif();
 //                    pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
+//                    pickupRequest.saveInBackground();
+
+                    //onCancel need to remove pendingVolunteer
+//                    pickupRequest.remove("pendingVolunteer");
 //                    pickupRequest.saveInBackground();
                 }
             }
