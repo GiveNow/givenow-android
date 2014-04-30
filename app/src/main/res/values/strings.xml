@@ -14,7 +14,7 @@
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
     <string name="donate_cash_button">Donate by Credit Card</string>
-    <string name="donate_cash_motivational">Helping Families Stay Warm</string>
+    <string name="donate_cash_motivational"> . . . arbitrary motivational message</string>
     <string name="set_pickup_location_label">Set Pickup Location</string>
     <string name="submit_pickup_label">Submit Pickup Request</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -26,6 +26,7 @@
     <string name="cancel">Cancel</string>
     <string name="donation_history">Donation History</string>
     <string name="pickup_history">Pickup History</string>
+    <string name="name_no_msg">REQUIRED; This information will only be used in case we have trouble locating your donated items.</string>
     <string name="anonymous">Anonymous</string>
     <string name="address">Anonymous Address</string>
 

@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import com.google.maps.android.ui.IconGenerator;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
@@ -30,11 +33,12 @@ import butterknife.ButterKnife;
 
 public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>, ClusterManager.OnClusterItemClickListener<PickupRequest>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
+        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest>, AcceptPickupDialogFragment.AcceptPickupDialogListener {
 
     //    private OnMarkerClickListener listener;
     private ClusterManager<PickupRequest> mClusterManager;
-    private ConfirmPickupInteractionListener mListener;
+    //private ConfirmPickupInteractionListener mListener;
+    private PickupRequest selectedPickupReq;
 
     public PickUpRequestsFragment() {
         // Required empty public constructor
@@ -50,12 +54,12 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
+        /*try {
             mListener = (ConfirmPickupInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement ConfirmPickupInteractionListener");
-        }
+        }*/
     }
 
     @Override
@@ -66,6 +70,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
         ButterKnife.inject(this, v);
 
         return v;
+
     }
 
     @Override
@@ -115,12 +120,26 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     public boolean onClusterItemClick(PickupRequest pickupRequest) {
         Toast.makeText(getActivity(), "clicked on a marker, need to launch child fragment here", Toast.LENGTH_SHORT).show();
 
-        return false;
+        selectedPickupReq = pickupRequest;
+        String n = pickupRequest.getName();
+        FragmentManager fm = getChildFragmentManager();
+        /*FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);*/
+
+        AcceptPickupDialogFragment acceptDialogFragment = AcceptPickupDialogFragment.newInstance(pickupRequest);
+        /*ft.add(R.id.flMapContainer, acceptDialogFragment);
+        ft.addToBackStack("acceptPickupDialog");
+        ft.commit();*/
+        acceptDialogFragment.show(fm, "acceptPickupDialog");
+
+        return true;
     }
 
     @Override
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
-        mListener.onLaunchConfirmPickup(pickupRequest);
+
+
+        //mListener.chConfirmPickup(pickupRequest);
 
 //        FragmentManager fm = getChildFragmentManager();
 //        FragmentTransaction ft = fm.beginTransaction();
@@ -132,6 +151,20 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
 //        ft.add(R.id.flMapContainer, confirmPickupLocationFragment);
 //        ft.addToBackStack("pickupConfirmation");
 //        ft.commit();
+    }
+
+    @Override
+    public void onConfirmAcceptDialog() {
+        Double donationValue = selectedPickupReq.getDonationValue();
+        String donationType = selectedPickupReq.getDonationType();
+        ParseUser donor = selectedPickupReq.getDonor();
+        Donation newDonation = new Donation(donor, donationType, donationValue);
+        newDonation.saveInBackground();
+    }
+
+    // Container Activity must implement this interface
+    public interface ConfirmPickupInteractionListener {
+        public void onLaunchConfirmPickup(PickupRequest pickupRequest);
     }
 
     private class PickupRequestRenderer extends DefaultClusterRenderer<PickupRequest> {
@@ -161,10 +194,5 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
             // always be clustering
             return cluster.getSize() > 2;
         }
-    }
-
-    // Container Activity must implement this interface
-    public interface ConfirmPickupInteractionListener {
-        public void onLaunchConfirmPickup(PickupRequest pickupRequest);
     }
 }

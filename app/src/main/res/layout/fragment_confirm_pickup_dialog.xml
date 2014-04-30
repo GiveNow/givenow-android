@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
-        android:text="This information will only be used in case we have trouble locating your donated items."
+        android:text="@string/name_no_msg"
         android:textAllCaps="true"
         android:textSize="12sp"
         android:textStyle="bold" />

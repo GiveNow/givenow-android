@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
+package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,29 +8,36 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class ConfirmPickupDialogFragment extends DialogFragment {
+public class AcceptPickupDialogFragment extends DialogFragment {
 
-    @InjectView(R.id.etName)
-    EditText etName;
-    @InjectView(R.id.etPhone)
-    EditText etPhone;
+    @InjectView(R.id.dnameTV)
+    TextView donorNameTextView;
+    @InjectView(R.id.daddrTV)
+    TextView donorAddressTextView;
 
-    public ConfirmPickupDialogFragment() {
+    // try this out too
+    PickupRequest currentPickupReq;
+
+    public AcceptPickupDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
-    public static ConfirmPickupDialogFragment newInstance(String title) {
-        ConfirmPickupDialogFragment frag = new ConfirmPickupDialogFragment();
+    public static AcceptPickupDialogFragment newInstance(PickupRequest pr) {
+        AcceptPickupDialogFragment frag = new AcceptPickupDialogFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
+        String name = pr.getName();
+        String addr = pr.getAddresss();
+
+        args.putString("donorName", name);
+        args.putString("donorAddress", addr);
         frag.setArguments(args);
         return frag;
     }
@@ -39,11 +46,6 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Show soft keyboard automatically
-        etName.requestFocus();
-//        etName.setOnEditorActionListener(this);
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -64,22 +66,32 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String title = getArguments().getString("title");
+        //String title = getArguments().getString("title");
+        String title = "Pick This Donation Up?";
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_confirm_pickup_dialog, null);
+
+
+        View view = inflater.inflate(R.layout.fragment_accept_pickup_dialog, null);
         ButterKnife.inject(this, view);
 
+        String name = getArguments().getString("donorName");
+        String address = getArguments().getString("donorAddress");
+
+        donorNameTextView.setText(name);
+        donorAddressTextView.setText(address);
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setTitle(title);
         setStyle(STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
+
+
         alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // on success
-                ConfirmPickupDialogListener listener = (ConfirmPickupDialogListener) getParentFragment();
-                listener.onFinishConfirmPickupDialog(etName.getText().toString(), etPhone.getText().toString());
+                AcceptPickupDialogListener listener = (AcceptPickupDialogListener) getParentFragment();
+                listener.onConfirmAcceptDialog();
                 dismiss();
             }
         });
@@ -94,16 +106,14 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
         AlertDialog dialog = alertDialogBuilder.create();
         dialog.show();
 
-        if (etName.getText() == null || etPhone.getText() == null)
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-
 
         //return alertDialogBuilder.create();
         return dialog;
     }
 
-    public interface ConfirmPickupDialogListener {
-        void onFinishConfirmPickupDialog(String name, String phoneNumber);
+    public interface AcceptPickupDialogListener {
+        // go to PickupRequestsFragment to get access to vars for Donation persistence
+        void onConfirmAcceptDialog();
     }
 
 }
