@@ -192,6 +192,9 @@ public class PickupRequestDetailFragment extends Fragment {
 
         pickupRequest.generatePendingVolunteerAssignedNotif();
 
+        //somehow need to get pickupRequestsFragment, so we can reload markers
+//        pickupRequestsFragment.loadMarkers();
+
         //launch congrats fragment, waiting for user to confirm
 
         //need to re-draw pin in new color

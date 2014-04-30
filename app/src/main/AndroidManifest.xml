@@ -23,8 +23,8 @@
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
     <permission
-        android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"
+        android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
     <uses-permission android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
 
     <!-- Card.io perms -->
