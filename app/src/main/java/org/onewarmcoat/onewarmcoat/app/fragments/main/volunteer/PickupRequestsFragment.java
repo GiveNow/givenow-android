@@ -81,6 +81,11 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 //        mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
 
+        //onHiddenChanged doesn't get called first load, only when the state changes
+        loadMarkers();
+    }
+
+    public void loadMarkers() {
         ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
         query.findInBackground(new FindCallback<PickupRequest>() {
@@ -90,6 +95,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                     return;
                 }
 
+                mClusterManager.clearItems();
                 for (PickupRequest item : list) {
                     //default clustering setup
                     mClusterManager.addItem(item);

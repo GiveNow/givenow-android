@@ -3,6 +3,7 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
@@ -58,4 +59,10 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
         return frag;
     }
 
+    public void loadMarkers() {
+        if(pickupRequestsFragment != null){
+            Toast.makeText(getActivity(), "query and reload markers", Toast.LENGTH_SHORT).show();
+            pickupRequestsFragment.loadMarkers();
+        }
+    }
 }

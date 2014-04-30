@@ -31,6 +31,7 @@ import com.parse.SaveCallback;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
@@ -302,6 +303,8 @@ public class RequestPickupDetailFragment extends Fragment implements
             donationValue = 0.0;
         }
 
+        CharityUserHelper.setNameAndNumber(name, phoneNumber);
+
         int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
         mPickupRequest = new PickupRequest(
@@ -334,6 +337,7 @@ public class RequestPickupDetailFragment extends Fragment implements
         if (e == null) {
             // saved successfully
             mRequestSubmitted = true;
+
             // detach this detail fragment, we're done here
             animateAndDetach();
 

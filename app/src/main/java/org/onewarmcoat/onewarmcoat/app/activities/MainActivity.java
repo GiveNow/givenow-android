@@ -271,6 +271,7 @@ public class MainActivity extends Activity implements
 //                            volunteerFragment.TAG);
                             "vol");
                 } else {
+                    volunteerFragment.loadMarkers();
                     ft.show(volunteerFragment);
                 }
                 break;
