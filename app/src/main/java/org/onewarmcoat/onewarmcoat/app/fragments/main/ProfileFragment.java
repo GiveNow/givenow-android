@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -15,21 +16,26 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.adapters.DonationsAdapter;
-import org.onewarmcoat.onewarmcoat.app.adapters.PickupsAdapter;
+import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
-    public final String TAG = this.getClass().getSimpleName();
+public class ProfileFragment extends PageSlidingTabStripFragment {
 
-    private TextView usernameTV;
-    private TextView phoneTV;
-    private ListView historyLV;
-    private ListView pickupHistoryLV;
-    private String readableUsername;
+    String readableUsername;
+    @InjectView(R.id.silhouette)
+    ImageView profileIV;
+    @InjectView(R.id.username)
+    TextView usernameTV;
+    @InjectView(R.id.phoneno)
+    TextView phonenoTV;
+
+    private DonationHistoryFragment dhFragment;
+    private PickupHistoryFragment phFragment;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -40,65 +46,58 @@ public class ProfileFragment extends Fragment {
         return f;
     }
 
+    @Override
+    protected String[] getTitles() {
+        return new String[]{"Donation History", "Pickup History"};
+    }
 
-    /**
-     * If is volunteer: show parse username(id) and pickup history
-     * If is donor: show parse username(id), donation name, number, and email
-     * <p/>
-     * 1.  silhouette
-     * 2.  parse username to right
-     * 3.  list of donations(donation name, phone, email)
-     * 4.  list of pickups(pickup date, address, donationValue)
-     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        if (savedInstanceState == null) {
+            //create fragments
+            dhFragment = DonationHistoryFragment.newInstance();
+            phFragment = PickupHistoryFragment.newInstance();
+            Log.w("ProfileFragment", "onCreate: child fragments created");
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_profile, container,
-                false);
+        // Inflate the layout for this fragment
+        final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        ButterKnife.inject(this, rootView);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         String objId = currentUser.getObjectId();
-        String currUsername = currentUser.getUsername();
 
-        usernameTV = (TextView) rootView.findViewById(R.id.username);
         setReadableName("donor", currentUser);
         setReadableName("confirmedVolunteer", currentUser);
-
-        /*prev 2 calls were ASYNCHRONOUS, so this needs to be in callback or may not be set in time
-        usernameTV.setText(readableUsername);*/
-
-        /*String email = currentUser.getEmail();
-        emailTV.setText(email);*/
-/*
-        phoneTV = (TextView)rootView.findViewById(R.id.phoneno);
-        Object phoneNumObj = currentUser.getString("phone");
-        String phoneNum = currentUser.get("phone").toString();
-        phoneTV.setText(phoneNum);*/
 
         ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
         userQuery.whereEqualTo("objectId", objId);
         userQuery.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
-                    String phoneNum = objects.get(0).getString("phone");
-                    phoneTV = (TextView) rootView.findViewById(R.id.phoneno);
-                    phoneTV.setText(phoneNum);
+                    if (objects.size() > 0) {
+                        String phoneNum = objects.get(0).getString("phone");
+                        phonenoTV = (TextView) rootView.findViewById(R.id.phoneno);
+                        phonenoTV.setText(phoneNum);
+                    } else {
+                        Toast.makeText(getActivity(), "NO RECORDS FOUND!", Toast.LENGTH_LONG);
+                    }
                 } else {
                     // Something went wrong.
                 }
             }
         });
-
-        DonationsAdapter adapter = new DonationsAdapter(getActivity());
-        historyLV = (ListView) rootView.findViewById(R.id.donations);
-        historyLV.setAdapter(adapter);
-
-        PickupsAdapter pickupAdapter = new PickupsAdapter(getActivity());
-        pickupHistoryLV = (ListView) rootView.findViewById(R.id.pickups);
-        pickupHistoryLV.setAdapter(pickupAdapter);
-
         return rootView;
     }
+
 
     public void setReadableName(String columnName, ParseUser currentUser) {
         ParseQuery<PickupRequest> query = ParseQuery.getQuery(PickupRequest.class);
@@ -119,4 +118,21 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+
+    @Override
+    protected Fragment getFragmentForPosition(int position) {
+        Fragment frag = null;
+
+        switch (position) {
+            case 0: //PickUp Requests
+                frag = dhFragment;
+                break;
+            case 1: //Drop Off Locations
+                frag = phFragment;
+                break;
+        }
+        return frag;
+    }
+
 }

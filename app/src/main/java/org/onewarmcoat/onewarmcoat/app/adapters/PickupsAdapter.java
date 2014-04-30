@@ -29,7 +29,8 @@ public class PickupsAdapter extends ParseQueryAdapter {
                 //REPLACE HARDCODED donorID LATER
                 //query.whereEqualTo("donor", "Alex");
                 String currentUsername = ParseUser.getCurrentUser().getUsername();
-                query.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
+                //query.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
+                query.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
                 //query.whereEqualTo("donor", ParseUser.getCurrentUser());
                 return query;
             }
