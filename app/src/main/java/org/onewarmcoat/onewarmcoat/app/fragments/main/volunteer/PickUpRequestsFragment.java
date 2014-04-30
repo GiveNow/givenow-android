@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -18,11 +17,9 @@ import com.google.maps.android.ui.IconGenerator;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.MapHostingFragment;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
@@ -30,7 +27,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 
 
-public class PickUpRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
+public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
         ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
@@ -39,14 +36,14 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     private ConfirmPickupInteractionListener mListener;
     private PickupRequest selectedPickupReq;
 
-    public PickUpRequestsFragment() {
+    public PickupRequestsFragment() {
         // Required empty public constructor
     }
 
-    public static PickUpRequestsFragment newInstance() {
+    public static PickupRequestsFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
         // call this in order to get a usable instance of this fragment.
-        PickUpRequestsFragment f = new PickUpRequestsFragment();
+        PickupRequestsFragment f = new PickupRequestsFragment();
         return f;
     }
 
@@ -65,7 +62,7 @@ public class PickUpRequestsFragment extends MapHostingFragment implements Cluste
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_pick_up_requests, container, false);
+        View v = inflater.inflate(R.layout.fragment_pickup_requests, container, false);
         ButterKnife.inject(this, v);
 
         return v;

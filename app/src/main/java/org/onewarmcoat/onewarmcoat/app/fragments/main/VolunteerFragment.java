@@ -7,11 +7,11 @@ import android.util.Log;
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.DropOffLocationsFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
 
-    private PickUpRequestsFragment pickUpRequestsFragment;
+    private PickupRequestsFragment pickupRequestsFragment;
     private DropOffLocationsFragment dropOffLocationsFragment;
 
     public VolunteerFragment() {
@@ -34,7 +34,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
 
         if (savedInstanceState == null) {
             //create fragments
-            pickUpRequestsFragment = PickUpRequestsFragment.newInstance();
+            pickupRequestsFragment = PickupRequestsFragment.newInstance();
             dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
             Log.w("VolunteerFragment", "onCreate: Fragments created");
         }
@@ -45,7 +45,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
         Fragment frag;
         switch (position) {
             case 0: //PickUp Requests
-                frag = pickUpRequestsFragment;
+                frag = pickupRequestsFragment;
                 break;
             case 1: //Drop Off Locations
                 frag = dropOffLocationsFragment;

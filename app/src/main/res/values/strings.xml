@@ -22,11 +22,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="login_label">Continue anonymously</string>
     <string name="confirm_pickup">Are you sure you want to pick up here?</string>
-    <string name="confirm">Confirm</string>
+    <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
     <string name="donation_history">Donation History</string>
     <string name="pickup_history">Pickup History</string>
-    <string name="name_no_msg">REQUIRED; This information will only be used in case we have trouble locating your donated items.</string>
+    <string name="name_phone_disclaimer">This information will only be used in case we have trouble locating your donated items.</string>
     <string name="anonymous">Anonymous</string>
     <string name="address">Anonymous Address</string>
 

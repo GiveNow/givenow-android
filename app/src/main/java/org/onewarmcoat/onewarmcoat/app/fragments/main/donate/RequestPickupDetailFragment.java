@@ -38,9 +38,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class PickUpDetailFragment extends Fragment implements
+public class RequestPickupDetailFragment extends Fragment implements
         NumberPickerDialogFragment.NumberPickerDialogListener,
-        ConfirmPickupDialogFragment.ConfirmPickupDialogListener {
+        ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ADDRESS = "addr";
@@ -76,12 +76,12 @@ public class PickUpDetailFragment extends Fragment implements
     private Animator fade_out;
 
 
-    public PickUpDetailFragment() {
+    public RequestPickupDetailFragment() {
         // Required empty public constructor
     }
 
-    public static PickUpDetailFragment newInstance(String addr, double lat, double lng) {
-        PickUpDetailFragment fragment = new PickUpDetailFragment();
+    public static RequestPickupDetailFragment newInstance(String addr, double lat, double lng) {
+        RequestPickupDetailFragment fragment = new RequestPickupDetailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ADDRESS, addr);
         args.putDouble(ARG_LAT, lat);
@@ -106,7 +106,7 @@ public class PickUpDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_pick_up_detail, container, false);
+        View v = inflater.inflate(R.layout.fragment_request_pickup_detail, container, false);
         ButterKnife.inject(this, v);
         setHasOptionsMenu(true);
 
@@ -231,7 +231,7 @@ public class PickUpDetailFragment extends Fragment implements
         btnSubmitPickup.setEnabled(true);
         ObjectAnimator btnAnim = ObjectAnimator.ofObject(btnSubmitPickup, "backgroundColor", new ArgbEvaluator(),
           /*LightBlue*/0xFF3D89C2, /*Blue*/0xff246d9e);
-        btnAnim.setDuration(700).setRepeatCount(ValueAnimator.INFINITE);
+        btnAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
         btnAnim.setRepeatMode(ValueAnimator.REVERSE);
         btnAnim.start();
 
@@ -287,9 +287,9 @@ public class PickUpDetailFragment extends Fragment implements
 
     private void showConfirmPickupDialog() {
         FragmentManager fm = getChildFragmentManager();
-        ConfirmPickupDialogFragment confirmPickupDialogFragment =
-                ConfirmPickupDialogFragment.newInstance("Confirm Pickup");
-        confirmPickupDialogFragment.show(fm, "fragment_confirm_pickup_dialog");
+        ConfirmRequestDialogFragment confirmRequestDialogFragment =
+                ConfirmRequestDialogFragment.newInstance("Confirm Pickup");
+        confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
     @Override

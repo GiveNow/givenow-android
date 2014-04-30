@@ -29,14 +29,14 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpDetailFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.ConfirmPickupLocationFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickUpRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupDetailFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestDetailFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class MainActivity extends Activity implements
-        PickUpFragment.PickUpDetailInteractionListener, PickUpRequestsFragment.ConfirmPickupInteractionListener {
+        RequestPickupFragment.PickUpDetailInteractionListener, PickupRequestsFragment.ConfirmPickupInteractionListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -55,8 +55,8 @@ public class MainActivity extends Activity implements
     private CharSequence mTitle;
     private String[] mDrawerTitles;
     private int mSelectedItem;
-    private PickUpDetailFragment pickUpDetailFragment;
-    private ConfirmPickupLocationFragment confirmPickupLocationFragment;
+    private RequestPickupDetailFragment pickUpDetailFragment;
+    private PickupRequestDetailFragment pickupRequestDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,11 +310,11 @@ public class MainActivity extends Activity implements
     }
 
     public void onLaunchPickUpDetail(String address, double lat, double lng) {
-        pickUpDetailFragment = PickUpDetailFragment.newInstance(address, lat, lng);
+        pickUpDetailFragment = RequestPickupDetailFragment.newInstance(address, lat, lng);
         getFragmentManager().beginTransaction()
                 .add(R.id.content, pickUpDetailFragment,
-                        "PickUpDetailFragment")
-                .addToBackStack("PickUpDetailFragment")
+                        "RequestPickupDetailFragment")
+                .addToBackStack("RequestPickupDetailFragment")
                 .commit();
     }
 
@@ -325,11 +325,11 @@ public class MainActivity extends Activity implements
     }
 
     public void onLaunchConfirmPickup(PickupRequest pickupRequest) {
-        confirmPickupLocationFragment = ConfirmPickupLocationFragment.newInstance(pickupRequest);
+        pickupRequestDetailFragment = PickupRequestDetailFragment.newInstance(pickupRequest);
         getFragmentManager().beginTransaction()
-                .add(R.id.content, confirmPickupLocationFragment,
-                        "ConfirmPickupLocationFragment")
-                .addToBackStack("ConfirmPickupLocationFragment")
+                .add(R.id.content, pickupRequestDetailFragment,
+                        "PickupRequestDetailFragment")
+                .addToBackStack("PickupRequestDetailFragment")
                 .commit();
     }
 

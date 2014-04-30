@@ -16,6 +16,8 @@ import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+// ARC: Not used currently
+
 public class AcceptPickupDialogFragment extends DialogFragment {
 
     @InjectView(R.id.dnameTV)

@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class ConfirmPickupLocationFragment extends Fragment {
+public class PickupRequestDetailFragment extends Fragment {
     private static PickupRequest pickupRequest;
 
     @InjectView(R.id.donorNameTV)
@@ -33,13 +33,13 @@ public class ConfirmPickupLocationFragment extends Fragment {
     @InjectView(R.id.cancelBtn)
     Button cancelBtn;
 
-    public ConfirmPickupLocationFragment() {
+    public PickupRequestDetailFragment() {
 
     }
 
     // keeps name and addr in bundle 'memory' for retrieval later in onCreateView
-    public static ConfirmPickupLocationFragment newInstance(PickupRequest pickupRequest) {
-        ConfirmPickupLocationFragment f = new ConfirmPickupLocationFragment();
+    public static PickupRequestDetailFragment newInstance(PickupRequest pickupRequest) {
+        PickupRequestDetailFragment f = new PickupRequestDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable("pickupRequest", pickupRequest);
         f.setArguments(args);
@@ -48,7 +48,7 @@ public class ConfirmPickupLocationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
-        View fragmentView = inf.inflate(R.layout.fragment_confirm_pickup_location, parent, false);
+        View fragmentView = inf.inflate(R.layout.fragment_pickup_request_detail, parent, false);
         ButterKnife.inject(this, fragmentView);
         /* name could be anything ("My Clothes", "Two Fur Coats", "Alex Tam", etc
          * name originated from scraped javascript

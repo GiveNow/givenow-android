@@ -9,12 +9,12 @@ import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.DropOffLocationsFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.PickUpFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment;
 
 
 public class DonateFragment extends PageSlidingTabStripFragment {
 
-    private PickUpFragment pickupFragment;
+    private RequestPickupFragment requestPickupFragment;
     private DropOffLocationsFragment dropoffLocationsFragment;
     private CashFragment cashFragment;
 
@@ -40,14 +40,14 @@ public class DonateFragment extends PageSlidingTabStripFragment {
 
         if (savedInstanceState == null) {
             //create fragments
-            pickupFragment = PickUpFragment.newInstance();
+            requestPickupFragment = RequestPickupFragment.newInstance();
             dropoffLocationsFragment = DropOffLocationsFragment.newInstance();
             cashFragment = CashFragment.newInstance();
             Log.w("DonateFragment", "onCreate: Fragments created");
         }
 //        else {
 //            // restore fragments
-//            pickupFragment = (PickUpFragment) getFragmentManager()..findFragmentByTag("don");
+//            requestPickupFragment = (RequestPickupFragment) getFragmentManager()..findFragmentByTag("don");
 //            dropoffLocationsFragment = (DropOffLocationsFragment) getFragmentManager().findFragmentByTag("vol");
 //            cashFragment = (CashFragment) getFragmentManager().findFragmentByTag("prof");
 //            Log.d("MainActivity", "Fragments restored");
@@ -59,7 +59,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getChildFragmentManager().putFragment(outState, "pickupFragment", pickupFragment);
+        getChildFragmentManager().putFragment(outState, "requestPickupFragment", requestPickupFragment);
         getChildFragmentManager().putFragment(outState, "dropoffLocationsFragment", dropoffLocationsFragment);
         getChildFragmentManager().putFragment(outState, "cashFragment", cashFragment);
         Log.w("DonateFragment", "onSaveInstanceState: Fragments saved");
@@ -71,7 +71,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
         Log.w("DonateFragment", "onActivityCreated called.");
         if (inState != null) {
             // ain't reaching here for some reason
-            pickupFragment = (PickUpFragment) getChildFragmentManager().getFragment(inState, "pickupFragment");
+            requestPickupFragment = (RequestPickupFragment) getChildFragmentManager().getFragment(inState, "requestPickupFragment");
             dropoffLocationsFragment = (DropOffLocationsFragment) getChildFragmentManager().getFragment(inState, "dropoffLocationsFragment");
             cashFragment = (CashFragment) getChildFragmentManager().getFragment(inState, "cashFragment");
             Log.w("DonateFragment", "onActivityCreated: Fragments restored");
@@ -83,7 +83,7 @@ public class DonateFragment extends PageSlidingTabStripFragment {
         Fragment frag;
         switch (position) {
             case 0: //Pickup
-                frag = pickupFragment;
+                frag = requestPickupFragment;
                 break;
             case 1: //Dropoff
                 frag = dropoffLocationsFragment;

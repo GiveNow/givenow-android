@@ -21,21 +21,21 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class PickUpFragment extends MapHostingFragment {
+public class RequestPickupFragment extends MapHostingFragment {
 
     @InjectView(R.id.etAddress)
     EditText etAddress;
 
     private PickUpDetailInteractionListener mListener;
 
-    public PickUpFragment() {
+    public RequestPickupFragment() {
         // Required empty public constructor
     }
 
-    public static PickUpFragment newInstance() {
+    public static RequestPickupFragment newInstance() {
         // strange. I can't use a constructor, I have to define this newInstance method and
         // call this in order to get a usable instance of this fragment.
-        PickUpFragment f = new PickUpFragment();
+        RequestPickupFragment f = new RequestPickupFragment();
         return f;
     }
 
@@ -49,7 +49,7 @@ public class PickUpFragment extends MapHostingFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_pick_up, container, false);
+        View v = inflater.inflate(R.layout.fragment_request_pickup, container, false);
         ButterKnife.inject(this, v);
 
         Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");

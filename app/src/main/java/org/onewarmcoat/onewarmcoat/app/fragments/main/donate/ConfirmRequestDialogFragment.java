@@ -16,19 +16,19 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class ConfirmPickupDialogFragment extends DialogFragment {
+public class ConfirmRequestDialogFragment extends DialogFragment {
 
     @InjectView(R.id.etName)
     EditText etName;
     @InjectView(R.id.etPhone)
     EditText etPhone;
 
-    public ConfirmPickupDialogFragment() {
+    public ConfirmRequestDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
-    public static ConfirmPickupDialogFragment newInstance(String title) {
-        ConfirmPickupDialogFragment frag = new ConfirmPickupDialogFragment();
+    public static ConfirmRequestDialogFragment newInstance(String title) {
+        ConfirmRequestDialogFragment frag = new ConfirmRequestDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
         frag.setArguments(args);
@@ -67,7 +67,7 @@ public class ConfirmPickupDialogFragment extends DialogFragment {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.fragment_confirm_pickup_dialog, null);
+        View view = inflater.inflate(R.layout.fragment_confirm_request_dialog, null);
         ButterKnife.inject(this, view);
 
         alertDialogBuilder.setView(view);
