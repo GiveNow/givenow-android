@@ -2,21 +2,27 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
@@ -53,6 +59,12 @@ public class PickUpDetailFragment extends Fragment implements
     private double mLng;
     private Animator slide_down_from_top;
     private Animator slide_up_from_bottom;
+    private PickupRequest mPickupRequest;
+    private boolean mRequestSubmitted;
+    private Animator fade_in;
+    private Animator slide_down_to_bottom;
+    private Animator slide_up_to_top;
+    private Animator fade_out;
 
 
     public PickUpDetailFragment() {
@@ -87,8 +99,7 @@ public class PickUpDetailFragment extends Fragment implements
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pick_up_detail, container, false);
         ButterKnife.inject(this, v);
-
-        setAddressFieldText(mAddress);
+        setHasOptionsMenu(true);
 
         //Hack to catch back button and animate away before popping backstack
         v.setFocusableInTouchMode(true);
@@ -96,43 +107,8 @@ public class PickUpDetailFragment extends Fragment implements
         v.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Log.i(((Object) this).getClass().getSimpleName(), "keyCode: " + keyCode);
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    Log.i(((Object) this).getClass().getSimpleName(), "onKey Back listener is working!!!");
-//                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    Animator slide_down_to_bottom = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_to_bottom);
-                    Animator slide_up_to_top = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
-                    slide_down_to_bottom.setTarget(rlPickupDetailContainer);
-                    slide_down_to_bottom.start();
-
-                    slide_up_to_top.setTarget(rlAddressContainer);
-
-                    final FragmentManager fm = getFragmentManager();
-                    slide_up_to_top.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            //TODO: maybe fade out?
-                            adaptableGradientRectView.setVisibility(View.INVISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            //HACKITY HACKITY
-                            fm.popBackStack();
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-                    slide_up_to_top.start();
-
+                    animateAndDetach();
                     return true;
                 } else {
                     return false;
@@ -140,7 +116,83 @@ public class PickUpDetailFragment extends Fragment implements
             }
         });
 
+        setAddressFieldText(mAddress);
+
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.pickup_detail_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                animateAndDetach();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void animateAndDetach() {
+        fade_out.setTarget(adaptableGradientRectView);
+        slide_down_to_bottom.setTarget(rlPickupDetailContainer);
+        slide_up_to_top.setTarget(rlAddressContainer);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(
+                fade_out,
+                slide_down_to_bottom,
+                slide_up_to_top);
+
+        final FragmentManager fragmentManager = getFragmentManager();
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                onAnimationEndedBeforeDetach();
+                fragmentManager.popBackStack();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+
+        set.start();
+    }
+
+    private void onAnimationEndedBeforeDetach() {
+        if (mRequestSubmitted) {
+            //stop displaying the spinning indicator
+            getActivity().setProgressBarIndeterminateVisibility(false);
+
+            // show submitted confirmation
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.pickupRequest_submittedDialog_title)
+                    .setMessage(R.string.pickupRequest_submittedDialog_message)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //
+                        }
+                    })
+                            //TODO: perhaps add another button to this dialog - 'view profile'?
+                    .setIcon(R.drawable.ic_launcher)
+                    .show();
+        }
+
     }
 
     @Override
@@ -172,10 +224,16 @@ public class PickUpDetailFragment extends Fragment implements
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        // entering animations
         slide_down_from_top = AnimatorInflater.loadAnimator(activity, R.animator.slide_down_from_top);
         slide_up_from_bottom = AnimatorInflater.loadAnimator(activity, R.animator.slide_up_from_bottom);
-    }
+        fade_in = AnimatorInflater.loadAnimator(activity, R.animator.fade_in);
 
+        //exiting animations
+        slide_down_to_bottom = AnimatorInflater.loadAnimator(activity, R.animator.slide_down_to_bottom);
+        slide_up_to_top = AnimatorInflater.loadAnimator(activity, R.animator.slide_up_to_top);
+        fade_out = AnimatorInflater.loadAnimator(activity, R.animator.fade_out);
+    }
 
     @Override
     public void onDetach() {
@@ -185,42 +243,19 @@ public class PickUpDetailFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+
+        fade_in.setTarget(adaptableGradientRectView);
         slide_down_from_top.setTarget(rlAddressContainer);
-        slide_down_from_top.start();
         slide_up_from_bottom.setTarget(rlPickupDetailContainer);
-        slide_up_from_bottom.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                //TODO: Fade in
-                adaptableGradientRectView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        slide_up_from_bottom.start();
-//        rlAddressContainer.startAnimation(slide_down_from_top);
-//        rlPickupDetailContainer.startAnimation(slide_up_from_bottom);
+        AnimatorSet set = new AnimatorSet();
+        set.play(slide_down_from_top).with(slide_up_from_bottom).before(fade_in);
+        set.start();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-//        rlAddressContainer.startAnimation(slide_up_from_bottom);
-//        rlPickupDetailContainer.startAnimation(slide_down_from_top);
     }
 
     @OnClick(R.id.btnSubmitPickup)
@@ -250,7 +285,7 @@ public class PickUpDetailFragment extends Fragment implements
         //TODO: create numcoats column in Parse
         int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
-        PickupRequest pickupRequest = new PickupRequest(
+        mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(mLat, mLng),
                 name,
                 mAddress,
@@ -260,9 +295,49 @@ public class PickUpDetailFragment extends Fragment implements
                 donationValue,
                 numcoats
         );
-        pickupRequest.saveInBackground();
 
-        Toast.makeText(getActivity(), "Pickup Confirmed! Saved " + name + " and " + phoneNumber + " to Parse!", Toast.LENGTH_LONG).show();
+        savePickupRequest();
+    }
 
+    private void savePickupRequest() {
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        mPickupRequest.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                shouldWeRetrySave(e);
+            }
+        });
+    }
+
+
+    public void shouldWeRetrySave(ParseException e) {
+        if (e == null) {
+            // saved successfully
+            mRequestSubmitted = true;
+            // detach this detail fragment, we're done here
+            animateAndDetach();
+
+        } else {
+            // save did not succeed
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            // show error notification dialog with retry or cancel
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.pickupRequest_retryDialog_title)
+                    .setMessage(R.string.pickupRequest_retryDialog_message)
+                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with retry
+                            savePickupRequest();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .show();
+        }
     }
 }

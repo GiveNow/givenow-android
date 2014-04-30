@@ -198,6 +198,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public int getNumberOfCoats() {
         int coats = getInt("numberOfCoats");
 
+        //TODO: do we really want this? UI should probably limit you from ever entering 0
         if (coats < 1) {
             coats = 1;
         }
@@ -235,8 +236,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     @Override
     public LatLng getPosition() {
         ParseGeoPoint loc = getLocation();
-        LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
-        return ll;
+        return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
 
     public void generatePendingVolunteerAssignedNotif() {

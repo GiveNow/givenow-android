@@ -20,7 +20,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_greeting">Login anonymously using your phone number</string>
     <string name="hello_world">Hello world!</string>
-    <string name="login_label">Login Anonymously</string>
+    <string name="login_label">Continue anonymously</string>
     <string name="confirm_pickup">Are you sure you want to pick up here?</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
@@ -29,5 +29,11 @@
     <string name="anonymous">Anonymous</string>
     <string name="address">Anonymous Address</string>
 
+    <string name="pickupRequest_retryDialog_message">Please check your internet connection and try again.</string>
+    <string name="pickupRequest_retryDialog_title">Pickup Request Failed</string>
+    <string name="pickupRequest_retryDialog_retryLabel">Retry</string>
+    <string name="pickupRequest_submittedDialog_title">Pickup Request Submitted!</string>
+    <string name="pickupRequest_submittedDialog_message">You\'ll be notified when a volunteer is ready to pick up your donation!</string>
+    <string name="action_cancel">Cancel</string>
 
 </resources>
