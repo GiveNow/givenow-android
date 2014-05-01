@@ -56,6 +56,8 @@ public class ConfirmRequestDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        // this is very temperamental here, so in the interests of demo stability,
+        // if i see this crashing again, maybe move this to an earlier point
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         super.onDismiss(dialog);
@@ -79,14 +81,15 @@ public class ConfirmRequestDialogFragment extends DialogFragment {
                 // on success
                 ConfirmPickupDialogListener listener = (ConfirmPickupDialogListener) getParentFragment();
                 listener.onFinishConfirmPickupDialog(etName.getText().toString(), etPhone.getText().toString());
-                dialog.dismiss();
+
+//                dialog.dismiss();
             }
         });
 
         alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+//                dialog.dismiss();
             }
         });
 

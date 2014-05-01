@@ -2,30 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_centerVertical="true">
+    android:layout_centerVertical="true"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/pickupDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:textColor="#ffffffff" />
 
     <TextView
         android:id="@+id/pickupAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="4" />
+        android:layout_weight="4"
+        android:textColor="#ffffffff" />
 
     <TextView
         android:id="@+id/itemType"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.5" />
+        android:layout_weight="1.5"
+        android:textColor="#ffffffff" />
 
 
     <TextView
         android:id="@+id/numItems"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.5" />
+        android:layout_weight="1.5"
+        android:textColor="#ffffffff" />
 </LinearLayout>

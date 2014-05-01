@@ -27,10 +27,10 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.profile.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
@@ -55,7 +55,7 @@ public class MainActivity extends Activity implements
     private CharSequence mTitle;
     private String[] mDrawerTitles;
     private int mSelectedItem;
-    private RequestPickupDetailFragment pickUpDetailFragment;
+    private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
 
     @Override
@@ -129,7 +129,7 @@ public class MainActivity extends Activity implements
     private String getId(ParseUser volunteer) {
         String id = null;
 
-        if(volunteer != null){
+        if (volunteer != null) {
             id = volunteer.getObjectId();
         }
 
@@ -310,27 +310,33 @@ public class MainActivity extends Activity implements
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-    public void onLaunchPickUpDetail(String address, double lat, double lng) {
-        pickUpDetailFragment = RequestPickupDetailFragment.newInstance(address, lat, lng);
+    public void onLaunchRequestPickUpDetail(String address, double lat, double lng) {
+        requestPickUpDetailFragment = RequestPickupDetailFragment.newInstance(address, lat, lng);
         getFragmentManager().beginTransaction()
-                .add(R.id.content, pickUpDetailFragment,
+                .add(R.id.content, requestPickUpDetailFragment,
                         "RequestPickupDetailFragment")
                 .addToBackStack("RequestPickupDetailFragment")
                 .commit();
     }
 
     public void updateAddress(Address address) {
-        if (pickUpDetailFragment != null) {
-            pickUpDetailFragment.setAddressFieldText(address.getAddressLine(0));
+        if (requestPickUpDetailFragment != null) {
+            requestPickUpDetailFragment.setAddressFieldText(address.getAddressLine(0));
         }
     }
 
     public void onLaunchPickupRequestDetail(PickupRequest pickupRequest) {
+        if (pickupRequestDetailFragment != null) {
+            if (pickupRequestDetailFragment.isAdded()) {
+                //already displaying a detail fragment, close that one
+                pickupRequestDetailFragment.animateAndDetach();
+            }
+        }
         pickupRequestDetailFragment = PickupRequestDetailFragment.newInstance(pickupRequest);
         getFragmentManager().beginTransaction()
                 .add(R.id.content, pickupRequestDetailFragment,
-                        "PickupRequestDetailFragment")
-                .addToBackStack("PickupRequestDetailFragment")
+                        pickupRequestDetailFragment.getGeneratedTag())
+                .addToBackStack(pickupRequestDetailFragment.getGeneratedTag())
                 .commit();
     }
 

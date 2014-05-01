@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.fragments.main;
+package org.onewarmcoat.onewarmcoat.app.fragments.main.profile;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -48,7 +48,7 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
 
     @Override
     protected String[] getTitles() {
-        return new String[]{"Donation History", "Pickup History"};
+        return new String[]{"My Donation History", "My Pickup History"};
     }
 
     @Override
@@ -85,8 +85,8 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
                 if (e == null) {
                     if (objects.size() > 0) {
                         String phoneNum = objects.get(0).getString("phone");
-                        phonenoTV = (TextView) rootView.findViewById(R.id.phoneno);
-                        phonenoTV.setText(phoneNum);
+                        //TODO: REENABLE THIS AFTER THE DEMO LOL
+//                        phonenoTV.setText(phoneNum);
                     } else {
                         Toast.makeText(getActivity(), "NO RECORDS FOUND!", Toast.LENGTH_LONG);
                     }

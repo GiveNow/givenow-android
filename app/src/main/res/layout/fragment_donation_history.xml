@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:background="#ff7ba8ff"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.DonationHistoryFragment">
+    android:background="#ff246d9e"
+    android:padding="10dp"
+    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.profile.DonationHistoryFragment">
 
 
     <LinearLayout
@@ -12,7 +13,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <TextView
             android:id="@+id/dateHdr"
@@ -21,6 +24,8 @@
             android:layout_weight="4"
             android:text="Pickup Date"
             android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#ffffffff"
             android:textStyle="bold" />
 
         <TextView
@@ -30,6 +35,8 @@
             android:layout_weight="3"
             android:text="Type"
             android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#ffffffff"
             android:textStyle="bold" />
 
         <TextView
@@ -37,17 +44,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="value"
+            android:text="Est. Value"
             android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#ffffffff"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/donationHeaders"
-        android:layout_marginBottom="5dp"
-        android:background="@android:color/black" />
+    <!--<View-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="2dp"-->
+    <!--android:layout_below="@id/donationHeaders"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--android:background="#ffcacaca" />-->
 
     <ListView
         android:id="@+id/donations"

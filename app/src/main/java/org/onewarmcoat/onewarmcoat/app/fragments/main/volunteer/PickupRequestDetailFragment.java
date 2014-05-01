@@ -33,21 +33,17 @@ import butterknife.OnClick;
 
 public class PickupRequestDetailFragment extends Fragment {
     private static PickupRequest pickupRequest;
-
     @InjectView(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
     @InjectView(R.id.rlButtonContainer)
     SlidingRelativeLayout rlButtonContainer;
-
     @InjectView(R.id.tvDonorName)
     TextView tvDonorName;
-
     @InjectView(R.id.tvDonorAddress)
     TextView tvDonorAddress;
-
     @InjectView(R.id.btnAccept)
     Button btnAccept;
-
+    private long mTag;
     private Animator slide_down_from_top;
     private Animator slide_up_to_top;
     private Animator slide_up_from_bottom;
@@ -63,7 +59,16 @@ public class PickupRequestDetailFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable("pickupRequest", pickupRequest);
         f.setArguments(args);
+        f.setGeneratedTag(System.currentTimeMillis());
         return f;
+    }
+
+    public String getGeneratedTag() {
+        return String.valueOf(mTag);
+    }
+
+    public void setGeneratedTag(long mTag) {
+        this.mTag = mTag;
     }
 
     @Override
@@ -145,7 +150,7 @@ public class PickupRequestDetailFragment extends Fragment {
         btnAnim.start();
     }
 
-    private void animateAndDetach() {
+    public void animateAndDetach() {
         slide_up_to_top.setTarget(rlInfoContainer);
         slide_down_to_bottom.setTarget(rlButtonContainer);
         AnimatorSet set = new AnimatorSet();
@@ -163,7 +168,8 @@ public class PickupRequestDetailFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animator animation) {
 //                onAnimationEndedBeforeDetach();
-                fragmentManager.popBackStack();
+                fragmentManager.popBackStack(getGeneratedTag(),
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
 
             @Override

@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.fragments.main;
+package org.onewarmcoat.onewarmcoat.app.fragments.main.profile;
 
 
 import android.app.Fragment;

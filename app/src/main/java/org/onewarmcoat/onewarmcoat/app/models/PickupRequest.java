@@ -247,8 +247,9 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //create Parse Data
         JSONObject data = new JSONObject();
         try {
-            data.put("title", "Pickup Request Confirmed");
-            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+            data.put("title", "Pickup Request Accepted");
+//            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation!");
         } catch (JSONException e) {
             e.printStackTrace();
         }

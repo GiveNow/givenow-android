@@ -113,7 +113,7 @@ public class RequestPickupFragment extends MapHostingFragment {
 //        etAddress.setVisibility(View.INVISIBLE);
 
         //show detail layout
-        mListener.onLaunchPickUpDetail(addrString, pos.latitude, pos.longitude);
+        mListener.onLaunchRequestPickUpDetail(addrString, pos.latitude, pos.longitude);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class RequestPickupFragment extends MapHostingFragment {
 
     // Container Activity must implement this interface
     public interface PickUpDetailInteractionListener {
-        public void onLaunchPickUpDetail(String addr, double lat, double lng);
+        public void onLaunchRequestPickUpDetail(String addr, double lat, double lng);
 
         public void updateAddress(Address address);
     }
