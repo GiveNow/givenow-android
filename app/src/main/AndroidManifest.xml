@@ -23,8 +23,8 @@
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
     <permission
-        android:protectionLevel="signature"
-        android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
+        android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
     <uses-permission android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
 
     <!-- Card.io perms -->
@@ -55,7 +55,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.Onewarmcoat">
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"

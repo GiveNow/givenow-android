@@ -5,6 +5,7 @@
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
+        style="@style/Theme.Onewarmcoat"
         android:layout_width="match_parent"
         android:layout_height="48dip" />
 

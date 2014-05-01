@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -52,7 +53,13 @@ public class PageSlidingTabStripFragment extends Fragment {
         // http://stackoverflow.com/questions/11852604/why-is-my-fragment-oncreate-being-called-extensively-whenever-i-page-through-my
         pager.setOffscreenPageLimit(adapter.getCount() - 1);
 
-		tabs.setViewPager(pager);
+//        tabs.setShouldExpand(true);
+//        tabs.setBackgroundResource(R.drawable.tab);
+//        tabs.setIndicatorColorResource(R.drawable.tab_selected_onewarmcoat);
+        tabs.setIndicatorColor(Color.argb(0xFF, 0x24, 0x6D, 0x9E));
+        tabs.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
+        tabs.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
+        tabs.setViewPager(pager);
 
 	}
 
