@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -128,13 +127,13 @@ public class MapHostingFragment extends Fragment
         mGoogleMap = map;
         if (mapFragment != null) {
             if (map != null) {
-                Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
                 map.setMyLocationEnabled(true);
             } else {
-                Toast.makeText(getActivity(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -247,10 +246,10 @@ public class MapHostingFragment extends Fragment
                     mZoomToLocation = false;
                 }
             } else {
-                Toast.makeText(getActivity(), "map is null, can't move camera!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "map is null, can't move camera!", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), "Current location was null, enable GPS!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Current location was null, enable GPS!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -261,7 +260,7 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onDisconnected() {
         // Display the connection status
-        Toast.makeText(getActivity(), "Disconnected from location services. Please re-connect.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "Disconnected from location services. Please re-connect.", Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -285,8 +284,8 @@ public class MapHostingFragment extends Fragment
                 e.printStackTrace();
             }
         } else {
-            Toast.makeText(getActivity(),
-                    "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(),
+//                    "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
     }
 }

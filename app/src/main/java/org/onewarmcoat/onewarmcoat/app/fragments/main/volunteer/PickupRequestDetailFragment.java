@@ -194,7 +194,8 @@ public class PickupRequestDetailFragment extends Fragment {
         //set the pending volunteer on the PickupRequest.  This marks the pickup request as pending, and not shown on the map to other volunteers
         pickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
         pickupRequest.saveInBackground();
-        Toast.makeText(getActivity(), "saved the current volunteer as pending", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "saved the current volunteer as pending", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Thank you!", Toast.LENGTH_SHORT).show();
 
         pickupRequest.generatePendingVolunteerAssignedNotif();
 
