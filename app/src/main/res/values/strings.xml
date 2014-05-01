@@ -20,7 +20,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_greeting">Login anonymously using your phone number</string>
     <string name="hello_world">Hello world!</string>
-    <string name="login_label">Continue anonymously</string>
+    <string name="login_label">Log in Anonymously</string>
     <string name="confirm_pickup">Are you sure you want to pick up this donation?</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>

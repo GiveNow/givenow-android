@@ -29,8 +29,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/imageView"
+        android:background="#ff494949"
         android:onClick="anonLogin"
-        android:text="@string/login_label" />
+        android:text="@string/login_label"
+        android:textColor="#ffffffff" />
 
     <ImageView
         android:id="@+id/imageView2"
