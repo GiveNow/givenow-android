@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseAnonymousUtils;
@@ -23,6 +24,8 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
+
         setContentView(R.layout.activity_login);
 
         ParseAnalytics.trackAppOpened(getIntent());

@@ -1,4 +1,18 @@
+buildscript {
+    repositories {
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
 apply plugin: 'android'
+apply plugin: 'crashlytics'
+repositories {
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
 
 android {
     compileSdkVersion 19
@@ -39,5 +53,7 @@ dependencies {
     compile files('libs/Parse-1.4.3/Parse-1.4.3.jar')
 //    compile files('libs/card.io-3.1.4/card.io.jar')
     compile project(':stripe')
+    compile 'com.crashlytics.android:crashlytics:1.+'
+
 }
 
