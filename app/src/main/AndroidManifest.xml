@@ -104,6 +104,10 @@
                 <category android:name="org.onewarmcoat.onewarmcoat.app" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="dc8da7fae26300fd9d1d6bf00f400fc442acc4a7" />
     </application>
 
 </manifest>
