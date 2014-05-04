@@ -66,4 +66,9 @@ public class CharityUserHelper {
         //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
         return CharityUserHelper.getName().split(" ")[0];
     }
+
+    public static String getFirstName(String name) {
+        //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
+        return name.split(" ")[0];
+    }
 }
