@@ -59,9 +59,9 @@ public class RequestPickupFragment extends MapHostingFragment {
     @Override
     public void onMapReady(GoogleMap map) {
         super.onMapReady(map);
-        mGoogleMap.getUiSettings().setCompassEnabled(false);
+        map.getUiSettings().setCompassEnabled(false);
 
-        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 if (!mMapIsTouched) {
@@ -77,7 +77,7 @@ public class RequestPickupFragment extends MapHostingFragment {
             }
         });
 
-        //TODO: Add a listener to etAddress to go to inputted addresses
+        //TODO: Add a textwatcher listener to etAddress to go to inputted addresses
 
     }
 

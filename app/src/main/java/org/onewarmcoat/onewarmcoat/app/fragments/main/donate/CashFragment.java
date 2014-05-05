@@ -156,7 +156,7 @@ public class CashFragment extends Fragment {
 
         // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
         startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
-        getActivity().overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_to_bottom);
+        getActivity().overridePendingTransition(R.anim.slide_in_from_top, R.anim.slide_out_from_bottom);
     }
 
     @Override

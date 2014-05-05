@@ -12,6 +12,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,6 +59,7 @@ public class PickupRequestDetailFragment extends Fragment {
     private Animator slide_up_to_top;
     private Animator slide_up_from_bottom;
     private Animator slide_down_to_bottom;
+    private boolean mKeyCodeBackEventHandled = false;
 
     public PickupRequestDetailFragment() {
 
@@ -93,11 +95,19 @@ public class PickupRequestDetailFragment extends Fragment {
         fragmentView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    animateAndDetach();
+                //This event is raised twice for a back button press. Not sure why, but
+                // here's a hack to only handle the first event.
+                if (mKeyCodeBackEventHandled) {
+                    Log.d(((Object) this).getClass().getSimpleName(), "Ignoring extra Back event.");
                     return true;
                 } else {
-                    return false;
+                    mKeyCodeBackEventHandled = true;
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        animateAndDetach();
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         });

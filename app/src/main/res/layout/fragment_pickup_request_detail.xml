@@ -110,15 +110,17 @@
                 android:textColor="#ff266e9f" />
         </LinearLayout>
 
+        <!-- disable this for now - we'll move this to the new volunteer dashboard tab. -->
         <LinearLayout
             android:id="@+id/llPhone"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_below="@id/llAddress"
             android:background="#ffdde8ed"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-            <ImageView
+        <ImageView
                 android:id="@+id/ivPhoneIcon"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
