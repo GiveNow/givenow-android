@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +44,8 @@ public class PickupRequestDetailFragment extends Fragment implements
     TextView tvDonorName;
     @InjectView(R.id.tvDonorAddress)
     TextView tvDonorAddress;
-    @InjectView(R.id.llPhone)
-    LinearLayout llPhone;
+    /*@InjectView(R.id.llPhone)
+    LinearLayout llPhone;*/
     @InjectView(R.id.btnAccept)
     Button btnAccept;
     private PickupRequest pickupRequest;
@@ -174,11 +173,11 @@ public class PickupRequestDetailFragment extends Fragment implements
         btnAnim.setRepeatMode(ValueAnimator.REVERSE);
         btnAnim.start();
 
-        ObjectAnimator llAnim = ObjectAnimator.ofObject(llPhone, "backgroundColor", new ArgbEvaluator(),
+        /*ObjectAnimator llAnim = ObjectAnimator.ofObject(llPhone, "backgroundColor", new ArgbEvaluator(),
                 0xffdde8ed, 0xffffffff);
         llAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
         llAnim.setRepeatMode(ValueAnimator.REVERSE);
-        llAnim.start();
+        llAnim.start();*/
     }
 
     public void animateAndDetach() {
