@@ -9,8 +9,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -21,8 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,12 +42,6 @@ public class PickupRequestDetailFragment extends Fragment {
     TextView tvDonorName;
     @InjectView(R.id.tvDonorAddress)
     TextView tvDonorAddress;
-    @InjectView(R.id.llPhone)
-    LinearLayout llPhone;
-    @InjectView(R.id.tvPhone)
-    TextView tvPhone;
-    @InjectView(R.id.ivPhoneIcon)
-    ImageView ivPhone;
     @InjectView(R.id.btnAccept)
     Button btnAccept;
     private long mTag;
@@ -119,7 +109,6 @@ public class PickupRequestDetailFragment extends Fragment {
 
         tvDonorName.setText(pickupRequest.getName());
         tvDonorAddress.setText(pickupRequest.getAddresss());
-        tvPhone.setText(pickupRequest.getPhoneNumber());
 
         return fragmentView;
     }
@@ -169,12 +158,6 @@ public class PickupRequestDetailFragment extends Fragment {
         btnAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
         btnAnim.setRepeatMode(ValueAnimator.REVERSE);
         btnAnim.start();
-
-        ObjectAnimator llAnim = ObjectAnimator.ofObject(llPhone, "backgroundColor", new ArgbEvaluator(),
-                0xffdde8ed, 0xffffffff);
-        llAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
-        llAnim.setRepeatMode(ValueAnimator.REVERSE);
-        llAnim.start();
     }
 
     public void animateAndDetach() {
@@ -236,20 +219,4 @@ public class PickupRequestDetailFragment extends Fragment {
 //        getActivity().getFragmentManager().popBackStack();
         animateAndDetach();
     }
-
-    @OnClick(R.id.llPhone)
-    public void onCallDonor(LinearLayout phoneRow) {
-        Toast.makeText(getActivity(), "Phone call callback activated!", Toast.LENGTH_LONG);
-
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        String donorPhoneNum = pickupRequest.getPhoneNumber();
-        donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
-        String uriStr = "tel:" + donorPhoneNum;
-        callIntent.setData(Uri.parse(uriStr));
-        startActivity(callIntent);
-
-    }
-
-
-
 }

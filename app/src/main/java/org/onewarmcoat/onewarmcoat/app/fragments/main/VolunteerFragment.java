@@ -7,12 +7,14 @@ import android.util.Log;
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.DropOffLocationsFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.DashboardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
 
     private PickupRequestsFragment pickupRequestsFragment;
     private DropOffLocationsFragment dropOffLocationsFragment;
+    private DashboardFragment dashboardFragment;
 
     public VolunteerFragment() {
         // Required empty public constructor
@@ -25,7 +27,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
 
     @Override
     protected String[] getTitles() {
-        return new String[]{"PickUp Requests", "DropOff Locations"};
+        return new String[]{"My Dashboard", "PickUp Requests", "DropOff Locations"};
     }
 
     @Override
@@ -36,6 +38,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
             //create fragments
             pickupRequestsFragment = PickupRequestsFragment.newInstance();
             dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
+            dashboardFragment = DashboardFragment.newInstance();
             Log.w("VolunteerFragment", "onCreate: Fragments created");
         }
     }
@@ -44,10 +47,13 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     protected Fragment getFragmentForPosition(int position) {
         Fragment frag;
         switch (position) {
-            case 0: //PickUp Requests
+            case 0: //Dashboard
+                frag = dashboardFragment;
+                break;
+            case 1: //PickUp Requests
                 frag = pickupRequestsFragment;
                 break;
-            case 1: //Drop Off Locations
+            case 2: //Drop Off Locations
                 frag = dropOffLocationsFragment;
                 break;
             default:
@@ -59,6 +65,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     }
 
     public void loadMarkers() {
+        //TODO: probably just move this to PickupRequestFragment onStart / onResume
         if(pickupRequestsFragment != null){
 //            Toast.makeText(getActivity(), "query and reload markers", Toast.LENGTH_SHORT).show();
             pickupRequestsFragment.loadMarkers();

@@ -40,5 +40,6 @@
     <string name="itypeHdr">Type</string>
     <string name="cashValHdr">Value</string>
     <string name="dateHdr">Pickup Date</string>
+    <string name="action_refresh">Refresh</string>
 
 </resources>
