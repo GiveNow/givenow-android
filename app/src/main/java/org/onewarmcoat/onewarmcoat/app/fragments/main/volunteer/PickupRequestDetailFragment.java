@@ -47,10 +47,6 @@ public class PickupRequestDetailFragment extends Fragment implements
     TextView tvDonorAddress;
     @InjectView(R.id.llPhone)
     LinearLayout llPhone;
-    @InjectView(R.id.tvPhone)
-    TextView tvPhone;
-    /*@InjectView(R.id.ivPhoneIcon)
-    ImageView ivPhone;*/
     @InjectView(R.id.btnAccept)
     Button btnAccept;
     private PickupRequest pickupRequest;
@@ -128,7 +124,6 @@ public class PickupRequestDetailFragment extends Fragment implements
 
         tvDonorName.setText(pickupRequest.getName());
         tvDonorAddress.setText(pickupRequest.getAddresss());
-        tvPhone.setText(pickupRequest.getPhoneNumber());
 
         return fragmentView;
     }
@@ -278,9 +273,6 @@ public class PickupRequestDetailFragment extends Fragment implements
     public void onDetach() {
         super.onDetach();
     }
-
-
-
 
 
     /* after clicking accept in the ConfirmRequestDialogFragment update User with
