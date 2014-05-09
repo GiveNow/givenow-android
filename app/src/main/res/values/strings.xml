@@ -44,5 +44,7 @@
     <string name="enter_phone">Phone No:</string>
     <string name="volunteer_disclaimer">You will only be called if there is a problem with the donation you are picking up</string>
     <string name="action_refresh">Refresh</string>
+    <string name="accepted_req_dialog_title">Accepted Pickup Request!</string>
+    <string name="accepted_req_dialog_msg">Thanks, pick up the donation</string>
 
 </resources>

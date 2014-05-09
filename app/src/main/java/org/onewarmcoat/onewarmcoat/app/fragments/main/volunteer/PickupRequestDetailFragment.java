@@ -7,8 +7,10 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.ParseUser;
 
@@ -231,42 +232,22 @@ public class PickupRequestDetailFragment extends Fragment implements
                     AcceptPickupDialogFragment.newInstance("Confirm Pickup");
             acceptanceDialogFragment.show(fm, "fragment_accept_pickup_dialog");
         } else {
-            animateAndDetach();
+            showFinalDialog();
         }
-
-        /*ParseUser currUser = ParseUser.getCurrentUser();
-        ParseQuery<PickupRequest> donorQuery = ParseQuery.getQuery(PickupRequest.class);
-        donorQuery.whereEqualTo("donor", currUser);
-        ParseQuery<PickupRequest> pendingVolunteerQuery = ParseQuery.getQuery(PickupRequest.class);
-        pendingVolunteerQuery.whereEqualTo("pendingVolunteer", currUser);
-
-        List<ParseQuery<PickupRequest>> queries = new ArrayList<ParseQuery<PickupRequest>>();
-        queries.add(donorQuery);
-        queries.add(pendingVolunteerQuery);
-
-        ParseQuery<PickupRequest> compoundQuery = ParseQuery.or(queries);
-        compoundQuery.findInBackground(new FindCallback<PickupRequest>() {
-            // CALLBACK FUNCTION, QUERY HAS FINISHED IF ENTERING THIS FUNCTION
-            public void done(List<PickupRequest> results, ParseException e) {
-                // not an existing donor or volunteer
-                if(results.size() == 0) {
-
-                    Activity act = getActivity();
-                    FragmentManager fm = getChildFragmentManager();
-                    AcceptPickupDialogFragment acceptanceDialogFragment =
-                            AcceptPickupDialogFragment.newInstance("Confirm Pickup");
-                    acceptanceDialogFragment.show(fm, "fragment_accept_pickup_dialog");
-
-                }
-                // IS an existing donor or volunteer
-                else {
-                    animateAndDetach();
-                }
-
-            }
-        }); */
     }
 
+    public void showFinalDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.accepted_req_dialog_title)
+                .setMessage(R.string.accepted_req_dialog_msg)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        animateAndDetach();
+                    }
+                })
+                .setIcon(R.drawable.ic_launcher)
+                .show();
+    }
 
     @Override
     public void onDetach() {
@@ -281,8 +262,8 @@ public class PickupRequestDetailFragment extends Fragment implements
     public void onConfirmAcceptDialog(String name, String phoneNumber) {
         CharityUserHelper cuh = new CharityUserHelper();
         cuh.setNameAndNumber(name, phoneNumber);
-        Toast.makeText(getActivity(), "Thanks " + name + "!", Toast.LENGTH_LONG).show();
-        animateAndDetach();
+        showFinalDialog();
+        //animateAndDetach();
     }
 
 
