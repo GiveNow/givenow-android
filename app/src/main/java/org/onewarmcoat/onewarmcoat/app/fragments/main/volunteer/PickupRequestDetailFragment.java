@@ -9,9 +9,8 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,6 +59,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     private Animator slide_up_to_top;
     private Animator slide_up_from_bottom;
     private Animator slide_down_to_bottom;
+    private boolean mKeyCodeBackEventHandled = false;
 
     public PickupRequestDetailFragment() {
 
@@ -107,11 +107,19 @@ public class PickupRequestDetailFragment extends Fragment implements
         fragmentView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    animateAndDetach();
+                //This event is raised twice for a back button press. Not sure why, but
+                // here's a hack to only handle the first event.
+                if (mKeyCodeBackEventHandled) {
+                    Log.d(((Object) this).getClass().getSimpleName(), "Ignoring extra Back event.");
                     return true;
                 } else {
-                    return false;
+                    mKeyCodeBackEventHandled = true;
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        animateAndDetach();
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         });
@@ -272,17 +280,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     }
 
 
-    @OnClick(R.id.llPhone)
-    public void onCallDonor(LinearLayout phoneRow) {
-        Toast.makeText(getActivity(), "Phone call callback activated!", Toast.LENGTH_LONG);
 
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        String donorPhoneNum = pickupRequest.getPhoneNumber();
-        donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
-        String uriStr = "tel:" + donorPhoneNum;
-        callIntent.setData(Uri.parse(uriStr));
-        startActivity(callIntent);
-    }
 
 
     /* after clicking accept in the ConfirmRequestDialogFragment update User with

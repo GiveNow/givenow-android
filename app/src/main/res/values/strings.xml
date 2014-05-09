@@ -43,5 +43,6 @@
     <string name="enter_name">First Name:</string>
     <string name="enter_phone">Phone No:</string>
     <string name="volunteer_disclaimer">You will only be called if there is a problem with the donation you are picking up</string>
+    <string name="action_refresh">Refresh</string>
 
 </resources>

@@ -110,41 +110,10 @@
                 android:textColor="#ff266e9f" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/llPhone"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_below="@id/llAddress"
-            android:background="#ffdde8ed"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/ivPhoneIcon"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/iconmonstr_phone_3_icon_256" />
-
-            <TextView
-                android:id="@+id/tvPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="6507777777"
-                android:textAllCaps="false"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#ff266e9f" />
-        </LinearLayout>
-
         <View
             android:layout_width="fill_parent"
             android:layout_height="5dp"
-            android:layout_below="@id/llPhone"
+            android:layout_below="@id/llAddress"
             android:background="@drawable/drop_shadow" />
     </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
 
