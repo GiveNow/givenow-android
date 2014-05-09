@@ -40,5 +40,8 @@
     <string name="itypeHdr">Type</string>
     <string name="cashValHdr">Value</string>
     <string name="dateHdr">Pickup Date</string>
+    <string name="enter_name">First Name:</string>
+    <string name="enter_phone">Phone No:</string>
+    <string name="volunteer_disclaimer">You will only be called if there is a problem with the donation you are picking up</string>
 
 </resources>

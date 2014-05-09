@@ -59,7 +59,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     }
 
     public void loadMarkers() {
-        if(pickupRequestsFragment != null){
+        if (pickupRequestsFragment != null) {
 //            Toast.makeText(getActivity(), "query and reload markers", Toast.LENGTH_SHORT).show();
             pickupRequestsFragment.loadMarkers();
         }

@@ -33,7 +33,6 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
-    private PickupRequest selectedPickupReq;
 
     public PickupRequestsFragment() {
         // Required empty public constructor
@@ -49,6 +48,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Activity currAct = activity;
         try {
             mListener = (PickupRequestDetailInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -56,6 +56,24 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                     + " must implement PickupRequestDetailInteractionListener");
         }
     }
+
+
+    /*@Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -120,19 +138,6 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
         mListener.onLaunchPickupRequestDetail(pickupRequest);
     }
-
-//    @Override
-//    public void onConfirmAcceptDialog() {
-//        // donation gets saved.
-//        // this should happen after volunteer says he picked up the donation
-//        Double donationValue = selectedPickupReq.getDonationValue();
-//        String donationType = selectedPickupReq.getDonationType();
-//        ParseUser donor = selectedPickupReq.getDonor();
-//        Donation newDonation = new Donation(donor, donationType, donationValue);
-//        newDonation.saveInBackground();
-//        selectedPickupReq.setDonation(newDonation);
-//        selectedPickupReq.saveInBackground();
-//    }
 
     // Container Activity must implement this interface
     public interface PickupRequestDetailInteractionListener {

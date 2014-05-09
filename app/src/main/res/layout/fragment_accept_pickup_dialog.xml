@@ -9,22 +9,24 @@
     android:orientation="vertical"
     android:padding="15dp">
 
-    <TextView
-        android:id="@+id/confirmPickupTV"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/vnameET"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/confirm_pickup" />
+        android:hint="volunteer name" />
+
+    <EditText
+        android:id="@+id/vphoneET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="volunteer phone" />
 
     <TextView
-        android:id="@+id/dnameTV"
-        android:layout_width="wrap_content"
+        android:id="@+id/volunteer_disclaimer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center" />
-
-    <TextView
-        android:id="@+id/daddrTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="@string/volunteer_disclaimer" />
 </LinearLayout>

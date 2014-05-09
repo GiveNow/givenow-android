@@ -100,7 +100,7 @@ public class RequestPickupDetailFragment extends Fragment implements
             mLng = getArguments().getDouble(ARG_LNG);
         }
         getActivity().getActionBar().setTitle("Confirmation");
-        //TODO: Add 'Cancel' button to Actionbar
+
     }
 
     @Override

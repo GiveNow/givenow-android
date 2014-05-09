@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,14 +28,16 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class PickupRequestDetailFragment extends Fragment {
-    private static PickupRequest pickupRequest;
+public class PickupRequestDetailFragment extends Fragment implements
+        AcceptPickupDialogFragment.AcceptPickupDialogListener {
+
     @InjectView(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
     @InjectView(R.id.rlButtonContainer)
@@ -49,10 +50,11 @@ public class PickupRequestDetailFragment extends Fragment {
     LinearLayout llPhone;
     @InjectView(R.id.tvPhone)
     TextView tvPhone;
-    @InjectView(R.id.ivPhoneIcon)
-    ImageView ivPhone;
+    /*@InjectView(R.id.ivPhoneIcon)
+    ImageView ivPhone;*/
     @InjectView(R.id.btnAccept)
     Button btnAccept;
+    private PickupRequest pickupRequest;
     private long mTag;
     private Animator slide_down_from_top;
     private Animator slide_up_to_top;
@@ -63,7 +65,8 @@ public class PickupRequestDetailFragment extends Fragment {
 
     }
 
-    // keeps name and addr in bundle 'memory' for retrieval later in onCreateView
+
+    // keeps pickup request bundle 'memory' for retrieval later in onCreateView
     public static PickupRequestDetailFragment newInstance(PickupRequest pickupRequest) {
         PickupRequestDetailFragment f = new PickupRequestDetailFragment();
         Bundle args = new Bundle();
@@ -80,6 +83,17 @@ public class PickupRequestDetailFragment extends Fragment {
     public void setGeneratedTag(long mTag) {
         this.mTag = mTag;
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            //pickupRequest = getArguments().getSerializable("pickupRequest");
+        }
+        getActivity().getActionBar().setTitle("Pickup Confirmation");
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
@@ -102,9 +116,6 @@ public class PickupRequestDetailFragment extends Fragment {
             }
         });
 
-        /* name could be anything ("My Clothes", "Two Fur Coats", "Alex Tam", etc
-         * name originated from scraped javascript
-         */
         pickupRequest = (PickupRequest) getArguments().getSerializable("pickupRequest");
 
         tvDonorName.setText(pickupRequest.getName());
@@ -201,31 +212,65 @@ public class PickupRequestDetailFragment extends Fragment {
         set.start();
     }
 
+
+    /* on accept, query parse to see if volunteer is either a donor or a previous volunteer.
+      If he isn't either pop up dialogfragment for name and phone.*/
     @OnClick(R.id.btnAccept)
     public void onAccept(Button b) {
-        //TODO: Add indeterminate progress bar
-        //this should be set when the volunteer confirms pickup
-//                Donation row1 = new Donation(pickupRequest.getDonor(), Donation.COAT, 100);
-//                row1.saveInBackground();
 
-        //set the pending volunteer on the PickupRequest.  This marks the pickup request as pending, and not shown on the map to other volunteers
-        pickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
-        pickupRequest.saveInBackground();
-//        Toast.makeText(getActivity(), "saved the current volunteer as pending", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), "Thank you!", Toast.LENGTH_SHORT).show();
+        // assign pending volunteer in PickupRequest table and send push notif to donor
+        pickupRequestHelper();
 
-        pickupRequest.generatePendingVolunteerAssignedNotif();
+        ParseUser currUser = ParseUser.getCurrentUser();
+        String currUserPhoneNo = currUser.getString("phoneNumber");
+        if (currUserPhoneNo == null) {
+            FragmentManager fm = getChildFragmentManager();
+            AcceptPickupDialogFragment acceptanceDialogFragment =
+                    AcceptPickupDialogFragment.newInstance("Confirm Pickup");
+            acceptanceDialogFragment.show(fm, "fragment_accept_pickup_dialog");
+        } else {
+            animateAndDetach();
+        }
 
-        //somehow need to get pickupRequestsFragment, so we can reload markers
-//        pickupRequestsFragment.loadMarkers();
+        /*ParseUser currUser = ParseUser.getCurrentUser();
+        ParseQuery<PickupRequest> donorQuery = ParseQuery.getQuery(PickupRequest.class);
+        donorQuery.whereEqualTo("donor", currUser);
+        ParseQuery<PickupRequest> pendingVolunteerQuery = ParseQuery.getQuery(PickupRequest.class);
+        pendingVolunteerQuery.whereEqualTo("pendingVolunteer", currUser);
 
-        //launch congrats fragment, waiting for user to confirm
+        List<ParseQuery<PickupRequest>> queries = new ArrayList<ParseQuery<PickupRequest>>();
+        queries.add(donorQuery);
+        queries.add(pendingVolunteerQuery);
 
-        //need to re-draw pin in new color
+        ParseQuery<PickupRequest> compoundQuery = ParseQuery.or(queries);
+        compoundQuery.findInBackground(new FindCallback<PickupRequest>() {
+            // CALLBACK FUNCTION, QUERY HAS FINISHED IF ENTERING THIS FUNCTION
+            public void done(List<PickupRequest> results, ParseException e) {
+                // not an existing donor or volunteer
+                if(results.size() == 0) {
 
-//        getActivity().getFragmentManager().popBackStack();
-        animateAndDetach();
+                    Activity act = getActivity();
+                    FragmentManager fm = getChildFragmentManager();
+                    AcceptPickupDialogFragment acceptanceDialogFragment =
+                            AcceptPickupDialogFragment.newInstance("Confirm Pickup");
+                    acceptanceDialogFragment.show(fm, "fragment_accept_pickup_dialog");
+
+                }
+                // IS an existing donor or volunteer
+                else {
+                    animateAndDetach();
+                }
+
+            }
+        }); */
     }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
 
     @OnClick(R.id.llPhone)
     public void onCallDonor(LinearLayout phoneRow) {
@@ -237,9 +282,28 @@ public class PickupRequestDetailFragment extends Fragment {
         String uriStr = "tel:" + donorPhoneNum;
         callIntent.setData(Uri.parse(uriStr));
         startActivity(callIntent);
-
     }
 
 
+    /* after clicking accept in the ConfirmRequestDialogFragment update User with
+     * volunteer name and phone
+     */
+    @Override
+    public void onConfirmAcceptDialog(String name, String phoneNumber) {
+        CharityUserHelper cuh = new CharityUserHelper();
+        cuh.setNameAndNumber(name, phoneNumber);
+        Toast.makeText(getActivity(), "Thanks " + name + "!", Toast.LENGTH_LONG).show();
+        animateAndDetach();
+    }
 
+
+    public void pickupRequestHelper() {
+        //set the pending volunteer on the PickupRequest.  This marks the pickup request as pending, and not shown on the map to other volunteers
+        pickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
+        pickupRequest.saveInBackground();
+        Activity currActivity = getActivity();
+        //Toast.makeText(currActivity, "Thank you!", Toast.LENGTH_SHORT).show();
+        pickupRequest.generatePendingVolunteerAssignedNotif();
+
+    }
 }
