@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +29,8 @@ import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
@@ -34,7 +39,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
-    private PickupRequest selectedPickupReq;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     public PickupRequestsFragment() {
         // Required empty public constructor
@@ -64,8 +69,40 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pickup_requests, container, false);
         ButterKnife.inject(this, v);
+        setHasOptionsMenu(true);
+
+        // add a PullToRefreshLayout, just so we can use its progress bar, heh.
+        // or i could use the indeterminate actionbar spinner instead. point of debate.
+        // Convert view to ViewGroup
+        ViewGroup viewGroup = (ViewGroup) v;
+        // Create a PullToRefreshLayout manually
+        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+        // Setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
+                .insertLayoutInto(viewGroup)
+                        // Commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.pickup_request_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                loadMarkers();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -89,10 +126,12 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void loadMarkers() {
         ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
+        mPullToRefreshLayout.setRefreshing(true);
         query.findInBackground(new FindCallback<PickupRequest>() {
             @Override
             public void done(List<PickupRequest> list, ParseException e) {
                 if (list == null) {
+                    mPullToRefreshLayout.setRefreshComplete();
                     return;
                 }
 
@@ -102,6 +141,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                     mClusterManager.addItem(item);
                     mClusterManager.cluster();
                 }
+                mPullToRefreshLayout.setRefreshComplete();
             }
         });
 

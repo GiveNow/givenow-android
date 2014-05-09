@@ -30,7 +30,6 @@ public class DashboardFragment extends Fragment {
     LinearLayout emptyView;
     @InjectView(R.id.lvItems)
     ListView lvItems;
-    @InjectView(R.id.ptr_layout)
     PullToRefreshLayout mPullToRefreshLayout;
     private DashboardItemAdapter mAdapter;
 
