@@ -15,6 +15,7 @@ import com.parse.ParseQueryAdapter;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.DashboardItemAdapter;
+import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements ViewPagerChangeListener {
 
     @InjectView(R.id.emptyView)
     LinearLayout emptyView;
@@ -117,5 +118,14 @@ public class DashboardFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onViewPagerShow() {
+        loadDashboardItems();
+    }
+
+    @Override
+    public void onViewPagerHide() {
     }
 }

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.SmartFragmentStatePagerAdapter;
+import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.lang.reflect.Field;
 
@@ -43,23 +45,56 @@ public class PageSlidingTabStripFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view
-				.findViewById(R.id.tabs);
-		ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
-		MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager(), getTitles());
-		pager.setAdapter(adapter);
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view
+                .findViewById(R.id.tabs);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        final MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager(), getTitles());
+//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+//        });
+        viewPager.setAdapter(adapter);
 
         // Determines how many pages can be offscreen before the viewpager starts destroying fragments it's hosting.
         // http://stackoverflow.com/questions/11852604/why-is-my-fragment-oncreate-being-called-extensively-whenever-i-page-through-my
-        pager.setOffscreenPageLimit(adapter.getCount() - 1);
+        viewPager.setOffscreenPageLimit(adapter.getCount() - 1);
 
-//        tabs.setShouldExpand(true);
-//        tabs.setBackgroundResource(R.drawable.tab);
-//        tabs.setIndicatorColorResource(R.drawable.tab_selected_onewarmcoat);
-        tabs.setIndicatorColor(Color.argb(0xFF, 0x24, 0x6D, 0x9E));
-        tabs.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
-        tabs.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
-        tabs.setViewPager(pager);
+//        tabStrip.setShouldExpand(true);
+//        tabStrip.setBackgroundResource(R.drawable.tab);
+//        tabStrip.setIndicatorColorResource(R.drawable.tab_selected_onewarmcoat);
+        tabStrip.setIndicatorColor(Color.argb(0xFF, 0x24, 0x6D, 0x9E));
+        tabStrip.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
+        tabStrip.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
+        tabStrip.setViewPager(viewPager);
+        tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            int currentPosition = 0;
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int newPosition) {
+                try {
+                    ViewPagerChangeListener fragmentToHide = (ViewPagerChangeListener) adapter.getItem(currentPosition);
+                    fragmentToHide.onViewPagerHide();
+                } catch (ClassCastException e) {
+                    Log.i(getClass().getSimpleName(), "Fragment at position " + String.valueOf(currentPosition) + " doesn't implement ViewPagerChangeListener.");
+                }
+
+                try {
+                    ViewPagerChangeListener fragmentToShow = (ViewPagerChangeListener) adapter.getItem(newPosition);
+                    fragmentToShow.onViewPagerShow();
+                } catch (ClassCastException e) {
+                    Log.i(getClass().getSimpleName(), "Fragment at position " + String.valueOf(newPosition) + " doesn't implement ViewPagerChangeListener.");
+                }
+
+                currentPosition = newPosition;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
 	}
 
@@ -108,8 +143,6 @@ public class PageSlidingTabStripFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            //TODO: is this fragment being created anew each time?
-            //TODO: here is where i create the PickupFragment, DropOffFragment and CashFragment depending on position.
             return getFragmentForPosition(position);
         }
 
