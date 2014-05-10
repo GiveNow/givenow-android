@@ -178,7 +178,7 @@ public class RequestPickupDetailFragment extends Fragment implements
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                onAnimationEndedBeforeDetach();
+                //onAnimationEndedBeforeDetach();
                 fragmentManager.popBackStack();
             }
 
@@ -290,10 +290,36 @@ public class RequestPickupDetailFragment extends Fragment implements
         if (tvNumCoatsValue.getText().toString().equals("0")) {
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
         } else {
-            //spawn a dialogfragment
-            //TODO: populate name + phone number from current user
-            showConfirmPickupDialog();
+            ParseUser currUser = ParseUser.getCurrentUser();
+            String currUserPhoneNo = currUser.getString("phoneNumber");
+            if (currUserPhoneNo == null)
+                showConfirmPickupDialog();
+            else {
+                String existingName = currUser.getString("name");
+                prepPickupRequest(existingName, currUserPhoneNo);
+                savePickupRequest();
+                showOKDialog();
+            }
+
         }
+    }
+
+    private void showOKDialog() {
+        //stop displaying the spinning indicator
+        getActivity().setProgressBarIndeterminateVisibility(false);
+
+        // show submitted confirmation
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.pickupRequest_submittedDialog_title)
+                .setMessage(R.string.pickupRequest_submittedDialog_message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        animateAndDetach();
+                    }
+                })
+                        //TODO: perhaps add another button to this dialog - 'view profile'?
+                .setIcon(R.drawable.ic_launcher)
+                .show();
     }
 
     private void showConfirmPickupDialog() {
@@ -303,8 +329,8 @@ public class RequestPickupDetailFragment extends Fragment implements
         confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
-    @Override
-    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+
+    public void prepPickupRequest(String donorName, String donorNumber) {
         double donationValue;
         String estimatedValueString = etEstimatedValue.getText().toString();
         if (!estimatedValueString.equals("")) {
@@ -313,22 +339,28 @@ public class RequestPickupDetailFragment extends Fragment implements
             donationValue = 0.0;
         }
 
-        CharityUserHelper.setNameAndNumber(name, phoneNumber);
+        CharityUserHelper.setNameAndNumber(donorName, donorNumber);
 
         int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
         mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(mLat, mLng),
-                name,
+                donorName,
                 mAddress,
-                phoneNumber,
+                donorNumber,
                 ParseUser.getCurrentUser(),
                 "Coat",
                 donationValue,
                 numcoats
         );
+    }
 
+    // after donor enters name and number and hits Confirm
+    @Override
+    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+        prepPickupRequest(name, phoneNumber);
         savePickupRequest();
+        showOKDialog();
     }
 
     private void savePickupRequest() {
@@ -349,7 +381,9 @@ public class RequestPickupDetailFragment extends Fragment implements
             mRequestSubmitted = true;
 
             // detach this detail fragment, we're done here
-            animateAndDetach();
+            //animateAndDetach();
+
+
 
         } else {
             // save did not succeed

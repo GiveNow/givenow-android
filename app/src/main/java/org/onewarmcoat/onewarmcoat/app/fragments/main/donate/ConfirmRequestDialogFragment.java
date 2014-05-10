@@ -82,8 +82,6 @@ public class ConfirmRequestDialogFragment extends DialogFragment {
         alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-
                 // on success
                 Fragment parentFragment = getParentFragment();
                 String parentFragName = parentFragment.getTag();
@@ -105,14 +103,14 @@ public class ConfirmRequestDialogFragment extends DialogFragment {
             }
         });
 
-        AlertDialog dialog = alertDialogBuilder.create();
-        dialog.show();
+        /*AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();*/
 
         /*if (etName.getText() == null || etPhone.getText() == null)
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);*/
 
-        //return alertDialogBuilder.create();
-        return dialog;
+        return alertDialogBuilder.create();
+        //return dialog;
     }
 
     public interface ConfirmPickupDialogListener {
