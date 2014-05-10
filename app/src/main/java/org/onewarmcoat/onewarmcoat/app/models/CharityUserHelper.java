@@ -14,26 +14,19 @@ public class CharityUserHelper {
         return name;
     }
 
-    public static String getPhoneNumber() {
-        ParseUser user = ParseUser.getCurrentUser();
-        return user.getString("phoneNumber");
-    }
-
     public static void setName(String name) {
         ParseUser user = ParseUser.getCurrentUser();
         user.put("name", name);
         user.saveInBackground();
     }
 
-    public static void setPhoneNumber(String phoneNumber) {
+    public static String getPhoneNumber() {
         ParseUser user = ParseUser.getCurrentUser();
-        user.put("phoneNumber", phoneNumber);
-        user.saveInBackground();
+        return user.getString("phoneNumber");
     }
 
-    public static void setNameAndNumber(String name, String phoneNumber) {
+    public static void setPhoneNumber(String phoneNumber) {
         ParseUser user = ParseUser.getCurrentUser();
-        user.put("name", name);
         user.put("phoneNumber", phoneNumber);
         user.saveInBackground();
     }

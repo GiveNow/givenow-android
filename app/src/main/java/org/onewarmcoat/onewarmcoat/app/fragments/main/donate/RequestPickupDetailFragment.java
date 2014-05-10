@@ -71,7 +71,7 @@ public class RequestPickupDetailFragment extends Fragment implements
     private Animator slide_down_from_top;
     private Animator slide_up_from_bottom;
     private PickupRequest mPickupRequest;
-    private boolean mRequestSubmitted;
+    private boolean mRequestSubmitted = false;
     private Animator fade_in;
     private Animator slide_down_to_bottom;
     private Animator slide_up_to_top;
@@ -178,7 +178,7 @@ public class RequestPickupDetailFragment extends Fragment implements
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                //onAnimationEndedBeforeDetach();
+                onAnimationEndedBeforeDetach();
                 fragmentManager.popBackStack();
             }
 
@@ -291,46 +291,37 @@ public class RequestPickupDetailFragment extends Fragment implements
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
         } else {
             ParseUser currUser = ParseUser.getCurrentUser();
-            String currUserPhoneNo = currUser.getString("phoneNumber");
-            if (currUserPhoneNo == null)
-                showConfirmPickupDialog();
+            String myPhoneNumber = currUser.getString("phoneNumber");
+            if (myPhoneNumber == null) {
+                //user hasn't entered their phone before
+                showConfirmPickupDialog("", "");
+            }
             else {
-                String existingName = currUser.getString("name");
-                prepPickupRequest(existingName, currUserPhoneNo);
-                savePickupRequest();
-                showOKDialog();
+                //they have entered their phone before, let's pre-populate it and their name
+                String myName = currUser.getString("name");
+                showConfirmPickupDialog(myName, myPhoneNumber);
+//                savePickupRequest();
             }
 
         }
     }
 
-    private void showOKDialog() {
-        //stop displaying the spinning indicator
-        getActivity().setProgressBarIndeterminateVisibility(false);
-
-        // show submitted confirmation
-        new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.pickupRequest_submittedDialog_title)
-                .setMessage(R.string.pickupRequest_submittedDialog_message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        animateAndDetach();
-                    }
-                })
-                        //TODO: perhaps add another button to this dialog - 'view profile'?
-                .setIcon(R.drawable.ic_launcher)
-                .show();
-    }
-
-    private void showConfirmPickupDialog() {
+    private void showConfirmPickupDialog(String name, String phoneNumber) {
         FragmentManager fm = getChildFragmentManager();
         ConfirmRequestDialogFragment confirmRequestDialogFragment =
-                ConfirmRequestDialogFragment.newInstance("Confirm Pickup");
+                ConfirmRequestDialogFragment.newInstance("Confirm Pickup", name, phoneNumber,
+                        getResources().getText(R.string.donor_dialog_disclaimer));
         confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
+    // after donor enters name and number and hits Confirm
+    @Override
+    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+        //update the current user's name and phone
+        CharityUserHelper.setName(name);
+        CharityUserHelper.setPhoneNumber(phoneNumber);
 
-    public void prepPickupRequest(String donorName, String donorNumber) {
+        //grab donation details
         double donationValue;
         String estimatedValueString = etEstimatedValue.getText().toString();
         if (!estimatedValueString.equals("")) {
@@ -338,29 +329,20 @@ public class RequestPickupDetailFragment extends Fragment implements
         } else {
             donationValue = 0.0;
         }
-
-        CharityUserHelper.setNameAndNumber(donorName, donorNumber);
-
         int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
 
+        //ship it off to parse
         mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(mLat, mLng),
-                donorName,
+                name,
                 mAddress,
-                donorNumber,
+                phoneNumber,
                 ParseUser.getCurrentUser(),
                 "Coat",
                 donationValue,
                 numcoats
         );
-    }
-
-    // after donor enters name and number and hits Confirm
-    @Override
-    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
-        prepPickupRequest(name, phoneNumber);
         savePickupRequest();
-        showOKDialog();
     }
 
     private void savePickupRequest() {
@@ -379,12 +361,8 @@ public class RequestPickupDetailFragment extends Fragment implements
         if (e == null) {
             // saved successfully
             mRequestSubmitted = true;
-
             // detach this detail fragment, we're done here
-            //animateAndDetach();
-
-
-
+            animateAndDetach();
         } else {
             // save did not succeed
             getActivity().setProgressBarIndeterminateVisibility(false);

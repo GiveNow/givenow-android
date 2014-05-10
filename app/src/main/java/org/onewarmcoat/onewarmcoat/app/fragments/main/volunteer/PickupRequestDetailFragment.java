@@ -23,10 +23,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
@@ -35,7 +38,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class PickupRequestDetailFragment extends Fragment implements
-        AcceptPickupDialogFragment.AcceptPickupDialogListener {
+        ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
 
     @InjectView(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
@@ -45,28 +48,27 @@ public class PickupRequestDetailFragment extends Fragment implements
     TextView tvDonorName;
     @InjectView(R.id.tvDonorAddress)
     TextView tvDonorAddress;
-    /*@InjectView(R.id.llPhone)
-    LinearLayout llPhone;*/
     @InjectView(R.id.btnAccept)
     Button btnAccept;
-    private PickupRequest pickupRequest;
+
+    private PickupRequest mPickupRequest;
     private long mTag;
     private Animator slide_down_from_top;
     private Animator slide_up_to_top;
     private Animator slide_up_from_bottom;
     private Animator slide_down_to_bottom;
     private boolean mKeyCodeBackEventHandled = false;
+    private boolean mRequestAccepted = false;
 
     public PickupRequestDetailFragment() {
 
     }
 
-
     // keeps pickup request bundle 'memory' for retrieval later in onCreateView
     public static PickupRequestDetailFragment newInstance(PickupRequest pickupRequest) {
         PickupRequestDetailFragment f = new PickupRequestDetailFragment();
         Bundle args = new Bundle();
-        args.putSerializable("pickupRequest", pickupRequest);
+        args.putSerializable("mPickupRequest", pickupRequest);
         f.setArguments(args);
         f.setGeneratedTag(System.currentTimeMillis());
         return f;
@@ -84,10 +86,16 @@ public class PickupRequestDetailFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //pickupRequest = getArguments().getSerializable("pickupRequest");
+            mPickupRequest = (PickupRequest) getArguments().getSerializable("mPickupRequest");
         }
-        getActivity().getActionBar().setTitle("Pickup Confirmation");
+        getActivity().getActionBar().setTitle("Accept Pickup");
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().getActionBar().setTitle(R.string.app_name);
     }
 
 
@@ -120,10 +128,8 @@ public class PickupRequestDetailFragment extends Fragment implements
             }
         });
 
-        pickupRequest = (PickupRequest) getArguments().getSerializable("pickupRequest");
-
-        tvDonorName.setText(pickupRequest.getName());
-        tvDonorAddress.setText(pickupRequest.getAddresss());
+        tvDonorName.setText(mPickupRequest.getName());
+        tvDonorAddress.setText(mPickupRequest.getAddresss());
 
         return fragmentView;
     }
@@ -173,12 +179,6 @@ public class PickupRequestDetailFragment extends Fragment implements
         btnAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
         btnAnim.setRepeatMode(ValueAnimator.REVERSE);
         btnAnim.start();
-
-        /*ObjectAnimator llAnim = ObjectAnimator.ofObject(llPhone, "backgroundColor", new ArgbEvaluator(),
-                0xffdde8ed, 0xffffffff);
-        llAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
-        llAnim.setRepeatMode(ValueAnimator.REVERSE);
-        llAnim.start();*/
     }
 
     public void animateAndDetach() {
@@ -198,7 +198,7 @@ public class PickupRequestDetailFragment extends Fragment implements
 
             @Override
             public void onAnimationEnd(Animator animation) {
-//                onAnimationEndedBeforeDetach();
+                onAnimationEndedBeforeDetach();
                 fragmentManager.popBackStack(getGeneratedTag(),
                         FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
@@ -215,38 +215,102 @@ public class PickupRequestDetailFragment extends Fragment implements
         set.start();
     }
 
-
     /* on accept, query parse to see if volunteer is either a donor or a previous volunteer.
       If he isn't either pop up dialogfragment for name and phone.*/
     @OnClick(R.id.btnAccept)
     public void onAccept(Button b) {
-
-        // assign pending volunteer in PickupRequest table and send push notif to donor
-        pickupRequestHelper();
+        mPickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
 
         ParseUser currUser = ParseUser.getCurrentUser();
-        String currUserPhoneNo = currUser.getString("phoneNumber");
-        if (currUserPhoneNo == null) {
-            FragmentManager fm = getChildFragmentManager();
-            AcceptPickupDialogFragment acceptanceDialogFragment =
-                    AcceptPickupDialogFragment.newInstance("Confirm Pickup");
-            acceptanceDialogFragment.show(fm, "fragment_accept_pickup_dialog");
+        String myPhoneNumber = currUser.getString("phoneNumber");
+        if (myPhoneNumber == null) {
+            //volunteer hasn't entered their phone before
+            showConfirmPickupDialog("", "");
         } else {
-            showFinalDialog();
+            //they have entered their name and phone before, let's pre-populate it and their name
+            String myName = currUser.getString("name");
+            showConfirmPickupDialog(myName, myPhoneNumber);
         }
     }
 
-    public void showFinalDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.accepted_req_dialog_title)
-                .setMessage(R.string.accepted_req_dialog_msg)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        animateAndDetach();
-                    }
-                })
-                .setIcon(R.drawable.ic_launcher)
-                .show();
+    private void showConfirmPickupDialog(String name, String phoneNumber) {
+        FragmentManager fm = getChildFragmentManager();
+        ConfirmRequestDialogFragment confirmRequestDialogFragment =
+                ConfirmRequestDialogFragment.newInstance("Accept Pickup Request", name, phoneNumber,
+                        getResources().getText(R.string.volunteer_dialog_disclaimer));
+        confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
+    }
+
+    /* after clicking accept in the ConfirmRequestDialogFragment update User with
+     * volunteer name and phone
+     */
+    @Override
+    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+        //update the current user's name and phone
+        CharityUserHelper.setName(name);
+        CharityUserHelper.setPhoneNumber(phoneNumber);
+
+        savePickupRequest();
+    }
+
+    private void savePickupRequest() {
+        // assign pending volunteer in PickupRequest table and send push notif to donor
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        mPickupRequest.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                shouldWeRetrySave(e);
+            }
+        });
+    }
+
+
+    public void shouldWeRetrySave(ParseException e) {
+        if (e == null) {
+            // saved successfully
+            mRequestAccepted = true;
+            mPickupRequest.generatePendingVolunteerAssignedNotif();
+            // detach this detail fragment, we're done here
+            animateAndDetach();
+        } else {
+            // save did not succeed
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            // show error notification dialog with retry or cancel
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.pickupRequest_retryDialog_title)
+                    .setMessage(R.string.pickupRequest_retryDialog_message)
+                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with retry
+                            savePickupRequest();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .show();
+        }
+    }
+
+    public void onAnimationEndedBeforeDetach() {
+        if (mRequestAccepted) {
+            //stop displaying the spinning indicator
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.acceptRequest_submittedDialog_title)
+                    .setMessage(R.string.acceptRequest_submittedDialog_msg)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //
+                        }
+                    })
+                    .setIcon(R.drawable.ic_launcher)
+                    .show();
+        }
     }
 
     @Override
@@ -255,25 +319,4 @@ public class PickupRequestDetailFragment extends Fragment implements
     }
 
 
-    /* after clicking accept in the ConfirmRequestDialogFragment update User with
-     * volunteer name and phone
-     */
-    @Override
-    public void onConfirmAcceptDialog(String name, String phoneNumber) {
-        CharityUserHelper cuh = new CharityUserHelper();
-        cuh.setNameAndNumber(name, phoneNumber);
-        showFinalDialog();
-        //animateAndDetach();
-    }
-
-
-    public void pickupRequestHelper() {
-        //set the pending volunteer on the PickupRequest.  This marks the pickup request as pending, and not shown on the map to other volunteers
-        pickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
-        pickupRequest.saveInBackground();
-        Activity currActivity = getActivity();
-        //Toast.makeText(currActivity, "Thank you!", Toast.LENGTH_SHORT).show();
-        pickupRequest.generatePendingVolunteerAssignedNotif();
-
-    }
 }

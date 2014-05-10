@@ -26,15 +26,18 @@
     <string name="cancel">Cancel</string>
     <string name="donation_history">Donation History</string>
     <string name="pickup_history">Pickup History</string>
-    <string name="name_phone_disclaimer">This information will only be used in case we have trouble locating your donated items.</string>
+    <string name="donor_dialog_disclaimer">This information will only be used in case we have trouble locating your donated items.</string>
+    <string name="volunteer_dialog_disclaimer">Your name and phone number will only be used for verification.</string>
     <string name="anonymous">Anonymous</string>
     <string name="address">Anonymous Address</string>
 
     <string name="pickupRequest_retryDialog_message">Please check your internet connection and try again.</string>
-    <string name="pickupRequest_retryDialog_title">Pickup Request Failed</string>
+    <string name="pickupRequest_retryDialog_title">Request Failed</string>
     <string name="pickupRequest_retryDialog_retryLabel">Retry</string>
     <string name="pickupRequest_submittedDialog_title">Pickup Request Submitted!</string>
     <string name="pickupRequest_submittedDialog_message">You\'ll be notified when a volunteer is ready to pick up your donation!</string>
+    <string name="acceptRequest_submittedDialog_title">You\'ve accepted a pickup!</string>
+    <string name="acceptRequest_submittedDialog_msg">We\'ll notify you when the donation is ready for pickup!</string>
     <string name="action_cancel">Cancel</string>
     <string name="addrHdr">Address</string>
     <string name="itypeHdr">Type</string>
@@ -44,7 +47,5 @@
     <string name="enter_phone">Phone No:</string>
     <string name="volunteer_disclaimer">You will only be called if there is a problem with the donation you are picking up</string>
     <string name="action_refresh">Refresh</string>
-    <string name="accepted_req_dialog_title">Accepted Pickup Request!</string>
-    <string name="accepted_req_dialog_msg">Thanks, pick up the donation</string>
 
 </resources>
