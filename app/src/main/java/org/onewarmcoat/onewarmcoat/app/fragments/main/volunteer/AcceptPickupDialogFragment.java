@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,22 @@ public class AcceptPickupDialogFragment extends DialogFragment {
     @InjectView(R.id.vphoneET)
     EditText volunteerPhoneEditText;
 
+    AlertDialog dialog;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            checkFieldsForEmptyValues();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
 
     public AcceptPickupDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -97,12 +115,31 @@ public class AcceptPickupDialogFragment extends DialogFragment {
         });
 
         // create the alert dialog and show it
-        AlertDialog dialog = alertDialogBuilder.create();
+        dialog = alertDialogBuilder.create();
         dialog.show();
 
+        volunteerNameEditText.addTextChangedListener(textWatcher);
+        volunteerPhoneEditText.addTextChangedListener(textWatcher);
 
+        checkFieldsForEmptyValues();
         //return alertDialogBuilder.create();
         return dialog;
+    }
+
+    private void checkFieldsForEmptyValues() {
+
+        String s1 = volunteerNameEditText.getText().toString();
+        String s2 = volunteerPhoneEditText.getText().toString();
+
+        if (s1.equals("") && s2.equals("")) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else if (!s1.equals("") && s2.equals("")) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else if (!s2.equals("") && s1.equals("")) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+        }
     }
 
     public interface AcceptPickupDialogListener {

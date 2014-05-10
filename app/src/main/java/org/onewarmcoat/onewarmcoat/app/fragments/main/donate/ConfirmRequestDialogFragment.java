@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,22 @@ public class ConfirmRequestDialogFragment extends DialogFragment {
     @InjectView(R.id.etPhone)
     EditText etPhone;
 
+    AlertDialog dialog;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            checkFieldsForEmptyValues();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    };
 
     public ConfirmRequestDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -103,15 +121,33 @@ public class ConfirmRequestDialogFragment extends DialogFragment {
             }
         });
 
-        /*AlertDialog dialog = alertDialogBuilder.create();
-        dialog.show();*/
+        dialog = alertDialogBuilder.create();
+        dialog.show();
 
-        /*if (etName.getText() == null || etPhone.getText() == null)
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);*/
+        etName.addTextChangedListener(textWatcher);
+        etPhone.addTextChangedListener(textWatcher);
 
-        return alertDialogBuilder.create();
-        //return dialog;
+        checkFieldsForEmptyValues();
+        //return alertDialogBuilder.create();
+        return dialog;
     }
+
+    private void checkFieldsForEmptyValues() {
+
+        String s1 = etName.getText().toString();
+        String s2 = etPhone.getText().toString();
+
+        if (s1.equals("") && s2.equals("")) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else if (!s1.equals("") && s2.equals("")) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else if (!s2.equals("") && s1.equals("")) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        } else {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+        }
+    }
+
 
     public interface ConfirmPickupDialogListener {
         void onFinishConfirmPickupDialog(String name, String phoneNumber);
