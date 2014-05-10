@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,7 +53,6 @@ public class PickupRequestDetailFragment extends Fragment implements
     Button btnAccept;
 
     private PickupRequest mPickupRequest;
-    private long mTag;
     private Animator slide_down_from_top;
     private Animator slide_up_to_top;
     private Animator slide_up_from_bottom;
@@ -70,16 +70,7 @@ public class PickupRequestDetailFragment extends Fragment implements
         Bundle args = new Bundle();
         args.putSerializable("mPickupRequest", pickupRequest);
         f.setArguments(args);
-        f.setGeneratedTag(System.currentTimeMillis());
         return f;
-    }
-
-    public String getGeneratedTag() {
-        return String.valueOf(mTag);
-    }
-
-    public void setGeneratedTag(long mTag) {
-        this.mTag = mTag;
     }
 
     @Override
@@ -137,6 +128,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        menu.removeItem(R.id.action_refresh);
         inflater.inflate(R.menu.pickup_request_detail_menu, menu);
     }
 
@@ -199,8 +191,14 @@ public class PickupRequestDetailFragment extends Fragment implements
             @Override
             public void onAnimationEnd(Animator animation) {
                 onAnimationEndedBeforeDetach();
-                fragmentManager.popBackStack(getGeneratedTag(),
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                try {
+                    FragmentTransaction ft = fragmentManager.beginTransaction();
+                    ft.remove(PickupRequestDetailFragment.this);
+//                     ft.commitAllowingStateLoss(); // SO answer had this, try if problems
+                    ft.commit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

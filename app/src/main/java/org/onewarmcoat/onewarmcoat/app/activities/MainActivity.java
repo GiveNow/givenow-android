@@ -334,8 +334,8 @@ public class MainActivity extends Activity implements
         pickupRequestDetailFragment = PickupRequestDetailFragment.newInstance(pickupRequest);
         getFragmentManager().beginTransaction()
                 .add(R.id.content, pickupRequestDetailFragment,
-                        pickupRequestDetailFragment.getGeneratedTag())
-                .addToBackStack(pickupRequestDetailFragment.getGeneratedTag())
+                        "PickupRequestDetailFragment")
+                .addToBackStack("PickupRequestDetailFragment")
                 .commit();
     }
 
