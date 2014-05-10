@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
+package org.onewarmcoat.onewarmcoat.app.fragments.main.common;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

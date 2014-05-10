@@ -29,7 +29,7 @@ import com.parse.SaveCallback;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.ConfirmRequestDialogFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 

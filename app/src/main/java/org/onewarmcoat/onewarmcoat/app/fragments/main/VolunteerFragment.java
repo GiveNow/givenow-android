@@ -6,7 +6,7 @@ import android.util.Log;
 
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.DropOffLocationsFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.common.DropOffLocationsFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.DashboardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
 
@@ -40,6 +40,28 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
             dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
             dashboardFragment = DashboardFragment.newInstance();
             Log.w("VolunteerFragment", "onCreate: Fragments created");
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getChildFragmentManager().putFragment(outState, "pickupRequestsFragment", pickupRequestsFragment);
+        getChildFragmentManager().putFragment(outState, "dropoffLocationsFragment", dropOffLocationsFragment);
+        getChildFragmentManager().putFragment(outState, "dashboardFragment", dashboardFragment);
+        Log.w("VolunteerFragment", "onSaveInstanceState: Fragments saved");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle inState) {
+        super.onActivityCreated(inState);
+        Log.w("DonateFragment", "onActivityCreated called.");
+        if (inState != null) {
+            pickupRequestsFragment = (PickupRequestsFragment) getChildFragmentManager().getFragment(inState, "pickupRequestsFragment");
+            dropOffLocationsFragment = (DropOffLocationsFragment) getChildFragmentManager().getFragment(inState, "dropoffLocationsFragment");
+            dashboardFragment = (DashboardFragment) getChildFragmentManager().getFragment(inState, "dashboardFragment");
+            Log.w("VolunteerFragment", "onActivityCreated: Fragments restored");
         }
     }
 

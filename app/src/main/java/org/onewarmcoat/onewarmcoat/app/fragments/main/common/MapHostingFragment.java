@@ -1,4 +1,4 @@
-package org.onewarmcoat.onewarmcoat.app.fragments.main;
+package org.onewarmcoat.onewarmcoat.app.fragments.main.common;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -71,7 +71,7 @@ public class MapHostingFragment extends Fragment
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.flMapContainer, mapFragment, "MAP").commit();
                 mZoomToLocation = true;
-            }catch(NullPointerException npe){
+            } catch (NullPointerException npe) {
                 npe.printStackTrace();
             }
         } else {
@@ -145,7 +145,7 @@ public class MapHostingFragment extends Fragment
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
         try {
-            if(isOnline()) {
+            if (isOnline()) {
                 addresses = gcd.getFromLocation(pos.latitude, pos.longitude, 1);
             }
         } catch (IOException e) {
