@@ -31,6 +31,7 @@ import com.parse.SaveCallback;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
@@ -60,6 +61,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     private boolean mKeyCodeBackEventHandled = false;
     private boolean mRequestAccepted = false;
     private PickupRequestConfirmedListener mListener;
+    private ObjectAnimator mBtnAnim;
 
     public PickupRequestDetailFragment() {
 
@@ -81,6 +83,7 @@ public class PickupRequestDetailFragment extends Fragment implements
             mPickupRequest = (PickupRequest) getArguments().getSerializable("mPickupRequest");
         }
         getActivity().getActionBar().setTitle("Accept Pickup");
+
     }
 
     @Override
@@ -118,6 +121,8 @@ public class PickupRequestDetailFragment extends Fragment implements
                 }
             }
         });
+
+        mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
 
         tvDonorName.setText(CharityUserHelper.getFirstName(mPickupRequest.getName()));
         tvDonorAddress.setText(mPickupRequest.getAddresss());

@@ -164,24 +164,38 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true">
 
+                            <ImageView
+                                android:id="@+id/imageView"
+                                android:layout_width="40dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="2dp"
+                                android:layout_weight="0"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_launcher" />
+
                             <TextView
-                                android:id="@+id/tvNumCoatsValue"
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/tvNumCoats"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="4dp"
+                                android:text="×"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="#ff818181" />
+
+                            <EditText
+                                android:id="@+id/etNumCoatsValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="0"
+                                android:hint="0"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:singleLine="true"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:textColor="#ff266e9f" />
-
-                            <ImageView
-                                android:id="@+id/ivNumberPickerEdit"
-                                android:layout_width="40dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="0"
-                                android:padding="8dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/iconmonstr_edit_icon_256" />
 
                         </LinearLayout>
                     </RelativeLayout>
@@ -232,6 +246,7 @@
                                 android:layout_gravity="center"
                                 android:hint="Optional"
                                 android:inputType="numberDecimal"
+                                android:maxLength="8"
                                 android:orientation="horizontal"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:textColor="#ff266e9f" />
@@ -248,7 +263,7 @@
                             android:text="For your records"
                             android:textAllCaps="true"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="#ff868686"
+                            android:textColor="@color/gray"
                             android:textStyle="bold" />
                     </RelativeLayout>
 
@@ -264,8 +279,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@android:color/darker_gray"
-        android:enabled="false"
+        android:background="@color/disabled"
         android:text="@string/submit_pickup_label"
         android:textColor="#ffffffff" />
 

@@ -3,15 +3,14 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -33,16 +32,17 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 
 public class RequestPickupDetailFragment extends Fragment implements
-        NumberPickerDialogFragment.NumberPickerDialogListener,
         ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,8 +60,10 @@ public class RequestPickupDetailFragment extends Fragment implements
     EditText etAddress;
     @InjectView(R.id.etEstimatedValue)
     EditText etEstimatedValue;
-    @InjectView(R.id.tvNumCoatsValue)
-    TextView tvNumCoatsValue;
+    @InjectView(R.id.etNumCoatsValue)
+    EditText etNumCoatsValue;
+    @InjectView(R.id.rlNumberCoats)
+    RelativeLayout rlNumberCoats;
 
     @InjectView(R.id.btnSubmitPickup)
     Button btnSubmitPickup;
@@ -78,6 +80,8 @@ public class RequestPickupDetailFragment extends Fragment implements
     private Animator slide_up_to_top;
     private Animator fade_out;
     private boolean mKeyCodeBackEventHandled = false;
+    private ObjectAnimator mBtnAnim;
+    private boolean mInputValidated = false;
 
 
     public RequestPickupDetailFragment() {
@@ -103,7 +107,6 @@ public class RequestPickupDetailFragment extends Fragment implements
             mLng = getArguments().getDouble(ARG_LNG);
         }
         getActivity().getActionBar().setTitle("Confirmation");
-
     }
 
     @Override
@@ -138,6 +141,8 @@ public class RequestPickupDetailFragment extends Fragment implements
         });
 
         setAddressFieldText(mAddress);
+
+        mBtnAnim = CustomAnimations.buttonFlashCTA(btnSubmitPickup);
 
         return v;
     }
@@ -228,27 +233,6 @@ public class RequestPickupDetailFragment extends Fragment implements
         }
     }
 
-    @OnClick(R.id.rlNumberCoats)
-    public void showNumberPickerDialog(View v) {
-        int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
-        FragmentManager fm = getChildFragmentManager();
-        NumberPickerDialogFragment numberPickerDialogFragment =
-                NumberPickerDialogFragment.newInstance("Number of Coats", numcoats);
-        numberPickerDialogFragment.show(fm, "fragment_number_picker_dialog");
-    }
-
-    @Override
-    public void onFinishNumberPickerDialog(int value) {
-        tvNumCoatsValue.setText(String.valueOf(value));
-        btnSubmitPickup.setEnabled(true);
-        ObjectAnimator btnAnim = ObjectAnimator.ofObject(btnSubmitPickup, "backgroundColor", new ArgbEvaluator(),
-          /*LightBlue*/0xFF3D89C2, /*Blue*/0xff246d9e);
-        btnAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
-        btnAnim.setRepeatMode(ValueAnimator.REVERSE);
-        btnAnim.start();
-
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -286,10 +270,36 @@ public class RequestPickupDetailFragment extends Fragment implements
         super.onStop();
     }
 
+    @OnTextChanged(value = R.id.etNumCoatsValue, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void onAfterTextChanged(Editable editable) {
+        if (editable.length() > 0) {
+            if (!editable.toString().equals("0")) {
+                enableSubmitButton();
+            }
+        } else {
+            disableSubmitButton();
+        }
+    }
+
+    public void enableSubmitButton() {
+        // we don't actually *disable* the button per se, just use the tag, so we can still click on it
+        mInputValidated = true;
+        mBtnAnim.end();
+        mBtnAnim.start();
+    }
+
+    public void disableSubmitButton() {
+        mBtnAnim.end();
+        mInputValidated = false;
+        btnSubmitPickup.setBackgroundColor(getResources().getColor(R.color.disabled));
+    }
+
     @OnClick(R.id.btnSubmitPickup)
     protected void onSubmitPickup(View v) {
-        if (tvNumCoatsValue.getText().toString().equals("0")) {
+        if (!mInputValidated) {
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
+            ObjectAnimator anim = CustomAnimations.highlightIncompleteInput(rlNumberCoats);
+            anim.start();
         } else {
             ParseUser currUser = ParseUser.getCurrentUser();
             String myPhoneNumber = currUser.getString("phoneNumber");
@@ -330,7 +340,7 @@ public class RequestPickupDetailFragment extends Fragment implements
         } else {
             donationValue = 0.0;
         }
-        int numcoats = Integer.parseInt(tvNumCoatsValue.getText().toString());
+        int numcoats = Integer.parseInt(etNumCoatsValue.getText().toString());
 
         //ship it off to parse
         mPickupRequest = new PickupRequest(

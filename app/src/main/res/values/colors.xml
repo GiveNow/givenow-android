@@ -4,4 +4,5 @@
     <color name="foreground">#ffffffff</color>
     <color name="accent">#ff246d9e</color>
     <color name="gray">#ff858585</color>
+    <color name="disabled">#ffa6a6a6</color>
 </resources>
