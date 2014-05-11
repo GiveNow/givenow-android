@@ -21,6 +21,8 @@ import java.util.Date;
  */
 @ParseClassName("PickupRequest")
 public class PickupRequest extends ParseObject implements ClusterItem, Serializable {
+    public static final String VOLUNTEER_CONFIRMED = "volunteer_confirmed";
+
     public PickupRequest() {
         // A default constructor is required.
     }
@@ -272,6 +274,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         try {
             data.put("title", "Pickup Request Ready");
             data.put("alert", CharityUserHelper.getFirstName() + " is available to have their donation picked up.");
+            data.put("type", VOLUNTEER_CONFIRMED);
         } catch (JSONException e) {
             e.printStackTrace();
         }

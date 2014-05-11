@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 public class PageSlidingTabStripFragment extends Fragment {
 
 	public final String TAG = this.getClass().getSimpleName();
+    private ViewPager mViewPager;
 
     protected String[] getTitles() {
         return new String[] {"Categories", "Home", "Top Paid", "Top Free"};
@@ -47,16 +48,16 @@ public class PageSlidingTabStripFragment extends Fragment {
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view
                 .findViewById(R.id.tabs);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
+        mViewPager = (ViewPager) view.findViewById(R.id.pager);
         final MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager(), getTitles());
 //        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //
 //        });
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
 
         // Determines how many pages can be offscreen before the viewpager starts destroying fragments it's hosting.
         // http://stackoverflow.com/questions/11852604/why-is-my-fragment-oncreate-being-called-extensively-whenever-i-page-through-my
-        viewPager.setOffscreenPageLimit(adapter.getCount() - 1);
+        mViewPager.setOffscreenPageLimit(adapter.getCount() - 1);
 
         tabStrip.setShouldExpand(true);
         tabStrip.setTabPaddingLeftRight(10); //10 is the magic number?
@@ -67,7 +68,7 @@ public class PageSlidingTabStripFragment extends Fragment {
         tabStrip.setIndicatorColor(Color.argb(0xFF, 0x24, 0x6D, 0x9E));
         tabStrip.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
         tabStrip.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
-        tabStrip.setViewPager(viewPager);
+        tabStrip.setViewPager(mViewPager);
         tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             int currentPosition = 0;
 
@@ -98,8 +99,12 @@ public class PageSlidingTabStripFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
-
 	}
+
+
+    public void setCurrentItem(int index) {
+        mViewPager.setCurrentItem(index);
+    }
 
     protected Fragment getFragmentForPosition(int position) {
         return SuperAwesomeCardFragment.newInstance(position);

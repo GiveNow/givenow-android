@@ -1,5 +1,6 @@
 package org.onewarmcoat.onewarmcoat.app.models;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class CharityUserHelper {
@@ -7,6 +8,21 @@ public class CharityUserHelper {
     public static String getName() {
         ParseUser user = ParseUser.getCurrentUser();
         String name = user.getString("name");
+
+        if(name == null || name.isEmpty()){
+            name = "Anonymous";
+        }
+        return name;
+    }
+
+    public static String getName(ParseUser user) {
+        String name = null;
+        try {
+            user.fetchIfNeeded();
+            name = user.getString("name");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if(name == null || name.isEmpty()){
             name = "Anonymous";
@@ -23,6 +39,19 @@ public class CharityUserHelper {
     public static String getPhoneNumber() {
         ParseUser user = ParseUser.getCurrentUser();
         return user.getString("phoneNumber");
+    }
+
+    public static String getPhoneNumber(ParseUser user) {
+        String number = "";
+        try {
+            user.fetchIfNeeded();
+            number = user.getString("phoneNumber");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return number;
     }
 
     public static void setPhoneNumber(String phoneNumber) {

@@ -26,6 +26,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
@@ -41,6 +43,10 @@ public class MainActivity extends Activity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
         PickupRequestsFragment.PickupRequestDetailInteractionListener,
         PickupRequestDetailFragment.PickupRequestConfirmedListener {
+    private static final int POSITION_DONATE = 0;
+    private static final int POSITION_VOLUNTEER = 1;
+    private static final int POSITION_PROFILE = 2;
+    private static final int POSITION_SIGN_OUT = 3;
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -62,6 +68,7 @@ public class MainActivity extends Activity implements
     private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,7 @@ public class MainActivity extends Activity implements
 
         setContentView(R.layout.activity_main);
 
+        mIntent = getIntent();
         initializeFragments();
         initializeDrawer();
         if (savedInstanceState == null) {
@@ -102,6 +110,49 @@ public class MainActivity extends Activity implements
     protected void onResume() {
         super.onResume();
 
+        //if the user resumed the app by entering through a Volunteer push notif, show dashboard
+        boolean isPushNotif = handlePushNotifResume();
+
+        if(!isPushNotif) {
+            checkForPendingRequests();
+        }
+    }
+
+    private boolean handlePushNotifResume() {
+//        Log.d("detectPushNotificationMessage", "handlePushNotif");
+        String notificationData = mIntent.getStringExtra("com.parse.Data");
+        if (notificationData != null) {
+//                Log.d("detectPushNotificationMessage", "notificationData =" + notificationData);
+
+            try {
+                JSONObject json = new JSONObject(notificationData);
+//                    Log.d("detectPushNotificationMessage", "made json object " + json.toString());
+
+                String notifType = json.getString("type");
+//                    Log.d("detectPushNotificationMessage", "notifType = " + notifType);
+                if(notifType.equals(PickupRequest.VOLUNTEER_CONFIRMED)){
+//                        Log.d("detectPushNotificationMessage", "switch to volunteer fragment");
+
+                    //remove the push notif data, so we don't process it next app resume
+                    mIntent.removeExtra("com.parse.Data");
+
+                    //try setting us to the Volunteer fragment
+                    selectItem(POSITION_VOLUNTEER);
+                    //move to dashboard duey
+//                    VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+                    //0 means dashboard
+//                    volunteerFragment.setCurrentItem(0);
+
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    private void checkForPendingRequests() {
         ParseQuery<PickupRequest> query = PickupRequest.getMyPendingRequests();
 
         //only want to get 1 at a time (there shouldn't be more than 1 anyway)
@@ -120,7 +171,8 @@ public class MainActivity extends Activity implements
     }
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
-        String title = CharityUserHelper.getFirstName(pickupRequest.getName()) + " would like to pick up your coats!";
+        ParseUser pendingVolunteer = pickupRequest.getPendingVolunteer();
+        String title = CharityUserHelper.getFirstName(CharityUserHelper.getName(pendingVolunteer)) + " would like to pick up your coats!";
         String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddresss() + "</font>";
 
         if(acceptPendingDialog != null && acceptPendingDialog.isShowing()){
@@ -269,7 +321,7 @@ public class MainActivity extends Activity implements
         VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
         ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
         switch (position) {
-            case 0: //Donate
+            case POSITION_DONATE: //Donate
                 if (volunteerFragment != null) {
                     ft.hide(volunteerFragment);
                 }
@@ -288,7 +340,7 @@ public class MainActivity extends Activity implements
                     ft.show(donateFragment);
                 }
                 break;
-            case 1: //Volunteer
+            case POSITION_VOLUNTEER: //Volunteer
                 if (donateFragment != null) {
                     ft.hide(donateFragment);
                 }
@@ -308,7 +360,7 @@ public class MainActivity extends Activity implements
                     ft.show(volunteerFragment);
                 }
                 break;
-            case 2: // Profile
+            case POSITION_PROFILE: // Profile
                 if (volunteerFragment != null) {
                     ft.hide(volunteerFragment);
                 }
@@ -327,7 +379,7 @@ public class MainActivity extends Activity implements
                     ft.show(profileFragment);
                 }
                 break;
-            case 3: //Sign Out
+            case POSITION_SIGN_OUT: //Sign Out
                 ParseUser.logOut();
                 ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
                 //take user to login screen
