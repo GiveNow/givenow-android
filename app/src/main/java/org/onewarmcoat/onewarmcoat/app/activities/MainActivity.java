@@ -1,13 +1,16 @@
 package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -31,6 +34,7 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragme
 import org.onewarmcoat.onewarmcoat.app.fragments.main.profile.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class MainActivity extends Activity implements
@@ -60,6 +64,7 @@ public class MainActivity extends Activity implements
     private DonateFragment donateFragment;
     private VolunteerFragment volunteerFragment;
     private ProfileFragment profileFragment;
+    private AlertDialog acceptPendingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,21 +116,49 @@ public class MainActivity extends Activity implements
                     Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
 
                     //show dialog to user
-
-
-                    // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
-
-                    //**this works, just needs to be in the accept callback from the dialog
-//                    pickupRequest.generateVolunteerConfirmedNotif();
-//                    pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
-//                    pickupRequest.saveInBackground();
-
-                    //onCancel need to remove pendingVolunteer
-//                    pickupRequest.remove("pendingVolunteer");
-//                    pickupRequest.saveInBackground();
+                    createAcceptPendingVolunteerDialog(pickupRequest);
                 }
             }
         });
+    }
+
+    private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
+        String title = CharityUserHelper.getFirstName(pickupRequest.getName()) + " would like to pick up your coats!";
+        String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddresss() + "</font>";
+
+        if(acceptPendingDialog != null && acceptPendingDialog.isShowing()){
+            acceptPendingDialog.dismiss();
+        }
+        acceptPendingDialog = new AlertDialog.Builder(this)
+//                .setTitle(R.string.acceptRequest_submittedDialog_title)
+//                .setMessage(R.string.acceptRequest_submittedDialog_msg)
+                .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>"))
+                .setMessage(Html.fromHtml("Is your donation of " + pickupRequest.getNumberOfCoats() + " coats available for pickup today?" + address))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        pendingVolunteerConfirmed(pickupRequest);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        cancelPendingVolunteer(pickupRequest);
+                    }
+                })
+                .setIcon(R.drawable.ic_launcher)
+                .show();
+    }
+
+    private void cancelPendingVolunteer(PickupRequest pickupRequest) {
+        //donor doesn't accept volunteer request, so remove the pending volunteer
+        pickupRequest.remove("pendingVolunteer");
+        pickupRequest.saveInBackground();
+    }
+
+    private void pendingVolunteerConfirmed(PickupRequest pickupRequest) {
+        // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
+        pickupRequest.generateVolunteerConfirmedNotif();
+        pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
+        pickupRequest.saveInBackground();
     }
 
     //stupid helper method, can go away whenever
