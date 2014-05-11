@@ -75,7 +75,8 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
             }
         });
 
-        return alertDialogBuilder.create();
+        dialog = alertDialogBuilder.create();
+        return dialog;
     }
 
     @Override
