@@ -28,7 +28,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
 
     @Override
     protected String[] getTitles() {
-        return new String[]{"My Dashboard", "PickUp Requests", "DropOff Locations"};
+        return new String[]{"My Dashboard", "PickUp Requests", "DropOff"};
     }
 
     @Override

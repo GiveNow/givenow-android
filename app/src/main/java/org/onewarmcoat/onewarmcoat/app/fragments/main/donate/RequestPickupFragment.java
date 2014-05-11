@@ -40,6 +40,15 @@ public class RequestPickupFragment extends MapHostingFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        //trying this hack to keep Google Maps from crashing.
+        //StackOverflow link: http://stackoverflow.com/questions/19624437/random-nullpointerexception-on-google-maps-api-v2/19627149#19627149
+        super.connectMap();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.w(((Object) this).getClass().getSimpleName(), "onCreate!!!");

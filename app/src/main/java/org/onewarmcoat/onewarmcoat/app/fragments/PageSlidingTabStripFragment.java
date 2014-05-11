@@ -58,7 +58,10 @@ public class PageSlidingTabStripFragment extends Fragment {
         // http://stackoverflow.com/questions/11852604/why-is-my-fragment-oncreate-being-called-extensively-whenever-i-page-through-my
         viewPager.setOffscreenPageLimit(adapter.getCount() - 1);
 
-//        tabStrip.setShouldExpand(true);
+        tabStrip.setShouldExpand(true);
+        tabStrip.setTabPaddingLeftRight(10); //10 is the magic number?
+//        int padding = tabStrip.getDividerPadding();
+//        tabStrip.setDividerPadding(padding - 1);
 //        tabStrip.setBackgroundResource(R.drawable.tab);
 //        tabStrip.setIndicatorColorResource(R.drawable.tab_selected_onewarmcoat);
         tabStrip.setIndicatorColor(Color.argb(0xFF, 0x24, 0x6D, 0x9E));

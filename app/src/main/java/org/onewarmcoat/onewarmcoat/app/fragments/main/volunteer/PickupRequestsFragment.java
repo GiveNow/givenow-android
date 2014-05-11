@@ -174,6 +174,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     @Override
     public void onViewPagerShow() {
+        super.onViewPagerShow();
         loadMarkers();
     }
 

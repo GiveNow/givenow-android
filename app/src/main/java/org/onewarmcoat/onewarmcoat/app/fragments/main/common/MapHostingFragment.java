@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.ErrorDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.GoogleMapFragment;
+import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +42,8 @@ public class MapHostingFragment extends Fragment
         implements
         GoogleMapFragment.OnGoogleMapFragmentListener,
         GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener {
+        GooglePlayServicesClient.OnConnectionFailedListener,
+        ViewPagerChangeListener {
 
     /*
      * Define a request code to send to Google Play services This code is
@@ -64,8 +66,6 @@ public class MapHostingFragment extends Fragment
 
         mLocationClient = new LocationClient(getActivity(), this, this);
         if (savedInstanceState == null) {
-
-            //TODO: putting this try/catch to handle the Google Maps bug
             try {
                 mapFragment = GoogleMapFragment.newInstance();
                 getChildFragmentManager().beginTransaction()
@@ -174,8 +174,15 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        // Connect the client.
-        if (isGooglePlayServicesAvailable()) {
+//        // Connect the client.
+//        if (isGooglePlayServicesAvailable()) {
+//            mLocationClient.connect();
+//        }
+    }
+
+    public void connectMap(){
+//        // Connect the client.
+        if (isGooglePlayServicesAvailable() && !mLocationClient.isConnected()) {
             mLocationClient.connect();
         }
     }
@@ -239,7 +246,7 @@ public class MapHostingFragment extends Fragment
 //            CameraPosition startCameraPosition = new CameraPosition.Builder()
 //                    .bearing(0.0f)
 //                    .target(new LatLng(0, 0)).build();
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
+            final CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
             if (mGoogleMap != null) {
                 if (mZoomToLocation) {
                     mGoogleMap.animateCamera(cameraUpdate);
@@ -287,5 +294,17 @@ public class MapHostingFragment extends Fragment
 //            Toast.makeText(getActivity(),
 //                    "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onViewPagerShow() {
+        //trying this hack to keep Google Maps from crashing.
+        //StackOverflow link: http://stackoverflow.com/questions/19624437/random-nullpointerexception-on-google-maps-api-v2/19627149#19627149
+        connectMap();
+    }
+
+    @Override
+    public void onViewPagerHide() {
+
     }
 }
