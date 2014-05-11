@@ -23,6 +23,7 @@ import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
@@ -35,7 +36,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
+        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest>, ViewPagerChangeListener {
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
@@ -161,6 +162,17 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
         mListener.onLaunchPickupRequestDetail(pickupRequest);
     }
+
+    @Override
+    public void onViewPagerShow() {
+        loadMarkers();
+    }
+
+    @Override
+    public void onViewPagerHide() {
+
+    }
+
 
 //    @Override
 //    public void onConfirmAcceptDialog() {
