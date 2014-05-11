@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +49,7 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String title = getArguments().getString("title");
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity()); // R.style.Theme_Onewarmcoat_Dialog); //??
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_confirm_request_dialog, null);
@@ -75,13 +76,34 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
             }
         });
 
+        // I'm sorry.
+        alertDialogBuilder.setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>"));
+
+        // behold, the graveyard of failed color changing attempts:
+//        int dividerId = dialog.getContext().getResources().getIdentifier("android:id/titleDivider", null, null);
+//        View divider = dialog.findViewById(dividerId);
+//        divider.setBackgroundColor(getResources().getColor(R.color.background));
+//        int textViewId = dialog.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+//        TextView tv = (TextView) dialog.findViewById(android.R.id.title);
+//        tv.setTextColor(getResources().getColor(R.color.accent));
+
+//        TextView mTitle = (TextView) dialog.findViewById(android.R.id.title);
+//        mTitle.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
+//        mTitle.setTextColor(getResources().getColor(R.color.accent));
+//        int x = Resources.getSystem().getIdentifier("titleDivider", "id", "android");
+//        View titleDivider = dialog.findViewById(x);
+//        titleDivider.setBackgroundColor(dialog.getContext().getResources().getColor(R.color.background));
+
         dialog = alertDialogBuilder.create();
+
         return dialog;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         etName.setText(getArguments().getString("name"));
         etPhone.setText(getArguments().getString("phoneNumber"));
         tvDisclaimer.setText(getArguments().getCharSequence("disclaimer"));
