@@ -127,8 +127,11 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
     public void onDismiss(DialogInterface dialog) {
         // this is very temperamental here, so in the interests of demo stability,
         // if i see this crashing again, maybe move this to an earlier point
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        Dialog d = getDialog();
+        if (d != null) {
+            d.getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        }
         super.onDismiss(dialog);
     }
 

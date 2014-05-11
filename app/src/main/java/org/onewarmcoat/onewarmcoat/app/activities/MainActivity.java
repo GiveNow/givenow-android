@@ -61,15 +61,12 @@ public class MainActivity extends Activity implements
     private int mSelectedItem;
     private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
-    private DonateFragment donateFragment;
-    private VolunteerFragment volunteerFragment;
-    private ProfileFragment profileFragment;
     private AlertDialog acceptPendingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        super.onCreate(savedInstanceState);
 //        requestWindowFeature(Window.FEATURE_PROGRESS);
 
         setContentView(R.layout.activity_main);
@@ -268,9 +265,9 @@ public class MainActivity extends Activity implements
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
         //here is the retarded way of doing fragment hiding, in all its shitty glory. BUT IT WORKS
-        donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
-        volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
-        profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
+        DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+        VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+        ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
         switch (position) {
             case 0: //Donate
                 if (volunteerFragment != null) {
@@ -378,8 +375,11 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onPickupConfirmed(PickupRequest pickupRequest) {
+        VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
         if (volunteerFragment != null) {
-            //removing individual marker for the pickup request
+            // removing individual marker for this pickup request
+            // won't work if the orientation changed during the PickupConfirmDialog, because the pickupRequest we get back from the dialog
+            // isn't the same one that's now in the since-recreated volunteerFragment.
             volunteerFragment.removePickupRequestFromMap(pickupRequest);
         }
     }
