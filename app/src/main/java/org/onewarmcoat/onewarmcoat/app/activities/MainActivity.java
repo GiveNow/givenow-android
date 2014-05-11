@@ -1,7 +1,6 @@
 package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -35,7 +34,9 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFr
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class MainActivity extends Activity implements
-        RequestPickupFragment.PickUpDetailInteractionListener, PickupRequestsFragment.PickupRequestDetailInteractionListener {
+        RequestPickupFragment.PickUpDetailInteractionListener,
+        PickupRequestsFragment.PickupRequestDetailInteractionListener,
+        PickupRequestDetailFragment.PickupRequestConfirmedListener {
 //        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -56,6 +57,9 @@ public class MainActivity extends Activity implements
     private int mSelectedItem;
     private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
+    private DonateFragment donateFragment;
+    private VolunteerFragment volunteerFragment;
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,18 +235,18 @@ public class MainActivity extends Activity implements
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
         //here is the retarded way of doing fragment hiding, in all its shitty glory. BUT IT WORKS
-        Fragment don = getFragmentManager().findFragmentByTag("don");
-        Fragment vol = getFragmentManager().findFragmentByTag("vol");
-        Fragment prof = getFragmentManager().findFragmentByTag("prof");
+        donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+        volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+        profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
         switch (position) {
             case 0: //Donate
-                if (vol != null) {
-                    ft.hide(vol);
+                if (volunteerFragment != null) {
+                    ft.hide(volunteerFragment);
                 }
-                if (prof != null) {
-                    ft.hide(prof);
+                if (profileFragment != null) {
+                    ft.hide(profileFragment);
                 }
-                DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+
                 if (donateFragment == null) {
                     donateFragment = DonateFragment.newInstance();
                     Log.w("MainActivity", "Adding donateFragment to content.");
@@ -255,13 +259,13 @@ public class MainActivity extends Activity implements
                 }
                 break;
             case 1: //Volunteer
-                if (don != null) {
-                    ft.hide(don);
+                if (donateFragment != null) {
+                    ft.hide(donateFragment);
                 }
-                if (prof != null) {
-                    ft.hide(prof);
+                if (profileFragment != null) {
+                    ft.hide(profileFragment);
                 }
-                VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+
                 if (volunteerFragment == null) {
                     volunteerFragment = VolunteerFragment.newInstance();
                     Log.w("MainActivity", "Adding volunteerFragment to content.");
@@ -275,13 +279,13 @@ public class MainActivity extends Activity implements
                 }
                 break;
             case 2: // Profile
-                if (vol != null) {
-                    ft.hide(vol);
+                if (volunteerFragment != null) {
+                    ft.hide(volunteerFragment);
                 }
-                if (don != null) {
-                    ft.hide(don);
+                if (donateFragment != null) {
+                    ft.hide(donateFragment);
                 }
-                ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
+
                 if (profileFragment == null) {
                     profileFragment = ProfileFragment.newInstance();
                     Log.w("MainActivity", "Adding profileFragment to content.");
@@ -337,6 +341,14 @@ public class MainActivity extends Activity implements
                         "PickupRequestDetailFragment")
                 .addToBackStack("PickupRequestDetailFragment")
                 .commit();
+    }
+
+    @Override
+    public void onPickupConfirmed(PickupRequest pickupRequest) {
+        if (volunteerFragment != null) {
+            //removing individual marker for the pickup request
+            volunteerFragment.removePickupRequestFromMap(pickupRequest);
+        }
     }
 
     // The click listener for ListView in the navigation drawer

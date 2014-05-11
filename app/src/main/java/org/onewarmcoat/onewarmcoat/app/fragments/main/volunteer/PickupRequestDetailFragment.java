@@ -59,6 +59,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     private Animator slide_down_to_bottom;
     private boolean mKeyCodeBackEventHandled = false;
     private boolean mRequestAccepted = false;
+    private PickupRequestConfirmedListener mListener;
 
     public PickupRequestDetailFragment() {
 
@@ -80,7 +81,6 @@ public class PickupRequestDetailFragment extends Fragment implements
             mPickupRequest = (PickupRequest) getArguments().getSerializable("mPickupRequest");
         }
         getActivity().getActionBar().setTitle("Accept Pickup");
-
     }
 
     @Override
@@ -119,7 +119,7 @@ public class PickupRequestDetailFragment extends Fragment implements
             }
         });
 
-        tvDonorName.setText(mPickupRequest.getName());
+        tvDonorName.setText(CharityUserHelper.getFirstName(mPickupRequest.getName()));
         tvDonorAddress.setText(mPickupRequest.getAddresss());
 
         return fragmentView;
@@ -154,6 +154,8 @@ public class PickupRequestDetailFragment extends Fragment implements
         //exiting animations
         slide_up_to_top = AnimatorInflater.loadAnimator(activity, R.animator.slide_up_to_top);
         slide_down_to_bottom = AnimatorInflater.loadAnimator(activity, R.animator.slide_down_to_bottom);
+
+        mListener = (PickupRequestConfirmedListener) activity;
     }
 
     @Override
@@ -234,8 +236,8 @@ public class PickupRequestDetailFragment extends Fragment implements
     private void showConfirmPickupDialog(String name, String phoneNumber) {
         FragmentManager fm = getChildFragmentManager();
         ConfirmRequestDialogFragment confirmRequestDialogFragment =
-                ConfirmRequestDialogFragment.newInstance("Accept Pickup Request", name, phoneNumber,
-                        getResources().getText(R.string.volunteer_dialog_disclaimer));
+        ConfirmRequestDialogFragment.newInstance("Accept Pickup Request", name, phoneNumber,
+                getResources().getText(R.string.volunteer_dialog_disclaimer));
         confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
@@ -245,10 +247,14 @@ public class PickupRequestDetailFragment extends Fragment implements
     @Override
     public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
         //update the current user's name and phone
-        CharityUserHelper.setName(name);
-        CharityUserHelper.setPhoneNumber(phoneNumber);
+        CharityUserHelper.setNameAndNumber(name, phoneNumber);
 
         savePickupRequest();
+    }
+
+    private void removePinFromMap() {
+        // listener will be implemented by MainActivity
+        mListener.onPickupConfirmed(mPickupRequest);
     }
 
     private void savePickupRequest() {
@@ -259,6 +265,7 @@ public class PickupRequestDetailFragment extends Fragment implements
             @Override
             public void done(ParseException e) {
                 shouldWeRetrySave(e);
+                removePinFromMap();
             }
         });
     }
@@ -316,5 +323,7 @@ public class PickupRequestDetailFragment extends Fragment implements
         super.onDetach();
     }
 
-
+    public interface PickupRequestConfirmedListener {
+        void onPickupConfirmed(PickupRequest pickupRequest);
+    }
 }

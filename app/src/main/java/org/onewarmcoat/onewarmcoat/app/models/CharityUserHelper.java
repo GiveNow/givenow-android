@@ -31,6 +31,14 @@ public class CharityUserHelper {
         user.saveInBackground();
     }
 
+    //this way we only do 1 network call to save user.
+    public static void setNameAndNumber(String name, String phoneNumber){
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("name", name);
+        user.put("phoneNumber", phoneNumber);
+        user.saveInBackground();
+    }
+
     public static String getStripeCustomerId() {
         ParseUser user = ParseUser.getCurrentUser();
         String stripeCustomerId = user.getString("stripeCustomerId");

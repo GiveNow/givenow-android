@@ -9,6 +9,7 @@ import org.onewarmcoat.onewarmcoat.app.fragments.SuperAwesomeCardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.DropOffLocationsFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.DashboardFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 public class VolunteerFragment extends PageSlidingTabStripFragment {
 
@@ -92,6 +93,12 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
 
 //            Toast.makeText(getActivity(), "query and reload markers", Toast.LENGTH_SHORT).show();
             pickupRequestsFragment.loadMarkers();
+        }
+    }
+
+    public void removePickupRequestFromMap(PickupRequest pickupRequest) {
+        if (pickupRequestsFragment != null) {
+            pickupRequestsFragment.removePickupRequestFromMap(pickupRequest);
         }
     }
 }

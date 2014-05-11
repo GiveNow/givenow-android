@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
+import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.parse.FindCallback;
@@ -112,6 +114,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
         mClusterManager = new ClusterManager<PickupRequest>(getActivity(), map);
         mClusterManager.setRenderer(new PickupRequestRenderer(map));
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<PickupRequest>(new GridBasedAlgorithm<PickupRequest>()));
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
         map.setOnInfoWindowClickListener(mClusterManager);
@@ -161,6 +164,12 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     @Override
     public void onClusterItemInfoWindowClick(PickupRequest pickupRequest) {
         mListener.onLaunchPickupRequestDetail(pickupRequest);
+    }
+
+    public void removePickupRequestFromMap(PickupRequest pickupRequest){
+        mClusterManager.removeItem(pickupRequest);
+        //need to call cluster so the items are re-rendered (removing the item)
+        mClusterManager.cluster();
     }
 
     @Override
