@@ -4,12 +4,13 @@
     android:layout_height="fill_parent"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:background="#ffdee8ee"
+
+    android:background="@drawable/donate_cash_background"
     android:gravity="center"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@+id/btn_donate"
         android:layout_alignParentBottom="false"
@@ -36,43 +37,16 @@
             android:typeface="normal" />
 
         <TextView
-            android:id="@+id/tv_donate_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView"
-            android:layout_weight="0.05"
-            android:gravity="center"
-            android:text="@string/donate_cash_motivational"
-            android:textAllCaps="true"
-            android:textColor="#ff818181"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tv_donate_msg"
-            android:layout_weight="0.20"
-            android:gravity="center"
-            android:singleLine="false"
-            android:text="Provide any person in need with a warm coat, free of charge."
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ff4b83a8"
-            android:textIsSelectable="false" />
-
-        <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView2"
-            android:layout_weight="0.25"
+            android:layout_marginBottom="75dp"
             android:gravity="center"
-            android:text="Please help by donating a coat or making a financial contribution today.  Your generous donations will help One Warm Coat provide a warmer winter for your neighbors in need."
-            android:textColor="#ff818181" />
+            android:text="@string/donate_cash_msg"
+            android:textColor="#ff2e3ab3"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/et_donate_amount"
@@ -80,12 +54,12 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/tvTaxIDNumber"
             android:layout_centerHorizontal="true"
-            android:layout_weight="0.10"
+            android:layout_weight="0.5"
             android:ems="10"
             android:gravity="center_horizontal|bottom"
             android:hint="$10"
             android:inputType="numberDecimal|numberSigned"
-            android:textColor="#ff266e9f"
+            android:textColorHint="#008000"
             android:textSize="40sp" />
 
         <TextView
@@ -94,12 +68,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_weight="0.05"
             android:gravity="center"
-            android:text="Our non-profit 501(c)3 Tax ID is #74-3045243."
+            android:text="@string/tax_id_msg"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#ff2e3ab3"
             android:textSize="12sp"
             android:textStyle="bold" />
 
