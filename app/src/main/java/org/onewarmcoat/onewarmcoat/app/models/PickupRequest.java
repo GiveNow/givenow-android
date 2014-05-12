@@ -22,6 +22,7 @@ import java.util.Date;
 @ParseClassName("PickupRequest")
 public class PickupRequest extends ParseObject implements ClusterItem, Serializable {
     public static final String VOLUNTEER_CONFIRMED = "volunteer_confirmed";
+    public static final String PICKUP_COMPLETE = "pickup_complete";
 
     public PickupRequest() {
         // A default constructor is required.
@@ -288,7 +289,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     public void generateVolunteerConfirmedNotif() {
-        //send pickup response back to donor
+        //send pickup response back to volunteer
         ParseQuery pushQuery = ParseInstallation.getQuery();
         pushQuery.whereEqualTo("user", this.getPendingVolunteer());
 
@@ -298,6 +299,29 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
             data.put("title", "Pickup Request Ready");
             data.put("alert", CharityUserHelper.getFirstName() + " is available to have their donation picked up.");
             data.put("type", VOLUNTEER_CONFIRMED);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        push.setData(data);
+//      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+        push.sendInBackground();
+    }
+
+    public void generatePickupCompleteNotif() {
+        //send pickup response back to donor
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", this.getDonor());
+
+        //create Parse Data
+        JSONObject data = new JSONObject();
+        try {
+            data.put("title", "Donation Successful");
+            data.put("alert", CharityUserHelper.getFirstName() + " has successfully picked up your donation.");
+            data.put("type", PICKUP_COMPLETE);
         } catch (JSONException e) {
             e.printStackTrace();
         }

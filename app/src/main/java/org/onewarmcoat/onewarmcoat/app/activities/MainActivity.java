@@ -36,8 +36,11 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragme
 import org.onewarmcoat.onewarmcoat.app.fragments.main.profile.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class MainActivity extends Activity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
@@ -144,6 +147,15 @@ public class MainActivity extends Activity implements
 //                    volunteerFragment.setCurrentItem(0);
 
                     return true;
+                }else if(notifType.equals(PickupRequest.PICKUP_COMPLETE)){
+                    //remove the push notif data, so we don't process it next app resume
+                    mIntent.removeExtra("com.parse.Data");
+
+                    String title = getResources().getString(R.string.donate_success);
+                    String message = getResources().getString(R.string.donate_pickup_complete);
+
+                    Crouton crouton = CroutonHelper.createInfoCrouton(this, title, message);
+                    crouton.show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

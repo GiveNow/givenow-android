@@ -287,7 +287,7 @@ public class CashFragment extends Fragment {
     }
 
     private void showCrouton(String amount){
-        String title = getResources().getString(R.string.donate_cash_success);
+        String title = getResources().getString(R.string.donate_success);
         String message = getResources().getString(R.string.donate_cash_amount, amount);
 
         Crouton crouton = CroutonHelper.createInfoCrouton(getActivity(), title, message);

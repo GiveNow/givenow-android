@@ -111,6 +111,9 @@ public class DashboardFragment extends Fragment implements ViewPagerChangeListen
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
+                            //send push to donor
+                            pickupRequest.generatePickupCompleteNotif();
+
                             //create donation, and set it in the PickupRequest
                             pickupRequest.setDonation(donation);
 
