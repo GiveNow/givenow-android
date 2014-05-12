@@ -14,6 +14,8 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,11 +24,9 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
 
     public DashboardItemAdapter(Context context) {
         //items are all items where the pending volunteer = current user.
-        super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+        super(context, new ParseQueryAdapter.QueryFactory<PickupRequest>() {
             public ParseQuery create() {
-                ParseQuery<ParseObject> query = new ParseQuery("PickupRequest");
-                query.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
-                return query;
+                return PickupRequest.getMyDashboardPickups();
             }
         });
     }
@@ -43,16 +43,24 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         }
         super.getItemView(object, v, parent);
 
-        //TODO: Add logic to choose the appropriate status to display.
+        PickupRequest pickupRequest = (PickupRequest) object;
+
+        //set this as default case
         holder.tvStatus.setText("Waiting for donor to confirm");
-        holder.tvStatus.setText("Ready for Pickup");
 
-        holder.tvNumCoats.setText(String.valueOf(object.getNumber("numberOfCoats")));
+        ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
 
-        holder.tvName.setText(object.getString("name"));
-        holder.tvAddress.setText(object.getString("address"));
+        //if there is a confirmed volunteer and it is me, then say it is ready for pickup
+        if(confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
+            holder.tvStatus.setText("Ready for Pickup");
+        }
 
-        holder.btnCall.setTag(object.getString("phoneNumber"));
+        holder.tvNumCoats.setText(String.valueOf(pickupRequest.getNumberOfCoats()));
+
+        holder.tvName.setText(CharityUserHelper.getFirstName(pickupRequest.getName()));
+        holder.tvAddress.setText(pickupRequest.getAddresss());
+
+        holder.btnCall.setTag(pickupRequest.getPhoneNumber());
         holder.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +80,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         // String uriBegin = "geo:" + gp.getLatitude() + "," + gp.getLongitude();
         // navigation intent:
         String uriBegin = "google.navigation:"; // + gp.getLatitude() + "," + gp.getLongitude();
-        String query = object.getString("address");
+        String query = pickupRequest.getAddresss();
         String encodedQuery = Uri.encode(query);
         String uriString = uriBegin + "q=" + encodedQuery;
         holder.btnMap.setTag(uriString);
