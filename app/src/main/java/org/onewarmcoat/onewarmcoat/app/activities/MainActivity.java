@@ -113,7 +113,7 @@ public class MainActivity extends Activity implements
         //if the user resumed the app by entering through a Volunteer push notif, show dashboard
         boolean isPushNotif = handlePushNotifResume();
 
-        if(!isPushNotif) {
+        if (!isPushNotif) {
             checkForPendingRequests();
         }
     }
@@ -130,7 +130,7 @@ public class MainActivity extends Activity implements
 
                 String notifType = json.getString("type");
 //                    Log.d("detectPushNotificationMessage", "notifType = " + notifType);
-                if(notifType.equals(PickupRequest.VOLUNTEER_CONFIRMED)){
+                if (notifType.equals(PickupRequest.VOLUNTEER_CONFIRMED)) {
 //                        Log.d("detectPushNotificationMessage", "switch to volunteer fragment");
 
                     //remove the push notif data, so we don't process it next app resume
@@ -175,7 +175,7 @@ public class MainActivity extends Activity implements
         String title = CharityUserHelper.getFirstName(CharityUserHelper.getName(pendingVolunteer)) + " would like to pick up your coats!";
         String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddresss() + "</font>";
 
-        if(acceptPendingDialog != null && acceptPendingDialog.isShowing()){
+        if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
             acceptPendingDialog.dismiss();
         }
         acceptPendingDialog = new AlertDialog.Builder(this)
@@ -210,21 +210,6 @@ public class MainActivity extends Activity implements
 
         //removed this, and added it to done method below
         pickupRequest.saveInBackground();
-
-        //TODO: LOOK HERE FOR DONATION CREATION
-//        final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
-//
-//        donation.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if (e == null) {
-//                    //create donation, and set it in the PickupRequest
-//                    pickupRequest.setDonation(donation);
-//
-//                    pickupRequest.saveInBackground();
-//                }
-//            }
-//        });
     }
 
     //stupid helper method, can go away whenever

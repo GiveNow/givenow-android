@@ -43,7 +43,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         }
         super.getItemView(object, v, parent);
 
-        PickupRequest pickupRequest = (PickupRequest) object;
+        final PickupRequest pickupRequest = (PickupRequest) object;
 
         //set this as default case
         holder.tvStatus.setText("Waiting for donor to confirm");
@@ -101,6 +101,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         //TODO: That's a lot of buttons. Perhaps a Card UI would be more suitable here. (+Swiping gestures to dismiss and ask user if the pickup was successful?) ... Point of debate.
         return v;
     }
+
 
     static class ViewHolder {
         @InjectView(R.id.tvName)
