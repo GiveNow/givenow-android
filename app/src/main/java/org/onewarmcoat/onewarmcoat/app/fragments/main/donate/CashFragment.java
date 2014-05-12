@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -193,36 +195,46 @@ public class CashFragment extends Fragment {
 
             //TODO: This data like last 4, expiration, etc should get stored too.
             // do something with resultDisplayStr, maybe display it in a textView
-//            Toast.makeText(getActivity(), resultDisplayStr, Toast.LENGTH_LONG).show();
+            Log.d("credit_card", resultDisplayStr);
 
         }
     }
 
     public void newStripeCard(CreditCard cc) {
         Card card = new Card(cc.cardNumber, cc.expiryMonth, cc.expiryYear, cc.cvv);
+//        Log.d("credit_card", "in newStripeCard");
 
         if(card.validateCard()) {
+//            Log.d("credit_card", "card valid");
             try {
+//                Log.d("credit_card", "init stripe");
                 Stripe stripe = new Stripe("pk_test_T2v8tseWb9m0K2Qa9tCrJUE5");
 
                 stripe.createToken(
                         card,
                         new TokenCallback() {
                             public void onSuccess(Token token) {
+//                                Log.d("credit_card", "token success");
                                 chargeStripeToken(token);
                             }
 
                             public void onError(Exception error) {
+//                                Log.d("credit_card", "token error");
                                 // Show localized error message
 //                                Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                                Crouton.showText(getActivity(), getResources().getString(R.string.credit_card_invalid), Style.ALERT);
                             }
                         }
                 );
             } catch (AuthenticationException e) {
+//                Log.d("credit_card", "exception");
                 e.printStackTrace();
             }
         }else {
-            Crouton.showText(getActivity(), getResources().getString(R.string.credit_card_invalid), Style.ALERT);
+//            Crouton.showText(getActivity(), getResources().getString(R.string.credit_card_invalid), Style.ALERT);
+//            showCrouton();
+            Toast.makeText(getActivity(), "invalid card", Toast.LENGTH_LONG).show();
+//            Log.d("credit_card", "card invalid");
         }
 
     }
@@ -246,6 +258,10 @@ public class CashFragment extends Fragment {
 
                     showCrouton(amount);
                     storeDonation(amount);
+                }else {
+                    Log.d("credit_card", "charge failed");
+                    //TODO: TAKE THIS GARBAGE OUT AFTER DEMO
+                    showCrouton(amount);
                 }
             }
         });

@@ -51,7 +51,7 @@ public class DonationsAdapter extends ParseQueryAdapter {
 
         TextView donationValueView = (TextView) v.findViewById(R.id.donationValue);
         double donationVal = donation.getDonationValue();
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#");
         donationValueView.setText("$" + df.format(donationVal));
 
         return v;

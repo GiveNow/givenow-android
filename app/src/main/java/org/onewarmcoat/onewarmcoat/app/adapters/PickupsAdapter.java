@@ -54,7 +54,7 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
         TextView numItemsView = (TextView) v.findViewById(R.id.numItems);
         double numItems = pickupRequest.getDonationValue();
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("#");
         numItemsView.setText("$" + df.format(numItems));
 
         //TODO: this should get the number of coats
