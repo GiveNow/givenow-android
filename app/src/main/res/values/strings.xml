@@ -13,7 +13,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
-    <string name="donate_cash_button">Donate with Credit Card Scanner</string>
+    <string name="donate_cash_button">Donate</string>
     <string name="donate_cash_motivational"> One Warm Coat’s mission is simple:</string>
     <string name="set_pickup_location_label">Set Pickup Location</string>
     <string name="submit_pickup_label">Submit Pickup Request</string>

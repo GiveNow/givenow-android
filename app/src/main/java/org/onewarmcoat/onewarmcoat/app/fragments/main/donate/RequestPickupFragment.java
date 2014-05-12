@@ -61,6 +61,8 @@ public class RequestPickupFragment extends MapHostingFragment {
         View v = inflater.inflate(R.layout.fragment_request_pickup, container, false);
         ButterKnife.inject(this, v);
 
+        etAddress.getBackground().setAlpha(216);
+
         Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
         return v;
     }

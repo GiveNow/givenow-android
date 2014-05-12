@@ -65,7 +65,8 @@ public class PageSlidingTabStripFragment extends Fragment {
 //        tabStrip.setDividerPadding(padding - 1);
 //        tabStrip.setBackgroundResource(R.drawable.tab);
 //        tabStrip.setIndicatorColorResource(R.drawable.tab_selected_onewarmcoat);
-        tabStrip.setIndicatorColor(Color.argb(0xFF, 0x24, 0x6D, 0x9E));
+        tabStrip.setIndicatorColor(getResources().getColor(R.color.accent));
+        tabStrip.setTextColor(getResources().getColorStateList(R.color.tab_text));
         tabStrip.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
         tabStrip.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
         tabStrip.setViewPager(mViewPager);

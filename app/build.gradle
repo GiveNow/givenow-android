@@ -44,7 +44,8 @@ dependencies {
     compile 'com.android.support:support-v13:18.0.+'
     compile 'com.google.android.gms:play-services:4.3.+'
 
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+//    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+
     compile 'com.jakewharton:butterknife:5.0.+'
     compile 'com.google.maps.android:android-maps-utils:0.3.1+'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
@@ -60,6 +61,11 @@ dependencies {
     compile files('libs/Parse-1.4.3/Parse-1.4.3.jar')
 //    compile files('libs/card.io-3.1.4/card.io.jar')
     compile project(':stripe')
+
+    // fork of Pager Sliding Tab Strip that supports ColorStateLists for tab text color.
+    // https://github.com/magicgoose/PagerSlidingTabStrip
+    compile project(':PagerSlidingTabStrip-magicgoose-1c26523:library')
+    //
     compile 'com.crashlytics.android:crashlytics:1.+'
 
 }

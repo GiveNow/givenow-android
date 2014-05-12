@@ -30,12 +30,12 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="55dp"
             android:layout_marginTop="3dp"
-            android:alpha="0.85"
             android:background="@drawable/menu_dropdown_panel_onewarmcoat"
             android:hint="Address"
             android:inputType="textPostalAddress"
             android:minHeight="56dp"
             android:padding="15dp"
+            android:textColor="@color/accent"
             android:textSize="14sp" />
 
         <ImageView
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="#ff246d9e"
+        android:background="@color/accent"
         android:text="@string/set_pickup_location_label"
         android:textColor="#ffffffff" />
 

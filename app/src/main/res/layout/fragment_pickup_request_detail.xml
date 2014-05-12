@@ -13,7 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
-        android:background="@color/shadow_light">
+        android:background="@color/shadow_light"
+        android:clickable="true">
 
 
         <LinearLayout
@@ -43,7 +44,7 @@
                 android:text="@string/confirm_pickup"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#ff266e9f"
+                android:textColor="@color/accent"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -75,7 +76,7 @@
                 android:text="User Name"
                 android:textAllCaps="false"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#ff266e9f" />
+                android:textColor="@color/accent" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,7 +108,7 @@
                 android:layout_weight="1"
                 android:inputType="textPostalAddress"
                 android:text="123 Address Lane"
-                android:textColor="#ff266e9f" />
+                android:textColor="@color/accent" />
         </LinearLayout>
 
         <View
@@ -128,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:background="#ff246d9e"
+            android:background="@color/accent"
             android:text="@string/accept"
             android:textColor="#ffffffff" />
     </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>

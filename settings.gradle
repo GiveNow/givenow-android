@@ -1,2 +1,3 @@
 include ':app'
 include ':stripe'
+include ':PagerSlidingTabStrip-magicgoose-1c26523:library'

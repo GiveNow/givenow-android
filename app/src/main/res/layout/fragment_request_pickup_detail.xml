@@ -12,7 +12,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
-        android:background="@color/shadow_light">
+        android:background="@color/shadow_light"
+        android:clickable="true">
 
         <LinearLayout
             android:id="@+id/llConfirmInfo"
@@ -41,7 +42,7 @@
                 android:text="Please verify your address is correct."
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#ff266e9f"
+                android:textColor="@color/gray"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -71,8 +72,9 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
+                android:imeOptions="actionNext"
                 android:inputType="textPostalAddress"
-                android:textColor="#ff266e9f" />
+                android:textColor="@color/accent" />
         </LinearLayout>
 
         <View
@@ -114,6 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginLeft="0dp"
+            android:clickable="true"
             android:minHeight="100dp">
 
             <RelativeLayout
@@ -154,7 +157,7 @@
                             android:text="# of coats"
                             android:textAllCaps="true"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="#ff266e9f"
+                            android:textColor="@color/accent"
                             android:textStyle="bold" />
 
                         <LinearLayout
@@ -191,11 +194,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:hint="0"
+                                android:imeOptions="actionNext"
                                 android:inputType="number"
                                 android:maxLength="4"
                                 android:singleLine="true"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="#ff266e9f" />
+                                android:textColor="@color/accent" />
 
                         </LinearLayout>
                     </RelativeLayout>
@@ -220,7 +224,7 @@
                             android:text="Estimated Value"
                             android:textAllCaps="true"
                             android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="#ff266e9f"
+                            android:textColor="@color/accent"
                             android:textStyle="bold" />
 
                         <LinearLayout
@@ -245,11 +249,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:hint="Optional"
+                                android:imeOptions="actionDone"
                                 android:inputType="numberDecimal"
                                 android:maxLength="8"
                                 android:orientation="horizontal"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="#ff266e9f" />
+                                android:textColor="@color/accent" />
                         </LinearLayout>
 
                         <TextView

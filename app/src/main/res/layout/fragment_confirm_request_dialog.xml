@@ -34,8 +34,9 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:hint="Your name"
-             android:imeOptions="actionDone"
-             android:inputType="textCapWords" />
+             android:imeOptions="actionNext"
+             android:inputType="textCapWords"
+             android:textColor="@color/accent" />
      </LinearLayout>
 
      <!--<TextView-->
@@ -65,7 +66,8 @@
              android:layout_height="wrap_content"
              android:hint="Your phone number"
              android:imeOptions="actionDone"
-             android:inputType="phone" />
+             android:inputType="phone"
+             android:textColor="@color/accent" />
      </LinearLayout>
 
      <TextView

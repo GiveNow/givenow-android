@@ -3,9 +3,7 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -175,11 +173,7 @@ public class PickupRequestDetailFragment extends Fragment implements
         set.play(slide_down_from_top).with(slide_up_from_bottom);
         set.start();
 
-        ObjectAnimator btnAnim = ObjectAnimator.ofObject(btnAccept, "backgroundColor", new ArgbEvaluator(),
-          /*LightBlue*/0xFF3D89C2, /*Blue*/0xff246d9e);
-        btnAnim.setDuration(500).setRepeatCount(ValueAnimator.INFINITE);
-        btnAnim.setRepeatMode(ValueAnimator.REVERSE);
-        btnAnim.start();
+        mBtnAnim.start();
     }
 
     public void animateAndDetach() {
