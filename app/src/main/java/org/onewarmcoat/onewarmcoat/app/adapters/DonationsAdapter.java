@@ -9,31 +9,21 @@ import android.widget.TextView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class DonationsAdapter extends ParseQueryAdapter {
 
-    ParseUser foundUser;
-
     //public DonationsAdapter(Context context, final ParseUser donor) {
     public DonationsAdapter(Context context) {
-        super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+        super(context, new ParseQueryAdapter.QueryFactory<Donation>() {
             public ParseQuery create() {
-
-                //ParseQuery<ParseObject> query = new ParseQuery("Donation");
-                //REPLACE HARDCODED donorID LATER
-                //query.whereEqualTo("donor", "Alex");
-//                String currentUsername = ParseUser.getCurrentUser().getUsername();
-                //query.whereEqualTo("donor", ParseUser.getCurrentUser());
-                //query.whereEqualTo("donor", ParseUser.getCurrentUser());
-                ParseQuery<ParseObject> query = new ParseQuery("PickupRequest");
-                query.whereEqualTo("donor", ParseUser.getCurrentUser());
-                return query;
+                return Donation.getAllMyDonations();
             }
         });
     }
@@ -46,21 +36,23 @@ public class DonationsAdapter extends ParseQueryAdapter {
 
         super.getItemView(object, v, parent);
 
+        Donation donation = (Donation) object;
+
         TextView donationDateView = (TextView) v.findViewById(R.id.donationDate);
 
-        Date d = object.getCreatedAt();
+        Date d = donation.getCreatedAt();
         String dateStr = DateFormat.getInstance().format(d);
-        //String dateStr = object.getString("createdAt");
         donationDateView.setText(dateStr);
 
 
         TextView donationTypeView = (TextView) v.findViewById(R.id.donationType);
-        String donationType = object.getString("donationType");
+        String donationType = donation.getDonationType();
         donationTypeView.setText(donationType);
 
         TextView donationValueView = (TextView) v.findViewById(R.id.donationValue);
-        Number donationVal = object.getNumber("donationValue");
-        donationValueView.setText(donationVal.toString());
+        double donationVal = donation.getDonationValue();
+        DecimalFormat df = new DecimalFormat("#.00");
+        donationValueView.setText("$" + df.format(donationVal));
 
         return v;
     }

@@ -116,7 +116,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     /*
-    All Pickup Requests that I have made, which currently have a volunteer confirmed to be completing the pickup
+    All Pickup Requests that I have made, which currently have a volunteer confirmed to be completing the pickup, but not delivered
      */
     public static ParseQuery<PickupRequest> getMyConfirmedRequests() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
@@ -124,6 +124,17 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("confirmedVolunteer");
         q.whereDoesNotExist("donation");
+        return q;
+    }
+
+    /*
+    All Pickup Requests that I have made, which currently have a volunteer confirmed to be completing the pickup
+     */
+    public static ParseQuery<PickupRequest> getAllMyConfirmedRequests() {
+        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("donor", ParseUser.getCurrentUser());
+        q.whereExists("confirmedVolunteer");
         return q;
     }
 

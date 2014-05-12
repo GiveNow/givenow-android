@@ -48,7 +48,7 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
 
     @Override
     protected String[] getTitles() {
-        return new String[]{"My Donation History", "My Pickup History"};
+        return new String[]{"Donation History", "Volunteer History"};
     }
 
     @Override

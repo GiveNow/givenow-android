@@ -12,8 +12,10 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 public class PickupsAdapter extends ParseQueryAdapter {
@@ -22,17 +24,10 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
     public PickupsAdapter(Context context) {
 
-        super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+        super(context, new ParseQueryAdapter.QueryFactory<PickupRequest>() {
             public ParseQuery create() {
-
-                ParseQuery<ParseObject> query = new ParseQuery("PickupRequest");
-                //REPLACE HARDCODED donorID LATER
-                //query.whereEqualTo("donor", "Alex");
-                String currentUsername = ParseUser.getCurrentUser().getUsername();
-                //query.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
-                query.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
-                //query.whereEqualTo("donor", ParseUser.getCurrentUser());
-                return query;
+                //TODO: this should be completed pickups
+                return PickupRequest.getMyConfirmedPickups();
             }
         });
     }
@@ -45,23 +40,27 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
         super.getItemView(object, v, parent);
 
+        PickupRequest pickupRequest = (PickupRequest) object;
+
         TextView pickupDateView = (TextView) v.findViewById(R.id.pickupDate);
-        Date d = object.getCreatedAt();
+        Date d = pickupRequest.getCreatedAt();
+
         String dateStr = DateFormat.getInstance().format(d);
-        //String dateStr = object.getString("createdAt");
         pickupDateView.setText(dateStr);
 
         TextView pickupAddressView = (TextView) v.findViewById(R.id.pickupAddress);
-        String pickupAddress = object.getString("address");
+        String pickupAddress = pickupRequest.getAddresss();
         pickupAddressView.setText(pickupAddress);
 
         TextView numItemsView = (TextView) v.findViewById(R.id.numItems);
-        Number numItems = object.getNumber("donationValue");
-        String numItemsStr = numItems.toString();
-        numItemsView.setText(numItemsStr);
+        double numItems = pickupRequest.getDonationValue();
+        DecimalFormat df = new DecimalFormat("#.00");
+        numItemsView.setText("$" + df.format(numItems));
+
+        //TODO: this should get the number of coats
 
         TextView itemTypeView = (TextView) v.findViewById(R.id.itemType);
-        String itemType = object.getString("donationType");
+        String itemType = pickupRequest.getDonationType();
         itemTypeView.setText(itemType.toString());
 
 

@@ -203,11 +203,28 @@ public class MainActivity extends Activity implements
         pickupRequest.saveInBackground();
     }
 
-    private void pendingVolunteerConfirmed(PickupRequest pickupRequest) {
+    private void pendingVolunteerConfirmed(final PickupRequest pickupRequest) {
         // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
         pickupRequest.generateVolunteerConfirmedNotif();
         pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
+
+        //removed this, and added it to done method below
         pickupRequest.saveInBackground();
+
+        //TODO: LOOK HERE FOR DONATION CREATION
+//        final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
+//
+//        donation.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e == null) {
+//                    //create donation, and set it in the PickupRequest
+//                    pickupRequest.setDonation(donation);
+//
+//                    pickupRequest.saveInBackground();
+//                }
+//            }
+//        });
     }
 
     //stupid helper method, can go away whenever
