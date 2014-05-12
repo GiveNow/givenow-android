@@ -27,7 +27,7 @@ public class PickupsAdapter extends ParseQueryAdapter {
         super(context, new ParseQueryAdapter.QueryFactory<PickupRequest>() {
             public ParseQuery create() {
                 //TODO: this should be completed pickups
-                return PickupRequest.getMyConfirmedPickups();
+                return PickupRequest.getMyCompletedPickups();
             }
         });
     }

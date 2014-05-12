@@ -183,12 +183,12 @@ public class MainActivity extends Activity implements
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
                 .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>"))
                 .setMessage(Html.fromHtml("Is your donation of " + pickupRequest.getNumberOfCoats() + " coats available for pickup today?" + address))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         pendingVolunteerConfirmed(pickupRequest);
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         cancelPendingVolunteer(pickupRequest);
                     }
@@ -378,6 +378,7 @@ public class MainActivity extends Activity implements
 //                            profileFragment.TAG);
                             "prof");
                 } else {
+                    profileFragment.refreshProfile();
                     ft.show(profileFragment);
                 }
                 break;

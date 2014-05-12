@@ -10,10 +10,12 @@ import android.widget.ListView;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.PickupsAdapter;
+import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 
-public class PickupHistoryFragment extends Fragment {
+public class PickupHistoryFragment extends Fragment implements ViewPagerChangeListener {
     private ListView pickupHist;
+    private PickupsAdapter mPickupsAdapter;
 
     public PickupHistoryFragment() {
         // Required empty public constructor
@@ -36,10 +38,24 @@ public class PickupHistoryFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_pickup_history, container,
                 false);
 
-        PickupsAdapter pa = new PickupsAdapter(getActivity());
+        mPickupsAdapter = new PickupsAdapter(getActivity());
         pickupHist = (ListView) rootView.findViewById(R.id.pickups);
-        pickupHist.setAdapter(pa);
+        pickupHist.setAdapter(mPickupsAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewPagerShow() {
+        refreshList();
+    }
+
+    @Override
+    public void onViewPagerHide() {
+
+    }
+
+    public void refreshList() {
+        mPickupsAdapter.loadObjects();
     }
 }

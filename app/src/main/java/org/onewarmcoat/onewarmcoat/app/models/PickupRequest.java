@@ -92,6 +92,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
         q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
+        q.orderByDescending("createdAt");
         return q;
     }
 
@@ -100,6 +101,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
         q.whereExists("donation");
+        q.orderByDescending("createdAt");
         return q;
     }
 

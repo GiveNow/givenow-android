@@ -30,6 +30,14 @@ public class Donation extends ParseObject {
         setNumberOfCoats(numberOfCoats);
     }
 
+    public static ParseQuery<Donation> getAllMyDonations() {
+        ParseQuery<Donation> q = ParseQuery.getQuery(Donation.class);
+        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("donor", ParseUser.getCurrentUser());
+        q.orderByDescending("createdAt");
+        return q;
+    }
+
     public String getDonor() {
         return getString("donor");
     }
@@ -67,13 +75,6 @@ public class Donation extends ParseObject {
 
     public void setNumberOfCoats(int numCoats) {
         put("numberOfCoats", numCoats);
-    }
-
-    public static ParseQuery<Donation> getAllMyDonations() {
-        ParseQuery<Donation> q = ParseQuery.getQuery(Donation.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        q.whereEqualTo("donor", ParseUser.getCurrentUser());
-        return q;
     }
 
 }

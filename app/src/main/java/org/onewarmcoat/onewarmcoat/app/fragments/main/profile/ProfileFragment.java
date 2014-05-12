@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -85,10 +84,9 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
                 if (e == null) {
                     if (objects.size() > 0) {
                         String phoneNum = objects.get(0).getString("phone");
-                        //TODO: REENABLE THIS AFTER THE DEMO LOL
-//                        phonenoTV.setText(phoneNum);
+                        phonenoTV.setText(phoneNum);
                     } else {
-                        Toast.makeText(getActivity(), "NO RECORDS FOUND!", Toast.LENGTH_LONG);
+//                        Toast.makeText(getActivity(), "NO RECORDS FOUND!", Toast.LENGTH_LONG);
                     }
                 } else {
                     // Something went wrong.
@@ -119,6 +117,10 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         });
     }
 
+    public void refreshProfile() {
+        dhFragment.refreshList();
+        phFragment.refreshList();
+    }
 
     @Override
     protected Fragment getFragmentForPosition(int position) {
