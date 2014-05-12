@@ -47,5 +47,9 @@
     <string name="enter_phone">Phone No:</string>
     <string name="volunteer_disclaimer">You will only be called if there is a problem with the donation you are picking up</string>
     <string name="action_refresh">Refresh</string>
+    <string name="donate_cash_amount">Congratulations, you just donated $%1$s to One Warm Coat</string>
+    <string name="donate_cash_success">Donation Successful</string>
+    <string name="credit_card_invalid">Credit Card Invalid</string>
+    <string name="invalid_donation_amount">$%1$s is not valid input. Please enter a valid donation amount greater than 0</string>
 
 </resources>

@@ -31,6 +31,7 @@ import com.parse.SaveCallback;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
@@ -38,6 +39,7 @@ import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class PickupRequestDetailFragment extends Fragment implements
         ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
@@ -286,6 +288,7 @@ public class PickupRequestDetailFragment extends Fragment implements
         } else {
             // save did not succeed
             getActivity().setProgressBarIndeterminateVisibility(false);
+
             // show error notification dialog with retry or cancel
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.pickupRequest_retryDialog_title)
@@ -310,16 +313,10 @@ public class PickupRequestDetailFragment extends Fragment implements
         if (mRequestAccepted) {
             //stop displaying the spinning indicator
             getActivity().setProgressBarIndeterminateVisibility(false);
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.acceptRequest_submittedDialog_title)
-                    .setMessage(R.string.acceptRequest_submittedDialog_msg)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //
-                        }
-                    })
-                    .setIcon(R.drawable.ic_launcher)
-                    .show();
+
+            // show accepted confirmation
+            Crouton crouton = CroutonHelper.createInfoCrouton(getActivity(), getResources().getString(R.string.acceptRequest_submittedDialog_title), getResources().getString(R.string.acceptRequest_submittedDialog_msg));
+            crouton.show();
         }
     }
 

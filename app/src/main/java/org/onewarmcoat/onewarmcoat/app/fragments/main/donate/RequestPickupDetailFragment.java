@@ -32,6 +32,7 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
@@ -40,6 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 
 public class RequestPickupDetailFragment extends Fragment implements
@@ -206,17 +208,8 @@ public class RequestPickupDetailFragment extends Fragment implements
             getActivity().setProgressBarIndeterminateVisibility(false);
 
             // show submitted confirmation
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.pickupRequest_submittedDialog_title)
-                    .setMessage(R.string.pickupRequest_submittedDialog_message)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //
-                        }
-                    })
-                            //TODO: perhaps add another button to this dialog - 'view profile'?
-                    .setIcon(R.drawable.ic_launcher)
-                    .show();
+            Crouton crouton = CroutonHelper.createInfoCrouton(getActivity(), getResources().getString(R.string.pickupRequest_submittedDialog_title), getResources().getString(R.string.pickupRequest_submittedDialog_message));
+            crouton.show();
         }
 
     }

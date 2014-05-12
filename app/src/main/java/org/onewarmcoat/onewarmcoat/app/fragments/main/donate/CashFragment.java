@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -27,6 +26,7 @@ import com.stripe.exception.AuthenticationException;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.helpers.AmountOnFocusChangeListener;
+import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.NumericRangeFilter;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
@@ -36,6 +36,8 @@ import java.util.HashMap;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
@@ -120,7 +122,7 @@ public class CashFragment extends Fragment {
     private boolean validateInput() {
         String enteredAmount = etDonateAmount.getText().toString();
 
-        int amount;
+        int amount = 0;
         try {
             //parseInt returns an int, so this will be auto-rounded to whole dollars
             amount = Integer.parseInt(enteredAmount);
@@ -132,14 +134,13 @@ public class CashFragment extends Fragment {
             //sad day, no moniez
         }
 
-        Toast.makeText(getActivity(), "$" + enteredAmount + " is not valid input. " +
-                "Please enter a valid donation amount > 0", Toast.LENGTH_LONG).show();
+        Crouton.showText(getActivity(), getResources().getString(R.string.invalid_donation_amount, amount), Style.ALERT);
         return false;
     }
 
     private void getCardDetails() {
         if(!CardIOActivity.canReadCardWithCamera()){
-            Toast.makeText(getActivity(), "whyyyyyyyy??", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "whyyyyyyyy??", Toast.LENGTH_SHORT).show();
         }
 
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
@@ -151,8 +152,6 @@ public class CashFragment extends Fragment {
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: true
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
-
-//        Toast.makeText(getActivity(), "Starting Card.io Intent wheeeee", Toast.LENGTH_SHORT).show();
 
         // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
         startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
@@ -194,7 +193,7 @@ public class CashFragment extends Fragment {
 
             //TODO: This data like last 4, expiration, etc should get stored too.
             // do something with resultDisplayStr, maybe display it in a textView
-            Toast.makeText(getActivity(), resultDisplayStr, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), resultDisplayStr, Toast.LENGTH_LONG).show();
 
         }
     }
@@ -215,7 +214,7 @@ public class CashFragment extends Fragment {
 
                             public void onError(Exception error) {
                                 // Show localized error message
-                                Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                 );
@@ -223,7 +222,7 @@ public class CashFragment extends Fragment {
                 e.printStackTrace();
             }
         }else {
-            Toast.makeText(getActivity(), "Credit card invalid :(", Toast.LENGTH_LONG).show();
+            Crouton.showText(getActivity(), getResources().getString(R.string.credit_card_invalid), Style.ALERT);
         }
 
     }
@@ -243,11 +242,9 @@ public class CashFragment extends Fragment {
             @Override
             public void done(String stripeCustomerId, ParseException e) {
                 if (e == null) {
-//                    Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
                     CharityUserHelper.setStripeCustomerId(stripeCustomerId);
 
-                    Toast.makeText(getActivity(), CharityUserHelper.getStripeCustomerId(), Toast.LENGTH_LONG).show();
-
+                    showCrouton(amount);
                     storeDonation(amount);
                 }
             }
@@ -266,12 +263,19 @@ public class CashFragment extends Fragment {
             @Override
             public void done(String result, ParseException e) {
                 if (e == null) {
-                    Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
-
+                    showCrouton(amount);
                     storeDonation(amount);
                 }
             }
         });
+    }
+
+    private void showCrouton(String amount){
+        String title = getResources().getString(R.string.donate_cash_success);
+        String message = getResources().getString(R.string.donate_cash_amount, amount);
+
+        Crouton crouton = CroutonHelper.createInfoCrouton(getActivity(), title, message);
+        crouton.show();
     }
 
     private void storeDonation(String amount){

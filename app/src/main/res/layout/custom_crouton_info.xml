@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/crouton_border"
+
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="15dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" >
+
+        <ImageView
+            android:id="@+id/ivCroutonIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/iconmonstr_info_6_icon_256"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@+id/ivCroutonIcon">
+
+            <TextView
+                android:id="@+id/tvCroutonTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ff266e9f"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvCroutonMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tvCroutonTitle"
+                android:layout_below="@+id/tvCroutonTitle"
+                android:text="" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
