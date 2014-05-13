@@ -34,7 +34,7 @@ Users can also donate cash directly to the charity.
 
 They can enter their credit card details manually, or use a credit card scanner (needs screenshot).
 
-![Credit Card](/assets/credit_card_details.png?raw=true)
+![Credit Card](/assets/credit_card_detail.png?raw=true)
 
 #Volunteer
 
