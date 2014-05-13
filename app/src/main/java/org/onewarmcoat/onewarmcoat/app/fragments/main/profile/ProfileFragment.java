@@ -16,6 +16,7 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
@@ -71,28 +72,9 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
 
         ButterKnife.inject(this, rootView);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        String objId = currentUser.getObjectId();
+        phonenoTV.setText(CharityUserHelper.getPhoneNumber());
+        usernameTV.setText(CharityUserHelper.getName());
 
-        setReadableName("donor", currentUser);
-        setReadableName("confirmedVolunteer", currentUser);
-
-        ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
-        userQuery.whereEqualTo("objectId", objId);
-        userQuery.findInBackground(new FindCallback<ParseUser>() {
-            public void done(List<ParseUser> objects, ParseException e) {
-                if (e == null) {
-                    if (objects.size() > 0) {
-                        String phoneNum = objects.get(0).getString("phone");
-                        phonenoTV.setText(phoneNum);
-                    } else {
-//                        Toast.makeText(getActivity(), "NO RECORDS FOUND!", Toast.LENGTH_LONG);
-                    }
-                } else {
-                    // Something went wrong.
-                }
-            }
-        });
         return rootView;
     }
 

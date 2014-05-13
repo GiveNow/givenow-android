@@ -13,8 +13,8 @@ import com.parse.ParseQueryAdapter;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DonationsAdapter extends ParseQueryAdapter {
@@ -41,7 +41,10 @@ public class DonationsAdapter extends ParseQueryAdapter {
         TextView donationDateView = (TextView) v.findViewById(R.id.donationDate);
 
         Date d = donation.getCreatedAt();
-        String dateStr = DateFormat.getInstance().format(d);
+
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy");
+        String dateStr = format.format(d);
+
         donationDateView.setText(dateStr);
 
 

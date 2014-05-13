@@ -14,8 +14,8 @@ import com.parse.ParseUser;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PickupsAdapter extends ParseQueryAdapter {
@@ -45,7 +45,8 @@ public class PickupsAdapter extends ParseQueryAdapter {
         TextView pickupDateView = (TextView) v.findViewById(R.id.pickupDate);
         Date d = pickupRequest.getCreatedAt();
 
-        String dateStr = DateFormat.getInstance().format(d);
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy");
+        String dateStr = format.format(d);
         pickupDateView.setText(dateStr);
 
         TextView pickupAddressView = (TextView) v.findViewById(R.id.pickupAddress);
