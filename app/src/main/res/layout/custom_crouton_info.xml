@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/crouton_border"
 
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:padding="15dp" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
     <RelativeLayout
+        android:id="@+id/rlMain"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" >
+        android:layout_height="100dp"
+        android:background="@color/background"
+        android:padding="15dp">
+
 
         <ImageView
             android:id="@+id/ivCroutonIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/iconmonstr_info_6_icon_256"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
+            android:src="@drawable/iconmonstr_info_6_icon_256" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_toRightOf="@+id/ivCroutonIcon">
+            android:layout_toRightOf="@+id/ivCroutonIcon"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tvCroutonTitle"
@@ -37,7 +37,7 @@
                 android:layout_marginLeft="10dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#ff266e9f"
+                android:textColor="@color/accent"
                 android:textStyle="bold"/>
 
             <TextView
@@ -46,10 +46,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/tvCroutonTitle"
                 android:layout_below="@+id/tvCroutonTitle"
-                android:text="" />
+                android:text=""
+                android:textAllCaps="true"
+                android:textColor="@color/gray"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
+
     </RelativeLayout>
 
-</LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:layout_below="@id/rlMain"
+        android:background="@drawable/drop_shadow" />
+</RelativeLayout>

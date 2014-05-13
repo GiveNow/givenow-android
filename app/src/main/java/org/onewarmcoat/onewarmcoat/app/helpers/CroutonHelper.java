@@ -9,13 +9,10 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import de.keyboardsurfer.android.widget.crouton.Configuration;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-/**
- * Created by craigmartin on 5/11/14.
- */
 public class CroutonHelper {
     private static final int DURATION_5_SEC = 5000;
 
-    public static Crouton createInfoCrouton(Activity activity, String title, String message){
+    public static Crouton createInfoCrouton(Activity activity, String title, String message) {
         // Inflate a custom view
         View customView = activity.getLayoutInflater().inflate(R.layout.custom_crouton_info, null);
         TextView tvCroutonTitle = (TextView) customView.findViewById(R.id.tvCroutonTitle);
@@ -26,7 +23,7 @@ public class CroutonHelper {
 
         // Display the view just by calling "show"
         Configuration config = new Configuration.Builder().setDuration(DURATION_5_SEC).build();
-        
+
         return Crouton.make(activity, customView, R.id.content, config);
     }
 }

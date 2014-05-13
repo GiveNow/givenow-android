@@ -76,6 +76,7 @@ public class CashFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_cash, container, false);
         ButterKnife.inject(this, v);
 
+        etDonateAmount.requestFocus();
         //to allow layout resize with keyboard
 //        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return v;
@@ -287,7 +288,7 @@ public class CashFragment extends Fragment {
     }
 
     private void showCrouton(String amount){
-        String title = getResources().getString(R.string.donate_success);
+        String title = getResources().getString(R.string.donate_cash_success);
         String message = getResources().getString(R.string.donate_cash_amount, amount);
 
         Crouton crouton = CroutonHelper.createInfoCrouton(getActivity(), title, message);

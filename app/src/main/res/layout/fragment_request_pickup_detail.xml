@@ -42,7 +42,7 @@
                 android:text="Please verify your address is correct."
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/gray"
+                android:textColor="@color/accent"
                 android:textStyle="bold" />
         </LinearLayout>
 
