@@ -1,94 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:id="@+id/edit_name"
-     style="@android:style/Theme.Dialog"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:layout_gravity="center"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_name"
+    style="@android:style/Theme.Dialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:orientation="vertical"
     android:padding="15dp">
 
     <!--<TextView-->
     <!--android:id="@+id/tvNameLabel" android:text="Your name"-->
-     <!--android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
+    <!--android:layout_width="wrap_content" android:layout_height="wrap_content" />-->
 
-     <LinearLayout
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
 
-         <ImageView
-             android:id="@+id/ivName"
-             android:layout_width="40dp"
-             android:layout_height="match_parent"
-             android:layout_gravity="center"
-             android:layout_marginLeft="5dp"
-             android:layout_weight="0"
-             android:padding="8dp"
-             android:scaleType="fitCenter"
-             android:src="@drawable/iconmonstr_user_icon_256" />
+        <ImageView
+            android:id="@+id/ivName"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/iconmonstr_user_icon_256" />
 
-         <EditText
-             android:id="@+id/etName"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:hint="Your name"
-             android:imeOptions="actionNext"
-             android:inputType="textCapWords"
-             android:textColor="@color/accent" />
-     </LinearLayout>
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your name"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords"
+            android:textColor="@color/accent" />
+    </LinearLayout>
 
-     <!--<TextView-->
-     <!--android:id="@+id/tvPhoneLabel" android:text="Your phone number"-->
-     <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-     <!--android:layout_marginTop="10dp"/>-->
+    <!--<TextView-->
+    <!--android:id="@+id/tvPhoneLabel" android:text="Your phone number"-->
+    <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"/>-->
 
-     <LinearLayout
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
 
-         <ImageView
-             android:id="@+id/ivPhone"
-             android:layout_width="40dp"
-             android:layout_height="match_parent"
-             android:layout_gravity="center"
-             android:layout_marginLeft="5dp"
-             android:layout_weight="0"
-             android:padding="8dp"
-             android:scaleType="fitCenter"
-             android:src="@drawable/iconmonstr_phone_3_icon_256" />
+        <ImageView
+            android:id="@+id/ivPhone"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/iconmonstr_phone_3_icon_256" />
 
-         <EditText
-             android:id="@+id/etPhone"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:hint="Your phone number"
-             android:imeOptions="actionDone"
-             android:inputType="phone"
-             android:textColor="@color/accent" />
-     </LinearLayout>
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your phone number"
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:textColor="@color/accent" />
+    </LinearLayout>
 
-     <TextView
-         android:id="@+id/tvDisclaimer"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="10dp"
-         android:gravity="center_horizontal"
-         android:text="@string/donor_dialog_disclaimer"
-         android:textAlignment="center"
-         android:textAllCaps="true"
-         android:textColor="@color/gray"
-         android:textSize="12sp"
-         android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvDisclaimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/donor_dialog_disclaimer"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/owc_dark_gray"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-     <!--<CheckBox-->
-     <!--android:id="@+id/cbReminder"-->
-     <!--android:layout_width="wrap_content"-->
-     <!--android:layout_height="wrap_content"-->
-     <!--android:layout_gravity="center_horizontal"-->
-     <!--android:layout_marginTop="10dp"-->
-     <!--android:checked="true"-->
-     <!--android:text="Remind me the day before the pickup." />-->
- </LinearLayout>
+    <!--<CheckBox-->
+    <!--android:id="@+id/cbReminder"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:checked="true"-->
+    <!--android:text="Remind me the day before the pickup." />-->
+</LinearLayout>

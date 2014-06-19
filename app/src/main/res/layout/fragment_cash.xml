@@ -16,7 +16,7 @@
         android:layout_above="@+id/btn_donate"
         android:layout_alignParentTop="true"
         android:alpha="0.50"
-        android:paddingTop="100dp"
+        android:paddingTop="60dp"
         android:scaleType="centerCrop"
         android:src="@drawable/girl_coat_pancini20140208" />
 
@@ -136,7 +136,7 @@
             android:gravity="center"
             android:text="@string/donate_cash_motivational"
             android:textAllCaps="true"
-            android:textColor="@color/gray"
+            android:textColor="@color/owc_dark_gray"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -165,7 +165,7 @@
             android:gravity="center"
             android:text="@string/donate_cash_msg"
             android:textAllCaps="true"
-            android:textColor="@color/gray"
+            android:textColor="@color/owc_dark_gray"
             android:textSize="12sp"
             android:textStyle="bold" />
     </RelativeLayout>

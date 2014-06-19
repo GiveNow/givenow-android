@@ -2,16 +2,22 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
 import com.parse.SaveCallback;
@@ -30,7 +36,8 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class DashboardFragment extends Fragment implements ViewPagerChangeListener {
+public class DashboardFragment extends Fragment implements
+        ViewPagerChangeListener, OnDismissCallback, ContextualUndoAdapter.DeleteItemCallback {
 
     @InjectView(R.id.emptyView)
     LinearLayout emptyView;
@@ -98,7 +105,20 @@ public class DashboardFragment extends Fragment implements ViewPagerChangeListen
                 mPullToRefreshLayout.setRefreshComplete();
             }
         });
-        lvItems.setAdapter(mAdapter);
+
+        // Appearance Animation
+        SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
+        swingBottomInAnimationAdapter.setAbsListView(lvItems);
+
+        // Swipe-to-dismiss
+        SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(swingBottomInAnimationAdapter, this);
+        swipeDismissAdapter.setAbsListView(lvItems);
+
+        // Undo support (used to confirm whether pickup was dropped off)
+        ContextualUndoAdapter contextualUndoAdapter = new ContextualUndoAdapter(swipeDismissAdapter, R.layout.dashboard_item_contextual_undo, R.id.btnCompleteDropoff, this);
+        contextualUndoAdapter.setAbsListView(lvItems);
+
+        lvItems.setAdapter(contextualUndoAdapter);
 
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -158,5 +178,20 @@ public class DashboardFragment extends Fragment implements ViewPagerChangeListen
 
     @Override
     public void onViewPagerHide() {
+    }
+
+    @Override
+    public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+        for (int position : reverseSortedPositions) {
+            //create the contextual view asking if complete
+            Log.w("df", "dismiss");
+        }
+    }
+
+    @Override
+    public void deleteItem(int position) {
+        //pickup dropped off. complete
+        Log.w("df", "delete");
+
     }
 }

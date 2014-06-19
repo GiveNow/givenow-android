@@ -38,7 +38,7 @@
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/accent"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvCroutonMsg"
@@ -48,7 +48,7 @@
                 android:layout_below="@+id/tvCroutonTitle"
                 android:text=""
                 android:textAllCaps="true"
-                android:textColor="@color/gray"
+                android:textColor="@color/owc_dark_gray"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 

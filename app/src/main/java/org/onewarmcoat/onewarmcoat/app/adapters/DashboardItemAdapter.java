@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
@@ -29,6 +30,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
                 return PickupRequest.getMyDashboardPickups();
             }
         });
+
     }
 
     @Override
@@ -37,7 +39,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         if (v != null) {
             holder = (ViewHolder) v.getTag();
         } else {
-            v = View.inflate(getContext(), R.layout.dashboard_item, null);
+            v = View.inflate(getContext(), R.layout.dashboard_card_item, null);
             holder = new ViewHolder(v);
             v.setTag(holder);
         }
@@ -46,13 +48,15 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         final PickupRequest pickupRequest = (PickupRequest) object;
 
         //set this as default case
-        holder.tvStatus.setText("Waiting for donor to confirm");
-
+        holder.tvStatus.setText("Waiting for Donor");
+        holder.readyLayout.setVisibility(View.GONE);
         ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
 
         //if there is a confirmed volunteer and it is me, then say it is ready for pickup
         if(confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
             holder.tvStatus.setText("Ready for Pickup");
+            holder.readyLayout.setVisibility(View.VISIBLE);
+
         }
 
         holder.tvNumCoats.setText(String.valueOf(pickupRequest.getNumberOfCoats()));
@@ -113,9 +117,15 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         @InjectView(R.id.tvNumCoats)
         TextView tvNumCoats;
         @InjectView(R.id.btnCall)
-        ImageView btnCall;
+        Button btnCall;
         @InjectView(R.id.btnMap)
-        ImageView btnMap;
+        Button btnMap;
+        @InjectView(R.id.btnProblem)
+        Button btnProblem;
+        @InjectView(R.id.btnFinishPickup)
+        Button btnFinishPickup;
+        @InjectView(R.id.readyLayout)
+        LinearLayout readyLayout;
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);

@@ -5,9 +5,9 @@
     <color name="accent">#ff00548e</color>
     <color name="old_accent">#ff266e9f</color>
     <color name="buttonFlashCTA">#FF246d9e</color>
-    <color name="gray">#ff858585</color>
+    <color name="owc_dark_gray">#ff858585</color>
     <color name="disabled">#ffa6a6a6</color>
 
     <color name="tab_active">@color/accent</color>
-    <color name="tab_inactive">@color/gray</color>
+    <color name="tab_inactive">@color/owc_dark_gray</color>
 </resources>

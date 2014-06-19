@@ -52,5 +52,10 @@
     <string name="invalid_donation_amount">$%1$s is not valid input. Please enter a valid donation amount greater than 0</string>
     <string name="donate_cash_msg">Your generous donations will help One Warm Coat provide a warmer winter for your neighbors in need.</string>
     <string name="tax_id_msg">Our non-profit 501(c)3 Tax ID is #74-3045243.</string>
+    <string name="navigate">Navigate</string>
+    <!--<string name="get_directions">Get directions</string>-->
+    <string name="call_donor">Call donor</string>
+    <string name="report_problem">Report problem</string>
+    <string name="finish_pickup">I picked up this donation</string>
 
 </resources>
