@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.parse.ParseException;
@@ -110,15 +109,16 @@ public class DashboardFragment extends Fragment implements
         SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
         swingBottomInAnimationAdapter.setAbsListView(lvItems);
 
-        // Swipe-to-dismiss
-        SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(swingBottomInAnimationAdapter, this);
-        swipeDismissAdapter.setAbsListView(lvItems);
+        // Swipe-to-dismiss // actually, this doesnt make sense atm
+//        SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(swingBottomInAnimationAdapter, this);
+//        swipeDismissAdapter.setAbsListView(lvItems);
 
-        // Undo support (used to confirm whether pickup was dropped off)
-        ContextualUndoAdapter contextualUndoAdapter = new ContextualUndoAdapter(swipeDismissAdapter, R.layout.dashboard_item_contextual_undo, R.id.btnCompleteDropoff, this);
-        contextualUndoAdapter.setAbsListView(lvItems);
+//        // Undo support (used to confirm whether pickup was dropped off)
+//        ContextualUndoAdapter contextualUndoAdapter = new ContextualUndoAdapter(swipeDismissAdapter, R.layout.dashboard_item_contextual_undo, R.id.btnCompleteDropoff, this);
+//        contextualUndoAdapter.setAbsListView(lvItems);
 
-        lvItems.setAdapter(contextualUndoAdapter);
+//        lvItems.setAdapter(contextualUndoAdapter);
+        lvItems.setAdapter(swingBottomInAnimationAdapter);
 
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

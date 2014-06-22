@@ -3,6 +3,7 @@ package org.onewarmcoat.onewarmcoat.app.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,7 +43,8 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         if (v != null) {
             holder = (ViewHolder) v.getTag();
         } else {
-            v = View.inflate(getContext(), R.layout.dashboard_card_item, null);
+            v = LayoutInflater.from(getContext()).inflate(R.layout.dashboard_card_item, parent, false);
+//            v = View.inflate(getContext(), R.layout.dashboard_card_item, null);
             holder = new ViewHolder(v);
             v.setTag(holder);
         }
@@ -94,16 +96,19 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         holder.btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+                Intent navIntent = new Intent(Intent.ACTION_VIEW);
                 String uriStr = (String) v.getTag();
-                mapIntent.setData(Uri.parse(uriStr));
-                mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                navIntent.setData(Uri.parse(uriStr));
+                navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
-                getContext().startActivity(mapIntent);
+                getContext().startActivity(navIntent);
             }
         });
 
         ParseGeoPoint gp = pickupRequest.getLocation();
+        final Double lat = gp.getLatitude();
+        final Double lng = gp.getLongitude();
+        final String label = pickupRequest.getName();
         //TODO: use our custom marker
         String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
                 "center=" + gp.getLatitude() + "," + gp.getLongitude() +
@@ -113,6 +118,19 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
                 "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
         Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
 
+        holder.ivMapContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+                String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddresss());
+
+//                "geo:" + lat + "," + lng + "?q="+lat+","+ lng +"("")"
+                mapIntent.setData(Uri.parse(uriStr));
+                mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
+                getContext().startActivity(mapIntent);
+            }
+        });
         //TODO: Make Finish Pickup do something
 
         //TODO: Make Report Problem do something

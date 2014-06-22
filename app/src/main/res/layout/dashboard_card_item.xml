@@ -79,13 +79,13 @@
                 android:paddingRight="@dimen/text_block_side_padding"
                 android:text="User N." />
 
-            <LinearLayout
-                android:id="@+id/address_info"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+            <!--android:id="@+id/address_info"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
 
-                <TextView
+            <TextView
                     android:id="@+id/tvAddress"
                     style="@style/CardText"
                     android:layout_width="wrap_content"
@@ -96,6 +96,16 @@
                     android:text="123 Any St. Long Address, Long Boulevard of the Longnames, Longerica, Longited States of america"
                     android:visibility="visible" />
 
+
+            <!--</LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/readyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/map_container"
                     android:layout_width="fill_parent"
@@ -104,14 +114,6 @@
                     android:duplicateParentState="true"
                     android:scaleType="centerCrop"
                     android:visibility="visible" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/readyLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible">
 
                 <View
                     android:id="@+id/action_button_padding"
