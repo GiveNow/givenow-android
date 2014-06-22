@@ -116,9 +116,9 @@
                 <View
                     android:id="@+id/action_button_padding"
                     android:layout_width="fill_parent"
-                    android:layout_height="@dimen/text_block_side_padding"
+                    android:layout_height="@dimen/text_block_bottom_padding"
                     android:background="@null"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

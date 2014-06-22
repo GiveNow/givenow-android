@@ -6,13 +6,16 @@ import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
@@ -100,9 +103,19 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
             }
         });
 
-        //TODO: Add Finish Pickup button
-        //TODO: Add Problem with Pickup button
-        //TODO: That's a lot of buttons. Perhaps a Card UI would be more suitable here. (+Swiping gestures to dismiss and ask user if the pickup was successful?) ... Point of debate.
+        ParseGeoPoint gp = pickupRequest.getLocation();
+        //TODO: use our custom marker
+        String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
+                "center=" + gp.getLatitude() + "," + gp.getLongitude() +
+                "&zoom=15&size=512x512&scale=2" +
+                "&markers=color:blue%7Clabel:" + pickupRequest.getNumberOfCoats() +
+                "%7C" + gp.getLatitude() + "," + gp.getLongitude() +
+                "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
+        Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
+
+        //TODO: Make Finish Pickup do something
+
+        //TODO: Make Report Problem do something
         return v;
     }
 
@@ -126,6 +139,8 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         Button btnFinishPickup;
         @InjectView(R.id.readyLayout)
         LinearLayout readyLayout;
+        @InjectView(R.id.map_container)
+        ImageView ivMapContainer;
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);
