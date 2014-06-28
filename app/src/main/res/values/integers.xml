@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="google_play_services_version">4323000</integer>
+    <integer name="google_play_services_version">4452000</integer>
     <integer name="config_dynamic_grid_max_long_edge_cell_count">6</integer>
     <integer name="config_dynamic_grid_max_short_edge_cell_count">5</integer>
     <integer name="config_dynamic_grid_min_edge_cell_count">3</integer>

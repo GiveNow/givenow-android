@@ -15,12 +15,12 @@ repositories {
 
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 20
+    buildToolsVersion "20"
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 19
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }
@@ -40,9 +40,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.+'
-    compile 'com.android.support:support-v13:18.0.+'
-    compile 'com.google.android.gms:play-services:4.3.+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v13:20.0.+'
+    compile 'com.google.android.gms:play-services:4.4.+'
 
 //    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
@@ -53,7 +53,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
 
 
-    compile('de.keyboardsurfer.android.widget:crouton:1.8.4') {
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.4@aar') { //maybe drop the @aar later
         // exclusion is not neccessary, but generally a good idea.
         exclude group: 'com.google.android', module: 'support-v4'
     }
