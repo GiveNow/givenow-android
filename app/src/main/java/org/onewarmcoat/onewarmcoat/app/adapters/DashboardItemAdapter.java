@@ -11,15 +11,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.Donation;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
@@ -131,8 +134,28 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
                 getContext().startActivity(mapIntent);
             }
         });
-        //TODO: Make Finish Pickup do something
 
+        holder.btnFinishPickup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // DONATION CREATION
+                final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
+                donation.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            //send push to donor
+                            pickupRequest.generatePickupCompleteNotif();
+                            //create donation, and set it in the PickupRequest
+                            pickupRequest.setDonation(donation);
+                            pickupRequest.saveInBackground();
+                            loadObjects();
+                            //TODO: would be nice to make this card slide away
+                        }
+                    }
+                });
+            }
+        });
         //TODO: Make Report Problem do something
         return v;
     }

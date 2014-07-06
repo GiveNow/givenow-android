@@ -10,22 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualundo.ContextualUndoAdapter;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
-import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
-import com.parse.SaveCallback;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.DashboardItemAdapter;
 import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
-import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
 
@@ -119,32 +114,6 @@ public class DashboardFragment extends Fragment implements
 
 //        lvItems.setAdapter(contextualUndoAdapter);
         lvItems.setAdapter(swingBottomInAnimationAdapter);
-
-        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // DONATION CREATION
-                final PickupRequest pickupRequest = (PickupRequest) parent.getItemAtPosition(position);
-                final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
-
-                donation.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            //send push to donor
-                            pickupRequest.generatePickupCompleteNotif();
-
-                            //create donation, and set it in the PickupRequest
-                            pickupRequest.setDonation(donation);
-
-                            pickupRequest.saveInBackground();
-                            loadDashboardItems();
-                        }
-                    }
-                });
-                return false;
-            }
-        });
 
         return v;
     }
