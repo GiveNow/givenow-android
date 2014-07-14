@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -374,16 +373,9 @@ public class RequestPickupDetailFragment extends Fragment implements
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.pickupRequest_retryDialog_title)
                     .setMessage(R.string.pickupRequest_retryDialog_message)
-                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with retry
-                            savePickupRequest();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
+                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, (dialog, which) -> savePickupRequest())
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        // do nothing
                     })
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .show();

@@ -3,7 +3,6 @@ package org.onewarmcoat.onewarmcoat.app.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Address;
@@ -195,16 +194,8 @@ public class MainActivity extends Activity implements
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
                 .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>"))
                 .setMessage(Html.fromHtml("Is your donation of " + pickupRequest.getNumberOfCoats() + " coats available for pickup today?" + address))
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        pendingVolunteerConfirmed(pickupRequest);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        cancelPendingVolunteer(pickupRequest);
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
+                .setNegativeButton("No", (dialog, which) -> cancelPendingVolunteer(pickupRequest))
                 .setIcon(R.drawable.ic_launcher)
                 .show();
     }

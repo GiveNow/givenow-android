@@ -58,22 +58,16 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setTitle(title);
         setStyle(STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
-        alertDialogBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // on success
-                // listener will be implemented by either RequestPickupDetailFragment or PickupRequestDetailFragment
-                ConfirmPickupDialogListener listener = (ConfirmPickupDialogListener) getParentFragment();
-                listener.onFinishConfirmPickupDialog(etName.getText().toString(), etPhone.getText().toString());
+        alertDialogBuilder.setPositiveButton("Confirm", (dialog_param, which) -> {
+            // on success
+            // listener will be implemented by either RequestPickupDetailFragment or PickupRequestDetailFragment
+            ConfirmPickupDialogListener listener = (ConfirmPickupDialogListener) getParentFragment();
+            listener.onFinishConfirmPickupDialog(etName.getText().toString(), etPhone.getText().toString());
 
-            }
         });
 
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //
-            }
+        alertDialogBuilder.setNegativeButton("Cancel", (dialog_param, which) -> {
+            //
         });
 
         // I'm sorry.

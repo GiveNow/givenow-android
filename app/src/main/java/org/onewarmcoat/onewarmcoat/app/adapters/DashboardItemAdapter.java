@@ -88,36 +88,30 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
                 "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
         Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
 
-        holder.ivMapContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-                String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddresss());
+        holder.ivMapContainer.setOnClickListener(v -> {
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+            String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddresss());
 
 //                "geo:" + lat + "," + lng + "?q="+lat+","+ lng +"("")"
-                mapIntent.setData(Uri.parse(uriStr));
-                mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mapIntent.setData(Uri.parse(uriStr));
+            mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
-                getContext().startActivity(mapIntent);
-            }
+            getContext().startActivity(mapIntent);
         });
     }
 
 
     private void setupCardActionButtons(ViewHolder holder, final PickupRequest pickupRequest) {
         holder.btnCall.setTag(pickupRequest.getPhoneNumber());
-        holder.btnCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                String donorPhoneNum = (String) v.getTag();
-                donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
-                String uriStr = "tel:" + donorPhoneNum;
-                callIntent.setData(Uri.parse(uriStr));
-                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        holder.btnCall.setOnClickListener(v -> {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            String donorPhoneNum = (String) v.getTag();
+            donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
+            String uriStr = "tel:" + donorPhoneNum;
+            callIntent.setData(Uri.parse(uriStr));
+            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                Toast.makeText(getContext(), "Intent: Calling "+ uriStr, Toast.LENGTH_LONG).show();
-                getContext().startActivity(callIntent);
-            }
+            getContext().startActivity(callIntent);
         });
 
 //        ParseGeoPoint gp = object.getParseGeoPoint("location");
@@ -129,19 +123,16 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         String encodedQuery = Uri.encode(query);
         String uriString = uriBegin + "q=" + encodedQuery;
         holder.btnMap.setTag(uriString);
-        holder.btnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent navIntent = new Intent(Intent.ACTION_VIEW);
-                String uriStr = (String) v.getTag();
-                navIntent.setData(Uri.parse(uriStr));
-                navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        holder.btnMap.setOnClickListener(v -> {
+            Intent navIntent = new Intent(Intent.ACTION_VIEW);
+            String uriStr = (String) v.getTag();
+            navIntent.setData(Uri.parse(uriStr));
+            navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
-                getContext().startActivity(navIntent);
-            }
+            getContext().startActivity(navIntent);
         });
 
-        holder.btnFinishPickup.setOnClickListener(vw -> {
+        holder.btnFinishPickup.setOnClickListener(v -> {
             // DONATION CREATION
             final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
             donation.saveInBackground(new SaveCallback() {

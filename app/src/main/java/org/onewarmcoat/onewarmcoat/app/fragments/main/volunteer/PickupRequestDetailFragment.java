@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -237,8 +236,8 @@ public class PickupRequestDetailFragment extends Fragment implements
     private void showConfirmPickupDialog(String name, String phoneNumber) {
         FragmentManager fm = getChildFragmentManager();
         ConfirmRequestDialogFragment confirmRequestDialogFragment =
-        ConfirmRequestDialogFragment.newInstance("Accept Pickup Request", name, phoneNumber,
-                getResources().getText(R.string.volunteer_dialog_disclaimer));
+                ConfirmRequestDialogFragment.newInstance("Accept Pickup Request", name, phoneNumber,
+                        getResources().getText(R.string.volunteer_dialog_disclaimer));
         confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
@@ -287,16 +286,9 @@ public class PickupRequestDetailFragment extends Fragment implements
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.pickupRequest_retryDialog_title)
                     .setMessage(R.string.pickupRequest_retryDialog_message)
-                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with retry
-                            savePickupRequest();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
+                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, (dialog, which) -> savePickupRequest())
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        // do nothing
                     })
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .show();
