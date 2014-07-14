@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="You haven't volunteered for anything yet.\nCheck out the Pickup Requests tab!"
+            android:text="You haven't volunteered to pick up any requests.\nCheck out the Pickup Requests tab!"
             android:textAllCaps="true"
             android:textColor="@color/owc_dark_gray"
             android:textStyle="bold" />

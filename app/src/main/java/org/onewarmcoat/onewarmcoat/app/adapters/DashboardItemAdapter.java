@@ -58,20 +58,53 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         //set this as default case
         holder.tvStatus.setText("Waiting for Donor");
         holder.readyLayout.setVisibility(View.GONE);
-        ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
+        holder.tvNumCoats.setText(String.valueOf(pickupRequest.getNumberOfCoats()));
+        holder.tvName.setText(CharityUserHelper.getFirstName(pickupRequest.getName()));
+        holder.tvAddress.setText(pickupRequest.getAddresss());
 
+        ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
         //if there is a confirmed volunteer and it is me, then say it is ready for pickup
         if(confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
             holder.tvStatus.setText("Ready for Pickup");
             holder.readyLayout.setVisibility(View.VISIBLE);
-
+            setupStaticMap(holder, pickupRequest);
+            setupCardActionButtons(holder, pickupRequest);
         }
+        return v;
+    }
 
-        holder.tvNumCoats.setText(String.valueOf(pickupRequest.getNumberOfCoats()));
 
-        holder.tvName.setText(CharityUserHelper.getFirstName(pickupRequest.getName()));
-        holder.tvAddress.setText(pickupRequest.getAddresss());
+    private void setupStaticMap(ViewHolder holder, final PickupRequest pickupRequest) {
+        ParseGeoPoint gp = pickupRequest.getLocation();
+        final Double lat = gp.getLatitude();
+        final Double lng = gp.getLongitude();
+        final String label = pickupRequest.getName();
+        //TODO: use our custom marker
+        String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
+                "center=" + gp.getLatitude() + "," + gp.getLongitude() +
+                "&zoom=15&size=512x512&scale=2" +
+                "&markers=color:blue%7Clabel:" + pickupRequest.getNumberOfCoats() +
+                "%7C" + gp.getLatitude() + "," + gp.getLongitude() +
+                "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
+        Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
 
+        holder.ivMapContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+                String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddresss());
+
+//                "geo:" + lat + "," + lng + "?q="+lat+","+ lng +"("")"
+                mapIntent.setData(Uri.parse(uriStr));
+                mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
+                getContext().startActivity(mapIntent);
+            }
+        });
+    }
+
+
+    private void setupCardActionButtons(ViewHolder holder, final PickupRequest pickupRequest) {
         holder.btnCall.setTag(pickupRequest.getPhoneNumber());
         holder.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,58 +141,26 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
             }
         });
 
-        ParseGeoPoint gp = pickupRequest.getLocation();
-        final Double lat = gp.getLatitude();
-        final Double lng = gp.getLongitude();
-        final String label = pickupRequest.getName();
-        //TODO: use our custom marker
-        String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
-                "center=" + gp.getLatitude() + "," + gp.getLongitude() +
-                "&zoom=15&size=512x512&scale=2" +
-                "&markers=color:blue%7Clabel:" + pickupRequest.getNumberOfCoats() +
-                "%7C" + gp.getLatitude() + "," + gp.getLongitude() +
-                "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
-        Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
-
-        holder.ivMapContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-                String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddresss());
-
-//                "geo:" + lat + "," + lng + "?q="+lat+","+ lng +"("")"
-                mapIntent.setData(Uri.parse(uriStr));
-                mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
-                getContext().startActivity(mapIntent);
-            }
-        });
-
-        holder.btnFinishPickup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // DONATION CREATION
-                final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
-                donation.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            //send push to donor
-                            pickupRequest.generatePickupCompleteNotif();
-                            //create donation, and set it in the PickupRequest
-                            pickupRequest.setDonation(donation);
-                            pickupRequest.saveInBackground();
-                            loadObjects();
-                            //TODO: would be nice to make this card slide away
-                        }
+        holder.btnFinishPickup.setOnClickListener(vw -> {
+            // DONATION CREATION
+            final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
+            donation.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        //send push to donor
+                        pickupRequest.generatePickupCompleteNotif();
+                        //create donation, and set it in the PickupRequest
+                        pickupRequest.setDonation(donation);
+                        pickupRequest.saveInBackground();
+                        loadObjects();
+                        //TODO: would be nice to make this card slide away
                     }
-                });
-            }
+                }
+            });
         });
         //TODO: Make Report Problem do something
-        return v;
     }
-
 
     static class ViewHolder {
         @InjectView(R.id.tvName)

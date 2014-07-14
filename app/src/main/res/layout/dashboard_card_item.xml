@@ -116,11 +116,10 @@
                     android:visibility="visible" />
 
                 <View
-                    android:id="@+id/action_button_padding"
+                    android:id="@+id/card_action_buttons_sep"
                     android:layout_width="fill_parent"
-                    android:layout_height="@dimen/text_block_bottom_padding"
-                    android:background="@null"
-                    android:visibility="visible" />
+                    android:layout_height="@dimen/card_spacer_margin"
+                    android:background="@null" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -147,7 +147,7 @@ public class MainActivity extends Activity implements
 //                    volunteerFragment.setCurrentItem(0);
 
                     return true;
-                }else if(notifType.equals(PickupRequest.PICKUP_COMPLETE)){
+                } else if (notifType.equals(PickupRequest.PICKUP_COMPLETE)) {
                     //remove the push notif data, so we don't process it next app resume
                     mIntent.removeExtra("com.parse.Data");
 
@@ -218,7 +218,7 @@ public class MainActivity extends Activity implements
     private void pendingVolunteerConfirmed(final PickupRequest pickupRequest) {
         // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
         pickupRequest.generateVolunteerConfirmedNotif();
-        pickupRequest.setconfirmedVolunteer(pickupRequest.getPendingVolunteer());
+        pickupRequest.setConfirmedVolunteer(pickupRequest.getPendingVolunteer());
 
         //removed this, and added it to done method below
         pickupRequest.saveInBackground();

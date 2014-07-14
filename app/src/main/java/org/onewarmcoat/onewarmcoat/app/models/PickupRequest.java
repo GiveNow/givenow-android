@@ -23,6 +23,7 @@ import java.util.Date;
 public class PickupRequest extends ParseObject implements ClusterItem, Serializable {
     public static final String VOLUNTEER_CONFIRMED = "volunteer_confirmed";
     public static final String PICKUP_COMPLETE = "pickup_complete";
+    public static final String PROBLEM_REPORTED = "problem_reported";
 
     public PickupRequest() {
         // A default constructor is required.
@@ -42,7 +43,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         setDonationValue(donationValue);
         setPendingVolunteer(pendingVolunteer);
         setDonation(donation);
-        setconfirmedVolunteer(confirmedVolunteer);
+        setConfirmedVolunteer(confirmedVolunteer);
     }
 
     //Normal use case, the donation and volunteer shouldn't exist.
@@ -255,7 +256,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return getParseUser("confirmedVolunteer");
     }
 
-    public void setconfirmedVolunteer(ParseUser value) {
+    public void setConfirmedVolunteer(ParseUser value) {
         put("confirmedVolunteer", value);
     }
 
@@ -297,7 +298,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         JSONObject data = new JSONObject();
         try {
             data.put("title", "Pickup Request Ready");
-            data.put("alert", CharityUserHelper.getFirstName() + " is available to have their donation picked up.");
+            data.put("alert", CharityUserHelper.getFirstName() + " is ready to have their donation picked up.");
             data.put("type", VOLUNTEER_CONFIRMED);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -319,7 +320,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //create Parse Data
         JSONObject data = new JSONObject();
         try {
-            data.put("title", "Donation Successful");
+            data.put("title", "Donation Picked Up");
             data.put("alert", CharityUserHelper.getFirstName() + " has successfully picked up your donation.");
             data.put("type", PICKUP_COMPLETE);
         } catch (JSONException e) {
@@ -331,6 +332,28 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         push.setQuery(pushQuery); // Set our Installation query
         push.setData(data);
 //      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
+        push.sendInBackground();
+    }
+
+    public void reportProblem() {
+        //there's a problem. send a notif to the donor with the problem description.
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", this.getDonor());
+
+        //create Parse Data
+        JSONObject data = new JSONObject();
+        try {
+            data.put("title", "Problem reported");
+            data.put("alert", CharityUserHelper.getFirstName() + " reported a problem picking up your donation.");
+            data.put("type", PROBLEM_REPORTED);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        push.setData(data);
         push.sendInBackground();
     }
 }
