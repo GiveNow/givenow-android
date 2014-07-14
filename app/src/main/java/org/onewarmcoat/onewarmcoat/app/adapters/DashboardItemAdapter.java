@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -32,11 +31,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
 
     public DashboardItemAdapter(Context context) {
         //items are all items where the pending volunteer = current user.
-        super(context, new ParseQueryAdapter.QueryFactory<PickupRequest>() {
-            public ParseQuery create() {
-                return PickupRequest.getMyDashboardPickups();
-            }
-        });
+        super(context, (QueryFactory<PickupRequest>) PickupRequest::getMyDashboardPickups);
 
     }
 
