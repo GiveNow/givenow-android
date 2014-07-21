@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/dashboard_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/card_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_content_background"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:id="@+id/coatsContainer"
+                    android:layout_width="@dimen/custom_marker_image"
+                    android:layout_height="@dimen/custom_marker_image"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/ivMarker"
+                        android:layout_width="@dimen/custom_marker_image"
+                        android:layout_height="@dimen/custom_marker_image"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_transport_alert" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    style="@style/CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_toRightOf="@+id/coatsContainer"
+                    android:text="Report Problem" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvName"
+                style="@style/CardText.MediumCondensedItalic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/text_block_side_padding"
+                android:paddingRight="@dimen/text_block_side_padding"
+                android:text="User N." />
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/address_info"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <TextView
+                android:id="@+id/tvAddress"
+                style="@style/CardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/text_block_bottom_padding"
+                android:paddingLeft="@dimen/text_block_side_padding"
+                android:paddingRight="@dimen/text_block_side_padding"
+                android:text="123 Any St. Long Address, Long Boulevard of the Longnames, Longerica, Longited States of america"
+                android:visibility="visible" />
+
+
+            <!--</LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/readyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RadioButton
+                    style="@style/CustomRadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="I can't find the place" />
+
+                <RadioButton
+                    style="@style/reminder_radio_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="I found the place, but I can't find the coats" />
+
+                <RadioButton
+                    style="@style/reminder_radio_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="Other: " />
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:ems="10"
+                    android:inputType="textMultiLine" />
+
+                <View
+                    android:id="@+id/card_action_buttons_sep"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/card_spacer_margin"
+                    android:background="@null" />
+
+                <!--<View-->
+                <!--android:id="@+id/separator"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="1.0dip"-->
+                <!--android:layout_marginEnd="@dimen/card_spacer_margin"-->
+                <!--android:layout_marginStart="@dimen/card_spacer_margin"-->
+                <!--android:background="@color/card_separator" />-->
+                <!--android:layout_marginEnd="@dimen/card_spacer_margin"-->
+                <!--android:layout_marginStart="@dimen/card_spacer_margin"-->
+
+                <Button
+                    android:id="@+id/btnSendReport"
+                    style="@style/CardActionButtonWithIcon"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_action_check"
+                    android:text="@string/report_problem"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

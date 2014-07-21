@@ -6,25 +6,15 @@ buildscript {
 
     dependencies {
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
-        classpath 'me.tatarka:gradle-retrolambda:2.0.0'
+        classpath 'me.tatarka:gradle-retrolambda:2.1.0'
     }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'retrolambda'
 apply plugin: 'crashlytics'
+
 repositories {
     maven { url 'http://download.crashlytics.com/maven' }
-}
-
-
-supplied_java_home = new java.io.File(System.getProperty("java.home")).getParent()
-
-retrolambda {
-    // remove these comments now that my java home discovery works
-    // furthermore, once my PR is accepted for retrolambda, this whole block can be removed :)
-    jdk supplied_java_home //System.getenv("JAVA8_HOME")
-//    oldJdk supplied_java_home //System.getenv("JAVA7_HOME")
-    javaVersion JavaVersion.VERSION_1_7
 }
 
 android {
