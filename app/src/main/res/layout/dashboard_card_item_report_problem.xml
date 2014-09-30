@@ -93,24 +93,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="I can't find the place" />
+                    android:checked="false"
+                    android:text="@string/report_problem_reason_cant_find_place" />
 
                 <RadioButton
-                    style="@style/reminder_radio_button"
+                    style="@style/CustomRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="I found the place, but I can't find the coats" />
+                    android:text="@string/report_problem_reason_cant_find_coats" />
 
                 <RadioButton
-                    style="@style/reminder_radio_button"
+                    style="@style/CustomRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="Other: " />
+                    android:text="@string/report_problem_reason_other" />
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/etReasonOther"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
@@ -138,8 +139,18 @@
                     style="@style/CardActionButtonWithIcon"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_action_check"
+                    android:drawableStart="@drawable/ic_action_send"
+                    android:enabled="false"
                     android:text="@string/report_problem"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btnCancelReport"
+                    style="@style/CardActionButtonWithIcon"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_training_prev_normal"
+                    android:text="@string/report_problem_cancel"
                     android:visibility="visible" />
             </LinearLayout>
 

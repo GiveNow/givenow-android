@@ -57,5 +57,9 @@
     <string name="call_donor">Call donor</string>
     <string name="report_problem">Report problem</string>
     <string name="finish_pickup">I picked up this donation</string>
+    <string name="report_problem_cancel">Never mind</string>
+    <string name="report_problem_reason_cant_find_place">I can\'t find the place</string>
+    <string name="report_problem_reason_cant_find_coats">I found the place, but I can\'t find the coats</string>
+    <string name="report_problem_reason_other">Other: </string>
 
 </resources>
