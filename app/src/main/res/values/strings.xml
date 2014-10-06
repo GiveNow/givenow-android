@@ -52,6 +52,14 @@
     <string name="invalid_donation_amount">$%1$s is not valid input. Please enter a valid donation amount greater than 0</string>
     <string name="donate_cash_msg">Your generous donations will help One Warm Coat provide a warmer winter for your neighbors in need.</string>
     <string name="tax_id_msg">Our non-profit 501(c)3 Tax ID is #74-3045243.</string>
+    <string name="notif_pending_volunteer_assigned_title">Is your donation ready?</string>
+    <string name="notif_pending_volunteer_assigned_msg">%1$s wants to pick up your donation. Confirm?</string>
+    <string name="notif_volunteer_confirmed_title">Ready for Pickup</string>
+    <string name="notif_volunteer_confirmed_msg">%1$s\'s donation is ready to be picked up.</string>
+    <string name="notif_pickup_complete_title">Donation Picked Up</string>
+    <string name="notif_pickup_complete_msg">%1$s just picked up your donation. Thanks!</string>
+    <string name="notif_problem_reported_title">Problem Reported</string>
+    <string name="notif_problem_reported_msg">%1$s reported a problem picking up your donation.</string>
     <string name="navigate">Navigate</string>
     <!--<string name="get_directions">Get directions</string>-->
     <string name="call_donor">Call donor</string>

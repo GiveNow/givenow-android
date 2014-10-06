@@ -135,7 +135,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
                 public void done(ParseException e) {
                     if (e == null) {
                         //send push to donor
-                        pickupRequest.generatePickupCompleteNotif();
+                        pickupRequest.generatePickupCompleteNotif(getContext());
                         //create donation, and set it in the PickupRequest
                         pickupRequest.setDonation(donation);
                         pickupRequest.saveInBackground();

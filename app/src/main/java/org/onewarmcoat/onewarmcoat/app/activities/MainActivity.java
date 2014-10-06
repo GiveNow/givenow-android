@@ -208,7 +208,7 @@ public class MainActivity extends Activity implements
 
     private void pendingVolunteerConfirmed(final PickupRequest pickupRequest) {
         // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
-        pickupRequest.generateVolunteerConfirmedNotif();
+        pickupRequest.generateVolunteerConfirmedNotif(this);
         pickupRequest.setConfirmedVolunteer(pickupRequest.getPendingVolunteer());
 
         //removed this, and added it to done method below

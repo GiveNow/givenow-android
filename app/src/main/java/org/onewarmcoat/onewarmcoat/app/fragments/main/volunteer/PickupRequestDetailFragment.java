@@ -275,7 +275,7 @@ public class PickupRequestDetailFragment extends Fragment implements
         if (e == null) {
             // saved successfully
             mRequestAccepted = true;
-            mPickupRequest.generatePendingVolunteerAssignedNotif();
+            mPickupRequest.generatePendingVolunteerAssignedNotif(getActivity());
             // detach this detail fragment, we're done here
             animateAndDetach();
         } else {

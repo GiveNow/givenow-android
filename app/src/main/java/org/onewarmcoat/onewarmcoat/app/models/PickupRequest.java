@@ -1,5 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.models;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.parse.ParseClassName;
@@ -12,6 +14,7 @@ import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.onewarmcoat.onewarmcoat.app.R;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -266,94 +269,57 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
 
-    public void generatePendingVolunteerAssignedNotif() {
+
+    private void generatePushNotif(ParseUser target_user, String title, String message, String type) {
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", target_user);
+
+        //create Parse Data
+        JSONObject data = new JSONObject();
+        try {
+            data.put("title", title);
+            data.put("alert", message);
+            data.put("type", type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        push.setData(data);
+        push.sendInBackground();
+    }
+
+    public void generatePendingVolunteerAssignedNotif(Context context) {
         //send pickup response back to donor
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", this.getDonor());
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", "Pickup Request Accepted");
-//            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
-            data.put("alert", CharityUserHelper.getFirstName() + " is available to pickup your donation!");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-//      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
-        push.sendInBackground();
+        generatePushNotif(this.getDonor(),
+                context.getResources().getString(R.string.notif_pending_volunteer_assigned_title),
+                context.getResources().getString(R.string.notif_pending_volunteer_assigned_msg, CharityUserHelper.getFirstName()),
+                "");
     }
 
-    public void generateVolunteerConfirmedNotif() {
-        //send pickup response back to volunteer
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", this.getPendingVolunteer());
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", "Pickup Request Ready");
-            data.put("alert", CharityUserHelper.getFirstName() + " is ready to have their donation picked up.");
-            data.put("type", VOLUNTEER_CONFIRMED);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-//      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
-        push.sendInBackground();
+    public void generateVolunteerConfirmedNotif(Context context) {
+        //send pickup confirmed notif to volunteer
+        generatePushNotif(this.getPendingVolunteer(),
+                context.getResources().getString(R.string.notif_volunteer_confirmed_title),
+                context.getResources().getString(R.string.notif_volunteer_confirmed_msg, CharityUserHelper.getFirstName()),
+                VOLUNTEER_CONFIRMED);
     }
 
-    public void generatePickupCompleteNotif() {
-        //send pickup response back to donor
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", this.getDonor());
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", "Donation Picked Up");
-            data.put("alert", CharityUserHelper.getFirstName() + " has successfully picked up your donation.");
-            data.put("type", PICKUP_COMPLETE);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-//      push.setMessage("Pickup Request Confirmed: " + CharityUserHelper.getFirstName() + " is available to pickup your donation within the next hour.");
-        push.sendInBackground();
+    public void generatePickupCompleteNotif(Context context) {
+        //send pickup complete notif back to donor
+        generatePushNotif(this.getPendingVolunteer(),
+                context.getResources().getString(R.string.notif_pickup_complete_title),
+                context.getResources().getString(R.string.notif_pickup_complete_msg, CharityUserHelper.getFirstName()),
+                PICKUP_COMPLETE);
     }
 
-    public void reportProblem() {
+    public void reportProblem(Context context) {
         //there's a problem. send a notif to the donor with the problem description.
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", this.getDonor());
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", "Problem reported");
-            data.put("alert", CharityUserHelper.getFirstName() + " reported a problem picking up your donation.");
-            data.put("type", PROBLEM_REPORTED);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-        push.sendInBackground();
+        generatePushNotif(this.getPendingVolunteer(),
+                context.getResources().getString(R.string.notif_problem_reported_title),
+                context.getResources().getString(R.string.notif_problem_reported_msg, CharityUserHelper.getFirstName()),
+                PROBLEM_REPORTED);
     }
 }
