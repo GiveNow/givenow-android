@@ -47,17 +47,17 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.+'
-    compile 'com.android.support:support-v13:20.0.+'
-    compile 'com.google.android.gms:play-services:5.0.+'
+    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:support-v13:20.0.0'
+    compile 'com.google.android.gms:play-services:6.1.11'
 
 //    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
-    compile 'com.jakewharton:butterknife:5.0.+'
-    compile 'com.google.maps.android:android-maps-utils:0.3.1+'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
+    compile 'com.jakewharton:butterknife:5.1.2'
+    compile 'com.google.maps.android:android-maps-utils:0.3.1'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.9'
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
-    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.squareup.picasso:picasso:2.3.4'
 
 
     compile('de.keyboardsurfer.android.widget:crouton:1.8.4@aar') { //maybe drop the @aar later
