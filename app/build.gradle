@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
-        classpath 'me.tatarka:gradle-retrolambda:2.1.0'
+        classpath 'me.tatarka:gradle-retrolambda:2.4.0'
     }
 }
 apply plugin: 'com.android.application'
