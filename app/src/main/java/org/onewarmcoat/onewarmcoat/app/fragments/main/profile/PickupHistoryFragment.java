@@ -56,6 +56,8 @@ public class PickupHistoryFragment extends Fragment implements ViewPagerChangeLi
     }
 
     public void refreshList() {
-        mPickupsAdapter.loadObjects();
+        if (mPickupsAdapter != null) {
+            mPickupsAdapter.loadObjects();
+        }
     }
 }

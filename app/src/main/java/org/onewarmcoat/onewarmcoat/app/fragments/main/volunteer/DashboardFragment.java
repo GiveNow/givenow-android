@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class DashboardFragment extends Fragment implements
         ViewPagerChangeListener, OnDismissCallback, ContextualUndoAdapter.DeleteItemCallback {
@@ -79,12 +78,7 @@ public class DashboardFragment extends Fragment implements
                         // This is because they are not dirent children of the ViewGroup
                 .theseChildrenArePullable(lvItems, lvItems.getEmptyView())
                         // Set a OnRefreshListener
-                .listener(new OnRefreshListener() {
-                    @Override
-                    public void onRefreshStarted(View view) {
-                        loadDashboardItems();
-                    }
-                })
+                .listener(view -> loadDashboardItems())
                         // Commit the setup to our PullToRefreshLayout
                 .setup(mPullToRefreshLayout);
 
@@ -119,7 +113,9 @@ public class DashboardFragment extends Fragment implements
     }
 
     private void loadDashboardItems() {
-        mAdapter.loadObjects();
+        if (mAdapter != null) {
+            mAdapter.loadObjects();
+        }
     }
 
     @Override

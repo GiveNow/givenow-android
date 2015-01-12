@@ -17,19 +17,16 @@ import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.lang.reflect.Field;
 
-public class PageSlidingTabStripFragment extends Fragment {
+public class PageSlidingTabStripFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
 	public final String TAG = this.getClass().getSimpleName();
     private ViewPager mViewPager;
+    private MyPagerAdapter mAdapter;
+    private int currentPosition = 0;
 
     protected String[] getTitles() {
         return new String[] {"Categories", "Home", "Top Paid", "Top Free"};
     }
-
-    //this doesnt make sense, why not just instnatiate the fragment, why newinstance
-//	public static PageSlidingTabStripFragment newInstance() {
-//		return new PageSlidingTabStripFragment();
-//	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,15 +46,12 @@ public class PageSlidingTabStripFragment extends Fragment {
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view
                 .findViewById(R.id.tabs);
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
-        final MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager(), getTitles());
-//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//        });
-        mViewPager.setAdapter(adapter);
+        mAdapter = new MyPagerAdapter(getChildFragmentManager(), getTitles());
+        mViewPager.setAdapter(mAdapter);
 
         // Determines how many pages can be offscreen before the viewpager starts destroying fragments it's hosting.
         // http://stackoverflow.com/questions/11852604/why-is-my-fragment-oncreate-being-called-extensively-whenever-i-page-through-my
-        mViewPager.setOffscreenPageLimit(adapter.getCount() - 1);
+        mViewPager.setOffscreenPageLimit(mAdapter.getCount() - 1);
 
         tabStrip.setShouldExpand(true);
         tabStrip.setTabPaddingLeftRight(10); //10 is the magic number?
@@ -69,42 +63,94 @@ public class PageSlidingTabStripFragment extends Fragment {
         tabStrip.setTextColor(getResources().getColorStateList(R.color.tab_text));
         tabStrip.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
         tabStrip.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
+        tabStrip.setOnPageChangeListener(this);
+
         tabStrip.setViewPager(mViewPager);
-        tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int currentPosition = 0;
+    }
 
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        // When we get hidden or shown by the Main Activity navigation, pause and resume accordingly.
+        super.onHiddenChanged(hidden);
 
-            @Override
-            public void onPageSelected(int newPosition) {
-                try {
-                    ViewPagerChangeListener fragmentToHide = (ViewPagerChangeListener) adapter.getItem(currentPosition);
-                    fragmentToHide.onViewPagerHide();
-                } catch (ClassCastException e) {
-                    Log.i(getClass().getSimpleName(), "Fragment at position " + String.valueOf(currentPosition) + " doesn't implement ViewPagerChangeListener.");
-                }
+        if (hidden) {
+            onPause();
+        } else {
+            onResume();
+        }
+    }
 
-                try {
-                    ViewPagerChangeListener fragmentToShow = (ViewPagerChangeListener) adapter.getItem(newPosition);
-                    fragmentToShow.onViewPagerShow();
-                } catch (ClassCastException e) {
-                    Log.i(getClass().getSimpleName(), "Fragment at position " + String.valueOf(newPosition) + " doesn't implement ViewPagerChangeListener.");
-                }
+    // PageChangeListeners:
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
 
-                currentPosition = newPosition;
-            }
+    @Override
+    public void onPageSelected(int newPosition) {
+        callOnViewPagerHide(currentPosition);
+        pauseFragment(currentPosition);
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-	}
+        callOnViewPagerShow(newPosition);
+        resumeFragment(newPosition);
+
+        currentPosition = newPosition;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
 
 
-    public void setCurrentItem(int index) {
-        mViewPager.setCurrentItem(index);
+    @Override
+    public void onPause() {
+        Log.e(getClass().getSimpleName(), "OnPause.");
+        super.onPause();
+
+        callOnViewPagerHide(mViewPager.getCurrentItem());
+        pauseFragment(mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onResume() {
+        Log.e(getClass().getSimpleName(), "OnResume.");
+        super.onResume();
+
+        callOnViewPagerShow(mViewPager.getCurrentItem());
+        resumeFragment(mViewPager.getCurrentItem());
+    }
+
+    private void pauseFragment(int pos) {
+        Fragment currentPositionFragment = mAdapter.getItem(pos);
+        if (currentPositionFragment != null) {
+            currentPositionFragment.onPause();
+        }
+    }
+
+    private void resumeFragment(int pos) {
+        Fragment newPositionFragment = mAdapter.getItem(pos);
+        if (newPositionFragment != null) {
+            newPositionFragment.onResume();
+        }
+    }
+
+    private void callOnViewPagerHide(int i) {
+        Log.e(getClass().getSimpleName(), "CallOnViewPagerHide(" + String.valueOf(i) + ")");
+        try {
+            ViewPagerChangeListener fragmentToShow = (ViewPagerChangeListener) mAdapter.getItem(i);
+            fragmentToShow.onViewPagerHide();
+        } catch (ClassCastException e) {
+            Log.i(getClass().getSimpleName(), "Fragment at position " + String.valueOf(i) + " doesn't implement ViewPagerChangeListener.");
+        }
+    }
+
+    private void callOnViewPagerShow(int i) {
+        Log.e(getClass().getSimpleName(), "CallOnViewPagerShow(" + String.valueOf(i) + ")");
+        try {
+            ViewPagerChangeListener fragmentToShow = (ViewPagerChangeListener) mAdapter.getItem(i);
+            fragmentToShow.onViewPagerShow();
+        } catch (ClassCastException e) {
+            Log.i(getClass().getSimpleName(), "Fragment at position " + String.valueOf(i) + " doesn't implement ViewPagerChangeListener.");
+        }
     }
 
     protected Fragment getFragmentForPosition(int position) {
@@ -156,4 +202,5 @@ public class PageSlidingTabStripFragment extends Fragment {
         }
 
     }
+
 }

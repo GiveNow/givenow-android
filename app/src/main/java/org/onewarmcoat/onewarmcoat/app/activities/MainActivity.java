@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -44,21 +47,15 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 public class MainActivity extends Activity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
         PickupRequestsFragment.PickupRequestDetailInteractionListener,
-        PickupRequestDetailFragment.PickupRequestConfirmedListener {
+        PickupRequestDetailFragment.PickupRequestConfirmedListener,
+        GoogleApiClient.OnConnectionFailedListener {
     private static final int POSITION_DONATE = 0;
     private static final int POSITION_VOLUNTEER = 1;
     private static final int POSITION_PROFILE = 2;
     private static final int POSITION_SIGN_OUT = 3;
-//        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-//    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    /**
-     * Used to store the last screen title. For use in { #restoreActionBar()}.
-     */
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
@@ -71,6 +68,7 @@ public class MainActivity extends Activity implements
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
     private Intent mIntent;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +86,11 @@ public class MainActivity extends Activity implements
             initializeFragments();
 //            mCurrentFragment = null;
             mSelectedItem = 0;
-            selectItem(mSelectedItem);
+//            selectItem(mSelectedItem);
         }
 
+
+//        GoogleApiClientManager.build(this);
         //TODO: Open Navigation drawer on first launch to hint user that navigation drawer exists, per google UX design spec
 
     }
@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements
     public void onRestoreInstanceState(Bundle inState) {
         super.onRestoreInstanceState(inState);
         mSelectedItem = inState.getInt("mSelectedItem");
-        selectItem(mSelectedItem);
+//        selectItem(mSelectedItem);
     }
 
     @Override
@@ -115,8 +115,13 @@ public class MainActivity extends Activity implements
         //if the user resumed the app by entering through a Volunteer push notif, show dashboard
         boolean isPushNotif = handlePushNotifResume();
 
-        if (!isPushNotif) {
+        if (isPushNotif) {
+            selectItem(POSITION_VOLUNTEER);
+        } else {
             checkForPendingRequests();
+            selectItem(mSelectedItem);
+            
+
         }
     }
 
@@ -139,7 +144,7 @@ public class MainActivity extends Activity implements
                     mIntent.removeExtra("com.parse.Data");
 
                     //try setting us to the Volunteer fragment
-                    selectItem(POSITION_VOLUNTEER);
+//                    selectItem(POSITION_VOLUNTEER);
                     //move to dashboard duey
 //                    VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
                     //0 means dashboard
@@ -328,9 +333,11 @@ public class MainActivity extends Activity implements
         switch (position) {
             case POSITION_DONATE: //Donate
                 if (volunteerFragment != null) {
+//                    volunteerFragment.onPause();
                     ft.hide(volunteerFragment);
                 }
                 if (profileFragment != null) {
+//                    profileFragment.onPause();
                     ft.hide(profileFragment);
                 }
 
@@ -442,6 +449,30 @@ public class MainActivity extends Activity implements
         }
     }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /* Google Play services can resolve some errors it detects. If the error
+         * has a resolution, try sending an Intent to start a Google Play
+		 * services activity that can resolve error.
+		 */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this,
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /* Thrown if Google Play services canceled the original
+                 * PendingIntent */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+//            Toast.makeText(getActivity(),
+//                    "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
     // The click listener for ListView in the navigation drawer
     private class DrawerItemClickListener implements
             ListView.OnItemClickListener {
@@ -451,6 +482,5 @@ public class MainActivity extends Activity implements
             selectItem(position);
         }
     }
-
 
 }

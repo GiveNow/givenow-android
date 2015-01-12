@@ -128,26 +128,28 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     }
 
     public void loadMarkers() {
-        ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
+        if (mClusterManager != null) {
+            ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
-        mPullToRefreshLayout.setRefreshing(true);
-        query.findInBackground(new FindCallback<PickupRequest>() {
-            @Override
-            public void done(List<PickupRequest> list, ParseException e) {
-                if (list == null) {
+            mPullToRefreshLayout.setRefreshing(true);
+            query.findInBackground(new FindCallback<PickupRequest>() {
+                @Override
+                public void done(List<PickupRequest> list, ParseException e) {
+                    if (list == null) {
+                        mPullToRefreshLayout.setRefreshComplete();
+                        return;
+                    }
+
+                    mClusterManager.clearItems();
+                    for (PickupRequest item : list) {
+                        //default clustering setup
+                        mClusterManager.addItem(item);
+                        mClusterManager.cluster();
+                    }
                     mPullToRefreshLayout.setRefreshComplete();
-                    return;
                 }
-
-                mClusterManager.clearItems();
-                for (PickupRequest item : list) {
-                    //default clustering setup
-                    mClusterManager.addItem(item);
-                    mClusterManager.cluster();
-                }
-                mPullToRefreshLayout.setRefreshComplete();
-            }
-        });
+            });
+        }
 
     }
 
@@ -180,6 +182,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     @Override
     public void onViewPagerHide() {
+        super.onViewPagerHide();
 
     }
 

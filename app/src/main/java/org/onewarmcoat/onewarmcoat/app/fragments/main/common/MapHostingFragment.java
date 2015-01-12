@@ -1,34 +1,26 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.common;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.IntentSender;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.fragments.ErrorDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.GoogleMapFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.MapFragmentCounter;
 import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.io.IOException;
@@ -38,68 +30,81 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+//import com.google.android.gms.location.LocationClient;
+
 public class MapHostingFragment extends Fragment
         implements
         GoogleMapFragment.OnGoogleMapFragmentListener,
-        GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener,
-        ViewPagerChangeListener {
-
-    /*
-     * Define a request code to send to Google Play services This code is
-     * returned in Activity.onActivityResult
-     */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+        ViewPagerChangeListener, GoogleApiClient.ConnectionCallbacks,
+        OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleMap mGoogleMap;
     protected MapFragment mapFragment;
-    protected LocationClient mLocationClient;
+    //    protected LocationClient mLocationClient;
     protected boolean mMapIsTouched;
 
     @InjectView(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
     private boolean mZoomToLocation;
+    private boolean mShouldAttachMapFragmentOnStart = false;
+    private boolean isVisibleInViewPager = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocationClient = new LocationClient(getActivity(), this, this);
+        // Disabled map fragment reloading for now because of how fragile GPS 6.5.87 is.
         if (savedInstanceState == null) {
-            try {
-                mapFragment = GoogleMapFragment.newInstance();
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.flMapContainer, mapFragment, "MAP").commit();
-                mZoomToLocation = true;
-            } catch (NullPointerException npe) {
-                npe.printStackTrace();
-            }
+
         } else {
-            Log.w(((Object) this).getClass().getSimpleName(), "loading framgent");
+            Log.w(((Object) this).getClass().getSimpleName(), "loading mapFragment");
 //            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(savedInstanceState, "mapFragment");
 //            mapFragment = (GoogleMapFragment) getFragmentManager().getFragment(savedInstanceState, ((Object) this).getClass().getSimpleName());
 //            mapFragment = (GoogleMapFragment) getChildFragmentManager().findFragmentById(R.id.flMapContainer);
 //            mapFragment = savedInstanceState.getParcelable("mapFragment");
-            Log.w(((Object) this).getClass().getSimpleName(), "fragment loaded");
+            Log.w(((Object) this).getClass().getSimpleName(), "mapFragment loaded");
             mZoomToLocation = false;
+        }
+    }
+
+    protected void attachMapFragment() {
+        if (isAdded()) {
+            Log.w(this.getClass().getSimpleName(), "Attaching map fragment now.");
+            mapFragment = MapFragment.newInstance();
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.flMapContainer, mapFragment, "MAP")
+                    .commit();
+            mZoomToLocation = true;
+
+            mapFragment.getMapAsync(this);
+        } else {
+            Log.e(this.getClass().getSimpleName(), "CANT ATTACH MAP FRAGMENT NOW BECAUSE WE'RE NOT ADDED.");
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getChildFragmentManager().putFragment(outState, "mapFragment", mapFragment);
-        Log.w(((Object) this).getClass().getSimpleName(), "onSaveInstanceState: Fragments saved");
+//        if (mapFragment != null) {
+//            pauseMapFragment();
+//            getChildFragmentManager().putFragment(outState, "mapFragment", mapFragment);
+//        }
+//        Log.w(this.getClass().getSimpleName(), "onSaveInstanceState: Fragments saved");
     }
 
     @Override
     public void onActivityCreated(Bundle inState) {
         super.onActivityCreated(inState);
-        Log.w(((Object) this).getClass().getSimpleName(), "onActivityCreated called.");
-        if (inState != null) {
-            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(inState, "mapFragment");
-            Log.w(((Object) this).getClass().getSimpleName(), "onActivityCreated: Fragments restored");
-        }
+        Log.w(this.getClass().getSimpleName(), "onActivityCreated called.");
+//        if (inState != null) {
+//            mapFragment = (MapFragment) getChildFragmentManager().getFragment(inState, "mapFragment");
+//            if (mapFragment != null) {
+////                attachMapFragment();
+////                resumeMapFragment();
+//            }
+//            Log.w(((Object) this).getClass().getSimpleName(), "onActivityCreated: Fragments restored");
+//        }
     }
 
     @Override
@@ -109,33 +114,21 @@ public class MapHostingFragment extends Fragment
     }
 
     public void onMapReady(GoogleMap map) {
-        flMapLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mMapIsTouched = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        mMapIsTouched = false;
-                        break;
-                }
-                return false; // determines whether the event is 'consumed' or not
+        flMapLayout.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mMapIsTouched = true;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    mMapIsTouched = false;
+                    break;
             }
+            return false; // determines whether the event is 'consumed' or not
         });
 
         mGoogleMap = map;
-        if (mapFragment != null) {
-            if (map != null) {
-//                Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
-                map.setMyLocationEnabled(true);
-            } else {
-//                Toast.makeText(getActivity(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-//            Toast.makeText(getActivity(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+        mGoogleMap.setMyLocationEnabled(true);
 
-        }
     }
 
     protected Address reverseGeocodeAddress() {
@@ -159,32 +152,64 @@ public class MapHostingFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /*
-     * Called when the Fragment becomes visible.
-     */
-    @Override
     public void onStart() {
         super.onStart();
-//        // Connect the client.
-//        if (isGooglePlayServicesAvailable()) {
-//            mLocationClient.connect();
-//        }
+        if (isVisibleInViewPager) {
+            attachMapFragment();
+        }
+
+//        mLocationClient = new LocationClient(getActivity(), this, this);
     }
 
-    public void connectMap(){
-//        // Connect the client.
-        if (isGooglePlayServicesAvailable() && !mLocationClient.isConnected()) {
-            mLocationClient.connect();
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e(getClass().getSimpleName(), "OnPause.");
+
+        // To work around "DirectByteBuffer.put Attempt to get length of null array" errors in the Google Maps 6.5.87 library,
+        // we must not have more than one map fragment running at once.
+        // When we want a map fragment to Resume, any other map fragments must Pause, or the fatal crash occurs.
+        // By judicious use of the mapFragment's onPause and onResume calls, we can facilitate this.
+        if (mapFragment != null) {
+            if (mapFragment.isAdded()) {
+                mapFragment.onPause();
+                MapFragmentCounter.dec();
+                Log.w(this.getClass().getSimpleName(), "mapFragment paused.");
+            }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(getClass().getSimpleName(), "OnResume.");
+
+        if (mapFragment != null) {
+            if (mapFragment.isAdded()) {
+                mapFragment.onResume();
+                MapFragmentCounter.inc();
+                Log.w(this.getClass().getSimpleName(), "mapFragment resumed.");
+            } else {
+                // possible cause of crashes after long-term returns from background.
+                // if this is hit, do we need to attach the map fragment?
+                Log.e(this.getClass().getSimpleName(), "onResume: mapFragment is not null, but is not Added!.");
+            }
+        } else {
+            if (isVisibleInViewPager) { //gotta detect if we're visible and only then attach
+                attachMapFragment();
+            }
+        }
+    }
+
+    @Override
+    public void onViewPagerShow() {
+        isVisibleInViewPager = true;
+        Log.w(this.getClass().getSimpleName(), "I've been marked as visible in the Viewpager.");
+    }
+
+    @Override
+    public void onViewPagerHide() {
+        isVisibleInViewPager = false;
     }
 
     /*
@@ -193,33 +218,8 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onStop() {
         // Disconnecting the client invalidates it.
-        mLocationClient.disconnect();
+//        disconnectMap();
         super.onStop();
-    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        // Check that Google Play services is available
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-        // If Google Play services is available
-        if (ConnectionResult.SUCCESS == resultCode) {
-            // In debug mode, log the status
-            Log.d("Location Updates", "Google Play services is available.");
-            return true;
-        } else {
-            // Get the error dialog from Google Play services
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(resultCode, getActivity(),
-                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-            // If Google Play services can provide an error dialog
-            if (errorDialog != null) {
-                // Create a new DialogFragment for the error dialog
-                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                errorFragment.setDialog(errorDialog);
-                errorFragment.show(getFragmentManager(), "Location Updates");
-            }
-
-            return false;
-        }
     }
 
     public boolean isOnline() {
@@ -238,73 +238,37 @@ public class MapHostingFragment extends Fragment
      */
     @Override
     public void onConnected(Bundle dataBundle) {
+        //TODO: might be abele to disable the rest of this function
         // Display the connection status
-        Location location = mLocationClient.getLastLocation();
-        if (location != null) {
-//            Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            CameraPosition startCameraPosition = new CameraPosition.Builder()
-//                    .bearing(0.0f)
-//                    .target(new LatLng(0, 0)).build();
-            final CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
-            if (mGoogleMap != null) {
-                if (mZoomToLocation) {
-                    mGoogleMap.animateCamera(cameraUpdate);
-                    mZoomToLocation = false;
-                }
-            } else {
-//                Toast.makeText(getActivity(), "map is null, can't move camera!", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-//            Toast.makeText(getActivity(), "Current location was null, enable GPS!", Toast.LENGTH_SHORT).show();
-        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 
     /*
      * Called by Location Services if the connection to the location client
      * drops because of an error.
      */
-    @Override
-    public void onDisconnected() {
-        // Display the connection status
+//    @Override
+//    public void onDisconnected() {
+//        // Display the connection status
 //        Toast.makeText(getActivity(), "Disconnected from location services. Please re-connect.", Toast.LENGTH_SHORT).show();
-    }
+//    }
 
     /*
      * Called by Location Services if the attempt to Location Services fails.
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        /* Google Play services can resolve some errors it detects. If the error
-         * has a resolution, try sending an Intent to start a Google Play
-		 * services activity that can resolve error.
-		 */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(getActivity(),
-                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /* Thrown if Google Play services canceled the original
-                 * PendingIntent */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-//            Toast.makeText(getActivity(),
-//                    "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onViewPagerShow() {
-        //trying this hack to keep Google Maps from crashing.
-        //StackOverflow link: http://stackoverflow.com/questions/19624437/random-nullpointerexception-on-google-maps-api-v2/19627149#19627149
-        connectMap();
-    }
-
-    @Override
-    public void onViewPagerHide() {
 
     }
+
+
+//    private void disconnectMap() {
+//        mGoogleApiClient.disconnect();
+
+//    }
 }

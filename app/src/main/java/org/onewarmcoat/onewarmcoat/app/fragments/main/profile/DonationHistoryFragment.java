@@ -57,6 +57,8 @@ public class DonationHistoryFragment extends Fragment implements ViewPagerChange
     }
 
     public void refreshList() {
-        mDonationsAdapter.loadObjects();
+        if (mDonationsAdapter != null) {
+            mDonationsAdapter.loadObjects();
+        }
     }
 }

@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -40,15 +39,6 @@ public class RequestPickupFragment extends MapHostingFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        //trying this hack to keep Google Maps from crashing.
-        //StackOverflow link: http://stackoverflow.com/questions/19624437/random-nullpointerexception-on-google-maps-api-v2/19627149#19627149
-        super.connectMap();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.w(((Object) this).getClass().getSimpleName(), "onCreate!!!");
@@ -72,19 +62,16 @@ public class RequestPickupFragment extends MapHostingFragment {
         super.onMapReady(map);
         map.getUiSettings().setCompassEnabled(false);
 
-        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                if (!mMapIsTouched) {
-                    // save cpu cycles, only recalculate if we're not pressed, ie the user lifted their finger off
-                    Address address = reverseGeocodeAddress();
-                    if (address != null) {
-                        setAddressFieldText(address.getAddressLine(0));
-                        mListener.updateAddress(address);
-                    }
-                } else {
-                    //can remove the detail fragment here, but per uber UX we keep it displayed
+        map.setOnCameraChangeListener(cameraPosition -> {
+            if (!mMapIsTouched) {
+                // save cpu cycles, only recalculate if we're not pressed, ie the user lifted their finger off
+                Address address = reverseGeocodeAddress();
+                if (address != null) {
+                    setAddressFieldText(address.getAddressLine(0));
+                    mListener.updateAddress(address);
                 }
+            } else {
+                //can remove the detail fragment here, but per uber UX we keep it displayed
             }
         });
 
