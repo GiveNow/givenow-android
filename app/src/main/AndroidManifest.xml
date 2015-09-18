@@ -14,7 +14,6 @@
 
     <!-- Parse Push notif perms -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
@@ -23,7 +22,7 @@
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
     <permission
-        android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE"
+        android:name="com.parse.starter.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
 
@@ -90,10 +89,13 @@
         <!-- Parse Push setup -->
         <service android:name="com.parse.PushService" />
 
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
         <receiver
@@ -109,6 +111,7 @@
                 <category android:name="org.onewarmcoat.onewarmcoat.app" />
             </intent-filter>
         </receiver>
+
 
         <meta-data
             android:name="com.crashlytics.ApiKey"

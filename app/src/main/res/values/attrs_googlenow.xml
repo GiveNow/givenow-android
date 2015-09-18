@@ -102,7 +102,7 @@
     <attr name="y" format="string" />
     <attr name="spanX" format="string" />
     <attr name="spanY" format="string" />
-    <attr name="icon" format="reference" />
+    <!--<attr name="icon" format="reference" />-->
     <attr name="title" format="reference" />
     <attr name="uri" format="string" />
     <attr name="key" format="string" />
@@ -188,7 +188,7 @@
     <attr name="crossfadeDuration" format="integer" />
     <attr name="fadeImageIfLoadedFromCache" format="boolean" />
     <attr name="pressedHighlightColor" format="reference|color" />
-    <attr name="barSize" format="reference|dimension" />
+    <!--<attr name="barSize" format="reference|dimension" />-->
     <attr name="barPadding" format="reference|dimension" />
     <attr name="barGravity">
         <enum name="end" value="2" />
