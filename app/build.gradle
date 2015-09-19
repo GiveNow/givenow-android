@@ -104,7 +104,8 @@ dependencies {
 
 //    compile files('libs/ParseFacebookUtilsV4-1.10.1.jar')
 
-//    compile files('libs/card.io-3.1.4/card.io.jar')
+    compile 'io.card:android-sdk:5.0.1'
+
     compile project(':stripe')
 
     // fork of Pager Sliding Tab Strip that supports ColorStateLists for tab text color.

@@ -69,5 +69,6 @@
     <string name="report_problem_reason_cant_find_place">I can\'t find the place</string>
     <string name="report_problem_reason_cant_find_coats">I found the place, but I can\'t find the coats</string>
     <string name="report_problem_reason_other">Other: </string>
+    <string name="credit_card_error">Error processing card - please try again later!</string>
 
 </resources>

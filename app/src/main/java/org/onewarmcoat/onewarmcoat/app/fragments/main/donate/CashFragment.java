@@ -1,6 +1,5 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +43,7 @@ import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
 
 public class CashFragment extends Fragment {
-    public static final int MY_SCAN_REQUEST_CODE = 01234;
+    public static final int MY_SCAN_REQUEST_CODE = 1234567;
     static final InputFilter[] FILTERS = new InputFilter[]{new NumericRangeFilter()};
     static final View.OnFocusChangeListener ON_FOCUS = new AmountOnFocusChangeListener();
     private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
@@ -80,32 +79,6 @@ public class CashFragment extends Fragment {
         //to allow layout resize with keyboard
 //        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return v;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /*
- * Called when the Activity becomes visible.
- */
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    /*
-     * Called when the Activity is no longer visible.
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @OnClick(R.id.btn_donate)
@@ -148,11 +121,8 @@ public class CashFragment extends Fragment {
 
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
 
-        // required for authentication with card.io
-        scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, MY_CARDIO_APP_TOKEN);
-
         // customize these values to suit your needs.
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: true
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
 
@@ -193,7 +163,6 @@ public class CashFragment extends Fragment {
                 resultDisplayStr = "Scan was canceled.";
             }
 
-
             //TODO: This data like last 4, expiration, etc should get stored too.
             // do something with resultDisplayStr, maybe display it in a textView
             Log.d("credit_card", resultDisplayStr);
@@ -220,10 +189,10 @@ public class CashFragment extends Fragment {
                             }
 
                             public void onError(Exception error) {
-//                                Log.d("credit_card", "token error");
+                                Log.d("credit_card", error.getMessage());
                                 // Show localized error message
 //                                Toast.makeText(getActivity(), error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                                Crouton.showText(getActivity(), getResources().getString(R.string.credit_card_invalid), Style.ALERT);
+                                Crouton.showText(getActivity(), getResources().getString(R.string.credit_card_error), Style.ALERT);
                             }
                         }
                 );
@@ -242,7 +211,7 @@ public class CashFragment extends Fragment {
 
     private void chargeStripeToken(Token token) {
         // Send token to server to charge
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("token", token.getId());
         final String amount = etDonateAmount.getText().toString();
         params.put("amount", amount);
@@ -270,19 +239,16 @@ public class CashFragment extends Fragment {
 
     private void chargeStripeCustomer() {
         // Send customer ID to server to charge
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("stripeCustomer", CharityUserHelper.getStripeCustomerId());
         final String amount = etDonateAmount.getText().toString();
         params.put("amount", amount);
 
         //need to call a different function to create new stripe customer (if we have authority/info to do so)
-        ParseCloud.callFunctionInBackground("stripe_charge_customer", params, new FunctionCallback<String>() {
-            @Override
-            public void done(String result, ParseException e) {
-                if (e == null) {
-                    showCrouton(amount);
-                    storeDonation(amount);
-                }
+        ParseCloud.callFunctionInBackground("stripe_charge_customer", params, (result, e) -> {
+            if (e == null) {
+                showCrouton(amount);
+                storeDonation(amount);
             }
         });
     }
@@ -317,7 +283,7 @@ public class CashFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }

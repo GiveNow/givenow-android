@@ -27,13 +27,11 @@
     <uses-permission android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
 
     <!-- Card.io perms -->
-    <!-- Permission to use camera - required -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
     <!-- Permission to vibrate - recommended, allows vibration feedback on scan -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!-- Permission to use camera - required -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Camera features - recommended -->
     <uses-feature
@@ -45,6 +43,8 @@
     <uses-feature
         android:name="android.hardware.camera.flash"
         android:required="false" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <!--Maps requires openGL ES 2-->
     <uses-feature
