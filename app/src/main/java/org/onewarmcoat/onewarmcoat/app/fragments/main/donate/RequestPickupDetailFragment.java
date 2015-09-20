@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
@@ -351,12 +350,7 @@ public class RequestPickupDetailFragment extends Fragment implements
     private void savePickupRequest() {
         getActivity().setProgressBarIndeterminateVisibility(true);
 
-        mPickupRequest.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                shouldWeRetrySave(e);
-            }
-        });
+        mPickupRequest.saveInBackground(this::shouldWeRetrySave);
     }
 
 
