@@ -55,40 +55,37 @@ public class DropOffLocationsFragment extends MapHostingFragment implements Goog
         super.onMapReady(map);
         map.setOnInfoWindowClickListener(this);
 
-        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                LatLng pos = mGoogleMap.getCameraPosition().target;
-                ParseGeoPoint geoPoint = new ParseGeoPoint(pos.latitude, pos.longitude);
+        mGoogleMap.setOnCameraChangeListener(cameraPosition -> {
+            LatLng pos = mGoogleMap.getCameraPosition().target;
+            ParseGeoPoint geoPoint = new ParseGeoPoint(pos.latitude, pos.longitude);
 
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("DropOffAgency");
-                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-                // Restrict query to the 20 nearest locations so the phone doesn't explode
-                query.whereNear("agencyGeoLocation", geoPoint);
-                query.setLimit(20);
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("DropOffAgency");
+            query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+            // Restrict query to the 20 nearest locations so the phone doesn't explode
+            query.whereNear("agencyGeoLocation", geoPoint);
+            query.setLimit(20);
 
-                query.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List list, ParseException e) {
-                        if(list == null){
-                            return;
-                        }
-
-                        for (Object item : list) {
-                            ParseObject it = (ParseObject) item;
-                            ParseGeoPoint geoPoint = it.getParseGeoPoint("agencyGeoLocation");
-                            MarkerOptions marker = new MarkerOptions();
-                            LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                            marker.position(ll);
-                            marker.title(it.getString("agencyName"));
-                            marker.snippet(it.getString("agencyAddress"));
-                            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                            //TODO: don't place the same markers on top of markers we already got?
-                            map.addMarker(marker);
-                        }
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List list, ParseException e) {
+                    if(list == null){
+                        return;
                     }
-                });
-            }
+
+                    for (Object item : list) {
+                        ParseObject it = (ParseObject) item;
+                        ParseGeoPoint geoPoint = it.getParseGeoPoint("agencyGeoLocation");
+                        MarkerOptions marker = new MarkerOptions();
+                        LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                        marker.position(ll);
+                        marker.title(it.getString("agencyName"));
+                        marker.snippet(it.getString("agencyAddress"));
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        //TODO: don't place the same markers on top of markers we already got?
+                        map.addMarker(marker);
+                    }
+                }
+            });
         });
 
 

@@ -4,15 +4,20 @@ import android.app.Fragment;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,9 +46,9 @@ public class MapHostingFragment extends Fragment
 
     protected GoogleMap mGoogleMap;
     protected MapFragment mapFragment;
-    //    protected LocationClient mLocationClient;
-    protected boolean mMapIsTouched;
+    private GoogleApiClient mLocationClient;
 
+    protected boolean mMapIsTouched;
     @InjectView(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
     private boolean mZoomToLocation;
@@ -54,11 +59,17 @@ public class MapHostingFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Disabled map fragment reloading for now because of how fragile GPS 6.5.87 is.
-        if (savedInstanceState == null) {
+        mLocationClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
 
+        if (savedInstanceState == null) {
+            mZoomToLocation = true;
         } else {
             Log.w(((Object) this).getClass().getSimpleName(), "loading mapFragment");
+            // Disabled map fragment reloading for now because of how fragile GPS 6.5.87 is.
 //            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(savedInstanceState, "mapFragment");
 //            mapFragment = (GoogleMapFragment) getFragmentManager().getFragment(savedInstanceState, ((Object) this).getClass().getSimpleName());
 //            mapFragment = (GoogleMapFragment) getChildFragmentManager().findFragmentById(R.id.flMapContainer);
@@ -76,6 +87,7 @@ public class MapHostingFragment extends Fragment
                     .add(R.id.flMapContainer, mapFragment, "MAP")
                     .commit();
             mZoomToLocation = true;
+            mLocationClient.connect();
 
             mapFragment.getMapAsync(this);
         } else {
@@ -158,7 +170,6 @@ public class MapHostingFragment extends Fragment
             attachMapFragment();
         }
 
-//        mLocationClient = new LocationClient(getActivity(), this, this);
     }
 
     @Override
@@ -238,37 +249,28 @@ public class MapHostingFragment extends Fragment
      */
     @Override
     public void onConnected(Bundle dataBundle) {
-        //TODO: might be abele to disable the rest of this function
-        // Display the connection status
+        if (mZoomToLocation) {
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
+            if (lastLocation != null) {
+//                Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
+                LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
+                mGoogleMap.animateCamera(cameraUpdate);
+                mZoomToLocation = false;
+            }
+        }
 
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
-
-    /*
-     * Called by Location Services if the connection to the location client
-     * drops because of an error.
-     */
-//    @Override
-//    public void onDisconnected() {
-//        // Display the connection status
-//        Toast.makeText(getActivity(), "Disconnected from location services. Please re-connect.", Toast.LENGTH_SHORT).show();
-//    }
 
     /*
      * Called by Location Services if the attempt to Location Services fails.
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
 
-
-//    private void disconnectMap() {
-//        mGoogleApiClient.disconnect();
-
-//    }
 }
