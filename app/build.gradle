@@ -69,55 +69,51 @@ android {
 dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
+    compile "org.functionaljava:functionaljava:4.4"
+//    compile "org.functionaljava:functionaljava-java8:4.4"
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:support-v13:23.0.1'
-//    compile 'com.google.android.gms:play-services:7.8.0'
     compile 'com.google.android.gms:play-services-maps:8.1.0'
     compile 'com.google.android.gms:play-services-location:8.1.0'
+    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:palette-v7:23.0.1'
 
-//    compile('com.google.android.gms:play-services-maps:7.8.0') {
-//        transitive = true;
-//    }
-//    compile 'com.google.android.gms:play-services-gcm:7.8.0'
-
-//    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     compile 'com.jakewharton:butterknife:5.1.2'
     compile 'com.google.maps.android:android-maps-utils:0.4'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.9'
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'com.squareup.picasso:picasso:2.3.4'
+//    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
 
+    compile 'com.parse.bolts:bolts-android:1.2.1'
+//    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+//    compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
 
     compile('de.keyboardsurfer.android.widget:crouton:1.8.4@aar') { //maybe drop the @aar later
         // exclusion is not neccessary, but generally a good idea.
         exclude group: 'com.google.android', module: 'support-v4'
     }
 
-//    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
-
-//    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
-    compile 'com.parse.bolts:bolts-android:1.2.1'
     // Module dependency on ParseLoginUI library sources
     compile project(':ParseLoginUI')
     // Uncomment if using Facebook Login (optional Maven dependency)
 //    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 //    compile fileTree(dir: 'libs', include: 'ParseFacebookUtilsV4-*.jar')
-
 //    compile files('libs/ParseFacebookUtilsV4-1.10.1.jar')
 
+    compile project(':stripe')
     compile 'io.card:android-sdk:5.0.1'
 
-    compile project(':stripe')
-
+    //    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     // fork of Pager Sliding Tab Strip that supports ColorStateLists for tab text color.
     // https://github.com/magicgoose/PagerSlidingTabStrip
     compile project(':PagerSlidingTabStrip-magicgoose-1c26523:library')
-    //
+
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
-
 }

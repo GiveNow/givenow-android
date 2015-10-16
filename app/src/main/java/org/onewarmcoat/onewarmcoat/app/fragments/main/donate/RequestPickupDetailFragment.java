@@ -20,11 +20,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
@@ -33,12 +38,15 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialo
 import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 
@@ -54,14 +62,13 @@ public class RequestPickupDetailFragment extends Fragment implements
     SlidingRelativeLayout rlAddressContainer;
     @InjectView(R.id.rlPickupDetailContainer)
     SlidingRelativeLayout rlPickupDetailContainer;
+    @InjectView(R.id.tableDonationCategories)
+    TableLayout tableDonationCategories;
+
     @InjectView(R.id.agrv)
     AdaptableGradientRectView adaptableGradientRectView;
     @InjectView(R.id.etAddress)
     EditText etAddress;
-    @InjectView(R.id.etEstimatedValue)
-    EditText etEstimatedValue;
-    @InjectView(R.id.etNumCoatsValue)
-    EditText etNumCoatsValue;
     @InjectView(R.id.rlNumberCoats)
     RelativeLayout rlNumberCoats;
 
@@ -107,6 +114,88 @@ public class RequestPickupDetailFragment extends Fragment implements
             mLng = getArguments().getDouble(ARG_LNG);
         }
         getActivity().getActionBar().setTitle("Confirmation");
+
+        buildCategoryGrid();
+    }
+
+    private void buildCategoryGrid() {
+        //get categories from parse
+        DonationCategory.getTop9().findInBackground((categoryList, error) -> {
+            if (error == null) {
+                ArrayList<View> categoryItems = new ArrayList<>();
+
+                //inject categories into each category item
+                for (int i = 0; i < tableDonationCategories.getChildCount(); i++) {
+                    View child = tableDonationCategories.getChildAt(i);
+                    if (child instanceof TableRow) {
+                        TableRow row = (TableRow) child;
+                        for (int x = 0; x < row.getChildCount(); x++) {
+                            View view = row.getChildAt(x);
+                            categoryItems.add(view);
+                        }
+                    }
+                }
+
+//                Stream<View> categoryStream = Stream.iterableStream(categoryItems);
+//                categoryStream.foreachDoEffect(view -> {
+//                    view
+//                });
+
+                for (int i = 0; i < categoryList.size(); i++) {
+                    if (i == categoryList.size() - 1) {
+                        //TODO: "other" category.
+                    }
+                    DonationCategory donationCategory = categoryList.get(i);
+                    View categoryView = categoryItems.get(i);
+
+                    ImageView imageView = ButterKnife.findById(categoryView, R.id.image);
+                    if (imageView != null) {
+                        Picasso.with(getActivity()).load(donationCategory.getImage().getUrl()).into(imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                ButterKnife.findById(categoryView, R.id.progressBar).setVisibility(View.INVISIBLE);
+
+                                // Use generateAsync() method from the Palette API to get the vibrant color from the bitmap
+                                // Set the result as the background color for `R.id.vPalette` view containing the contact's name.
+//                                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+//                                Palette.from(bitmap).generate(palette -> {
+//                                    int color = palette.getVibrantColor(Color.WHITE);
+//                                    View vPalette = ButterKnife.findById(categoryView, R.id.vPalette);
+//                                    vPalette.setBackgroundColor(color);
+//                                    vPalette.setTag(color);
+//                                });
+                            }
+
+                            @Override
+                            public void onError() {
+                                // set a default or 'error' image
+//                                imageView.setImageDrawable(R.id.);
+                            }
+                        });
+
+                    }
+
+                    TextView tvName = ButterKnife.findById(categoryView, R.id.tvName);
+                    TextView tvDescription = ButterKnife.findById(categoryView, R.id.tvDescription);
+                    if (tvName != null && tvDescription != null) {
+                        if (Locale.getDefault() == Locale.GERMAN) {
+                            tvName.setText(donationCategory.getNameDE());
+                            tvDescription.setText(donationCategory.getDescriptionDE());
+                        } else {
+                            tvName.setText(donationCategory.getNameEN());
+                            tvDescription.setText(donationCategory.getDescriptionEN());
+                        }
+                    }
+
+//                    Option<ImageView> imageViewOption = Option.fromNull(ButterKnife.findById(categoryView, R.id.image));
+//                    imageViewOption.foreachDoEffect(imageView -> {
+//                    });
+                }
+
+            } else {
+                Log.d("RPDF", "Error fetching categories: " + error.getMessage());
+            }
+        });
     }
 
     @Override
@@ -261,7 +350,7 @@ public class RequestPickupDetailFragment extends Fragment implements
         super.onStop();
     }
 
-    @OnTextChanged(value = R.id.etNumCoatsValue, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    //    @OnTextChanged(value = R.id.etNumCoatsValue, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void onAfterTextChanged(Editable editable) {
         if (editable.length() > 0) {
             if (!editable.toString().equals("0")) {
@@ -297,8 +386,7 @@ public class RequestPickupDetailFragment extends Fragment implements
             if (myPhoneNumber == null) {
                 //user hasn't entered their phone before
                 showConfirmPickupDialog("", "");
-            }
-            else {
+            } else {
                 //they have entered their phone before, let's pre-populate it and their name
                 String myName = currUser.getString("name");
                 showConfirmPickupDialog(myName, myPhoneNumber);
@@ -325,26 +413,26 @@ public class RequestPickupDetailFragment extends Fragment implements
 
         //grab donation details
         double donationValue;
-        String estimatedValueString = etEstimatedValue.getText().toString();
-        if (!estimatedValueString.equals("")) {
-            donationValue = Double.parseDouble(estimatedValueString);
-        } else {
-            donationValue = 0.0;
-        }
-        int numcoats = Integer.parseInt(etNumCoatsValue.getText().toString());
-
-        //ship it off to parse
-        mPickupRequest = new PickupRequest(
-                new ParseGeoPoint(mLat, mLng),
-                name,
-                mAddress,
-                phoneNumber,
-                ParseUser.getCurrentUser(),
-                "Coat",
-                donationValue,
-                numcoats
-        );
-        savePickupRequest();
+//        String estimatedValueString = etEstimatedValue.getText().toString();
+//        if (!estimatedValueString.equals("")) {
+//            donationValue = Double.parseDouble(estimatedValueString);
+//        } else {
+//            donationValue = 0.0;
+//        }
+//        int numcoats = Integer.parseInt(etNumCoatsValue.getText().toString());
+//
+//        //ship it off to parse
+//        mPickupRequest = new PickupRequest(
+//                new ParseGeoPoint(mLat, mLng),
+//                name,
+//                mAddress,
+//                phoneNumber,
+//                ParseUser.getCurrentUser(),
+//                "Coat",
+//                donationValue,
+//                numcoats
+//        );
+//        savePickupRequest();
     }
 
     private void savePickupRequest() {

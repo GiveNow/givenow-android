@@ -24,7 +24,7 @@
 
             <ImageView
                 android:id="@+id/ivInfo"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/icon_size"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
@@ -56,7 +56,7 @@
 
             <ImageView
                 android:id="@+id/ivAddress"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/icon_size"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
@@ -106,23 +106,24 @@
         <org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView
             android:id="@+id/agrv"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_weight="0"
             android:alpha="0.0" />
 
         <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
             android:id="@+id/rlPickupDetailContainer"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginLeft="0dp"
+            android:layout_weight="1"
             android:clickable="true"
             android:minHeight="100dp">
 
             <RelativeLayout
                 android:id="@+id/rlInnerPickupDetailContainer"
                 android:layout_width="fill_parent"
-                android:layout_height="110dp"
+                android:layout_height="fill_parent"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:background="#ffdde8ed">
@@ -135,8 +136,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:orientation="horizontal">
 
                     <RelativeLayout
                         android:id="@+id/rlNumberCoats"
@@ -154,122 +154,176 @@
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center"
                             android:layout_margin="5dp"
-                            android:text="# of coats"
+                            android:text="What are you donating?"
                             android:textAllCaps="true"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/accent"
                             android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:id="@+id/llNumCoatsValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <TableLayout
+                            android:id="@+id/tableDonationCategories"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@+id/tvNumCoats"
                             android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true">
+                            android:divider="@color/accent"
+                            android:dividerPadding="10dp"
+                            android:showDividers="middle">
 
-                            <ImageView
-                                android:id="@+id/imageView"
-                                android:layout_width="40dp"
+                            <TableRow
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="2dp"
-                                android:layout_weight="0"
-                                android:scaleType="centerInside"
-                                android:src="@drawable/ic_launcher" />
+                                android:layout_weight="1"
+                                android:divider="@color/accent"
+                                android:dividerPadding="10dp"
+                                android:showDividers="middle">
 
-                            <TextView
-                                android:id="@+id/textView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/tvNumCoats"
-                                android:layout_gravity="center_vertical"
-                                android:layout_margin="4dp"
-                                android:text="×"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:textColor="#ff818181" />
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
 
-                            <EditText
-                                android:id="@+id/etNumCoatsValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:hint="0"
-                                android:imeOptions="actionNext"
-                                android:inputType="number"
-                                android:maxLength="4"
-                                android:singleLine="true"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="@color/accent" />
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
 
-                        </LinearLayout>
-                    </RelativeLayout>
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+                                <!--<RelativeLayout-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:layout_weight="1">-->
 
-                    <RelativeLayout
-                        android:id="@+id/rlValueContainer"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="1dp"
-                        android:layout_weight="1"
-                        android:background="#ffffffff"
-                        android:orientation="vertical">
+                                <!--<ImageButton-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:id="@+id/imageButton2"-->
+                                <!--android:layout_alignParentBottom="true"-->
+                                <!--android:layout_alignEnd="@+id/imageButton"-->
+                                <!--android:layout_alignParentStart="true"-->
+                                <!--android:layout_alignParentTop="true"-->
+                                <!--android:src="@drawable/blanket"-->
+                                <!--android:scaleType="fitCenter"-->
+                                <!--android:background="#00ffffff" />-->
 
-                        <TextView
-                            android:id="@+id/tvValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:text="Estimated Value"
-                            android:textAllCaps="true"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/accent"
-                            android:textStyle="bold" />
+                                <!--<LinearLayout-->
+                                <!--android:id="@+id/lltworows"-->
+                                <!--android:orientation="vertical"-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:weightSum="2">-->
 
-                        <LinearLayout
-                            android:id="@+id/llValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true">
+                                <!--<LinearLayout-->
+                                <!--android:orientation="horizontal"-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="0dp"-->
+                                <!--android:weightSum="2"-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:gravity="end">-->
 
-                            <TextView
-                                android:id="@+id/tvDollar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:text="$"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:textColor="#ff818181" />
+                                <!--<ImageButton-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:id="@+id/imageButton"-->
+                                <!--android:layout_alignParentTop="true"-->
+                                <!--android:layout_alignParentEnd="true"-->
+                                <!--android:src="@drawable/iconmonstr_check_mark_4_icon_256"-->
+                                <!--android:layout_alignParentStart="true"-->
+                                <!--android:layout_column="0"-->
+                                <!--android:background="#00ffffff"-->
+                                <!--android:scaleType="fitCenter"-->
+                                <!--android:layout_row="0"-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:padding="10dp" />-->
+                                <!--</LinearLayout>-->
 
-                            <EditText
-                                android:id="@+id/etEstimatedValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:hint="Optional"
-                                android:imeOptions="actionDone"
-                                android:inputType="numberDecimal"
-                                android:maxLength="8"
-                                android:orientation="horizontal"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:textColor="@color/accent" />
-                        </LinearLayout>
+                                <!--<TextView-->
+                                <!--android:id="@+id/tvLabel"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="0dp"-->
+                                <!--android:text="Blankets"-->
+                                <!--android:textAlignment="gravity"-->
+                                <!--android:layout_gravity="center_horizontal"-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:layout_alignParentTop="true"-->
+                                <!--android:gravity="bottom" />-->
 
-                        <TextView
-                            android:id="@+id/tvValueExplainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:text="For your records"
-                            android:textAllCaps="true"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textColor="@color/owc_dark_gray"
-                            android:textStyle="bold" />
+                                <!--</LinearLayout>-->
+
+                                <!--</RelativeLayout>-->
+
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:divider="@color/background"
+                                android:dividerPadding="10dp"
+                                android:showDividers="middle">
+
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+
+                                <include
+                                    layout="@layout/item_category"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/category_cell_margin"
+                                    android:layout_weight="1" />
+
+                            </TableRow>
+                        </TableLayout>
+
                     </RelativeLayout>
 
                 </LinearLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/grid_margin"
+    android:layout_marginRight="@dimen/grid_margin"
+    android:layout_marginTop="@dimen/cell_margin"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardCornerRadius="@dimen/card_corner_radius"
+    card_view:cardElevation="@dimen/card_elevation">
+    <!--android:foreground="?android:attr/selectableItemBackground"-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/relativeLayout2"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:indeterminate="true"
+            android:indeterminateOnly="true" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/relativeLayout2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitCenter" />
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/lltworows"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:weightSum="2">-->
+
+        <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:weightSum="2"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="end">-->
+
+        <!--<ImageButton-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/imageButton"-->
+        <!--android:src="@drawable/iconmonstr_check_mark_4_icon_256"-->
+        <!--android:layout_column="0"-->
+        <!--android:background="#00ffffff"-->
+        <!--android:scaleType="fitCenter"-->
+        <!--android:layout_row="0"-->
+        <!--android:layout_weight="1"-->
+        <!--android:padding="10dp" />-->
+        <!--</LinearLayout>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tvLabel"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:text="Blankets"-->
+        <!--android:textAlignment="center"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_alignParentTop="false"-->
+        <!--android:gravity="bottom" />-->
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/palette_height"
+            android:layout_alignParentBottom="true">
+
+            <View
+                android:id="@+id/vPalette"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:transitionName="palette" />
+
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/category_text_size"
+                android:transitionName="name" />
+
+            <!--<ImageView-->
+            <!--android:layout_width="@dimen/icon_size"-->
+            <!--android:layout_height="@dimen/icon_size"-->
+            <!--android:src="@drawable/iconmonstr_info_6_icon_256"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_toEndOf="@+id/tvName"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:scaleType="fitCenter" />-->
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/accent"
+                android:transitionName="name"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <!--<ImageView-->
+        <!--android:layout_width="@dimen/icon_size"-->
+        <!--android:layout_height="@dimen/icon_size"-->
+        <!--android:id="@+id/imageButton"-->
+        <!--android:src="@drawable/iconmonstr_check_mark_4_icon_256"-->
+        <!--android:layout_column="0"-->
+        <!--android:background="#00ffffff"-->
+        <!--android:scaleType="fitStart"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:layout_row="0"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentEnd="true" />-->
+
+        <!--</LinearLayout>-->
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
