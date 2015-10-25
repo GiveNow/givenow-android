@@ -1,6 +1,5 @@
 package org.onewarmcoat.onewarmcoat.app.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -8,11 +7,11 @@ import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +22,6 @@ import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.GetCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -44,7 +41,7 @@ import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
-public class MainActivity extends Activity implements
+public class MainActivity extends BaseActivity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
         PickupRequestsFragment.PickupRequestDetailInteractionListener,
         PickupRequestDetailFragment.PickupRequestConfirmedListener,
@@ -76,7 +73,7 @@ public class MainActivity extends Activity implements
         super.onCreate(savedInstanceState);
 //        requestWindowFeature(Window.FEATURE_PROGRESS);
 
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
 
         mIntent = getIntent();
         initializeFragments();
@@ -93,6 +90,11 @@ public class MainActivity extends Activity implements
 //        GoogleApiClientManager.build(this);
         //TODO: Open Navigation drawer on first launch to hint user that navigation drawer exists, per google UX design spec
 
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -172,16 +174,13 @@ public class MainActivity extends Activity implements
         ParseQuery<PickupRequest> query = PickupRequest.getMyPendingRequests();
 
         //only want to get 1 at a time (there shouldn't be more than 1 anyway)
-        query.getFirstInBackground(new GetCallback<PickupRequest>() {
-            @Override
-            public void done(PickupRequest pickupRequest, ParseException e) {
-                if (pickupRequest != null) {
+        query.getFirstInBackground((pickupRequest, e) -> {
+            if (pickupRequest != null) {
 //                    Toast.makeText(getBaseContext(), "found pickup confirmation = " + pickupRequest.getNumberOfCoats() + pickupRequest.getDonationType(), Toast.LENGTH_LONG).show();
-                    Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
+                Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
 
-                    //show dialog to user
-                    createAcceptPendingVolunteerDialog(pickupRequest);
-                }
+                //show dialog to user
+                createAcceptPendingVolunteerDialog(pickupRequest);
             }
         });
     }
@@ -235,45 +234,57 @@ public class MainActivity extends Activity implements
     }
 
     private void initializeDrawer() {
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerTitles = getResources().getStringArray(R.array.drawer_titles);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        // set a custom shadow that overlays the main content when the drawer
-        // opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                Gravity.START);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        );
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.syncState();
+
+//        mTitle = mDrawerTitle = getTitle();
+        mDrawerTitles = getResources().getStringArray(R.array.drawer_titles);
+//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+//
+//        // set a custom shadow that overlays the main content when the drawer
+//        // opens
+//        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+//                Gravity.START);
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mDrawerTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-                mDrawerLayout, /* DrawerLayout object */
-                R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open, /* "open drawer" description for accessibility */
-                R.string.drawer_close /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to
-                // onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to
-                // onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+//
+//        // enable ActionBar app icon to behave as action to toggle nav drawer
+////        getActionBar().setDisplayHomeAsUpEnabled(true);
+////        getActionBar().setHomeButtonEnabled(true);
+//
+//        // ActionBarDrawerToggle ties together the the proper interactions
+//        // between the sliding drawer and the action bar app icon
+//        mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+//                mDrawerLayout, /* DrawerLayout object */
+//                toolbar,
+//                R.string.drawer_open, /* "open drawer" description for accessibility */
+//                R.string.drawer_close /* "close drawer" description for accessibility */
+//        ) {
+//            public void onDrawerClosed(View view) {
+//                getActionBar().setTitle(mTitle);
+//                invalidateOptionsMenu(); // creates call to
+//                // onPrepareOptionsMenu()
+//            }
+//
+//            public void onDrawerOpened(View drawerView) {
+//                getActionBar().setTitle(mDrawerTitle);
+//                invalidateOptionsMenu(); // creates call to
+//                // onPrepareOptionsMenu()
+//            }
+//        };
+//        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override
@@ -344,7 +355,7 @@ public class MainActivity extends Activity implements
                 if (donateFragment == null) {
                     donateFragment = DonateFragment.newInstance();
                     Log.w("MainActivity", "Adding donateFragment to content.");
-                    ft.add(R.id.content,
+                    ft.add(R.id.content_frame,
                             donateFragment,
 //                            donateFragment.TAG);
                             "don");
@@ -363,7 +374,7 @@ public class MainActivity extends Activity implements
                 if (volunteerFragment == null) {
                     volunteerFragment = VolunteerFragment.newInstance();
                     Log.w("MainActivity", "Adding volunteerFragment to content.");
-                    ft.add(R.id.content,
+                    ft.add(R.id.content_frame,
                             volunteerFragment,
 //                            volunteerFragment.TAG);
                             "vol");
@@ -383,7 +394,7 @@ public class MainActivity extends Activity implements
                 if (profileFragment == null) {
                     profileFragment = ProfileFragment.newInstance();
                     Log.w("MainActivity", "Adding profileFragment to content.");
-                    ft.add(R.id.content,
+                    ft.add(R.id.content_frame,
                             profileFragment,
 //                            profileFragment.TAG);
                             "prof");
@@ -411,7 +422,7 @@ public class MainActivity extends Activity implements
     public void onLaunchRequestPickUpDetail(String address, double lat, double lng) {
         requestPickUpDetailFragment = RequestPickupDetailFragment.newInstance(address, lat, lng);
         getFragmentManager().beginTransaction()
-                .add(R.id.content, requestPickUpDetailFragment,
+                .add(R.id.content_frame, requestPickUpDetailFragment,
                         "RequestPickupDetailFragment")
                 .addToBackStack("RequestPickupDetailFragment")
                 .commit();
@@ -432,7 +443,7 @@ public class MainActivity extends Activity implements
         }
         pickupRequestDetailFragment = PickupRequestDetailFragment.newInstance(pickupRequest);
         getFragmentManager().beginTransaction()
-                .add(R.id.content, pickupRequestDetailFragment,
+                .add(R.id.content_frame, pickupRequestDetailFragment,
                         "PickupRequestDetailFragment")
                 .addToBackStack("PickupRequestDetailFragment")
                 .commit();

@@ -1,9 +1,17 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
-    </style>
+    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
+    <!--<style name="AppTheme" parent="android:Theme.Material.Light">-->
+    <!--Customize your theme here.-->
+    <!--</style>-->
+
+    <!--<style name="Theme.Material.Light.GiveNow" parent="Theme.AppCompat" >-->
+    <!--<item name="android:colorPrimary">@color/primary_material_light</item>-->
+    <!--<item name="android:colorForeground">@color/foreground_material_light</item>-->
+    <!--<item name="android:colorAccent">@color/accent_material_light</item>-->
+    <!--<item name="android:colorPrimaryDark">@color/primary_dark_material_light</item>-->
+    <!--<item name="android:colorBackground">@color/background_material_dark</item>-->
+    <!--</style>-->
 
     <color name="shadow_dark">#5000</color>
     <color name="shadow_light">#0000</color>

@@ -24,6 +24,6 @@ public class CroutonHelper {
         // Display the view just by calling "show"
         Configuration config = new Configuration.Builder().setDuration(DURATION_5_SEC).build();
 
-        return Crouton.make(activity, customView, R.id.content, config);
+        return Crouton.make(activity, customView, R.id.content_frame, config);
     }
 }

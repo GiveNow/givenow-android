@@ -11,6 +11,10 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:text="@string/login_greeting" />-->
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
