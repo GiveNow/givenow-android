@@ -18,5 +18,5 @@
     <color name="primary_dark_material_dark">#0a89a7</color>
     <color name="primary_material_dark">#00b9e6</color>
     <color name="accent_material_dark">#66bb6a</color>
-    <color name="background_material_dark">#00b9e6</color>
+    <!--<color name="background_material_dark">#00b9e6</color>-->
 </resources>

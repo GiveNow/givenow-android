@@ -90,6 +90,7 @@ dependencies {
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.9'
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 //    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
 
     compile 'com.parse.bolts:bolts-android:1.2.1'

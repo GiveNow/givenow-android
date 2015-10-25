@@ -3,10 +3,10 @@ package org.onewarmcoat.onewarmcoat.app.activities;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -16,12 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -30,6 +26,7 @@ import org.json.JSONObject;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.common.DropOffLocationsFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.profile.ProfileFragment;
@@ -45,11 +42,7 @@ public class MainActivity extends BaseActivity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
         PickupRequestsFragment.PickupRequestDetailInteractionListener,
         PickupRequestDetailFragment.PickupRequestConfirmedListener,
-        GoogleApiClient.OnConnectionFailedListener {
-    private static final int POSITION_DONATE = 0;
-    private static final int POSITION_VOLUNTEER = 1;
-    private static final int POSITION_PROFILE = 2;
-    private static final int POSITION_SIGN_OUT = 3;
+        NavigationView.OnNavigationItemSelectedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
@@ -57,39 +50,28 @@ public class MainActivity extends BaseActivity implements
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
 
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private String[] mDrawerTitles;
-    private int mSelectedItem;
+    private int mSelectedItemId;
     private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
     private Intent mIntent;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_PROGRESS);
-
-//        setContentView(R.layout.activity_main);
 
         mIntent = getIntent();
         initializeFragments();
         initializeDrawer();
+
         if (savedInstanceState == null) {
             //create fragments
             initializeFragments();
 //            mCurrentFragment = null;
-            mSelectedItem = 0;
-//            selectItem(mSelectedItem);
+            mSelectedItemId = R.id.navigation_give;
+            selectItem(mSelectedItemId);
         }
-
-
-//        GoogleApiClientManager.build(this);
-        //TODO: Open Navigation drawer on first launch to hint user that navigation drawer exists, per google UX design spec
-
     }
 
     @Override
@@ -100,14 +82,14 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("mSelectedItem", mSelectedItem);
+        outState.putInt("mSelectedItemId", mSelectedItemId);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle inState) {
         super.onRestoreInstanceState(inState);
-        mSelectedItem = inState.getInt("mSelectedItem");
-//        selectItem(mSelectedItem);
+        mSelectedItemId = inState.getInt("mSelectedItemId");
+        selectItem(mSelectedItemId);
     }
 
     @Override
@@ -118,12 +100,10 @@ public class MainActivity extends BaseActivity implements
         boolean isPushNotif = handlePushNotifResume();
 
         if (isPushNotif) {
-            selectItem(POSITION_VOLUNTEER);
+            selectItem(R.id.navigation_volunteer);
         } else {
             checkForPendingRequests();
-            selectItem(mSelectedItem);
-            
-
+            selectItem(mSelectedItemId);
         }
     }
 
@@ -235,56 +215,40 @@ public class MainActivity extends BaseActivity implements
 
     private void initializeDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        //Initializing NavigationView
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+        navigationView.setNavigationItemSelectedListener(this);
+
+        // Initializing Drawer Layout and ActionBarToggle
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        );
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        mDrawerToggle.syncState();
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout,
+                toolbar,
+                R.string.drawer_open, R.string.drawer_close) {
 
-//        mTitle = mDrawerTitle = getTitle();
-        mDrawerTitles = getResources().getStringArray(R.array.drawer_titles);
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-//
-//        // set a custom shadow that overlays the main content when the drawer
-//        // opens
-//        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-//                Gravity.START);
-        // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, mDrawerTitles));
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-//
-//        // enable ActionBar app icon to behave as action to toggle nav drawer
-////        getActionBar().setDisplayHomeAsUpEnabled(true);
-////        getActionBar().setHomeButtonEnabled(true);
-//
-//        // ActionBarDrawerToggle ties together the the proper interactions
-//        // between the sliding drawer and the action bar app icon
-//        mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-//                mDrawerLayout, /* DrawerLayout object */
-//                toolbar,
-//                R.string.drawer_open, /* "open drawer" description for accessibility */
-//                R.string.drawer_close /* "close drawer" description for accessibility */
-//        ) {
-//            public void onDrawerClosed(View view) {
-//                getActionBar().setTitle(mTitle);
-//                invalidateOptionsMenu(); // creates call to
-//                // onPrepareOptionsMenu()
-//            }
-//
-//            public void onDrawerOpened(View drawerView) {
-//                getActionBar().setTitle(mDrawerTitle);
-//                invalidateOptionsMenu(); // creates call to
-//                // onPrepareOptionsMenu()
-//            }
-//        };
-//        mDrawerLayout.setDrawerListener(mDrawerToggle);
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        //Setting the actionbarToggle to drawer layout
+        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //calling sync state is necessay or else your hamburger icon wont show up
+        actionBarDrawerToggle.syncState();
     }
 
     @Override
@@ -321,7 +285,7 @@ public class MainActivity extends BaseActivity implements
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+//        mDrawerToggle.syncState();
     }
 
     @Override
@@ -331,7 +295,7 @@ public class MainActivity extends BaseActivity implements
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void selectItem(int position) {
+    private void selectItem(int itemId) {
         //exTODO: hide fragment in container, simplify code
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -341,8 +305,9 @@ public class MainActivity extends BaseActivity implements
         DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
         VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
         ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
-        switch (position) {
-            case POSITION_DONATE: //Donate
+        DropOffLocationsFragment dropoffFragment = (DropOffLocationsFragment) getFragmentManager().findFragmentByTag("drop");
+        switch (itemId) {
+            case R.id.navigation_give: //Donate
                 if (volunteerFragment != null) {
 //                    volunteerFragment.onPause();
                     ft.hide(volunteerFragment);
@@ -363,7 +328,7 @@ public class MainActivity extends BaseActivity implements
                     ft.show(donateFragment);
                 }
                 break;
-            case POSITION_VOLUNTEER: //Volunteer
+            case R.id.navigation_volunteer: //Volunteer
                 if (donateFragment != null) {
                     ft.hide(donateFragment);
                 }
@@ -383,7 +348,7 @@ public class MainActivity extends BaseActivity implements
                     ft.show(volunteerFragment);
                 }
                 break;
-            case POSITION_PROFILE: // Profile
+            case R.id.navigation_dropoff: //Dropoff Centers
                 if (volunteerFragment != null) {
                     ft.hide(volunteerFragment);
                 }
@@ -391,19 +356,37 @@ public class MainActivity extends BaseActivity implements
                     ft.hide(donateFragment);
                 }
 
-                if (profileFragment == null) {
-                    profileFragment = ProfileFragment.newInstance();
-                    Log.w("MainActivity", "Adding profileFragment to content.");
+                if (dropoffFragment == null) {
+                    dropoffFragment = DropOffLocationsFragment.newInstance();
+                    Log.w("MainActivity", "Adding dropoffFragment to content.");
                     ft.add(R.id.content_frame,
-                            profileFragment,
+                            dropoffFragment,
 //                            profileFragment.TAG);
-                            "prof");
+                            "drop");
                 } else {
-                    profileFragment.refreshProfile();
-                    ft.show(profileFragment);
+                    ft.show(dropoffFragment);
                 }
+//            // Profile
+//                if (volunteerFragment != null) {
+//                    ft.hide(volunteerFragment);
+//                }
+//                if (donateFragment != null) {
+//                    ft.hide(donateFragment);
+//                }
+//
+//                if (profileFragment == null) {
+//                    profileFragment = ProfileFragment.newInstance();
+//                    Log.w("MainActivity", "Adding profileFragment to content.");
+//                    ft.add(R.id.content_frame,
+//                            profileFragment,
+////                            profileFragment.TAG);
+//                            "prof");
+//                } else {
+//                    profileFragment.refreshProfile();
+//                    ft.show(profileFragment);
+//                }
                 break;
-            case POSITION_SIGN_OUT: //Sign Out
+            case R.id.navigation_sign_out: //Sign Out
                 ParseUser.logOut();
                 ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
                 //take user to login screen
@@ -415,8 +398,7 @@ public class MainActivity extends BaseActivity implements
         }
 //        ft.addToBackStack(String.valueOf(position));
         ft.commit();
-        mSelectedItem = position;
-        mDrawerLayout.closeDrawer(mDrawerList);
+        mSelectedItemId = itemId;
     }
 
     public void onLaunchRequestPickUpDetail(String address, double lat, double lng) {
@@ -461,37 +443,17 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /* Google Play services can resolve some errors it detects. If the error
-         * has a resolution, try sending an Intent to start a Google Play
-		 * services activity that can resolve error.
-		 */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(this,
-                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /* Thrown if Google Play services canceled the original
-                 * PendingIntent */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-//            Toast.makeText(getActivity(),
-//                    "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
-        }
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        //Checking if the item is in checked state or not, if not make it in checked state
+        if (menuItem.isChecked()) menuItem.setChecked(false);
+        else menuItem.setChecked(true);
 
-    }
+        //Closing drawer on item click
+        mDrawerLayout.closeDrawers();
 
-    // The click listener for ListView in the navigation drawer
-    private class DrawerItemClickListener implements
-            ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            selectItem(position);
-        }
+        //Check to see which item was being clicked and perform appropriate action
+        selectItem(menuItem.getItemId());
+        return true;
     }
 
 }

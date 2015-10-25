@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_give"
+            android:checked="true"
+            android:icon="@drawable/ic_marker"
+            android:title="@string/navigation_item_1" />
+        <item
+            android:id="@+id/navigation_volunteer"
+            android:icon="@drawable/ic_action_directions"
+            android:title="@string/navigation_item_2" />
+        <item
+            android:id="@+id/navigation_dropoff"
+            android:icon="@drawable/iconmonstr_location_17_icon_256"
+            android:title="@string/navigation_item_3" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/navigation_sign_out"
+            android:icon="@drawable/ic_action_check"
+            android:title="@string/title_sign_out" />
+    </group>
+</menu>

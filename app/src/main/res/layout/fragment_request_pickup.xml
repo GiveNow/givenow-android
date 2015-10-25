@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/accent"
+        android:background="@color/accent_material_light"
         android:text="@string/set_pickup_location_label"
         android:textColor="#ffffffff" />
 

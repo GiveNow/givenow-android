@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -113,8 +114,8 @@ public class RequestPickupDetailFragment extends Fragment implements
             mLat = getArguments().getDouble(ARG_LAT);
             mLng = getArguments().getDouble(ARG_LNG);
         }
-        getActivity().getActionBar().setTitle("Confirmation");
-
+        getToolbar().setTitle("Confirmation");
+//        getActivity().getActionBar().setTitle("Confirmation");
         buildCategoryGrid();
     }
 
@@ -304,7 +305,11 @@ public class RequestPickupDetailFragment extends Fragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().getActionBar().setTitle(R.string.app_name);
+        getToolbar().setTitle(R.string.app_name);
+    }
+
+    private Toolbar getToolbar() {
+        return (Toolbar) getActivity().findViewById(R.id.toolbar);
     }
 
     public void setAddressFieldText(String text) {
