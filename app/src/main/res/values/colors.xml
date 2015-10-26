@@ -10,13 +10,15 @@
 
     <color name="tab_active">@color/accent</color>
     <color name="tab_inactive">@color/owc_dark_gray</color>
-    <color name="primary_material_light">#00b9e6</color>
-    <color name="primary_text_default_material_light">#000000</color>
-    <color name="foreground_material_light">#ffffff</color>
-    <color name="accent_material_light">#66bb6a</color>
-    <color name="primary_dark_material_light">#0a89a7</color>
-    <color name="primary_dark_material_dark">#0a89a7</color>
-    <color name="primary_material_dark">#00b9e6</color>
-    <color name="accent_material_dark">#66bb6a</color>
+
+    <color name="colorPrimary">#ff00b9e6</color>
+    <color name="colorPrimaryDark">#ff0a89a7</color>
+    <color name="colorAccent">#ff66bb6a</color>
+
+    <!--<color name="primary_text_default_material_light">#000000</color>-->
+    <!--<color name="foreground_material_light">#ffffff</color>-->
+    <!--<color name="primary_dark_material_dark">#0a89a7</color>-->
+    <!--<color name="primary_material_dark">#00b9e6</color>-->
+    <!--<color name="accent_material_dark">#66bb6a</color>-->
     <!--<color name="background_material_dark">#00b9e6</color>-->
 </resources>

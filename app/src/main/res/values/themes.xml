@@ -10,19 +10,19 @@
         <!--<item name="android:windowNoTitle">true</item>-->
         <!--<item name="windowActionBar">false</item>-->
 
-        <item name="android:colorForeground">@color/foreground_material_light</item>
+        <!--<item name="android:colorForeground">@color/foreground_material_dark</item>-->
 
-        <item name="android:colorBackground">@color/background_material_light</item>
+        <!--<item name="android:colorBackground">@color/colorPrimary</item>-->
         <!--<item name="android:windowNoTitle">true</item>-->
-        <!--<item name="windowActionBar">false</item>-->
+        <item name="windowActionBar">false</item>
 
 
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="android:colorPrimary">@color/primary_material_light</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="android:colorPrimaryDark">@color/primary_dark_material_light</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
-        <item name="android:colorAccent">@color/accent_material_light</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight, and colorSwitchThumbNormal. -->
 
@@ -34,7 +34,7 @@
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
-        <item name="color">@color/foreground_material_light</item>
+        <item name="color">@color/foreground_material_dark</item>
     </style>
 </resources>
 
