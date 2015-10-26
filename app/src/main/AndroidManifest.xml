@@ -22,7 +22,7 @@
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
     <permission
-        android:name="com.parse.starter.permission.C2D_MESSAGE"
+        android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
 
