@@ -30,10 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/background_material_light"
         app:headerLayout="@layout/drawer_header"
-        app:itemIconTint="@color/primary_text_default_material_light"
-        app:itemTextColor="@color/primary_text_default_material_light"
         app:menu="@menu/drawer" />
 
 </android.support.v4.widget.DrawerLayout>
