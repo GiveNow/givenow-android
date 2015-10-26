@@ -10,6 +10,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -81,14 +82,18 @@ public class PickupRequestDetailFragment extends Fragment implements
         if (getArguments() != null) {
             mPickupRequest = (PickupRequest) getArguments().getSerializable("mPickupRequest");
         }
-        getActivity().getActionBar().setTitle("Accept Pickup");
+        getToolbar().setTitle("Accept Pickup");
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().getActionBar().setTitle(R.string.app_name);
+        getToolbar().setTitle(R.string.app_name);
+    }
+
+    private Toolbar getToolbar() {
+        return (Toolbar) getActivity().findViewById(R.id.toolbar);
     }
 
 
