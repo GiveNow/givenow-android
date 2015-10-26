@@ -45,8 +45,6 @@ public class MainActivity extends BaseActivity implements
         PickupRequestDetailFragment.PickupRequestConfirmedListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
