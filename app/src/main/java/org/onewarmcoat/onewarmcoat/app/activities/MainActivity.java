@@ -1,6 +1,7 @@
 package org.onewarmcoat.onewarmcoat.app.activities;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -62,13 +63,9 @@ public class MainActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
 
         mIntent = getIntent();
-        initializeFragments();
         initializeDrawer();
 
         if (savedInstanceState == null) {
-            //create fragments
-            initializeFragments();
-//            mCurrentFragment = null;
             mSelectedItemId = R.id.navigation_give;
             selectItem(mSelectedItemId);
         }
@@ -210,9 +207,6 @@ public class MainActivity extends BaseActivity implements
         return id;
     }
 
-    private void initializeFragments() {
-    }
-
     private void initializeDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -296,52 +290,36 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void selectItem(int itemId) {
-        //exTODO: hide fragment in container, simplify code
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
-        //here is the retarded way of doing fragment hiding, in all its shitty glory. BUT IT WORKS
+        Fragment fragToHide = getFragmentManager().findFragmentById(R.id.content_frame);
+        if (fragToHide != null) {
+            ft.hide(fragToHide);
+        }
+
         DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
         VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
         ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
         DropOffLocationsFragment dropoffFragment = (DropOffLocationsFragment) getFragmentManager().findFragmentByTag("drop");
         switch (itemId) {
             case R.id.navigation_give: //Donate
-                if (volunteerFragment != null) {
-//                    volunteerFragment.onPause();
-                    ft.hide(volunteerFragment);
-                }
-                if (profileFragment != null) {
-//                    profileFragment.onPause();
-                    ft.hide(profileFragment);
-                }
-
                 if (donateFragment == null) {
                     donateFragment = DonateFragment.newInstance();
                     Log.w("MainActivity", "Adding donateFragment to content.");
                     ft.add(R.id.content_frame,
                             donateFragment,
-//                            donateFragment.TAG);
                             "don");
                 } else {
                     ft.show(donateFragment);
                 }
                 break;
             case R.id.navigation_volunteer: //Volunteer
-                if (donateFragment != null) {
-                    ft.hide(donateFragment);
-                }
-                if (profileFragment != null) {
-                    ft.hide(profileFragment);
-                }
-
                 if (volunteerFragment == null) {
                     volunteerFragment = VolunteerFragment.newInstance();
                     Log.w("MainActivity", "Adding volunteerFragment to content.");
                     ft.add(R.id.content_frame,
                             volunteerFragment,
-//                            volunteerFragment.TAG);
                             "vol");
                 } else {
                     volunteerFragment.loadMarkers();
@@ -349,42 +327,27 @@ public class MainActivity extends BaseActivity implements
                 }
                 break;
             case R.id.navigation_dropoff: //Dropoff Centers
-                if (volunteerFragment != null) {
-                    ft.hide(volunteerFragment);
-                }
-                if (donateFragment != null) {
-                    ft.hide(donateFragment);
-                }
-
                 if (dropoffFragment == null) {
                     dropoffFragment = DropOffLocationsFragment.newInstance();
                     Log.w("MainActivity", "Adding dropoffFragment to content.");
                     ft.add(R.id.content_frame,
                             dropoffFragment,
-//                            profileFragment.TAG);
                             "drop");
                 } else {
                     ft.show(dropoffFragment);
                 }
-//            // Profile
-//                if (volunteerFragment != null) {
-//                    ft.hide(volunteerFragment);
-//                }
-//                if (donateFragment != null) {
-//                    ft.hide(donateFragment);
-//                }
-//
-//                if (profileFragment == null) {
-//                    profileFragment = ProfileFragment.newInstance();
-//                    Log.w("MainActivity", "Adding profileFragment to content.");
-//                    ft.add(R.id.content_frame,
-//                            profileFragment,
-////                            profileFragment.TAG);
-//                            "prof");
-//                } else {
-//                    profileFragment.refreshProfile();
-//                    ft.show(profileFragment);
-//                }
+                break;
+            case R.id.profile_image: // Profile
+                if (profileFragment == null) {
+                    profileFragment = ProfileFragment.newInstance();
+                    Log.w("MainActivity", "Adding profileFragment to content.");
+                    ft.add(R.id.content_frame,
+                            profileFragment,
+                            "prof");
+                } else {
+                    profileFragment.refreshProfile();
+                    ft.show(profileFragment);
+                }
                 break;
             case R.id.navigation_sign_out: //Sign Out
                 ParseUser.logOut();
