@@ -4,15 +4,50 @@
     android:layout_height="match_parent"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment">
 
+    <LinearLayout
+        android:id="@+id/llAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@id/llConfirmInfo"
+        android:background="@color/colorPrimary"
+        android:elevation="@dimen/appbar_elevation"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivAddress"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="0"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_location_on_white_24dp" />
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:hint="Address"
+            android:imeOptions="actionNext"
+            android:inputType="textPostalAddress"
+            android:text="Anklamer Straße 33"
+            android:textColor="@color/white"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:theme="@style/MyEditTextTheme" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/flMapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btnSetPickup"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp">
+        android:layout_below="@+id/llAddress"
+        android:layout_marginLeft="0dp">
 
         <FrameLayout
             android:id="@+id/flMapContainer"
@@ -22,21 +57,17 @@
 
         </FrameLayout>
 
-        <EditText
-            android:id="@+id/etAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="55dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/menu_dropdown_panel_onewarmcoat"
-            android:hint="Address"
-            android:inputType="textPostalAddress"
-            android:minHeight="56dp"
-            android:padding="15dp"
-            android:textColor="@color/accent"
-            android:textSize="14sp" />
+        <!--<EditText-->
+        <!--android:id="@+id/etAddress"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="top"-->
+        <!--android:hint="Address"-->
+        <!--android:inputType="textPostalAddress"-->
+        <!--android:minHeight="56dp"-->
+        <!--android:padding="15dp"-->
+        <!--android:textColor="@color/accent"-->
+        <!--android:textSize="14sp" />-->
 
         <ImageView
             android:id="@+id/btnMarker"
@@ -51,11 +82,13 @@
     <Button
         android:id="@+id/btnSetPickup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@color/colorAccent"
+        android:elevation="@dimen/button_elevation"
         android:text="@string/set_pickup_location_label"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#ffffffff" />
 
 </RelativeLayout>

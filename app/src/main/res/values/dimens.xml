@@ -18,4 +18,6 @@
     <dimen name="category_cell_margin">10dp</dimen>
     <dimen name="grid_profile_height">160dp</dimen>
     <dimen name="icon_size">40dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="button_elevation">2dp</dimen>
 </resources>

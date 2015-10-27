@@ -14,4 +14,11 @@
         <item name="spinBars">true</item>
         <item name="color">@color/foreground_material_dark</item>
     </style>
+
+    <style name="MyEditTextTheme" parent="Widget.AppCompat.EditText">
+        <!-- Used for the bottom line when not selected / focused -->
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+    </style>
 </resources>

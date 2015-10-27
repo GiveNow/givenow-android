@@ -81,6 +81,7 @@ public class RequestPickupFragment extends MapHostingFragment {
 
     public void setAddressFieldText(String text) {
         etAddress.setText(text);
+        etAddress.setSelection(text.length());
     }
 
     @OnClick(R.id.btnSetPickup)
@@ -133,9 +134,9 @@ public class RequestPickupFragment extends MapHostingFragment {
 
     // Container Activity must implement this interface
     public interface PickUpDetailInteractionListener {
-        public void onLaunchRequestPickUpDetail(String addr, double lat, double lng);
+        void onLaunchRequestPickUpDetail(String addr, double lat, double lng);
 
-        public void updateAddress(Address address);
+        void updateAddress(Address address);
     }
 
 }
