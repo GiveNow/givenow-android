@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.GoogleMapFragment;
 import org.onewarmcoat.onewarmcoat.app.helpers.MapFragmentCounter;
-import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,20 +38,19 @@ import butterknife.InjectView;
 public class MapHostingFragment extends Fragment
         implements
         GoogleMapFragment.OnGoogleMapFragmentListener,
-        ViewPagerChangeListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.ConnectionCallbacks,
         OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleMap mGoogleMap;
     protected MapFragment mapFragment;
-    private GoogleApiClient mLocationClient;
-
     protected boolean mMapIsTouched;
     @InjectView(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
+    private GoogleApiClient mLocationClient;
     private boolean mZoomToLocation;
-    private boolean mShouldAttachMapFragmentOnStart = false;
-    private boolean isVisibleInViewPager = false;
+//    private boolean mShouldAttachMapFragmentOnStart = false;
+//    private boolean isVisibleInViewPager = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,9 +163,9 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        if (isVisibleInViewPager) {
+//        if (isVisibleInViewPager) {
             attachMapFragment();
-        }
+//        }
 
     }
 
@@ -206,22 +203,22 @@ public class MapHostingFragment extends Fragment
                 Log.e(this.getClass().getSimpleName(), "onResume: mapFragment is not null, but is not Added!.");
             }
         } else {
-            if (isVisibleInViewPager) { //gotta detect if we're visible and only then attach
+//            if (isVisibleInViewPager) { //gotta detect if we're visible and only then attach
                 attachMapFragment();
-            }
+//            }
         }
     }
 
-    @Override
-    public void onViewPagerShow() {
-        isVisibleInViewPager = true;
-        Log.w(this.getClass().getSimpleName(), "I've been marked as visible in the Viewpager.");
-    }
-
-    @Override
-    public void onViewPagerHide() {
-        isVisibleInViewPager = false;
-    }
+//    @Override
+//    public void onViewPagerShow() {
+//        isVisibleInViewPager = true;
+//        Log.w(this.getClass().getSimpleName(), "I've been marked as visible in the Viewpager.");
+//    }
+//
+//    @Override
+//    public void onViewPagerHide() {
+//        isVisibleInViewPager = false;
+//    }
 
     /*
      * Called when the Fragment is no longer visible.

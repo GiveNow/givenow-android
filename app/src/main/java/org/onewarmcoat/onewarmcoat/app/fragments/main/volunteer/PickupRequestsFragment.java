@@ -19,17 +19,12 @@ import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
-import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -38,7 +33,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest>, ViewPagerChangeListener {
+        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
@@ -132,22 +127,19 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
             ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
             mPullToRefreshLayout.setRefreshing(true);
-            query.findInBackground(new FindCallback<PickupRequest>() {
-                @Override
-                public void done(List<PickupRequest> list, ParseException e) {
-                    if (list == null) {
-                        mPullToRefreshLayout.setRefreshComplete();
-                        return;
-                    }
-
-                    mClusterManager.clearItems();
-                    for (PickupRequest item : list) {
-                        //default clustering setup
-                        mClusterManager.addItem(item);
-                        mClusterManager.cluster();
-                    }
+            query.findInBackground((list, e) -> {
+                if (list == null) {
                     mPullToRefreshLayout.setRefreshComplete();
+                    return;
                 }
+
+                mClusterManager.clearItems();
+                for (PickupRequest item : list) {
+                    //default clustering setup
+                    mClusterManager.addItem(item);
+                    mClusterManager.cluster();
+                }
+                mPullToRefreshLayout.setRefreshComplete();
             });
         }
 
@@ -174,17 +166,16 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         mClusterManager.cluster();
     }
 
-    @Override
-    public void onViewPagerShow() {
-        super.onViewPagerShow();
-        loadMarkers();
-    }
+//    @Override
+//    public void onViewPagerShow() {
+//        super.onViewPagerShow();
+//        loadMarkers();
+//    }
 
-    @Override
-    public void onViewPagerHide() {
-        super.onViewPagerHide();
-
-    }
+//    @Override
+//    public void onViewPagerHide() {
+//        super.onViewPagerHide();
+//    }
 
 
 //    @Override
@@ -202,7 +193,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     // Container Activity must implement this interface
     public interface PickupRequestDetailInteractionListener {
-        public void onLaunchPickupRequestDetail(PickupRequest pickupRequest);
+        void onLaunchPickupRequestDetail(PickupRequest pickupRequest);
     }
 
     private class PickupRequestRenderer extends DefaultClusterRenderer<PickupRequest> {

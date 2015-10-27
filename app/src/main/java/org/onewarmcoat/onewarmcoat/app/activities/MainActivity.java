@@ -25,7 +25,6 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.VolunteerFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.DropOffLocationsFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupDetailFragment;
@@ -296,20 +295,20 @@ public class MainActivity extends BaseActivity implements
             ft.hide(fragToHide);
         }
 
-        DonateFragment donateFragment = (DonateFragment) getFragmentManager().findFragmentByTag("don");
+        RequestPickupFragment requestPickupFragment = (RequestPickupFragment) getFragmentManager().findFragmentByTag("don");
         VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
         ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
         DropOffLocationsFragment dropoffFragment = (DropOffLocationsFragment) getFragmentManager().findFragmentByTag("drop");
         switch (itemId) {
             case R.id.navigation_give: //Donate
-                if (donateFragment == null) {
-                    donateFragment = DonateFragment.newInstance();
-                    Log.w("MainActivity", "Adding donateFragment to content.");
+                if (requestPickupFragment == null) {
+                    requestPickupFragment = RequestPickupFragment.newInstance();
+                    Log.w("MainActivity", "Adding requestPickupFragment to content.");
                     ft.add(R.id.content_frame,
-                            donateFragment,
+                            requestPickupFragment,
                             "don");
                 } else {
-                    ft.show(donateFragment);
+                    ft.show(requestPickupFragment);
                 }
                 break;
             case R.id.navigation_volunteer: //Volunteer
