@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">One Warm Coat</string>
+    <string name="app_name">GiveNow</string>
     <string name="title_volunteer">Volunteer</string>
     <string name="title_donate">Donate</string>
     <string name="title_profile">Profile</string>
