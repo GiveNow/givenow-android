@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity implements
             selectItem(R.id.navigation_volunteer);
         } else {
             checkForPendingRequests();
-            selectItem(mSelectedItemId);
+//            selectItem(mSelectedItemId);
         }
     }
 
@@ -405,16 +405,19 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        //Checking if the item is in checked state or not, if not make it in checked state
-        if (menuItem.isChecked()) menuItem.setChecked(false);
-        else menuItem.setChecked(true);
+        if (menuItem.isChecked()) {
+            //Closing drawer on item click
+            mDrawerLayout.closeDrawers();
+            return true; // Current item is already selected
+        } else {
+            //Check to see which item was being clicked and perform appropriate action
+            selectItem(menuItem.getItemId());
+            menuItem.setChecked(true);
+            //Closing drawer on item click
+            mDrawerLayout.closeDrawers();
+            return true;
+        }
 
-        //Closing drawer on item click
-        mDrawerLayout.closeDrawers();
-
-        //Check to see which item was being clicked and perform appropriate action
-        selectItem(menuItem.getItemId());
-        return true;
     }
 
 }
