@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment">
 
     <LinearLayout
@@ -36,8 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:hint="Address"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="textPostalAddress"
+                android:singleLine="true"
                 android:text="Anklamer Straße 33"
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorPrimaryDark"
@@ -67,7 +70,9 @@
             android:id="@+id/flMapContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical">
+            android:layout_gravity="right|center_vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
         </FrameLayout>
 

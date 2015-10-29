@@ -1,15 +1,17 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Address;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -29,7 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class RequestPickupFragment extends MapHostingFragment implements ResultCallback<PlaceBuffer> {
+
+public class RequestPickupFragment extends MapHostingFragment implements ResultCallback<PlaceBuffer>, AdapterView.OnItemClickListener {
 
     private static final double AUTOCOMPLETE_BIAS_RADIUS_METERS = 10000;
 
@@ -38,9 +41,10 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
 
     @InjectView(R.id.btnClearAddress)
     ImageButton btnClearAddress;
-    private boolean mCameraChangeListenerEnabled = true;
+
     private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
+
     public RequestPickupFragment() {
         // Required empty public constructor
     }
@@ -50,6 +54,11 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         // call this in order to get a usable instance of this fragment.
         RequestPickupFragment f = new RequestPickupFragment();
         return f;
+    }
+
+    public static void hide_keyboard_from(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @OnClick(R.id.btnClearAddress)
@@ -70,8 +79,6 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         View v = inflater.inflate(R.layout.fragment_request_pickup, container, false);
         ButterKnife.inject(this, v);
 
-//        actvAddress.getBackground().setAlpha(216);
-
         Log.w(logTag(), "onCreateView completed.");
         return v;
     }
@@ -82,48 +89,24 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         map.getUiSettings().setCompassEnabled(false);
 
         map.setOnCameraChangeListener(cameraPosition -> {
-            if (mCameraChangeListenerEnabled) {
-                if (!isMapTouched()) {
-                    // save cpu cycles, only recalculate if we're not pressed, ie the user lifted their finger off
-                    getAddressFromMapTarget().subscribe(address -> {
-                        Log.i(logTag(), "Map OnCameraChanged: Setting address in input field: " + address.getAddressLine(0));
-                        setAddressFieldText(address.getAddressLine(0));
+            if (!isMapTouched()) {
+                // save cpu cycles, only recalculate if we're not pressed, ie the user lifted their finger off
+                getAddressFromMapTarget().subscribe(address -> {
+                    Log.i(logTag(), "Map OnCameraChanged: Setting address in input field: " + address.getAddressLine(0));
+                    setAddressFieldText(address.getAddressLine(0));
 //                    mListener.updateAddress(address);
-                    });
-                } else {
-                    //can remove the detail fragment here, but per uber UX we keep it displayed
-                }
+                });
+            } else {
+                //can remove the detail fragment here, but per uber UX we keep it displayed
             }
+
         });
 
         //TODO: Add a textwatcher listener to actvAddress to go to inputted addresses
 
 
         // Register a listener that receives callbacks when a suggestion has been selected
-        actvAddress.setOnItemClickListener((parent, view, position, id) -> {
-        /*
-         Retrieve the place ID of the selected item from the Adapter.
-         The adapter stores each Place suggestion in a AutocompletePrediction from which we
-         read the place ID and title.
-          */
-            final AutocompletePrediction item = mAdapter.getItem(position);
-            final String placeId = item.getPlaceId();
-            final CharSequence primaryText = item.getPrimaryText(null);
-
-
-            Log.i(logTag(), "Autocomplete item selected: " + primaryText);
-
-        /*
-         Issue a request to the Places Geo Data API to retrieve a Place object with additional
-         details about the place.
-          */
-            Places.GeoDataApi
-                    .getPlaceById(getmGoogleApiClient(), placeId)
-                    .setResultCallback(this);
-
-            Toast.makeText(getActivity(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
-            Log.i(logTag(), "Called getPlaceById to get Place details for " + placeId);
-        });
+        actvAddress.setOnItemClickListener(this);
         // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
         // the entire world.
         mAdapter = new PlaceAutocompleteAdapter(getActivity(),
@@ -132,12 +115,38 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
                 null //AutocompleteFilter.create(Collections.singletonList(Place.TYPE_STREET_ADDRESS)) //Ugh, this doesnt work because google doesn't actually support the `address` filter on android.
         );
         actvAddress.setAdapter(mAdapter);
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        /* Retrieve the place ID of the selected item from the Adapter.
+         The adapter stores each Place suggestion in a AutocompletePrediction from which we
+         read the place ID and title.*/
+        final AutocompletePrediction item = mAdapter.getItem(position);
+        final String placeId = item.getPlaceId();
+        final CharSequence primaryText = item.getPrimaryText(null);
+
+        Log.i(logTag(), "Autocomplete item selected: " + primaryText);
+
+        // Issue a request to the Places Geo Data API to retrieve a Place object with additional details about the place.
+        Places.GeoDataApi
+                .getPlaceById(RequestPickupFragment.this.getmGoogleApiClient(), placeId)
+                .setResultCallback(RequestPickupFragment.this);
+
+        //Toast.makeText(getActivity(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
+        setAddressFieldText(primaryText.toString());
+        deselectAddressField();
+        Log.i(logTag(), "Called getPlaceById to get Place details for " + placeId);
     }
 
     public void setAddressFieldText(String text) {
         actvAddress.setText(text, false); // setText, and disable autocompletion.
         actvAddress.setSelection(text.length());
+    }
+
+    public void deselectAddressField() {
+        flMapLayout.requestFocus();
+        hide_keyboard_from(getActivity(), flMapLayout);
     }
 
     @OnClick(R.id.btnSetPickup)
@@ -215,18 +224,7 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         // Animate map to place
         // perhaps maintain zoom level?
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 13);
-        mCameraChangeListenerEnabled = false;
-        mGoogleMap.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
-            @Override
-            public void onFinish() {
-                mCameraChangeListenerEnabled = true;
-            }
-
-            @Override
-            public void onCancel() {
-                mCameraChangeListenerEnabled = true;
-            }
-        });
+        mGoogleMap.animateCamera(cameraUpdate);
 
         Log.i(logTag(), "Place details received: " + place.getName());
 
@@ -236,6 +234,7 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
     public final String logTag() {
         return this.getClass().getSimpleName();
     }
+
 
     // Container Activity must implement this interface
     public interface PickUpDetailInteractionListener {
