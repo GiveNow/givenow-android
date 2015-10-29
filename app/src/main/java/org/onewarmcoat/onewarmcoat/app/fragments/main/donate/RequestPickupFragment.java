@@ -56,7 +56,7 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         return f;
     }
 
-    public static void hide_keyboard_from(Context context, View view) {
+    public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
@@ -69,7 +69,6 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.w(((Object) this).getClass().getSimpleName(), "onCreate!!!");
     }
 
     @Override
@@ -79,6 +78,28 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         View v = inflater.inflate(R.layout.fragment_request_pickup, container, false);
         ButterKnife.inject(this, v);
 
+        btnClearAddress.setVisibility(View.INVISIBLE);
+
+        // Register a listener that receives callbacks when a suggestion has been selected
+        actvAddress.setOnItemClickListener(this);
+
+        //Clear address button is only visible if address field has focus.
+        actvAddress.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus)
+                btnClearAddress.setVisibility(View.VISIBLE);
+            else
+                btnClearAddress.setVisibility(View.INVISIBLE);
+        });
+
+        //TODO: deselect address field/hide keyboard if map is touched
+//        FrameLayout flMapContainer = ButterKnife.findById(v, R.id.flMapContainer);
+//        flMapContainer..setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                deselectAddressField();
+//                return false;
+//            }
+//        });
         Log.w(logTag(), "onCreateView completed.");
         return v;
     }
@@ -102,11 +123,6 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
 
         });
 
-        //TODO: Add a textwatcher listener to actvAddress to go to inputted addresses
-
-
-        // Register a listener that receives callbacks when a suggestion has been selected
-        actvAddress.setOnItemClickListener(this);
         // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
         // the entire world.
         mAdapter = new PlaceAutocompleteAdapter(getActivity(),
@@ -146,7 +162,7 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
 
     public void deselectAddressField() {
         flMapLayout.requestFocus();
-        hide_keyboard_from(getActivity(), flMapLayout);
+        hideKeyboardFrom(getActivity(), flMapLayout);
     }
 
     @OnClick(R.id.btnSetPickup)
