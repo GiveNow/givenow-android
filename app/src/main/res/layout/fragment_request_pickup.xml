@@ -24,20 +24,34 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_location_on_white_24dp" />
 
-        <EditText
-            android:id="@+id/etAddress"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:hint="Address"
-            android:imeOptions="actionNext"
-            android:inputType="textPostalAddress"
-            android:text="Anklamer Straße 33"
-            android:textColor="@color/white"
-            android:textColorHint="@color/colorPrimaryDark"
-            android:theme="@style/MyEditTextTheme" />
+            android:layout_weight="1">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="Address"
+                android:imeOptions="actionNext"
+                android:inputType="textPostalAddress"
+                android:text="Anklamer Straße 33"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:theme="@style/MyEditTextTheme" />
+
+            <ImageButton
+                android:id="@+id/btnClearAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/ic_clear_white_24dp"
+                android:contentDescription="Clear" />
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout

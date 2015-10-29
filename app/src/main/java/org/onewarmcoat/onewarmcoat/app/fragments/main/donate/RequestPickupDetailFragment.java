@@ -68,7 +68,7 @@ public class RequestPickupDetailFragment extends Fragment implements
 
     @InjectView(R.id.agrv)
     AdaptableGradientRectView adaptableGradientRectView;
-    @InjectView(R.id.etAddress)
+    @InjectView(R.id.actvAddress)
     EditText etAddress;
     @InjectView(R.id.rlNumberCoats)
     RelativeLayout rlNumberCoats;

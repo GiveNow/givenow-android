@@ -371,9 +371,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void updateAddress(Address address) {
-        if (requestPickUpDetailFragment != null) {
-            requestPickUpDetailFragment.setAddressFieldText(address.getAddressLine(0));
-        }
+//        if (requestPickUpDetailFragment != null) {
+//            requestPickUpDetailFragment.setAddressFieldText(address.getAddressLine(0));
+//        }
     }
 
     public void onLaunchPickupRequestDetail(PickupRequest pickupRequest) {

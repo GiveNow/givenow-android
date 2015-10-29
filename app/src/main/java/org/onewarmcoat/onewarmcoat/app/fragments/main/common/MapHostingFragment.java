@@ -4,10 +4,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
@@ -15,12 +15,15 @@ import android.widget.FrameLayout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.SphericalUtil;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.GoogleMapFragment;
@@ -32,6 +35,11 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import fj.data.Option;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 
 //import com.google.android.gms.location.LocationClient;
 
@@ -47,20 +55,29 @@ public class MapHostingFragment extends Fragment
     protected boolean mMapIsTouched;
     @InjectView(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
-    private GoogleApiClient mLocationClient;
+
+    private GoogleApiClient mGoogleApiClient;
     private boolean mZoomToLocation;
-//    private boolean mShouldAttachMapFragmentOnStart = false;
+    private Geocoder mGeocoder;
+    //    private boolean mShouldAttachMapFragmentOnStart = false;
 //    private boolean isVisibleInViewPager = false;
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocationClient = new GoogleApiClient.Builder(getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
                 .build();
+
+        mGeocoder = new Geocoder(getActivity(), Locale.getDefault());
 
         if (savedInstanceState == null) {
             mZoomToLocation = true;
@@ -84,7 +101,7 @@ public class MapHostingFragment extends Fragment
                     .add(R.id.flMapContainer, mapFragment, "MAP")
                     .commit();
             mZoomToLocation = true;
-            mLocationClient.connect();
+            mGoogleApiClient.connect();
 
             mapFragment.getMapAsync(this);
         } else {
@@ -140,31 +157,53 @@ public class MapHostingFragment extends Fragment
 
     }
 
-    protected Address reverseGeocodeAddress() {
-        // capture pickup position
-        LatLng pos = mGoogleMap.getCameraPosition().target;
+    public boolean isMapTouched() {
+        return mMapIsTouched;
+    }
 
-        Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
-        List<Address> addresses = null;
-        try {
-            if (isOnline()) {
-                addresses = gcd.getFromLocation(pos.latitude, pos.longitude, 1);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (addresses != null) {
-            if (addresses.size() > 0)
-                return addresses.get(0);
-        }
-        return null;
+    @NonNull
+    protected Observable<Address> getAddressFromMapTarget() {
+        // capture pickup position
+        return getAddressFromLatLng(getMapTarget());
+    }
+
+    public LatLng getMapTarget() {
+        return mGoogleMap.getCameraPosition().target;
+    }
+
+    @NonNull
+    public Observable<Address> getAddressFromLatLng(LatLng pos) {
+        return Observable
+                .defer(() -> {
+                    List<Address> addresses = null;
+                    try {
+                        if (isOnline()) {
+                            addresses = mGeocoder.getFromLocation(pos.latitude, pos.longitude, 1);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (addresses != null) {
+                        if (addresses.size() > 0)
+                            return Observable.just(addresses.get(0));
+                    }
+                    return Observable.empty();
+                })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public LatLngBounds convertCenterAndRadiusToBounds(LatLng center, double radius) {
+        LatLng southwest = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 225);
+        LatLng northeast = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 45);
+        return new LatLngBounds(southwest, northeast);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 //        if (isVisibleInViewPager) {
-            attachMapFragment();
+        attachMapFragment();
 //        }
 
     }
@@ -204,7 +243,7 @@ public class MapHostingFragment extends Fragment
             }
         } else {
 //            if (isVisibleInViewPager) { //gotta detect if we're visible and only then attach
-                attachMapFragment();
+            attachMapFragment();
 //            }
         }
     }
@@ -247,16 +286,20 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onConnected(Bundle dataBundle) {
         if (mZoomToLocation) {
-            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mLocationClient);
-            if (lastLocation != null) {
+            getLastLocation().foreachDoEffect(latLng -> {
 //                Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
-                LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
                 mGoogleMap.animateCamera(cameraUpdate);
                 mZoomToLocation = false;
-            }
+            });
         }
 
+    }
+
+    public Option<LatLng> getLastLocation() {
+        return Option.fromNull(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient))
+                .map(location -> new LatLng(location.getLatitude(), location.getLongitude())
+                );
     }
 
     @Override
