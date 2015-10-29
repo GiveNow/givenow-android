@@ -37,6 +37,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:dropDownAnchor="@id/llAddress"
+                android:dropDownHeight="wrap_content"
+                android:dropDownWidth="match_parent"
                 android:hint="Address"
                 android:imeOptions="actionDone"
                 android:inputType="textPostalAddress"
@@ -45,6 +48,8 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:theme="@style/MyEditTextTheme" />
+            <!--android:popupAnimationStyle="@animator/slide_down_from_top"-->
+            <!--doesn't work ^-->
 
             <ImageButton
                 android:id="@+id/btnClearAddress"
