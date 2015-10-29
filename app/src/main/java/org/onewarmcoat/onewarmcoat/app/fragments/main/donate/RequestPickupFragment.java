@@ -251,6 +251,11 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         return this.getClass().getSimpleName();
     }
 
+    @Override
+    public void onConnected(Bundle dataBundle) {
+        super.onConnected(dataBundle);
+        mAdapter.setBounds(convertCenterAndRadiusToBounds(getLastLocation().orSome(getMapTarget()), AUTOCOMPLETE_BIAS_RADIUS_METERS));
+    }
 
     // Container Activity must implement this interface
     public interface PickUpDetailInteractionListener {
