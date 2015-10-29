@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Unused for now, I'm doing this in code because this xml doesn't work.-->
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="@android:integer/config_longAnimTime"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:propertyName="layout_height"
+        android:valueFrom="0"
+        android:valueTo="?attr/actionBarSize"
+        android:valueType="intType" />
+</set>

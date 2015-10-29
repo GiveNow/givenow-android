@@ -73,5 +73,6 @@
     <string name="navigation_item_1">Give stuff</string>
     <string name="navigation_item_2">Volunteer</string>
     <string name="navigation_item_3">Dropoff Centers</string>
+    <string name="continue_label">Continue</string>
 
 </resources>

@@ -5,8 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import org.onewarmcoat.onewarmcoat.app.R;
 
 public class AdaptableGradientRectView extends View {
     public AdaptableGradientRectView(Context context) {
@@ -26,12 +30,19 @@ public class AdaptableGradientRectView extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         int maxSize = Math.max(getHeight(), getWidth());
+        ColorDrawable cd = (ColorDrawable) ContextCompat.getDrawable(getContext(), R.color.colorPrimary);
+        int color = cd.getColor();
+        int alpha = cd.getAlpha();
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+
         RadialGradient gradient = new RadialGradient(
                 getWidth() / 2,
                 getHeight() / 2,
-                maxSize * 60 / 100,
+                maxSize * 80 / 100,
                 new int[]{Color.argb(0x00, 0xFF, 0xFF, 0xFF),
-                        Color.argb(0xFF, 0xDD, 0xE8, 0xED)},
+                        Color.argb(alpha, red, green, blue)},
                 new float[]{0, 1},
                 android.graphics.Shader.TileMode.CLAMP
         );

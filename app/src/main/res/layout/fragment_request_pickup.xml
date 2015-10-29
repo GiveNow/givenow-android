@@ -7,59 +7,94 @@
     tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment">
 
     <LinearLayout
-        android:id="@+id/llAddress"
-        android:layout_width="fill_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/llAddressInfoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/llConfirmInfo"
         android:background="@color/colorPrimary"
         android:elevation="@dimen/appbar_elevation"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivAddress"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="0"
-            android:padding="5dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_location_on_white_24dp" />
+        <LinearLayout
+            android:id="@+id/llAddress"
+            android:layout_width="fill_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/ivAddress"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="0"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_location_on_white_24dp" />
 
-            <AutoCompleteTextView
-                android:id="@+id/actvAddress"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
+
+                <AutoCompleteTextView
+                    android:id="@+id/actvAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:dropDownAnchor="@id/llAddress"
+                    android:dropDownHeight="wrap_content"
+                    android:dropDownWidth="match_parent"
+                    android:hint="Address"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPostalAddress"
+                    android:singleLine="true"
+                    android:text="Anklamer Straße 33"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/colorPrimaryDark"
+                    android:theme="@style/MyEditTextTheme" />
+                <!--android:popupAnimationStyle="@animator/slide_down_from_top"-->
+                <!--doesn't work ^-->
+
+                <ImageButton
+                    android:id="@+id/btnClearAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="3dp"
+                    android:background="@drawable/ic_clear_white_24dp"
+                    android:contentDescription="Clear" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivInfo"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="0"
+                android:padding="6dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_info_white_24dp" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:dropDownAnchor="@id/llAddress"
-                android:dropDownHeight="wrap_content"
-                android:dropDownWidth="match_parent"
-                android:hint="Address"
-                android:imeOptions="actionDone"
-                android:inputType="textPostalAddress"
-                android:singleLine="true"
-                android:text="Anklamer Straße 33"
+                android:layout_marginRight="10dp"
+                android:text="Is your address correct?"
                 android:textColor="@color/white"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:theme="@style/MyEditTextTheme" />
-            <!--android:popupAnimationStyle="@animator/slide_down_from_top"-->
-            <!--doesn't work ^-->
+                android:textSize="18sp" />
+        </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btnClearAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="3dp"
-                android:background="@drawable/ic_clear_white_24dp"
-                android:contentDescription="Clear" />
-        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout
@@ -68,7 +103,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/btnSetPickup"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/llAddress"
+        android:layout_below="@+id/llAddressInfoContainer"
         android:layout_marginLeft="0dp">
 
         <FrameLayout
@@ -78,6 +113,7 @@
             android:layout_gravity="right|center_vertical"
             android:focusable="true"
             android:focusableInTouchMode="true">
+
 
         </FrameLayout>
 
@@ -92,6 +128,11 @@
         <!--android:padding="15dp"-->
         <!--android:textColor="@color/accent"-->
         <!--android:textSize="14sp" />-->
+        <org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView
+            android:id="@+id/agrv"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.0" />
 
         <ImageView
             android:id="@+id/btnMarker"
@@ -100,6 +141,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
             android:background="@drawable/ic_marker" />
+
 
     </FrameLayout>
 

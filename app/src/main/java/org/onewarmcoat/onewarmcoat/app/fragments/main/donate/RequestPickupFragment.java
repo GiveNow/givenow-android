@@ -1,17 +1,26 @@
 package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.location.Address;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -25,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.adapters.PlaceAutocompleteAdapter;
+import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
 
 import butterknife.ButterKnife;
@@ -36,14 +46,31 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
 
     private static final double AUTOCOMPLETE_BIAS_RADIUS_METERS = 10000;
 
+    @InjectView(R.id.btnSetPickup)
+    Button btnSetPickup;
+
     @InjectView(R.id.actvAddress)
     AutoCompleteTextView actvAddress;
 
     @InjectView(R.id.btnClearAddress)
     ImageButton btnClearAddress;
 
+    @InjectView(R.id.llAddressInfoContainer)
+    LinearLayout llAddressInfoContainer;
+
+    @InjectView(R.id.llInfo)
+    LinearLayout llInfo;
+
+    @InjectView(R.id.agrv)
+    AdaptableGradientRectView adaptableGradientRectView;
+
     private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
+    private Animator fade_in;
+    private Animator inflate_to_height;
+    private boolean mConfirmAddressShowing = false;
+    private Animator fade_out;
+    private boolean mKeyCodeBackEventHandled = false;
 
     public RequestPickupFragment() {
         // Required empty public constructor
@@ -75,8 +102,9 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_request_pickup, container, false);
-        ButterKnife.inject(this, v);
+        View viewRoot = inflater.inflate(R.layout.fragment_request_pickup, container, false);
+        ButterKnife.inject(this, viewRoot);
+
 
         btnClearAddress.setVisibility(View.INVISIBLE);
 
@@ -100,8 +128,29 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
 //                return false;
 //            }
 //        });
+
+        //Catch back button and animate away relevant views
+        viewRoot.setOnKeyListener((v, keyCode, event) -> {
+            //This event is raised twice for a back button press. Not sure why, but
+            // here's a hack to only handle the first event.
+            if (mKeyCodeBackEventHandled) {
+                Log.d(logTag(), "Ignoring extra Back event.");
+                mKeyCodeBackEventHandled = false;
+                return true;
+            } else {
+                mKeyCodeBackEventHandled = true;
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (mConfirmAddressShowing) {
+                        hideConfirmAddress();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         Log.w(logTag(), "onCreateView completed.");
-        return v;
+        return viewRoot;
     }
 
     @Override
@@ -167,34 +216,44 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
 
     @OnClick(R.id.btnSetPickup)
     protected void onSetPickup(View view) {
-        getAddressFromMapTarget().subscribe(address ->
-                setAddressFieldText(address.getAddressLine(0)));
+//        getAddressFromMapTarget().subscribe(address ->
+//                setAddressFieldText(address.getAddressLine(0)));
 
-        LatLng pos = mGoogleMap.getCameraPosition().target;
-
-        // zoom in map
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
 
         //hide on-map address field
 //        actvAddress.setVisibility(View.INVISIBLE);
 
         //show detail layout
-        mListener.onLaunchRequestPickUpDetail(actvAddress.getText().toString(), pos.latitude, pos.longitude);
+        if (mConfirmAddressShowing) {
+            LatLng pos = mGoogleMap.getCameraPosition().target;
+
+            mListener.onLaunchRequestPickUpDetail(actvAddress.getText().toString(), pos.latitude, pos.longitude);
+        } else {
+            // zoom in map
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+            showConfirmAddress();
+        }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        // entering animations
+        fade_in = AnimatorInflater.loadAnimator(activity, R.animator.fade_in);
+        inflate_to_height = AnimatorInflater.loadAnimator(activity, R.animator.inflate_to_height);
+
+        fade_out = AnimatorInflater.loadAnimator(activity, R.animator.fade_out);
+
         try {
             mListener = (PickUpDetailInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -202,6 +261,58 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
                     + " must implement OnLaunchPickUpDetailListener");
         }
 
+    }
+
+    public void showConfirmAddress() {
+        mConfirmAddressShowing = true;
+
+        TypedValue typedValue = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true);
+        TypedArray typedArray = getActivity().obtainStyledAttributes(typedValue.data, new int[]{R.attr.actionBarSize});
+        int targetHeight = typedArray.getDimensionPixelSize(0, -1);
+        typedArray.recycle();
+
+        ValueAnimator anim = ValueAnimator.ofInt(llInfo.getMeasuredHeight(), targetHeight);
+        anim.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = llInfo.getLayoutParams();
+            layoutParams.height = val;
+            llInfo.setLayoutParams(layoutParams);
+        });
+        anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+
+        llInfo.setAlpha(0);
+        fade_in.setTarget(llInfo);
+        Animator fade_in_clone = fade_in.clone();
+        fade_in_clone.setTarget(adaptableGradientRectView);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(anim).before(fade_in).with(fade_in_clone);
+        set.start();
+
+        btnSetPickup.setText(getString(R.string.continue_label));
+    }
+
+    private void hideConfirmAddress() {
+        //Animate out.
+        ValueAnimator anim = ValueAnimator.ofInt(llInfo.getMeasuredHeight(), 0);
+        anim.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = llInfo.getLayoutParams();
+            layoutParams.height = val;
+            llInfo.setLayoutParams(layoutParams);
+        });
+        anim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+
+        fade_out.setTarget(llInfo);
+        fade_out.setTarget(adaptableGradientRectView);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(fade_out).with(anim);
+        set.start();
+
+        btnSetPickup.setText(getString(R.string.set_pickup_location_label));
+        mConfirmAddressShowing = false;
     }
 
     @Override
