@@ -2,7 +2,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/edit_name"
-    style="@android:style/Theme.Dialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -25,18 +24,19 @@
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_weight="0"
-            android:padding="8dp"
+            android:padding="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/iconmonstr_user_icon_256" />
+            android:src="@drawable/ic_person_black_24dp"
+            android:tint="@color/colorPrimary" />
 
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your name"
+            android:hint="@string/confirm_pickup_dialog_name_hint"
             android:imeOptions="actionNext"
             android:inputType="textCapWords"
-            android:textColor="@color/accent" />
+            android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>
 
     <!--<TextView-->
@@ -56,18 +56,19 @@
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_weight="0"
-            android:padding="8dp"
+            android:padding="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/iconmonstr_phone_3_icon_256" />
+            android:src="@drawable/ic_phone_black_24dp"
+            android:tint="@color/colorPrimary" />
 
         <EditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your phone number"
+            android:hint="@string/confirm_pickup_dialog_phone_number_hint"
             android:imeOptions="actionDone"
             android:inputType="phone"
-            android:textColor="@color/accent" />
+            android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>
 
     <TextView

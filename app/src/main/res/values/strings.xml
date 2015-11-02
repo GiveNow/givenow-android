@@ -15,7 +15,7 @@
     <string name="drawer_close">close drawer</string>
     <string name="donate_cash_button">Donate</string>
     <string name="donate_cash_motivational"> One Warm Coat’s mission is simple:</string>
-    <string name="set_pickup_location_label">Set Pickup Location</string>
+    <string name="button_set_pickup_location_label">Set Pickup Location</string>
     <string name="submit_pickup_label">Submit Pickup Request</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_greeting">Login anonymously using your phone number</string>
@@ -74,5 +74,10 @@
     <string name="navigation_item_2">Volunteer</string>
     <string name="navigation_item_3">Dropoff Centers</string>
     <string name="continue_label">Continue</string>
+    <string name="button_confirm_donation_label">Give Now</string>
+    <string name="error_insufficient_categories_selected">Please select one or more.</string>
+    <string name="confirm_pickup_dialog_title">How can we contact you?</string>
+    <string name="confirm_pickup_dialog_phone_number_hint">Your phone number</string>
+    <string name="confirm_pickup_dialog_name_hint">Your name</string>
 
 </resources>

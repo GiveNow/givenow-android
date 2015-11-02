@@ -34,8 +34,8 @@ import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -48,10 +48,10 @@ public class CashFragment extends Fragment {
     static final View.OnFocusChangeListener ON_FOCUS = new AmountOnFocusChangeListener();
     private static final String MY_CARDIO_APP_TOKEN = "ccb24a9a0d9d4d529c2f7f27cedc926e";
 
-    @InjectView(R.id.et_donate_amount)
+    @Bind(R.id.et_donate_amount)
     EditText etDonateAmount;
 
-    @InjectView(R.id.btn_donate)
+    @Bind(R.id.btn_donate)
     Button btnDonate;
 
     //TODO: ACHTUNG: When using windowSoftInputMode="adjustPan", can't type in the etDonateAmount edittext more than once, because then its obscured.
@@ -73,7 +73,7 @@ public class CashFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_cash, container, false);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
 
         etDonateAmount.requestFocus();
         //to allow layout resize with keyboard

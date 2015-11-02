@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -44,7 +43,7 @@ public class DropOffLocationsFragment extends MapHostingFragment implements Goog
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_drop_off, container, false);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
 
         Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
         return v;

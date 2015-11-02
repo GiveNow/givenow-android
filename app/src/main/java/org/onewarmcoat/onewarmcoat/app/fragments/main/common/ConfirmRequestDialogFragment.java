@@ -17,16 +17,17 @@ import android.widget.TextView;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 
 public class ConfirmRequestDialogFragment extends DialogFragment implements TextWatcher {
 
-    @InjectView(R.id.etName)
+    @Bind(R.id.etName)
     EditText etName;
-    @InjectView(R.id.etPhone)
+    @Bind(R.id.etPhone)
     EditText etPhone;
-    @InjectView(R.id.tvDisclaimer)
+    @Bind(R.id.tvDisclaimer)
     TextView tvDisclaimer;
 
     AlertDialog dialog;
@@ -53,11 +54,11 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_confirm_request_dialog, null);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
 
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setTitle(title);
-        setStyle(STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
+//        setStyle(STYLE_NORMAL, android.R.style.Theme_Holo_Light_Dialog);
         alertDialogBuilder.setPositiveButton("Confirm", (dialog_param, which) -> {
             // on success
             // listener will be implemented by either RequestPickupDetailFragment or PickupRequestDetailFragment
@@ -114,7 +115,7 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
     }
 
     @Override

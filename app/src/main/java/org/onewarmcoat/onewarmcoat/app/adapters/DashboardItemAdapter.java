@@ -24,8 +24,9 @@ import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 
 public class DashboardItemAdapter extends ParseQueryAdapter {
 
@@ -149,29 +150,29 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
     }
 
     static class ViewHolder {
-        @InjectView(R.id.tvName)
+        @Bind(R.id.tvName)
         TextView tvName;
-        @InjectView(R.id.tvAddress)
+        @Bind(R.id.tvAddress)
         TextView tvAddress;
-        @InjectView(R.id.tvStatus)
+        @Bind(R.id.tvStatus)
         TextView tvStatus;
-        @InjectView(R.id.tvNumCoats)
+        @Bind(R.id.tvNumCoats)
         TextView tvNumCoats;
-        @InjectView(R.id.btnCall)
+        @Bind(R.id.btnCall)
         Button btnCall;
-        @InjectView(R.id.btnMap)
+        @Bind(R.id.btnMap)
         Button btnMap;
-        @InjectView(R.id.btnProblem)
+        @Bind(R.id.btnProblem)
         Button btnProblem;
-        @InjectView(R.id.btnFinishPickup)
+        @Bind(R.id.btnFinishPickup)
         Button btnFinishPickup;
-        @InjectView(R.id.readyLayout)
+        @Bind(R.id.readyLayout)
         LinearLayout readyLayout;
-        @InjectView(R.id.map_container)
+        @Bind(R.id.map_container)
         ImageView ivMapContainer;
 
         public ViewHolder(View view) {
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 }

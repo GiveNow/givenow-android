@@ -33,8 +33,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import fj.data.Option;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,7 +53,8 @@ public class MapHostingFragment extends Fragment
     protected GoogleMap mGoogleMap;
     protected MapFragment mapFragment;
     protected boolean mMapIsTouched;
-    @InjectView(R.id.flMapLayout)
+
+    @Bind(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
 
     private GoogleApiClient mGoogleApiClient;
@@ -82,6 +83,7 @@ public class MapHostingFragment extends Fragment
         if (savedInstanceState == null) {
             mZoomToLocation = true;
         } else {
+            //TODO: Re-enable mapfragment saving for correct app restoring behavior.
             Log.w(((Object) this).getClass().getSimpleName(), "loading mapFragment");
             // Disabled map fragment reloading for now because of how fragile GPS 6.5.87 is.
 //            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(savedInstanceState, "mapFragment");
@@ -136,7 +138,7 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.reset(this);
+        ButterKnife.unbind(this);
     }
 
     public void onMapReady(GoogleMap map) {

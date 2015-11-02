@@ -86,6 +86,7 @@
                 android:src="@drawable/ic_info_white_24dp" />
 
             <TextView
+                android:id="@+id/tvInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -142,6 +143,178 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/ic_marker" />
 
+        <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+            android:id="@+id/slidingRLContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ECEFF1"
+            android:elevation="4dp"
+            android:visibility="invisible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvDonationCategories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/cell_margin"
+                android:paddingTop="@dimen/cell_margin">
+
+            </android.support.v7.widget.RecyclerView>
+        </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+
+        <!--<TableLayout-->
+        <!--android:id="@+id/tableDonationCategories"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/colorPrimaryDark"-->
+        <!--android:padding="5dp"-->
+        <!--android:divider="@drawable/d"-->
+        <!--android:dividerPadding="1dp"-->
+        <!--android:showDividers="beginning|middle|end">-->
+
+        <!--<TableRow-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:divider="@drawable/ab_transparent_onewarmcoat"-->
+        <!--android:dividerPadding="1dp"-->
+        <!--android:showDividers="beginning|middle|end">-->
+
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+        <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_weight="1">&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<ImageButton&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/imageButton2"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentBottom="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignEnd="@+id/imageButton"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentStart="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentTop="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:src="@drawable/blanket"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:scaleType="fitCenter"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:background="#00ffffff" />&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/lltworows"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:orientation="vertical"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:weightSum="2">&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+        <!--&lt;!&ndash;android:orientation="horizontal"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:weightSum="2"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:gravity="end">&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<ImageButton&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/imageButton"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentTop="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentEnd="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:src="@drawable/iconmonstr_check_mark_4_icon_256"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentStart="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_column="0"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:background="#00ffffff"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:scaleType="fitCenter"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_row="0"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:padding="10dp" />&ndash;&gt;-->
+        <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/tvLabel"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:text="Blankets"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:textAlignment="gravity"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_gravity="center_horizontal"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_alignParentTop="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:gravity="bottom" />&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+        <!--</TableRow>-->
+
+        <!--<TableRow-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:divider="@color/colorPrimary"-->
+        <!--android:dividerPadding="10dp"-->
+        <!--android:showDividers="middle">-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--</TableRow>-->
+
+        <!--<TableRow-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1">-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<include-->
+        <!--layout="@layout/item_category"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--</TableRow>-->
+        <!--</TableLayout>-->
 
     </FrameLayout>
 
@@ -152,8 +325,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@color/colorAccent"
-        android:elevation="@dimen/button_elevation"
-        android:text="@string/set_pickup_location_label"
+        android:text="@string/button_set_pickup_location_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#ffffffff" />
 

@@ -8,6 +8,8 @@ import com.parse.ParseQuery;
 @ParseClassName("DonationCategory")
 public class DonationCategory extends ParseObject {
 
+    private boolean mSelected = false;
+
     public DonationCategory() {
         super();
     }
@@ -26,6 +28,14 @@ public class DonationCategory extends ParseObject {
         return ParseQuery.getQuery(DonationCategory.class)
                 .orderByAscending("priority")
                 .setLimit(9);
+    }
+
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.mSelected = selected;
     }
 
     public String getNameEN() {

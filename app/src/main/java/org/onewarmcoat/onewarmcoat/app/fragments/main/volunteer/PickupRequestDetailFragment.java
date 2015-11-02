@@ -34,23 +34,23 @@ import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class PickupRequestDetailFragment extends Fragment implements
         ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
 
-    @InjectView(R.id.rlInfoContainer)
+    @Bind(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
-    @InjectView(R.id.rlButtonContainer)
+    @Bind(R.id.rlButtonContainer)
     SlidingRelativeLayout rlButtonContainer;
-    @InjectView(R.id.tvDonorName)
+    @Bind(R.id.tvDonorName)
     TextView tvDonorName;
-    @InjectView(R.id.tvDonorAddress)
+    @Bind(R.id.tvDonorAddress)
     TextView tvDonorAddress;
-    @InjectView(R.id.btnAccept)
+    @Bind(R.id.btnAccept)
     Button btnAccept;
 
     private PickupRequest mPickupRequest;
@@ -100,7 +100,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
         View fragmentView = inf.inflate(R.layout.fragment_pickup_request_detail, parent, false);
-        ButterKnife.inject(this, fragmentView);
+        ButterKnife.bind(this, fragmentView);
         setHasOptionsMenu(true);
 
         //Hack to catch back button and animate away before popping backstack

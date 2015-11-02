@@ -21,17 +21,18 @@ import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 
 public class ProfileFragment extends PageSlidingTabStripFragment {
 
     String readableUsername;
-    @InjectView(R.id.silhouette)
+    @Bind(R.id.silhouette)
     ImageView profileIV;
-    @InjectView(R.id.username)
+    @Bind(R.id.username)
     TextView usernameTV;
-    @InjectView(R.id.phoneno)
+    @Bind(R.id.phoneno)
     TextView phonenoTV;
 
     private DonationHistoryFragment dhFragment;
@@ -70,7 +71,7 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        ButterKnife.inject(this, rootView);
+        ButterKnife.bind(this, rootView);
 
         phonenoTV.setText(CharityUserHelper.getPhoneNumber());
         usernameTV.setText(CharityUserHelper.getName());

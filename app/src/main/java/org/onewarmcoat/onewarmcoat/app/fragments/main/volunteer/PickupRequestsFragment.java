@@ -66,7 +66,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pickup_requests, container, false);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         setHasOptionsMenu(true);
 
         // add a PullToRefreshLayout, just so we can use its progress bar, heh.

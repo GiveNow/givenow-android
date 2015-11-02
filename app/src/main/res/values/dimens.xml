@@ -9,10 +9,10 @@
 
     <dimen name="custom_marker_image">40dp</dimen>
     <dimen name="custom_marker_padding">2dp</dimen>
-    <dimen name="grid_margin">4dp</dimen>
-    <dimen name="cell_margin">16dp</dimen>
-    <dimen name="card_corner_radius">4dp</dimen>
-    <dimen name="card_elevation">8dp</dimen>
+    <dimen name="grid_margin">5dp</dimen>
+    <dimen name="cell_margin">5dp</dimen>
+    <dimen name="card_corner_radius">3dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
     <dimen name="palette_height">40dp</dimen>
     <dimen name="category_text_size">14sp</dimen>
     <dimen name="category_cell_margin">10dp</dimen>

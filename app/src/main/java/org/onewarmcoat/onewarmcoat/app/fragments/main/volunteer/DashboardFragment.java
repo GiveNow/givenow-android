@@ -24,17 +24,17 @@ import org.onewarmcoat.onewarmcoat.app.interfaces.ViewPagerChangeListener;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class DashboardFragment extends Fragment implements
         ViewPagerChangeListener, OnDismissCallback, ContextualUndoAdapter.DeleteItemCallback {
 
-    @InjectView(R.id.emptyView)
+    @Bind(R.id.emptyView)
     LinearLayout emptyView;
-    @InjectView(R.id.lvItems)
+    @Bind(R.id.lvItems)
     ListView lvItems;
     PullToRefreshLayout mPullToRefreshLayout;
     private DashboardItemAdapter mAdapter;
@@ -61,7 +61,7 @@ public class DashboardFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         setHasOptionsMenu(true);
 
         lvItems.setEmptyView(emptyView);

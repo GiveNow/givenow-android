@@ -45,8 +45,8 @@ import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
@@ -59,21 +59,21 @@ public class RequestPickupDetailFragment extends Fragment implements
     private static final String ARG_LAT = "lat";
     private static final String ARG_LNG = "lng";
 
-    @InjectView(R.id.rlAddressContainer)
+    @Bind(R.id.rlAddressContainer)
     SlidingRelativeLayout rlAddressContainer;
-    @InjectView(R.id.rlPickupDetailContainer)
+    @Bind(R.id.rlPickupDetailContainer)
     SlidingRelativeLayout rlPickupDetailContainer;
-    @InjectView(R.id.tableDonationCategories)
+    @Bind(R.id.tableDonationCategories)
     TableLayout tableDonationCategories;
 
-    @InjectView(R.id.agrv)
+    @Bind(R.id.agrv)
     AdaptableGradientRectView adaptableGradientRectView;
-    @InjectView(R.id.actvAddress)
+    @Bind(R.id.actvAddress)
     EditText etAddress;
-    @InjectView(R.id.rlNumberCoats)
+    @Bind(R.id.rlNumberCoats)
     RelativeLayout rlNumberCoats;
 
-    @InjectView(R.id.btnSubmitPickup)
+    @Bind(R.id.btnSubmitPickup)
     Button btnSubmitPickup;
 
     private String mAddress;
@@ -204,7 +204,7 @@ public class RequestPickupDetailFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_request_pickup_detail, container, false);
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         setHasOptionsMenu(true);
 
         //Hack to catch back button and animate away before popping backstack

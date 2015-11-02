@@ -3,12 +3,17 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.location.Address;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -21,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -31,38 +37,61 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
+import org.onewarmcoat.onewarmcoat.app.adapters.GridAdapter;
 import org.onewarmcoat.onewarmcoat.app.adapters.PlaceAutocompleteAdapter;
 import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
+import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
+import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
+import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
+import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
+import java.util.ArrayList;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class RequestPickupFragment extends MapHostingFragment implements ResultCallback<PlaceBuffer>, AdapterView.OnItemClickListener {
+public class RequestPickupFragment extends MapHostingFragment
+        implements ResultCallback<PlaceBuffer>, AdapterView.OnItemClickListener,
+        ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
 
     private static final double AUTOCOMPLETE_BIAS_RADIUS_METERS = 10000;
 
-    @InjectView(R.id.btnSetPickup)
+    @Bind(R.id.btnSetPickup)
     Button btnSetPickup;
 
-    @InjectView(R.id.actvAddress)
+    @Bind(R.id.actvAddress)
     AutoCompleteTextView actvAddress;
 
-    @InjectView(R.id.btnClearAddress)
+    @Bind(R.id.btnClearAddress)
     ImageButton btnClearAddress;
 
-    @InjectView(R.id.llAddressInfoContainer)
+    @Bind(R.id.llAddressInfoContainer)
     LinearLayout llAddressInfoContainer;
 
-    @InjectView(R.id.llInfo)
+    @Bind(R.id.llInfo)
     LinearLayout llInfo;
 
-    @InjectView(R.id.agrv)
+    @Bind(R.id.agrv)
     AdaptableGradientRectView adaptableGradientRectView;
+
+    @Bind(R.id.rvDonationCategories)
+    RecyclerView rvDonationCategories;
+
+    @Bind(R.id.slidingRLContainer)
+    SlidingRelativeLayout slidingRLContainer;
+
+    @Bind(R.id.tvInfo)
+    TextView tvInfo;
 
     private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
@@ -71,6 +100,12 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
     private boolean mConfirmAddressShowing = false;
     private Animator fade_out;
     private boolean mKeyCodeBackEventHandled = false;
+    private GridAdapter mGridAdapter;
+    private boolean mCategoryLayoutShowing = false;
+    private GridLayoutManager mGridLayoutManager;
+    private boolean mInputValidated = false;
+    private PickupRequest mPickupRequest;
+    private boolean mRequestSubmitted = false;
 
     public RequestPickupFragment() {
         // Required empty public constructor
@@ -103,7 +138,7 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View viewRoot = inflater.inflate(R.layout.fragment_request_pickup, container, false);
-        ButterKnife.inject(this, viewRoot);
+        ButterKnife.bind(this, viewRoot);
 
 
         btnClearAddress.setVisibility(View.INVISIBLE);
@@ -140,7 +175,10 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
             } else {
                 mKeyCodeBackEventHandled = true;
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (mConfirmAddressShowing) {
+                    if (mCategoryLayoutShowing) {
+                        hideCategoryLayout();
+                        return true;
+                    } else if (mConfirmAddressShowing) {
                         hideConfirmAddress();
                         return true;
                     }
@@ -148,6 +186,19 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
                 return false;
             }
         });
+
+        // Calling the RecyclerView
+        rvDonationCategories.setHasFixedSize(true);
+
+        mGridAdapter = new GridAdapter();
+        rvDonationCategories.setAdapter(mGridAdapter);
+
+        // The number of Columns
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 3);
+//        rvDonationCategories.setItemAnimator(new DefaultItemAnimator());
+//        mGridLayoutManager.
+//        rvDonationCategories.setRecycledViewPool();
+        rvDonationCategories.setLayoutManager(mGridLayoutManager);
 
         Log.w(logTag(), "onCreateView completed.");
         return viewRoot;
@@ -215,33 +266,111 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
     }
 
     @OnClick(R.id.btnSetPickup)
-    protected void onSetPickup(View view) {
-//        getAddressFromMapTarget().subscribe(address ->
-//                setAddressFieldText(address.getAddressLine(0)));
-
-
-        //hide on-map address field
-//        actvAddress.setVisibility(View.INVISIBLE);
-
-        //show detail layout
-        if (mConfirmAddressShowing) {
-            LatLng pos = mGoogleMap.getCameraPosition().target;
-
-            mListener.onLaunchRequestPickUpDetail(actvAddress.getText().toString(), pos.latitude, pos.longitude);
-        } else {
-            // zoom in map
-            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
+    protected void onSetPickup(Button button) {
+        if (!mConfirmAddressShowing) {
             showConfirmAddress();
+        } else {
+            if (!mCategoryLayoutShowing) {
+                showCategoryLayout();
+            } else {
+                confirmPickupRequest();
+            }
+        }
+    }
+
+    private void confirmPickupRequest() {
+        ArrayList<DonationCategory> items = mGridAdapter.getSelectedItems();
+        if (items.size() < 1) {
+            //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
+            ObjectAnimator anim = CustomAnimations.highlightIncompleteInput(slidingRLContainer);
+            anim.start();
+            tvInfo.setText(R.string.error_insufficient_categories_selected);
+        } else {
+            ParseUser currUser = ParseUser.getCurrentUser();
+            String myPhoneNumber = currUser.getString("phoneNumber");
+            if (myPhoneNumber == null) {
+                //user hasn't entered their phone before
+                showConfirmPickupDialog("", "");
+            } else {
+                //they have entered their phone before, let's pre-populate it and their name
+                String myName = currUser.getString("name");
+//                showConfirmPickupDialog(myName, myPhoneNumber);
+                onFinishConfirmPickupDialog(myName, myPhoneNumber);
+            }
+
+        }
+    }
+
+    private void showConfirmPickupDialog(String name, String phoneNumber) {
+        FragmentManager fm = getChildFragmentManager();
+        ConfirmRequestDialogFragment confirmRequestDialogFragment =
+                ConfirmRequestDialogFragment.newInstance(getString(R.string.confirm_pickup_dialog_title), name, phoneNumber,
+                        getResources().getText(R.string.donor_dialog_disclaimer));
+        confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
+    }
+
+    // after donor enters name and number and hits Confirm
+    @Override
+    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+        //update the current user's name and phone
+        CharityUserHelper.setName(name);
+        CharityUserHelper.setPhoneNumber(phoneNumber);
+
+        //grab donation details
+        double donationValue;
+//        String estimatedValueString = etEstimatedValue.getText().toString();
+//        if (!estimatedValueString.equals("")) {
+//            donationValue = Double.parseDouble(estimatedValueString);
+//        } else {
+//            donationValue = 0.0;
+//        }
+//        int numcoats = Integer.parseInt(etNumCoatsValue.getText().toString());
+//\
+
+        //get selected categories
+        ArrayList<DonationCategory> selectedItems = mGridAdapter.getSelectedItems();
+        LatLng target = getMapTarget();
+//        //ship it off to parse
+        mPickupRequest = new PickupRequest(
+                new ParseGeoPoint(target.latitude, target.longitude),
+                name,
+                actvAddress.getText().toString(),
+                phoneNumber,
+                ParseUser.getCurrentUser(),
+                "Coat",
+                0, //TODO eliminate
+                0 //TODO eliminate
+        );
+        savePickupRequest();
+    }
+
+    private void savePickupRequest() {
+        getActivity().setProgressBarIndeterminateVisibility(true);
+
+        mPickupRequest.saveInBackground(this::shouldWeRetrySave);
+    }
+
+
+    public void shouldWeRetrySave(ParseException e) {
+        if (e == null) {
+            // saved successfully
+            mRequestSubmitted = true;
+            // detach this detail fragment, we're done here
+            hideCategoryLayout();
+            hideConfirmAddress();
+        } else {
+            // save did not succeed
+            getActivity().setProgressBarIndeterminateVisibility(false);
+            // show error notification dialog with retry or cancel
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.pickupRequest_retryDialog_title)
+                    .setMessage(R.string.pickupRequest_retryDialog_message)
+                    .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, (dialog, which) -> savePickupRequest())
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        // do nothing
+                    })
+                    .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .show();
         }
     }
 
@@ -262,9 +391,24 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         }
 
     }
+//    @butterknife.Bind(R.attr.actionBarSize)
+//    int actionBarSize;
 
     public void showConfirmAddress() {
         mConfirmAddressShowing = true;
+
+        // zoom in map
+        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
 
         TypedValue typedValue = new TypedValue();
         getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true);
@@ -287,7 +431,7 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         fade_in_clone.setTarget(adaptableGradientRectView);
 
         AnimatorSet set = new AnimatorSet();
-        set.play(anim).before(fade_in).with(fade_in_clone);
+        set.play(anim).with(fade_in).with(fade_in_clone);
         set.start();
 
         btnSetPickup.setText(getString(R.string.continue_label));
@@ -311,8 +455,82 @@ public class RequestPickupFragment extends MapHostingFragment implements ResultC
         set.play(fade_out).with(anim);
         set.start();
 
-        btnSetPickup.setText(getString(R.string.set_pickup_location_label));
+        btnSetPickup.setText(getString(R.string.button_set_pickup_location_label));
         mConfirmAddressShowing = false;
+    }
+
+
+    private void showCategoryLayout() {
+        mCategoryLayoutShowing = true;
+//        rvDonationCategories.
+        slidingRLContainer.setVisibility(View.VISIBLE);
+        Animator slide_down_from_top = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
+        slide_down_from_top.setTarget(slidingRLContainer);
+        slide_down_from_top.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                buildCategoryGrid();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        slide_down_from_top.start();
+
+        btnSetPickup.setText(getString(R.string.button_confirm_donation_label));
+    }
+
+    private void buildCategoryGrid() {
+        //get categories from parse
+        DonationCategory.getTop9().findInBackground((categoryList, error) -> {
+            if (error == null) {
+                mGridAdapter.setItems(categoryList);
+            } else {
+                Log.d("RPDF", "Error fetching categories: " + error.getMessage());
+            }
+        });
+    }
+
+    private void hideCategoryLayout() {
+        //Animate down
+        Animator slide_up_to_top = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
+        slide_up_to_top.setTarget(slidingRLContainer);
+        slide_up_to_top.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                slidingRLContainer.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        slide_up_to_top.start();
+        btnSetPickup.setText(getString(R.string.continue_label));
+        mCategoryLayoutShowing = false;
     }
 
     @Override
