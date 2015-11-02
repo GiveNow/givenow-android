@@ -38,6 +38,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -51,7 +52,7 @@ import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -277,7 +278,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void confirmPickupRequest() {
-        ArrayList<DonationCategory> items = mGridAdapter.getSelectedItems();
+        Collection<DonationCategory> items = mGridAdapter.getSelectedItems();
         if (items.size() < 1) {
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
             tvInfo.setText(R.string.error_insufficient_categories_selected);
@@ -312,8 +313,13 @@ public class RequestPickupFragment extends MapHostingFragment
         ParseUserHelper.setName(name);
         ParseUserHelper.setPhoneNumber(phoneNumber);
 
+        // Associate the device with a user //TODO: maybe don't do this every time, only at the first time
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user", ParseUser.getCurrentUser());
+        installation.saveInBackground();
+
         //grab donation details
-        double donationValue;
+//        double donationValue;
 //        String estimatedValueString = etEstimatedValue.getText().toString();
 //        if (!estimatedValueString.equals("")) {
 //            donationValue = Double.parseDouble(estimatedValueString);
@@ -324,7 +330,7 @@ public class RequestPickupFragment extends MapHostingFragment
 //\
 
         //get selected categories
-        ArrayList<DonationCategory> selectedItems = mGridAdapter.getSelectedItems();
+        Collection<DonationCategory> selectedItems = mGridAdapter.getSelectedItems();
         LatLng target = getMapTarget();
 //        //ship it off to parse
         mPickupRequest = new PickupRequest(

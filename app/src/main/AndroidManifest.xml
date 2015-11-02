@@ -4,16 +4,23 @@
 
     <permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- Parse Push notif perms -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!--Maps requires openGL ES 2-->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
@@ -25,31 +32,6 @@
         android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="org.onewarmcoat.onewarmcoat.app.permission.C2D_MESSAGE" />
-
-    <!-- Card.io perms -->
-    <!-- Permission to vibrate - recommended, allows vibration feedback on scan -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <!-- Permission to use camera - required -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- Camera features - recommended -->
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.flash"
-        android:required="false" />
-
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-
-    <!--Maps requires openGL ES 2-->
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
 
     <application
         android:name="org.onewarmcoat.onewarmcoat.app.OWCApplication"
@@ -72,12 +54,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Activities responsible for gathering payment info -->
-        <activity
-            android:name="io.card.payment.CardIOActivity"
-            android:configChanges="keyboardHidden|orientation" />
-        <activity android:name="io.card.payment.DataEntryActivity" />
-
         <!--Google APIs -->
         <meta-data
             android:name="com.google.android.gms.version"
@@ -85,6 +61,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc" />
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="dc8da7fae26300fd9d1d6bf00f400fc442acc4a7" />
 
         <!-- Parse Push setup -->
         <service android:name="com.parse.PushService" />
@@ -111,11 +91,6 @@
                 <category android:name="org.onewarmcoat.onewarmcoat.app" />
             </intent-filter>
         </receiver>
-
-
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="dc8da7fae26300fd9d1d6bf00f400fc442acc4a7" />
     </application>
 
 </manifest>
