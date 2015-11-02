@@ -12,7 +12,6 @@ import com.parse.ParseQueryAdapter;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,15 +41,14 @@ public class DonationsAdapter extends ParseQueryAdapter {
 
         donationDateView.setText(dateStr);
 
-
         TextView donationTypeView = (TextView) v.findViewById(R.id.donationType);
-        String donationType = donation.getDonationType();
+        String donationType = donation.getDonationCategories().toString();
         donationTypeView.setText(donationType);
 
-        TextView donationValueView = (TextView) v.findViewById(R.id.donationValue);
-        double donationVal = donation.getDonationValue();
-        DecimalFormat df = new DecimalFormat("#");
-        donationValueView.setText("$" + df.format(donationVal));
+//        TextView donationValueView = (TextView) v.findViewById(R.id.donationValue);
+//        double donationVal = donation.getDonationValue();
+//        DecimalFormat df = new DecimalFormat("#");
+//        donationValueView.setText("$" + df.format(donationVal));
 
         return v;
     }

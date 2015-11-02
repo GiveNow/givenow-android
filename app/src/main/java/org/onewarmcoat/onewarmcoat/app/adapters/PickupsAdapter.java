@@ -13,7 +13,6 @@ import com.parse.ParseUser;
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -47,16 +46,16 @@ public class PickupsAdapter extends ParseQueryAdapter {
         String pickupAddress = pickupRequest.getAddresss();
         pickupAddressView.setText(pickupAddress);
 
-        TextView numItemsView = (TextView) v.findViewById(R.id.numItems);
-        double numItems = pickupRequest.getDonationValue();
-        DecimalFormat df = new DecimalFormat("#");
-        numItemsView.setText("$" + df.format(numItems));
+//        TextView numItemsView = (TextView) v.findViewById(R.id.numItems);
+//        double numItems = pickupRequest.getDonationValue();
+//        DecimalFormat df = new DecimalFormat("#");
+//        numItemsView.setText("$" + df.format(numItems));
 
-        //TODO: this should get the number of coats
+        //TODO: this should show the categories
 
-        TextView itemTypeView = (TextView) v.findViewById(R.id.itemType);
-        String itemType = pickupRequest.getDonationType();
-        itemTypeView.setText(itemType);
+//        TextView itemTypeView = (TextView) v.findViewById(R.id.itemType);
+//        String itemType = pickupRequest.getDonationCategories();
+//        itemTypeView.setText(itemType);
 
 
         return v;

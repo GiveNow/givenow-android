@@ -52,7 +52,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         //set this as default case
         holder.tvStatus.setText("Waiting for Donor");
         holder.readyLayout.setVisibility(View.GONE);
-        holder.tvNumCoats.setText(String.valueOf(pickupRequest.getNumberOfCoats()));
+        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
         holder.tvName.setText(ParseUserHelper.getFirstName(pickupRequest.getName()));
         holder.tvAddress.setText(pickupRequest.getAddresss());
 
@@ -77,7 +77,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
                 "center=" + gp.getLatitude() + "," + gp.getLongitude() +
                 "&zoom=15&size=512x512&scale=2" +
-                "&markers=color:blue%7Clabel:" + pickupRequest.getNumberOfCoats() +
+                "&markers=color:blue%7Clabel:" + //pickupRequest.getNumberOfCoats() +
                 "%7C" + gp.getLatitude() + "," + gp.getLongitude() +
                 "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
         Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
@@ -128,7 +128,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
 
         holder.btnFinishPickup.setOnClickListener(v -> {
             // DONATION CREATION
-            final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
+            final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationCategories());
             donation.saveInBackground(e -> {
                 if (e == null) {
                     //send push to donor

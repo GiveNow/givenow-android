@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import org.onewarmcoat.onewarmcoat.app.R;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -33,34 +35,31 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     //Full constructor, not sure if it will ever actually be used.
-    public PickupRequest(ParseGeoPoint location, Date pickupDate, String name, String address, String phoneNumber,
-                         ParseUser donor, String donationType, double donationValue, ParseUser pendingVolunteer, Donation donation, ParseUser confirmedVolunteer) {
-        super();
-        setLocation(location);
-        setPickupDate(pickupDate);
-        setName(name);
-        setAddress(address);
-        setPhoneNumber(phoneNumber);
-        setDonor(donor);
-        setDonationType(donationType);
-        setDonationValue(donationValue);
-        setPendingVolunteer(pendingVolunteer);
-        setDonation(donation);
-        setConfirmedVolunteer(confirmedVolunteer);
-    }
+//    public PickupRequest(ParseGeoPoint location, Date pickupDate, String name, String address, String phoneNumber,
+//                         ParseUser donor, String donationType, double donationValue, ParseUser pendingVolunteer, Donation donation, ParseUser confirmedVolunteer) {
+//        super();
+//        setLocation(location);
+//        setPickupDate(pickupDate);
+//        setName(name);
+//        setAddress(address);
+//        setPhoneNumber(phoneNumber);
+//        setDonor(donor);
+//        setDonationCategories(donationCategories);
+//        setPendingVolunteer(pendingVolunteer);
+//        setDonation(donation);
+//        setConfirmedVolunteer(confirmedVolunteer);
+//    }
 
     //Normal use case, the donation and volunteer shouldn't exist.
     public PickupRequest(ParseGeoPoint location, String name, String address, String phoneNumber,
-                         ParseUser donor, String donationType, double donationValue, int numberOfCoats) {
+                         ParseUser donor, Collection<DonationCategory> donationCategories) {
         super();
         setLocation(location);
         setName(name);
         setAddress(address);
         setPhoneNumber(phoneNumber);
         setDonor(donor);
-        setDonationType(donationType);
-        setDonationValue(donationValue);
-        setNumberOfCoats(numberOfCoats);
+        setDonationCategories(donationCategories);
     }
 
     public static ParseQuery<PickupRequest> getQuery() {
@@ -209,34 +208,12 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("donor", value);
     }
 
-    public String getDonationType() {
-        return getString("donationType");
+    public Collection<DonationCategory> getDonationCategories() {
+        return getList("donationCategories");
     }
 
-    public void setDonationType(String value) {
-        put("donationType", value);
-    }
-
-    public double getDonationValue() {
-        return getDouble("donationValue");
-    }
-
-    public void setDonationValue(double value) {
-        put("donationValue", value);
-    }
-
-    public int getNumberOfCoats() {
-        int coats = getInt("numberOfCoats");
-
-        //TODO: do we really want this? UI should probably limit you from ever entering 0
-        if (coats < 1) {
-            coats = 1;
-        }
-        return coats;
-    }
-
-    public void setNumberOfCoats(int numCoats) {
-        put("numberOfCoats", numCoats);
+    public void setDonationCategories(Collection<DonationCategory> donationCategories) {
+        put("donationCategories", new ArrayList<>(donationCategories));
     }
 
     public ParseUser getPendingVolunteer() {

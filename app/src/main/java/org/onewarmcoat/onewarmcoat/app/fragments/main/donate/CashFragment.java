@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
@@ -29,7 +28,6 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.helpers.AmountOnFocusChangeListener;
 import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.NumericRangeFilter;
-import org.onewarmcoat.onewarmcoat.app.models.Donation;
 import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 
 import java.util.HashMap;
@@ -266,8 +264,8 @@ public class CashFragment extends Fragment {
         InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(etDonateAmount.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-        Donation donation = new Donation(ParseUser.getCurrentUser(), Donation.CASH, Integer.parseInt(amount));
-        donation.saveInBackground();
+//        Donation donation = new Donation(ParseUser.getCurrentUser(), Donation.CASH, Integer.parseInt(amount));
+//        donation.saveInBackground();
     }
 
 

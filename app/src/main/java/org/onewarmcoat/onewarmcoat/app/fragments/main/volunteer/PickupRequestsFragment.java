@@ -107,9 +107,9 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
 
-        mClusterManager = new ClusterManager<PickupRequest>(getActivity(), map);
+        mClusterManager = new ClusterManager<>(getActivity(), map);
         mClusterManager.setRenderer(new PickupRequestRenderer(map));
-        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<PickupRequest>(new GridBasedAlgorithm<PickupRequest>()));
+        mClusterManager.setAlgorithm(new PreCachingAlgorithmDecorator<>(new GridBasedAlgorithm<>()));
         map.setOnCameraChangeListener(mClusterManager);
         map.setOnMarkerClickListener(mClusterManager);
         map.setOnInfoWindowClickListener(mClusterManager);
@@ -183,7 +183,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 //        // donation gets saved.
 //        // this should happen after volunteer says he picked up the donation
 //        Double donationValue = selectedPickupReq.getDonationValue();
-//        String donationType = selectedPickupReq.getDonationType();
+//        String donationType = selectedPickupReq.getDonationCategories();
 //        ParseUser donor = selectedPickupReq.getDonor();
 //        Donation newDonation = new Donation(donor, donationType, donationValue);
 //        newDonation.saveInBackground();
@@ -210,7 +210,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         @Override
         protected void onBeforeClusterItemRendered(PickupRequest pickupRequest, MarkerOptions markerOptions) {
             //draw marker with OneWarmCoat icon, and number of coats
-            Bitmap icon = mIconGenerator.makeIcon(String.valueOf(pickupRequest.getNumberOfCoats()));
+            Bitmap icon = mIconGenerator.makeIcon(""); //TODO: express categories in icon somehow?
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats

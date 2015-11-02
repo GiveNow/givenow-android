@@ -330,18 +330,16 @@ public class RequestPickupFragment extends MapHostingFragment
 //\
 
         //get selected categories
-        Collection<DonationCategory> selectedItems = mGridAdapter.getSelectedItems();
         LatLng target = getMapTarget();
 //        //ship it off to parse
+        Collection<DonationCategory> selectedItems = mGridAdapter.getSelectedItems();
         mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(target.latitude, target.longitude),
                 name,
                 actvAddress.getText().toString(),
                 phoneNumber,
                 ParseUser.getCurrentUser(),
-                "Coat",
-                0, //TODO eliminate
-                0 //TODO eliminate
+                selectedItems
         );
         savePickupRequest();
     }

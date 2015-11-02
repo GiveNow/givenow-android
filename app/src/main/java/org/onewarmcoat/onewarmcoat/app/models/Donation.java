@@ -5,6 +5,9 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @ParseClassName("Donation")
 public class Donation extends ParseObject {
     public static final String CASH = "Cash";
@@ -15,19 +18,16 @@ public class Donation extends ParseObject {
         super();
     }
 
-    public Donation(ParseUser donor, String donationType, double donationValue) {
-        super();
-        setDonor(donor);
-        setDonationType(donationType);
-        setDonationValue(donationValue);
-    }
+//    public Donation(ParseUser donor, String donationType, double donationValue) {
+//        super();
+//        setDonor(donor);
+//        setDonationCategories(donationType);
+//    }
 
-    public Donation(ParseUser donor, String donationType, double donationValue, int numberOfCoats) {
+    public Donation(ParseUser donor, Collection<DonationCategory> donationCategories) {
         super();
         setDonor(donor);
-        setDonationType(donationType);
-        setDonationValue(donationValue);
-        setNumberOfCoats(numberOfCoats);
+        setDonationCategories(donationCategories);
     }
 
     public static ParseQuery<Donation> getAllMyDonations() {
@@ -44,37 +44,15 @@ public class Donation extends ParseObject {
 
     public void setDonor(ParseUser donor) {
         put("donor", donor);
-
     }
 
-    public String getDonationType() {
-        return getString("donationType");
+    public Collection<DonationCategory> getDonationCategories() {
+        return getList("donationCategories");
     }
 
-    public void setDonationType(String donationType) {
-        put("donationType", donationType);
+    public void setDonationCategories(Collection<DonationCategory> donationCategories) {
+        put("donationCategories", new ArrayList<>(donationCategories));
 
-    }
-
-    public double getDonationValue() {
-        return getDouble("donationValue");
-    }
-
-    public void setDonationValue(double value) {
-        put("donationValue", value);
-    }
-
-    public int getNumberOfCoats() {
-        int coats = getInt("numberOfCoats");
-
-        if (coats < 1) {
-            coats = 1;
-        }
-        return coats;
-    }
-
-    public void setNumberOfCoats(int numCoats) {
-        put("numberOfCoats", numCoats);
     }
 
 }

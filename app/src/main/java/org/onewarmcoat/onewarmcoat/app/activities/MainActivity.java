@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity implements
         //only want to get 1 at a time (there shouldn't be more than 1 anyway)
         query.getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
-//                    Toast.makeText(getBaseContext(), "found pickup confirmation = " + pickupRequest.getNumberOfCoats() + pickupRequest.getDonationType(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getBaseContext(), "found pickup confirmation = " + pickupRequest.getNumberOfCoats() + pickupRequest.getDonationCategories(), Toast.LENGTH_LONG).show();
                 Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
 
                 //show dialog to user
@@ -172,8 +172,8 @@ public class MainActivity extends BaseActivity implements
         acceptPendingDialog = new AlertDialog.Builder(this)
 //                .setTitle(R.string.acceptRequest_submittedDialog_title)
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
-                .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>"))
-                .setMessage(Html.fromHtml("Is your donation of " + pickupRequest.getNumberOfCoats() + " coats available for pickup today?" + address))
+                .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>")) //TODO: fix message
+                .setMessage(Html.fromHtml("Is your donation of " + pickupRequest.getDonationCategories().toString() + " available for pickup today?" + address))
                 .setPositiveButton("Yes", (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
                 .setNegativeButton("No", (dialog, which) -> cancelPendingVolunteer(pickupRequest))
                 .setIcon(R.drawable.ic_launcher)
