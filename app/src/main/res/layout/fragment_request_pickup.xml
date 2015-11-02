@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="10dp"
-                android:text="Is your address correct?"
+                android:text="@string/request_pickup_info_confirm_address"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -325,6 +325,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@color/colorAccent"
+        android:foreground="?attr/selectableItemBackground"
         android:text="@string/button_set_pickup_location_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#ffffffff" />

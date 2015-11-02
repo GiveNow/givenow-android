@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -52,25 +53,41 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder vh, int i) {
         DonationCategory donationCategory = mItems.get(i);
         if (donationCategory.equals(mDummyCategory)) {
             return;
         }
-        if (viewHolder.tvName != null && viewHolder.tvDescription != null) {
+
+        if (donationCategory.isSelected()) {
+            vh.cvRoot.setSelected(true);
+            vh.cvRoot.setElevation(1);
+            vh.tvName.setTextColor(vh.white);
+            vh.tvName.setTypeface(null, Typeface.BOLD);
+//                vPalette.setBackgroundResource(R.color.colorPrimary);
+//            cv.setStateListAnimator(p);
+        } else {
+            //TODO: this is gross, use statelists for all the things that change when selected/unselected
+            vh.cvRoot.setSelected(false);
+            vh.cvRoot.setElevation(vh.card_elevation);
+            vh.tvName.setTextColor(vh.colorPrimary);
+            vh.tvName.setTypeface(null, Typeface.NORMAL);
+        }
+
+        if (vh.tvName != null && vh.tvDescription != null) {
             if (Locale.getDefault() == Locale.GERMAN) { //TODO locale doesnt work correctly
-                viewHolder.tvName.setText(donationCategory.getNameDE());
-                viewHolder.tvDescription.setText(donationCategory.getDescriptionDE());
+                vh.tvName.setText(donationCategory.getNameDE());
+                vh.tvDescription.setText(donationCategory.getDescriptionDE());
             } else {
-                viewHolder.tvName.setText(donationCategory.getNameEN());
-                viewHolder.tvDescription.setText(donationCategory.getDescriptionEN());
+                vh.tvName.setText(donationCategory.getNameEN());
+                vh.tvDescription.setText(donationCategory.getDescriptionEN());
             }
         }
 
-        Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(viewHolder.imageView, new Callback() {
+        Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(vh.imageView, new Callback() {
             @Override
             public void onSuccess() {
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                vh.progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -91,7 +108,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         notifyItemInserted(mItems.size() - 1);
     }
 
-    public void setItems(Collection<DonationCategory> items) {
+    public void setItems(List<DonationCategory> items) {
+        if (items.equals(mItems)) {
+            Log.i("GridAdapter", "New DonationCategory list is the same as the current list.");
+            return;
+        }
         mItems.clear();
         mItems.addAll(items);
         notifyDataSetChanged();
@@ -130,6 +151,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         @Bind(R.id.tvDescription)
         public TextView tvDescription;
 
+        @Bind(R.id.cvRoot)
+        CardView cvRoot;
+
         @Bind(R.id.vPalette)
         View vPalette;
 
@@ -153,6 +177,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
             if (donationCategory.isSelected()) {
                 donationCategory.setSelected(false);
+                //TODO: this is gross, use statelists for all the things that change when selected/unselected
                 tvName.setTextColor(colorPrimary);
                 tvName.setTypeface(null, Typeface.NORMAL);
                 cv.setElevation(card_elevation);

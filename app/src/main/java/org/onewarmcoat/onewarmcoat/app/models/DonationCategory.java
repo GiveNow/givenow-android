@@ -88,4 +88,18 @@ public class DonationCategory extends ParseObject {
         put("donationValue", value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DonationCategory that = (DonationCategory) o;
+
+        return getObjectId().equals(that.getObjectId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getObjectId().hashCode();
+    }
 }

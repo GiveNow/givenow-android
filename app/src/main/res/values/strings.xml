@@ -80,5 +80,7 @@
     <string name="confirm_pickup_dialog_phone_number_hint">Your phone number</string>
     <string name="confirm_pickup_dialog_name_hint">Your name</string>
     <string name="anonymous_user_name">Anonymous</string>
+    <string name="request_pickup_info_confirm_address">Is your address correct?</string>
+    <string name="request_pickup_info_select_categories">What are you donating?</string>
 
 </resources>

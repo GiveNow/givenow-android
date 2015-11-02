@@ -3,7 +3,6 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,7 +47,6 @@ import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
-import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
 import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
@@ -282,8 +280,6 @@ public class RequestPickupFragment extends MapHostingFragment
         ArrayList<DonationCategory> items = mGridAdapter.getSelectedItems();
         if (items.size() < 1) {
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
-            ObjectAnimator anim = CustomAnimations.highlightIncompleteInput(slidingRLContainer);
-            anim.start();
             tvInfo.setText(R.string.error_insufficient_categories_selected);
         } else {
             ParseUser currUser = ParseUser.getCurrentUser();
@@ -397,6 +393,9 @@ public class RequestPickupFragment extends MapHostingFragment
     public void showConfirmAddress() {
         mConfirmAddressShowing = true;
 
+        tvInfo.setText(R.string.request_pickup_info_confirm_address);
+        btnSetPickup.setText(getString(R.string.continue_label));
+
         // zoom in map
         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
             @Override
@@ -433,8 +432,6 @@ public class RequestPickupFragment extends MapHostingFragment
         AnimatorSet set = new AnimatorSet();
         set.play(anim).with(fade_in).with(fade_in_clone);
         set.start();
-
-        btnSetPickup.setText(getString(R.string.continue_label));
     }
 
     private void hideConfirmAddress() {
@@ -455,6 +452,7 @@ public class RequestPickupFragment extends MapHostingFragment
         set.play(fade_out).with(anim);
         set.start();
 
+        tvInfo.setText(R.string.request_pickup_info_confirm_address);
         btnSetPickup.setText(getString(R.string.button_set_pickup_location_label));
         mConfirmAddressShowing = false;
     }
@@ -462,6 +460,11 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private void showCategoryLayout() {
         mCategoryLayoutShowing = true;
+
+        tvInfo.setText(R.string.request_pickup_info_select_categories);
+        btnSetPickup.setText(getString(R.string.button_confirm_donation_label));
+//        btnSetPickup.setBackgroundResource(R.color.disabled);
+
 //        rvDonationCategories.
         slidingRLContainer.setVisibility(View.VISIBLE);
         Animator slide_down_from_top = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
@@ -488,12 +491,11 @@ public class RequestPickupFragment extends MapHostingFragment
             }
         });
         slide_down_from_top.start();
-
-        btnSetPickup.setText(getString(R.string.button_confirm_donation_label));
     }
 
     private void buildCategoryGrid() {
         //get categories from parse
+//        mGridAdapter.clearItems();
         DonationCategory.getTop9().findInBackground((categoryList, error) -> {
             if (error == null) {
                 mGridAdapter.setItems(categoryList);
@@ -529,7 +531,9 @@ public class RequestPickupFragment extends MapHostingFragment
             }
         });
         slide_up_to_top.start();
+        tvInfo.setText(R.string.request_pickup_info_confirm_address);
         btnSetPickup.setText(getString(R.string.continue_label));
+//        btnSetPickup.setBackgroundResource(R.color.colorAccent);
         mCategoryLayoutShowing = false;
     }
 
@@ -547,24 +551,7 @@ public class RequestPickupFragment extends MapHostingFragment
             return;
         }
         // Get the Place object from the buffer.
-        final Place place = places.get(0);
-
-        // Format details of the place for display and show it in a TextView.
-//        mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
-//                place.getId(), place.getAddress(), place.getPhoneNumber(),
-//                place.getWebsiteUri()));
-//
-//        // Display the third party attributions if set.
-//        final CharSequence thirdPartyAttribution = places.getAttributions();
-//        if (thirdPartyAttribution == null) {
-//            mPlaceDetailsAttribution.setVisibility(View.GONE);
-//        } else {
-//            mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
-//            mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
-//        }
-
-//        getAddressFromLatLng(place.getLatLng()).foreachDoEffect(address ->
-//                actvAddress.setText(address.getAddressLine(0)));
+        Place place = places.get(0);
 
         // Animate map to place
         // perhaps maintain zoom level?
@@ -572,7 +559,6 @@ public class RequestPickupFragment extends MapHostingFragment
         mGoogleMap.animateCamera(cameraUpdate);
 
         Log.i(logTag(), "Place details received: " + place.getName());
-
         places.release();
     }
 
