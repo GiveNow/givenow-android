@@ -69,6 +69,7 @@ android {
 dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
+    compile 'com.google.guava:guava:18.0'
     compile "org.functionaljava:functionaljava:4.4"
     compile 'io.reactivex:rxandroid:1.0.1'
 // Because RxAndroid releases are few and far between, it is recommended you also

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.common.collect.Collections2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +20,7 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -127,14 +129,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         mItems.get(position).setSelected(selected);
     }
 
-    public ArrayList<DonationCategory> getSelectedItems() {
-        ArrayList<DonationCategory> selectedItems = new ArrayList<>();
-        for (DonationCategory item : mItems) {
-            if (item.isSelected()) {
-                selectedItems.add(item);
-            }
-        }
-        return selectedItems;
+    public Collection<DonationCategory> getSelectedItems() {
+        return Collections2.filter(mItems, DonationCategory::isSelected);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
