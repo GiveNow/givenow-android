@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseQuery;
@@ -48,7 +47,6 @@ public class MainActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout mDrawerLayout;
-    ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
 
     private int mSelectedItemId;
@@ -268,30 +266,6 @@ public class MainActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        return super.onCreateOptionsMenu(menu);
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        switch (item.getItemId()) {
-//
-//            case android.R.id.home: {
-//                if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-//                    mDrawerLayout.closeDrawer(mDrawerList);
-//                } else {
-//                    mDrawerLayout.openDrawer(mDrawerList);
-//                }
-//                break;
-//            }
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -386,12 +360,12 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void onLaunchRequestPickUpDetail(String address, double lat, double lng) {
-        requestPickUpDetailFragment = RequestPickupDetailFragment.newInstance(address, lat, lng);
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, requestPickUpDetailFragment,
-                        "RequestPickupDetailFragment")
-                .addToBackStack("RequestPickupDetailFragment")
-                .commit();
+//        requestPickUpDetailFragment = RequestPickupDetailFragment.newInstance(address, lat, lng);
+//        getFragmentManager().beginTransaction()
+//                .add(R.id.content_frame, requestPickUpDetailFragment,
+//                        "RequestPickupDetailFragment")
+//                .addToBackStack("RequestPickupDetailFragment")
+//                .commit();
     }
 
     public void updateAddress(Address address) {
