@@ -36,13 +36,10 @@ public class SlidingRelativeLayout extends RelativeLayout {
 
         if (getHeight() == 0) {
             if (preDrawListener == null) {
-                preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
-                        setYFraction(yFraction);
-                        return true;
-                    }
+                preDrawListener = () -> {
+                    getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
+                    setYFraction(yFraction);
+                    return true;
                 };
                 getViewTreeObserver().addOnPreDrawListener(preDrawListener);
             }

@@ -13,15 +13,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -64,25 +60,22 @@ public class DropOffLocationsFragment extends MapHostingFragment implements Goog
             query.whereNear("agencyGeoLocation", geoPoint);
             query.setLimit(20);
 
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List list, ParseException e) {
-                    if(list == null){
-                        return;
-                    }
+            query.findInBackground((list, e) -> {
+                if (list == null) {
+                    return;
+                }
 
-                    for (Object item : list) {
-                        ParseObject it = (ParseObject) item;
-                        ParseGeoPoint geoPoint = it.getParseGeoPoint("agencyGeoLocation");
-                        MarkerOptions marker = new MarkerOptions();
-                        LatLng ll = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                        marker.position(ll);
-                        marker.title(it.getString("agencyName"));
-                        marker.snippet(it.getString("agencyAddress"));
-                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                        //TODO: don't place the same markers on top of markers we already got?
-                        map.addMarker(marker);
-                    }
+                for (Object item : list) {
+                    ParseObject it = (ParseObject) item;
+                    ParseGeoPoint geoPoint1 = it.getParseGeoPoint("agencyGeoLocation");
+                    MarkerOptions marker = new MarkerOptions();
+                    LatLng ll = new LatLng(geoPoint1.getLatitude(), geoPoint1.getLongitude());
+                    marker.position(ll);
+                    marker.title(it.getString("agencyName"));
+                    marker.snippet(it.getString("agencyAddress"));
+                    marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    //TODO: don't place the same markers on top of markers we already got?
+                    map.addMarker(marker);
                 }
             });
         });

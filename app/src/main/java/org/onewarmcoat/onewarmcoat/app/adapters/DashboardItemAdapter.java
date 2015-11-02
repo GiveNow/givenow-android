@@ -11,12 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -131,18 +129,15 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         holder.btnFinishPickup.setOnClickListener(v -> {
             // DONATION CREATION
             final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationType(), pickupRequest.getDonationValue(), pickupRequest.getNumberOfCoats());
-            donation.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        //send push to donor
-                        pickupRequest.generatePickupCompleteNotif(getContext());
-                        //create donation, and set it in the PickupRequest
-                        pickupRequest.setDonation(donation);
-                        pickupRequest.saveInBackground();
-                        loadObjects();
-                        //TODO: would be nice to make this card slide away
-                    }
+            donation.saveInBackground(e -> {
+                if (e == null) {
+                    //send push to donor
+                    pickupRequest.generatePickupCompleteNotif(getContext());
+                    //create donation, and set it in the PickupRequest
+                    pickupRequest.setDonation(donation);
+                    pickupRequest.saveInBackground();
+                    loadObjects();
+                    //TODO: would be nice to make this card slide away
                 }
             });
         });

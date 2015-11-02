@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
@@ -266,12 +265,9 @@ public class PickupRequestDetailFragment extends Fragment implements
         // assign pending volunteer in PickupRequest table and send push notif to donor
         getActivity().setProgressBarIndeterminateVisibility(true);
 
-        mPickupRequest.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                shouldWeRetrySave(e);
-                removePinFromMap();
-            }
+        mPickupRequest.saveInBackground(e -> {
+            shouldWeRetrySave(e);
+            removePinFromMap();
         });
     }
 

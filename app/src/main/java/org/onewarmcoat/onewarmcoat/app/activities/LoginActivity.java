@@ -9,10 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
-import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseAnonymousUtils;
-import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
@@ -76,22 +74,19 @@ public class LoginActivity extends Activity {
      * @param v
      */
     public void anonLogin(View v) {
-        ParseAnonymousUtils.logIn(new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (e != null) {
-                    Log.d("MyApp", "Anonymous login failed.");
-                } else {
-                    //at this point we know we have a valid Parse User, so subscribe to your own Push Notif channel
-                    //and this way we only subscribe once per user
-                    ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-                    installation.put("user", ParseUser.getCurrentUser());
-                    installation.saveInBackground();
+        ParseAnonymousUtils.logIn((user, e) -> {
+            if (e != null) {
+                Log.d("MyApp", "Anonymous login failed.");
+            } else {
+                //at this point we know we have a valid Parse User, so subscribe to your own Push Notif channel
+                //and this way we only subscribe once per user
+                ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+                installation.put("user", ParseUser.getCurrentUser());
+                installation.saveInBackground();
 
-                    Log.d("MyApp", "Anonymous user logged in.");
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
-                }
+                Log.d("MyApp", "Anonymous user logged in.");
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
             }
         });
 

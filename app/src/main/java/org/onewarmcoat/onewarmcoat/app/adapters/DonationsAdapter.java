@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
 import org.onewarmcoat.onewarmcoat.app.R;
@@ -21,11 +20,7 @@ public class DonationsAdapter extends ParseQueryAdapter {
 
     //public DonationsAdapter(Context context, final ParseUser donor) {
     public DonationsAdapter(Context context) {
-        super(context, new ParseQueryAdapter.QueryFactory<Donation>() {
-            public ParseQuery create() {
-                return Donation.getAllMyDonations();
-            }
-        });
+        super(context, (QueryFactory<Donation>) Donation::getAllMyDonations);
     }
 
     @Override

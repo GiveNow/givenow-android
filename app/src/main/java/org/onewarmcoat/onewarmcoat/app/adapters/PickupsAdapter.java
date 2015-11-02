@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
@@ -24,12 +23,7 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
     public PickupsAdapter(Context context) {
 
-        super(context, new ParseQueryAdapter.QueryFactory<PickupRequest>() {
-            public ParseQuery create() {
-                //TODO: this should be completed pickups
-                return PickupRequest.getMyCompletedPickups();
-            }
-        });
+        super(context, (QueryFactory<PickupRequest>) PickupRequest::getMyCompletedPickups);
     }
 
     @Override
@@ -62,7 +56,7 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
         TextView itemTypeView = (TextView) v.findViewById(R.id.itemType);
         String itemType = pickupRequest.getDonationType();
-        itemTypeView.setText(itemType.toString());
+        itemTypeView.setText(itemType);
 
 
         return v;

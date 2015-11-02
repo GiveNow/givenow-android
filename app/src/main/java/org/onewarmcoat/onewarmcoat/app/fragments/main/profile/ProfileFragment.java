@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -18,8 +16,6 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
 import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,17 +81,15 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         query.whereEqualTo(columnName, currentUser);
 
         // Execute the find asynchronously
-        query.findInBackground(new FindCallback<PickupRequest>() {
-            public void done(List<PickupRequest> itemList, ParseException e) {
-                if (e == null) {
-                    if (itemList.size() != 0) {
-                        readableUsername = itemList.get(0).getString("name");
-                        usernameTV.setText(readableUsername);
-                    }
-
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
+        query.findInBackground((itemList, e) -> {
+            if (e == null) {
+                if (itemList.size() != 0) {
+                    readableUsername = itemList.get(0).getString("name");
+                    usernameTV.setText(readableUsername);
                 }
+
+            } else {
+                Log.d("item", "Error: " + e.getMessage());
             }
         });
     }
