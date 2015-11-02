@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity implements
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
     private Intent mIntent;
+    private Fragment fragToHide = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,7 +310,7 @@ public class MainActivity extends BaseActivity implements
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
-        Fragment fragToHide = getFragmentManager().findFragmentById(R.id.content_frame);
+//        Fragment fragToHide = getFragmentManager().findFragmentById(R.id.content_frame);
         if (fragToHide != null) {
             ft.hide(fragToHide);
         }
@@ -329,6 +330,7 @@ public class MainActivity extends BaseActivity implements
                 } else {
                     ft.show(requestPickupFragment);
                 }
+                fragToHide = requestPickupFragment;
                 break;
             case R.id.navigation_volunteer: //Volunteer
                 if (volunteerFragment == null) {
@@ -341,6 +343,7 @@ public class MainActivity extends BaseActivity implements
                     volunteerFragment.loadMarkers();
                     ft.show(volunteerFragment);
                 }
+                fragToHide = volunteerFragment;
                 break;
             case R.id.navigation_dropoff: //Dropoff Centers
                 if (dropoffFragment == null) {
@@ -352,6 +355,7 @@ public class MainActivity extends BaseActivity implements
                 } else {
                     ft.show(dropoffFragment);
                 }
+                fragToHide = dropoffFragment;
                 break;
             case R.id.navigation_profile_image: // Profile
                 if (profileFragment == null) {
@@ -364,6 +368,7 @@ public class MainActivity extends BaseActivity implements
                     profileFragment.refreshProfile();
                     ft.show(profileFragment);
                 }
+                fragToHide = profileFragment;
                 break;
             case R.id.navigation_sign_out: //Sign Out
                 ParseUser.logOut();
