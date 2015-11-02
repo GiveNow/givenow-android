@@ -23,7 +23,7 @@ import com.parse.ParseQuery;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.ButterKnife;
@@ -214,7 +214,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats
-            markerOptions.title(CharityUserHelper.getFirstName(pickupRequest.getName()));
+            markerOptions.title(ParseUserHelper.getFirstName(pickupRequest.getName()));
             markerOptions.snippet("Tap to accept this request!");
         }
 

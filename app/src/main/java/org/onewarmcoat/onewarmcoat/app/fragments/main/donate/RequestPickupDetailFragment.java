@@ -38,8 +38,8 @@ import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import java.util.ArrayList;
@@ -413,8 +413,8 @@ public class RequestPickupDetailFragment extends Fragment implements
     @Override
     public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
         //update the current user's name and phone
-        CharityUserHelper.setName(name);
-        CharityUserHelper.setPhoneNumber(phoneNumber);
+        ParseUserHelper.setName(name);
+        ParseUserHelper.setPhoneNumber(phoneNumber);
 
         //grab donation details
         double donationValue;

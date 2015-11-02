@@ -18,8 +18,8 @@ import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import org.onewarmcoat.onewarmcoat.app.R;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.Bind;
@@ -53,7 +53,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         holder.tvStatus.setText("Waiting for Donor");
         holder.readyLayout.setVisibility(View.GONE);
         holder.tvNumCoats.setText(String.valueOf(pickupRequest.getNumberOfCoats()));
-        holder.tvName.setText(CharityUserHelper.getFirstName(pickupRequest.getName()));
+        holder.tvName.setText(ParseUserHelper.getFirstName(pickupRequest.getName()));
         holder.tvAddress.setText(pickupRequest.getAddresss());
 
         ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();

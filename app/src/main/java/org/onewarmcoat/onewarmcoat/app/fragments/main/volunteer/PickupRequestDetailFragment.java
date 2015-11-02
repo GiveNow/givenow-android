@@ -30,7 +30,7 @@ import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.CustomAnimations;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.Bind;
@@ -127,7 +127,7 @@ public class PickupRequestDetailFragment extends Fragment implements
 
         mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
 
-        tvDonorName.setText(CharityUserHelper.getFirstName(mPickupRequest.getName()));
+        tvDonorName.setText(ParseUserHelper.getFirstName(mPickupRequest.getName()));
         tvDonorAddress.setText(mPickupRequest.getAddresss());
 
         return fragmentView;
@@ -251,7 +251,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     @Override
     public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
         //update the current user's name and phone
-        CharityUserHelper.setNameAndNumber(name, phoneNumber);
+        ParseUserHelper.setNameAndNumber(name, phoneNumber);
 
         savePickupRequest();
     }

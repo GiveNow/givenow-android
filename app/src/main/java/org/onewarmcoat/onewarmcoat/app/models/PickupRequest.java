@@ -295,7 +295,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //send pickup response back to donor
         generatePushNotif(this.getDonor(),
                 context.getResources().getString(R.string.notif_pending_volunteer_assigned_title),
-                context.getResources().getString(R.string.notif_pending_volunteer_assigned_msg, CharityUserHelper.getFirstName()),
+                context.getResources().getString(R.string.notif_pending_volunteer_assigned_msg, ParseUserHelper.getFirstName()),
                 "");
     }
 
@@ -303,7 +303,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //send pickup confirmed notif to volunteer
         generatePushNotif(this.getPendingVolunteer(),
                 context.getResources().getString(R.string.notif_volunteer_confirmed_title),
-                context.getResources().getString(R.string.notif_volunteer_confirmed_msg, CharityUserHelper.getFirstName()),
+                context.getResources().getString(R.string.notif_volunteer_confirmed_msg, ParseUserHelper.getFirstName()),
                 VOLUNTEER_CONFIRMED);
     }
 
@@ -311,7 +311,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //send pickup complete notif back to donor
         generatePushNotif(this.getPendingVolunteer(),
                 context.getResources().getString(R.string.notif_pickup_complete_title),
-                context.getResources().getString(R.string.notif_pickup_complete_msg, CharityUserHelper.getFirstName()),
+                context.getResources().getString(R.string.notif_pickup_complete_msg, ParseUserHelper.getFirstName()),
                 PICKUP_COMPLETE);
     }
 
@@ -319,7 +319,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //there's a problem. send a notif to the donor with the problem description.
         generatePushNotif(this.getPendingVolunteer(),
                 context.getResources().getString(R.string.notif_problem_reported_title),
-                context.getResources().getString(R.string.notif_problem_reported_msg, CharityUserHelper.getFirstName()),
+                context.getResources().getString(R.string.notif_problem_reported_msg, ParseUserHelper.getFirstName()),
                 PROBLEM_REPORTED);
     }
 }

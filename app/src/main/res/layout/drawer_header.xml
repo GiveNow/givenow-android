@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profile_image"
+        android:id="@+id/navigation_profile_image"
         android:layout_width="76dp"
         android:layout_height="76dp"
         android:layout_alignParentLeft="true"
@@ -18,29 +18,29 @@
         app:civ_border_color="#FF000000" />
 
     <TextView
-        android:id="@+id/username"
+        android:id="@+id/navigation_label_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/phone"
-        android:layout_alignLeft="@+id/profile_image"
-        android:layout_alignStart="@+id/profile_image"
+        android:layout_above="@+id/navigation_label_phone"
+        android:layout_alignLeft="@+id/navigation_profile_image"
+        android:layout_alignStart="@+id/navigation_profile_image"
         android:gravity="left"
         android:paddingBottom="4dp"
-        android:text="User Name"
+        android:text="@string/anonymous_user_name"
         android:textColor="#FFF"
         android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/phone"
+        android:id="@+id/navigation_label_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username"
+        android:layout_alignLeft="@+id/navigation_label_username"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/username"
+        android:layout_alignStart="@+id/navigation_label_username"
         android:layout_marginBottom="8dp"
         android:gravity="left"
-        android:text="+13145550897"
+        android:text=""
         android:textColor="#fff"
         android:textSize="14sp" />
 

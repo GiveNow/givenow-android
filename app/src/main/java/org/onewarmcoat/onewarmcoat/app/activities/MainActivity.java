@@ -13,14 +13,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,10 +35,11 @@ import org.onewarmcoat.onewarmcoat.app.fragments.main.profile.ProfileFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.PickupRequestsFragment;
 import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+import fj.data.Option;
 
 public class MainActivity extends BaseActivity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
@@ -58,7 +61,6 @@ public class MainActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-
         mIntent = getIntent();
         initializeDrawer();
 
@@ -161,7 +163,7 @@ public class MainActivity extends BaseActivity implements
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
         ParseUser pendingVolunteer = pickupRequest.getPendingVolunteer();
-        String title = CharityUserHelper.getFirstName(CharityUserHelper.getName(pendingVolunteer)) + " would like to pick up your coats!";
+        String title = ParseUserHelper.getFirstName(ParseUserHelper.getName(pendingVolunteer)) + " would like to pick up your coats!";
         String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddresss() + "</font>";
 
         if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
@@ -223,15 +225,32 @@ public class MainActivity extends BaseActivity implements
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
                 super.onDrawerClosed(drawerView);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-
                 super.onDrawerOpened(drawerView);
+
+                ImageView navigation_profile_image = (ImageView) drawerView.findViewById(R.id.navigation_profile_image);
+                TextView navigation_label_username = (TextView) drawerView.findViewById(R.id.navigation_label_username);
+                TextView navigation_label_phone = (TextView) drawerView.findViewById(R.id.navigation_label_phone);
+
+                if (!ParseUserHelper.isStillAnonymous()) {
+                    //User is not anonymous
+                    navigation_label_username.setText(ParseUserHelper.getName());
+                    navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
+                    Option.fromNull(ParseUserHelper.getProfileImage()).foreachDoEffect(parseFile ->
+                            Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(navigation_profile_image));
+                }
+
+                navigation_profile_image.setOnClickListener(v -> {
+                    //Deselect current item and close drawer
+                    navigationView.getMenu().findItem(mSelectedItemId).setChecked(false);
+                    mDrawerLayout.closeDrawers();
+                    //Select Profile page
+                    selectItem(R.id.navigation_profile_image);
+                });
             }
         };
 
@@ -249,28 +268,28 @@ public class MainActivity extends BaseActivity implements
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case android.R.id.home: {
-                if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-                    mDrawerLayout.closeDrawer(mDrawerList);
-                } else {
-                    mDrawerLayout.openDrawer(mDrawerList);
-                }
-                break;
-            }
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        switch (item.getItemId()) {
+//
+//            case android.R.id.home: {
+//                if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+//                    mDrawerLayout.closeDrawer(mDrawerList);
+//                } else {
+//                    mDrawerLayout.openDrawer(mDrawerList);
+//                }
+//                break;
+//            }
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -334,7 +353,7 @@ public class MainActivity extends BaseActivity implements
                     ft.show(dropoffFragment);
                 }
                 break;
-            case R.id.profile_image: // Profile
+            case R.id.navigation_profile_image: // Profile
                 if (profileFragment == null) {
                     profileFragment = ProfileFragment.newInstance();
                     Log.w("MainActivity", "Adding profileFragment to content.");

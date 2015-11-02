@@ -14,7 +14,7 @@ import com.parse.ParseUser;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.fragments.PageSlidingTabStripFragment;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
 
 import butterknife.Bind;
@@ -69,8 +69,8 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
 
         ButterKnife.bind(this, rootView);
 
-        phonenoTV.setText(CharityUserHelper.getPhoneNumber());
-        usernameTV.setText(CharityUserHelper.getName());
+        phonenoTV.setText(ParseUserHelper.getPhoneNumber());
+        usernameTV.setText(ParseUserHelper.getName());
 
         return rootView;
     }

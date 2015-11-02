@@ -29,8 +29,8 @@ import org.onewarmcoat.onewarmcoat.app.R;
 import org.onewarmcoat.onewarmcoat.app.helpers.AmountOnFocusChangeListener;
 import org.onewarmcoat.onewarmcoat.app.helpers.CroutonHelper;
 import org.onewarmcoat.onewarmcoat.app.helpers.NumericRangeFilter;
-import org.onewarmcoat.onewarmcoat.app.models.CharityUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.Donation;
+import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 
 import java.util.HashMap;
 
@@ -85,7 +85,7 @@ public class CashFragment extends Fragment {
     public void onDonate(Button b) {
         if(validateInput()) {
             //check if user has a Stripe token - Parse query
-            if(CharityUserHelper.hasStripeCustomerId()){
+            if (ParseUserHelper.hasStripeCustomerId()) {
                 chargeStripeCustomer();
             }else{
                 //user doesn't have a stored Stripe token
@@ -216,7 +216,7 @@ public class CashFragment extends Fragment {
         final String amount = etDonateAmount.getText().toString();
         params.put("amount", amount);
 
-        params.put("user_name", CharityUserHelper.getName());
+        params.put("user_name", ParseUserHelper.getName());
         //we also ideally want a name - profile data, which has a default value
 
         //need to call a different function to create new stripe customer (if we have authority/info to do so)
@@ -224,7 +224,7 @@ public class CashFragment extends Fragment {
             @Override
             public void done(String stripeCustomerId, ParseException e) {
                 if (e == null) {
-                    CharityUserHelper.setStripeCustomerId(stripeCustomerId);
+                    ParseUserHelper.setStripeCustomerId(stripeCustomerId);
 
                     showCrouton(amount);
                     storeDonation(amount);
@@ -240,7 +240,7 @@ public class CashFragment extends Fragment {
     private void chargeStripeCustomer() {
         // Send customer ID to server to charge
         HashMap<String, Object> params = new HashMap<>();
-        params.put("stripeCustomer", CharityUserHelper.getStripeCustomerId());
+        params.put("stripeCustomer", ParseUserHelper.getStripeCustomerId());
         final String amount = etDonateAmount.getText().toString();
         params.put("amount", amount);
 
