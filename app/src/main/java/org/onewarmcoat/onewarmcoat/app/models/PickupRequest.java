@@ -89,6 +89,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         //we actually don't want this because then it is too restrictive
 //        q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
         q.whereDoesNotExist("donation");
+        q.orderByDescending("updatedAt"); //latest accepted requests first
         return q;
     }
 

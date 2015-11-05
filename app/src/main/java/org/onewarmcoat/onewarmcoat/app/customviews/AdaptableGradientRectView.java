@@ -30,7 +30,7 @@ public class AdaptableGradientRectView extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         int maxSize = Math.max(getHeight(), getWidth());
-        ColorDrawable cd = (ColorDrawable) ContextCompat.getDrawable(getContext(), R.color.colorPrimary);
+        ColorDrawable cd = (ColorDrawable) ContextCompat.getDrawable(getContext(), R.color.colorPrimaryLight);
         int color = cd.getColor();
         int alpha = cd.getAlpha();
         int red = Color.red(color);

@@ -82,5 +82,6 @@
     <string name="anonymous_user_name">Anonymous</string>
     <string name="request_pickup_info_confirm_address">Is your address correct?</string>
     <string name="request_pickup_info_select_categories">What are you donating?</string>
+    <string name="your_donation_label">Your Donation</string>
 
 </resources>

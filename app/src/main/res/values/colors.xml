@@ -13,6 +13,7 @@
 
     <color name="colorPrimary">#ff00b9e6</color>
     <color name="colorPrimaryDark">#ff0a89a7</color>
+    <color name="colorPrimaryLight">#ffe1f5fe</color>
     <color name="colorAccent">#ff66bb6a</color>
 
     <!--<color name="primary_text_default_material_light">#000000</color>-->

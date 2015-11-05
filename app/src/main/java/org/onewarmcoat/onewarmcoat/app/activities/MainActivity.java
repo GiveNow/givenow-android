@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
         ParseUser pendingVolunteer = pickupRequest.getPendingVolunteer();
-        String title = ParseUserHelper.getFirstName(ParseUserHelper.getName(pendingVolunteer)) + " would like to pick up your coats!";
+        String title = ParseUserHelper.getFirstName(ParseUserHelper.getName(pendingVolunteer)) + " is ready to pick up your donation!";
         String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddresss() + "</font>";
 
         if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
@@ -172,8 +172,8 @@ public class MainActivity extends BaseActivity implements
         acceptPendingDialog = new AlertDialog.Builder(this)
 //                .setTitle(R.string.acceptRequest_submittedDialog_title)
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
-                .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>")) //TODO: fix message
-                .setMessage(Html.fromHtml("Is your donation of " + pickupRequest.getDonationCategories().toString() + " available for pickup today?" + address))
+                .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>")) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
+                .setMessage(Html.fromHtml("Is your donation available for pickup today?" + address))
                 .setPositiveButton("Yes", (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
                 .setNegativeButton("No", (dialog, which) -> cancelPendingVolunteer(pickupRequest))
                 .setIcon(R.drawable.ic_launcher)

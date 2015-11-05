@@ -9,24 +9,24 @@
         android:layout_width="@dimen/custom_marker_image"
         android:layout_height="@dimen/custom_marker_image"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/donate_icon_2x" />
 
-    <TextView
-        android:id="@id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="18sp"
-        android:layout_gravity="center"
-        android:layout_marginTop="2dp"
-        android:autoText="false"
-        android:background="#ffffffff"
-        android:lineSpacingExtra="-2dp"
-        android:lineSpacingMultiplier="0"
-        android:singleLine="true"
-        android:text="88"
-        android:textAlignment="center"
-        android:textAppearance="@style/Bubble.TextAppearance.Light"
-        android:textColor="@color/accent"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+    <!--<TextView-->
+    <!--android:id="@id/text"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="18sp"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:layout_marginTop="2dp"-->
+    <!--android:autoText="false"-->
+    <!--android:background="#ffffffff"-->
+    <!--android:lineSpacingExtra="-2dp"-->
+    <!--android:lineSpacingMultiplier="0"-->
+    <!--android:singleLine="true"-->
+    <!--android:text="88"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textAppearance="@style/Bubble.TextAppearance.Light"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:textSize="16sp"-->
+    <!--android:textStyle="bold" />-->
 
 </FrameLayout>

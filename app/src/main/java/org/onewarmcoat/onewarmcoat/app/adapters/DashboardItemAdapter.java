@@ -52,7 +52,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         //set this as default case
         holder.tvStatus.setText("Waiting for Donor");
         holder.readyLayout.setVisibility(View.GONE);
-        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
+//        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
         holder.tvName.setText(ParseUserHelper.getFirstName(pickupRequest.getName()));
         holder.tvAddress.setText(pickupRequest.getAddresss());
 
@@ -151,8 +151,8 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         TextView tvAddress;
         @Bind(R.id.tvStatus)
         TextView tvStatus;
-        @Bind(R.id.tvNumCoats)
-        TextView tvNumCoats;
+        //        @Bind(R.id.tvNumCoats)
+//        TextView tvNumCoats;
         @Bind(R.id.btnCall)
         Button btnCall;
         @Bind(R.id.btnMap)

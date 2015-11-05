@@ -28,7 +28,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
 
     @Override
     protected String[] getTitles() {
-        return new String[]{"My Dashboard", "PickUp Requests", "DropOff"};
+        return new String[]{"My Dashboard", "PickUp Requests"};
     }
 
     @Override
@@ -38,7 +38,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
         if (savedInstanceState == null) {
             //create fragments
             pickupRequestsFragment = PickupRequestsFragment.newInstance();
-            dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
+//            dropOffLocationsFragment = DropOffLocationsFragment.newInstance();
             dashboardFragment = DashboardFragment.newInstance();
             Log.w("VolunteerFragment", "onCreate: Fragments created");
         }
@@ -49,7 +49,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getChildFragmentManager().putFragment(outState, "pickupRequestsFragment", pickupRequestsFragment);
-        getChildFragmentManager().putFragment(outState, "dropoffLocationsFragment", dropOffLocationsFragment);
+//        getChildFragmentManager().putFragment(outState, "dropoffLocationsFragment", dropOffLocationsFragment);
         getChildFragmentManager().putFragment(outState, "dashboardFragment", dashboardFragment);
         Log.w("VolunteerFragment", "onSaveInstanceState: Fragments saved");
     }
@@ -60,7 +60,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
         Log.w("DonateFragment", "onActivityCreated called.");
         if (inState != null) {
             pickupRequestsFragment = (PickupRequestsFragment) getChildFragmentManager().getFragment(inState, "pickupRequestsFragment");
-            dropOffLocationsFragment = (DropOffLocationsFragment) getChildFragmentManager().getFragment(inState, "dropoffLocationsFragment");
+//            dropOffLocationsFragment = (DropOffLocationsFragment) getChildFragmentManager().getFragment(inState, "dropoffLocationsFragment");
             dashboardFragment = (DashboardFragment) getChildFragmentManager().getFragment(inState, "dashboardFragment");
             Log.w("VolunteerFragment", "onActivityCreated: Fragments restored");
         }
@@ -76,9 +76,9 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
             case 1: //PickUp Requests
                 frag = pickupRequestsFragment;
                 break;
-            case 2: //Drop Off Locations
-                frag = dropOffLocationsFragment;
-                break;
+//            case 2: //Drop Off Locations
+//                frag = dropOffLocationsFragment;
+//                break;
             default:
                 Log.w("VolunteerFragment", "default case hit in getFragmentForPosition, weird tab/position number!");
                 frag = SuperAwesomeCardFragment.newInstance(position);
