@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -101,7 +102,7 @@
     <FrameLayout
         android:id="@+id/flMapLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/flBottomContainer"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/llAddressInfoContainer"
@@ -111,11 +112,7 @@
             android:id="@+id/flMapContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-
-
+            android:layout_gravity="right|center_vertical">
         </FrameLayout>
 
         <!--<EditText-->
@@ -133,7 +130,9 @@
             android:id="@+id/agrv"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:alpha="0.0" />
+            android:alpha="0.0"
+            app:gradientColorFrom="@color/white"
+            app:gradientColorTo="@color/colorPrimaryLight" />
 
         <ImageView
             android:id="@+id/btnMarker"
@@ -167,11 +166,10 @@
         android:id="@+id/flBottomContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/btnSetPickup"
+            android:id="@+id/btnBottomSubmit"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorAccent"
@@ -182,8 +180,9 @@
             android:visibility="visible" />
 
         <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+            android:id="@+id/rlCurrentRequestContainer"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
             android:visibility="gone">
 
@@ -201,7 +200,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="8dp"
                     android:layout_weight="0"
-                    android:padding="6dp"
+                    android:padding="1dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/donate_icon_2x"
                     android:tint="@color/white" />
@@ -221,7 +220,7 @@
                 android:id="@+id/llCancelContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/rvYourDonationCategories"
+                android:layout_above="@+id/rvCurrentRequestCategories"
                 android:layout_alignParentRight="true"
                 android:paddingRight="10dp">
 
@@ -244,9 +243,9 @@
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvYourDonationCategories"
+                android:id="@+id/rvCurrentRequestCategories"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="160dp"
                 android:layout_below="@+id/llDonationInfo"
                 android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
         </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>

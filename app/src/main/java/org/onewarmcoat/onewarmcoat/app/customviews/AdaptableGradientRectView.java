@@ -1,28 +1,51 @@
 package org.onewarmcoat.onewarmcoat.app.customviews;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
 import org.onewarmcoat.onewarmcoat.app.R;
 
 public class AdaptableGradientRectView extends View {
+    private int gradientColorFrom = getResources().getColor(android.R.color.white);
+    private int gradientColorTo = getResources().getColor(R.color.colorPrimaryLight);
+    private RadialGradient mGradient;
+
     public AdaptableGradientRectView(Context context) {
-        super(context);
+        super(context, null);
     }
 
     public AdaptableGradientRectView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.AdaptableGradientRectView, 0, 0);
+        try {
+            gradientColorFrom = ta.getColor(R.styleable.AdaptableGradientRectView_gradientColorFrom, gradientColorFrom);
+            gradientColorTo = ta.getColor(R.styleable.AdaptableGradientRectView_gradientColorTo, gradientColorTo);
+        } finally {
+            ta.recycle();
+        }
     }
 
-    public AdaptableGradientRectView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public int getGradientColorTo() {
+        return gradientColorTo;
+    }
+
+    public void setGradientColorTo(int gradientColorTo) {
+        this.gradientColorTo = gradientColorTo;
+        invalidate();
+    }
+
+    public int getGradientColorFrom() {
+        return gradientColorFrom;
+    }
+
+    public void setGradientColorFrom(int gradientColorFrom) {
+        this.gradientColorFrom = gradientColorFrom;
+        invalidate();
     }
 
     @Override
@@ -30,25 +53,19 @@ public class AdaptableGradientRectView extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         int maxSize = Math.max(getHeight(), getWidth());
-        ColorDrawable cd = (ColorDrawable) ContextCompat.getDrawable(getContext(), R.color.colorPrimaryLight);
-        int color = cd.getColor();
-        int alpha = cd.getAlpha();
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
 
-        RadialGradient gradient = new RadialGradient(
+        mGradient = new RadialGradient(
                 getWidth() / 2,
                 getHeight() / 2,
-                maxSize * 80 / 100,
-                new int[]{Color.argb(0x00, 0xFF, 0xFF, 0xFF),
-                        Color.argb(alpha, red, green, blue)},
+                maxSize * 60 / 100,
+                new int[]{gradientColorFrom & 0xfffffff,
+                        gradientColorTo},//alpha, red, green, blue)},
                 new float[]{0, 1},
                 android.graphics.Shader.TileMode.CLAMP
         );
 
         paint.setDither(true);
-        paint.setShader(gradient);
+        paint.setShader(mGradient);
 
         canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
     }

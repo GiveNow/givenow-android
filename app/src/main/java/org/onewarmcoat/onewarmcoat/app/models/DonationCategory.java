@@ -8,6 +8,8 @@ import com.parse.ParseQuery;
 @ParseClassName("DonationCategory")
 public class DonationCategory extends ParseObject {
 
+    private boolean mClickable = true;
+
     private boolean mSelected = false;
 
     public DonationCategory() {
@@ -35,7 +37,15 @@ public class DonationCategory extends ParseObject {
     }
 
     public void setSelected(boolean selected) {
-        this.mSelected = selected;
+        mSelected = selected;
+    }
+
+    public boolean isClickable() {
+        return mClickable;
+    }
+
+    public void setClickable(boolean b) {
+        mClickable = b;
     }
 
     public String getNameEN() {

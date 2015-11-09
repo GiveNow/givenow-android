@@ -21,7 +21,6 @@ import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -31,13 +30,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
+public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCategoryAdapter.ViewHolder> {
 
     private final DonationCategory mDummyCategory;
     ArrayList<DonationCategory> mItems;
     private Context mContext;
 
-    public GridAdapter() {
+    public DonationCategoryAdapter() {
         super();
         mDummyCategory = new DonationCategory();
         mItems = new ArrayList<>();
@@ -60,6 +59,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         if (donationCategory.equals(mDummyCategory)) {
             return;
         }
+
+        vh.cvRoot.setClickable(donationCategory.isClickable());
 
         if (donationCategory.isSelected()) {
             vh.cvRoot.setSelected(true);
@@ -110,9 +111,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         notifyItemInserted(mItems.size() - 1);
     }
 
-    public void setItems(List<DonationCategory> items) {
+    public void setItems(Collection<DonationCategory> items) {
         if (items.equals(mItems)) {
-            Log.i("GridAdapter", "New DonationCategory list is the same as the current list.");
+            Log.i("DonationCategoryAdapter", "New DonationCategory list is the same as the current list.");
             return;
         }
         mItems.clear();

@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Data model for a post.
@@ -54,6 +55,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public PickupRequest(ParseGeoPoint location, String name, String address, String phoneNumber,
                          ParseUser donor, Collection<DonationCategory> donationCategories) {
         super();
+        setActive(true);
         setLocation(location);
         setName(name);
         setAddress(address);
@@ -65,26 +67,25 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public static ParseQuery<PickupRequest> getQuery() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
         q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.whereEqualTo("isActive", true);
+        q.include("donationCategories");
         return q;
     }
 
     public static ParseQuery<PickupRequest> getAllActiveRequests() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereDoesNotExist("pendingVolunteer");
         return q;
     }
 
     public static ParseQuery<PickupRequest> getMyPendingPickups() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
         return q;
     }
 
     public static ParseQuery<PickupRequest> getMyDashboardPickups() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
         //we actually don't want this because then it is too restrictive
 //        q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
@@ -94,16 +95,14 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     public static ParseQuery<PickupRequest> getMyConfirmedPickups() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
         q.orderByDescending("createdAt");
         return q;
     }
 
     public static ParseQuery<PickupRequest> getMyCompletedPickups() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
         q.whereExists("donation");
         q.orderByDescending("createdAt");
@@ -111,11 +110,25 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     /*
-    All Pickup Requests that I have made, which currently have a pending volunteer, but no confirmed volunteer
+    All Pickup Requests that I have made,
+    which do not have a pending volunteer,
+    and no confirmed volunteer
+     */
+    public static ParseQuery<PickupRequest> getMySubmittedRequests() {
+        ParseQuery<PickupRequest> q = getQuery();
+        q.whereEqualTo("donor", ParseUser.getCurrentUser());
+        q.whereDoesNotExist("pendingVolunteer");
+        q.whereDoesNotExist("confirmedVolunteer");
+        return q;
+    }
+
+    /*
+    All Pickup Requests that I have made,
+    which currently have a pending volunteer,
+    but no confirmed volunteer
      */
     public static ParseQuery<PickupRequest> getMyPendingRequests() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("pendingVolunteer");
         q.whereDoesNotExist("confirmedVolunteer");
@@ -123,11 +136,12 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     /*
-    All Pickup Requests that I have made, which currently have a volunteer confirmed to be completing the pickup, but not delivered
+    All Pickup Requests that I have made,
+    which currently have a volunteer confirmed to be completing the pickup,
+    but not delivered
      */
     public static ParseQuery<PickupRequest> getMyConfirmedRequests() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("confirmedVolunteer");
         q.whereDoesNotExist("donation");
@@ -135,11 +149,11 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     /*
-    All Pickup Requests that I have made, which currently have a volunteer confirmed to be completing the pickup
+    All Pickup Requests that I have made,
+    which currently have a volunteer confirmed to be completing the pickup
      */
     public static ParseQuery<PickupRequest> getAllMyConfirmedRequests() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("confirmedVolunteer");
         return q;
@@ -149,8 +163,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     All Pickup Requests that I have made, which were successfully delivered to the charity as a donation
      */
     public static ParseQuery<PickupRequest> getMyCompletedRequests() {
-        ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("donation");
         return q;
@@ -210,7 +223,16 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     public Collection<DonationCategory> getDonationCategories() {
-        return getList("donationCategories");
+        List<DonationCategory> l = getList("donationCategories");
+//        ArrayList<DonationCategory> al = (ArrayList<DonationCategory>) get("donationCategories");
+//        ArrayList<DonationCategory> list= new ArrayList<DonationCategory>();
+//        JSONArray list = getJSONArray("arrayName");
+//        list.
+//        for (DonationCategory c : l) {
+//            c.fetchIfNeeded()
+//        }
+        return l;
+
     }
 
     public void setDonationCategories(Collection<DonationCategory> donationCategories) {
@@ -239,6 +261,14 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public void setConfirmedVolunteer(ParseUser value) {
         put("confirmedVolunteer", value);
+    }
+
+    public boolean getActive() {
+        return getBoolean("isActive");
+    }
+
+    public void setActive(boolean b) {
+        put("isActive", b);
     }
 
     @Override
@@ -299,5 +329,11 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
                 context.getResources().getString(R.string.notif_problem_reported_title),
                 context.getResources().getString(R.string.notif_problem_reported_msg, ParseUserHelper.getFirstName()),
                 PROBLEM_REPORTED);
+    }
+
+    /* Cancel this pickup request.
+     */
+    public void cancel() {
+        setActive(false);
     }
 }
