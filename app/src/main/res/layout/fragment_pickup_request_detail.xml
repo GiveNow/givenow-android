@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupDetailFragment">
+    tools:context="io.givenow.app.fragments.main.donate.RequestPickupDetailFragment">
 
-    <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+    <io.givenow.app.customviews.SlidingRelativeLayout
         android:id="@+id/rlInfoContainer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -116,9 +116,9 @@
             android:layout_height="5dp"
             android:layout_below="@id/llAddress"
             android:background="@drawable/drop_shadow" />
-    </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+    </io.givenow.app.customviews.SlidingRelativeLayout>
 
-    <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+    <io.givenow.app.customviews.SlidingRelativeLayout
         android:id="@+id/rlButtonContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -132,6 +132,6 @@
             android:background="@color/accent"
             android:text="@string/accept"
             android:textColor="#ffffffff" />
-    </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+    </io.givenow.app.customviews.SlidingRelativeLayout>
 
 </RelativeLayout>

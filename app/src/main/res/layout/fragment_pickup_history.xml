@@ -5,7 +5,7 @@
     android:layout_alignParentBottom="true"
     android:background="#ff246d9e"
     android:padding="10dp"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.profile.PickupHistoryFragment">
+    tools:context="io.givenow.app.fragments.main.profile.PickupHistoryFragment">
 
     <LinearLayout
         android:id="@+id/pickupHeaders"

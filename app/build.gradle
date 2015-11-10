@@ -25,6 +25,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
+        applicationId "io.givenow.app"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1

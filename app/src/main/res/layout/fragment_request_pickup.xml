@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupFragment">
+    tools:context="io.givenow.app.fragments.main.donate.RequestPickupFragment">
 
     <LinearLayout
         android:id="@+id/llAddressInfoContainer"
@@ -128,7 +128,7 @@
         <!--android:padding="15dp"-->
         <!--android:textColor="@color/accent"-->
         <!--android:textSize="14sp" />-->
-        <org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView
+        <io.givenow.app.customviews.AdaptableGradientRectView
             android:id="@+id/agrv"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -144,7 +144,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/ic_marker" />
 
-        <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+        <io.givenow.app.customviews.SlidingRelativeLayout
             android:id="@+id/slidingRLContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -160,7 +160,7 @@
                 android:paddingTop="@dimen/cell_margin">
 
             </android.support.v7.widget.RecyclerView>
-        </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+        </io.givenow.app.customviews.SlidingRelativeLayout>
 
     </FrameLayout>
 
@@ -181,7 +181,7 @@
             android:textColor="#ffffffff"
             android:visibility="visible" />
 
-        <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+        <io.givenow.app.customviews.SlidingRelativeLayout
             android:id="@+id/rlCurrentRequestContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -249,8 +249,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_below="@+id/llDonationInfo"
-                android:orientation="horizontal"></android.support.v7.widget.RecyclerView>
-        </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+                android:orientation="horizontal"/>
+        </io.givenow.app.customviews.SlidingRelativeLayout>
     </FrameLayout>
 
 

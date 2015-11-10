@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffffff"
-    tools:context="org.onewarmcoat.onewarmcoat.app.activities.LoginActivity">
+    tools:context="io.givenow.app.activities.LoginActivity">
 
     <!--<TextView-->
     <!--android:id="@+id/loginTV"-->

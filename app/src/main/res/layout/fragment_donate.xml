@@ -3,7 +3,7 @@
     android:id="@+id/DonateFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.DonateFragment">
+    tools:context="io.givenow.app.fragments.main.DonateFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

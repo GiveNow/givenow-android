@@ -3,7 +3,7 @@
     android:id="@+id/ProfileFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.profile.ProfileFragment">
+    tools:context="io.givenow.app.fragments.main.profile.ProfileFragment">
 
     <RelativeLayout
         android:id="@+id/userInfo"

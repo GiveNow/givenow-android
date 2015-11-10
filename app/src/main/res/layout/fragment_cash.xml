@@ -7,7 +7,7 @@
 
     android:background="@color/background"
     android:gravity="center"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.CashFragment">
+    tools:context="io.givenow.app.fragments.main.donate.CashFragment">
 
     <ImageView
         android:id="@+id/imageView"

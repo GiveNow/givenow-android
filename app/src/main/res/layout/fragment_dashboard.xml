@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffdee8ee"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.volunteer.DashboardFragment">
+    tools:context="io.givenow.app.fragments.main.volunteer.DashboardFragment">
 
     <ListView
         android:id="@+id/lvItems"

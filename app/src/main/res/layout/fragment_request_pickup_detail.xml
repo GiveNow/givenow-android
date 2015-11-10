@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.onewarmcoat.onewarmcoat.app.fragments.main.donate.RequestPickupDetailFragment">
+    tools:context="io.givenow.app.fragments.main.donate.RequestPickupDetailFragment">
 
-    <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+    <io.givenow.app.customviews.SlidingRelativeLayout
         android:id="@+id/rlAddressContainer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:layout_height="5dp"
             android:layout_below="@id/llAddress"
             android:background="@drawable/drop_shadow" />
-    </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+    </io.givenow.app.customviews.SlidingRelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -103,14 +103,14 @@
         <!--android:scaleType="matrix"-->
         <!--android:adjustViewBounds="false"-->
         <!--android:cropToPadding="false" />        -->
-        <org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView
+        <io.givenow.app.customviews.AdaptableGradientRectView
             android:id="@+id/agrv"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="0"
             android:alpha="0.0" />
 
-        <org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout
+        <io.givenow.app.customviews.SlidingRelativeLayout
             android:id="@+id/rlPickupDetailContainer"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -329,7 +329,7 @@
                 </LinearLayout>
 
             </RelativeLayout>
-        </org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout>
+        </io.givenow.app.customviews.SlidingRelativeLayout>
     </LinearLayout>
 
     <Button

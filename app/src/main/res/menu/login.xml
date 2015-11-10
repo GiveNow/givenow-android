@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.onewarmcoat.onewarmcoat.app.activities.LoginActivity">
+    tools:context="io.givenow.app.activities.LoginActivity">
 
     <item
         android:id="@+id/action_settings"
