@@ -1,20 +1,20 @@
-## One Warm Coat
+## GiveNow
 
-The One Warm Coat Android app is designed to make it easier for users to donate to One Warm Coat, and to help organize volunteers.
+The GiveNow Android app is designed to make it easier for users to donate to donation centers, and to help organize volunteers.
+
+Some of these screenshots still need to be updated. Bear with us!
 
 #Donor
 
-Users can login annonymously, this reduces friction to prevent dropoff in a signup flow.
+(Users can login annonymously, this reduces friction to prevent dropoff in a signup flow.)
 
-![Login](/assets/login.png?raw=true)
-
-Donors can request a coat pickup from their house.
+Donors can request a donation pickup from their house.
 
 ![Donor Request](/assets/donor_request.png?raw=true)
 
-In the detailed view they can fine tune their location, set the number of coats they want to donate, and set a monetary value for tax purposes.
+In the detailed view they can fine tune their location, and choose which items they want to donate.
 
-![Donor detailed view](/assets/donor_request_detail.png?raw=true)
+![Donor detailed view](/assets/donor_request_detail.png?raw=true)![Donor category chooser](/assets/donor_choose_categories.png?raw=true)
 
 The Donor needs to confirm their name and phone number so the volunteer can contact them.
 
