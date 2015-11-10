@@ -76,12 +76,6 @@ public class RequestPickupFragment extends MapHostingFragment
     @Bind(R.id.btnClearAddress)
     ImageButton btnClearAddress;
 
-    @Bind(R.id.llAddressInfoContainer)
-    LinearLayout llAddressInfoContainer;
-
-    @Bind(R.id.llInfo)
-    LinearLayout llInfo;
-
     @Bind(R.id.agrv)
     AdaptableGradientRectView adaptableGradientRectView;
 
@@ -91,20 +85,11 @@ public class RequestPickupFragment extends MapHostingFragment
     @Bind(R.id.slidingRLContainer)
     SlidingRelativeLayout slidingRLContainer;
 
-//    @Bind(R.id.tvInfo)
-//    TextView tvInfo;
-
     @Bind(R.id.rlCurrentRequestContainer)
     SlidingRelativeLayout rlCurrentRequestContainer;
 
-    @Bind(R.id.tvYourDonation)
-    TextView tvYourDonation;
-
     @Bind(R.id.rvCurrentRequestCategories)
     RecyclerView rvCurrentRequestCategories;
-
-    @Bind(R.id.flMapContainer)
-    FrameLayout flMapContainer;
 
     @Bind(R.id.tsInfo)
     TextSwitcher tsInfo;
@@ -211,9 +196,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
         // The number of Columns
         mGridLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        rvDonationCategories.setItemAnimator(new DefaultItemAnimator());
-//        mGridLayoutManager.
-//        rvDonationCategories.setRecycledViewPool();
+//        rvDonationCategories.setItemAnimator
         rvDonationCategories.setLayoutManager(mGridLayoutManager);
 
         rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
