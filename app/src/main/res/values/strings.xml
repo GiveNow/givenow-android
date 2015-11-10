@@ -88,6 +88,6 @@
     <string name="dialog_cancelDonation_message">Cancel your donation?</string>
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
     <string name="dialog_cancelDonation_negativeButton">Keep donation</string>
-    <string name="request_pickup_choose_location">Where is your donation?</string>
+    <string name="request_pickup_choose_location">Where is your donation located?</string>
 
 </resources>

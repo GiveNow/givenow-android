@@ -315,6 +315,7 @@ public class RequestPickupFragment extends MapHostingFragment
         if (items.size() < 1) {
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
+            btnBottomSubmit.setEnabled(true);
         } else {
             ParseUser currUser = ParseUser.getCurrentUser();
             String myPhoneNumber = currUser.getString("phoneNumber");
@@ -492,13 +493,13 @@ public class RequestPickupFragment extends MapHostingFragment
     private Observable<Void> showCategoryLayout() {
         return Observable.create(subscriber -> {
             mCategoryLayoutShowing = true;
+            buildCategoryGrid();
             tsInfo.setText(getString(R.string.request_pickup_info_select_categories));
             btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
             slidingRLContainer.setVisibility(View.VISIBLE);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
             slideDownFromTop.setTarget(slidingRLContainer);
             slideDownFromTop.addListener((AnimatorEndListener) animation -> {
-                buildCategoryGrid();
                 subscriber.onNext(null);
                 subscriber.onCompleted();
             });
@@ -508,10 +509,12 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private void buildCategoryGrid() {
         //get categories from parse
-//        mDonationCategoryAdapter.clearItems();
+        mDonationCategoryAdapter.clearItems();
         DonationCategory.getTop9().findInBackground((categoryList, error) -> {
             if (error == null) {
-                mDonationCategoryAdapter.setItems(categoryList);
+                for (DonationCategory category : categoryList) {
+                    mDonationCategoryAdapter.addItem(category);
+                }
             } else {
                 Log.d("RPDF", "Error fetching categories: " + error.getMessage());
             }
