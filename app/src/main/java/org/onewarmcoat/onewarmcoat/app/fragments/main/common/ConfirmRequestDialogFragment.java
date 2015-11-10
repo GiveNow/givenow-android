@@ -31,6 +31,8 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
     TextView tvDisclaimer;
 
     AlertDialog dialog;
+    DialogInterface.OnDismissListener mDismissListener = dialog -> {
+    };
 
     public ConfirmRequestDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -118,6 +120,10 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
         ButterKnife.unbind(this);
     }
 
+    public void setOnDismissListener(DialogInterface.OnDismissListener dismissListener) {
+        this.mDismissListener = dismissListener;
+    }
+
     @Override
     public void onDismiss(DialogInterface dialog) {
         // this is very temperamental here, so in the interests of demo stability,
@@ -127,6 +133,7 @@ public class ConfirmRequestDialogFragment extends DialogFragment implements Text
             d.getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
+        mDismissListener.onDismiss(dialog);
         super.onDismiss(dialog);
     }
 

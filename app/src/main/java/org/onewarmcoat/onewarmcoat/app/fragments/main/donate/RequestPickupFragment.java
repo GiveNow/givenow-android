@@ -3,20 +3,16 @@ package org.onewarmcoat.onewarmcoat.app.fragments.main.donate;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.location.Address;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +24,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.ResultCallback;
@@ -51,6 +48,7 @@ import org.onewarmcoat.onewarmcoat.app.customviews.AdaptableGradientRectView;
 import org.onewarmcoat.onewarmcoat.app.customviews.SlidingRelativeLayout;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.ConfirmRequestDialogFragment;
 import org.onewarmcoat.onewarmcoat.app.fragments.main.common.MapHostingFragment;
+import org.onewarmcoat.onewarmcoat.app.interfaces.AnimatorEndListener;
 import org.onewarmcoat.onewarmcoat.app.models.DonationCategory;
 import org.onewarmcoat.onewarmcoat.app.models.ParseUserHelper;
 import org.onewarmcoat.onewarmcoat.app.models.PickupRequest;
@@ -60,6 +58,7 @@ import java.util.Collection;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
 
 
 public class RequestPickupFragment extends MapHostingFragment
@@ -92,8 +91,8 @@ public class RequestPickupFragment extends MapHostingFragment
     @Bind(R.id.slidingRLContainer)
     SlidingRelativeLayout slidingRLContainer;
 
-    @Bind(R.id.tvInfo)
-    TextView tvInfo;
+//    @Bind(R.id.tvInfo)
+//    TextView tvInfo;
 
     @Bind(R.id.rlCurrentRequestContainer)
     SlidingRelativeLayout rlCurrentRequestContainer;
@@ -107,12 +106,12 @@ public class RequestPickupFragment extends MapHostingFragment
     @Bind(R.id.flMapContainer)
     FrameLayout flMapContainer;
 
+    @Bind(R.id.tsInfo)
+    TextSwitcher tsInfo;
+
     private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
-    private Animator fade_in;
-    private Animator inflate_to_height;
     private boolean mConfirmAddressShowing = false;
-    private Animator fade_out;
     private boolean mKeyCodeBackEventHandled = false;
     private DonationCategoryAdapter mDonationCategoryAdapter;
     private boolean mCategoryLayoutShowing = false;
@@ -191,10 +190,12 @@ public class RequestPickupFragment extends MapHostingFragment
                 mKeyCodeBackEventHandled = true;
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (mCategoryLayoutShowing) {
-                        hideCategoryLayout();
+                        hideCategoryLayout().subscribe(s ->
+                                tsInfo.setText(getString(R.string.request_pickup_info_confirm_address)));
                         return true;
                     } else if (mConfirmAddressShowing) {
-                        hideConfirmAddress();
+                        hideConfirmAddress().subscribe(s ->
+                                tsInfo.setText(getString(R.string.request_pickup_choose_location)));
                         return true;
                     }
                 }
@@ -218,6 +219,8 @@ public class RequestPickupFragment extends MapHostingFragment
         rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mCurrentRequestCategoriesAdapter = new DonationCategoryAdapter();
         rvCurrentRequestCategories.setAdapter(mCurrentRequestCategoriesAdapter);
+
+        tsInfo.setFactory(() -> LayoutInflater.from(getActivity()).inflate(R.layout.textview_info, null));
         Log.w(logTag(), "onCreateView completed.");
         return viewRoot;
     }
@@ -254,7 +257,7 @@ public class RequestPickupFragment extends MapHostingFragment
         PickupRequest.getMySubmittedRequests().getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
                 mPickupRequest = pickupRequest;
-                showCurrentRequestLayout();
+                showCurrentRequestLayout().subscribe();
             }
         });
     }
@@ -292,25 +295,27 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     @OnClick(R.id.btnBottomSubmit)
-    protected void onSetPickup(Button button) {
+    protected void onBottomSubmit(Button button) {
+        btnBottomSubmit.setEnabled(false);
         if (!mConfirmAddressShowing) {
-            showConfirmAddress();
+            showConfirmAddress().subscribe();
         } else {
             if (!mCategoryLayoutShowing) {
-                showCategoryLayout();
+                showCategoryLayout().subscribe();
             } else {
                 confirmPickupRequest();
+                return; //leave button disabled
             }
         }
+        btnBottomSubmit.setEnabled(true);
     }
 
     private void confirmPickupRequest() {
         Collection<DonationCategory> items = mDonationCategoryAdapter.getSelectedItems();
         if (items.size() < 1) {
             //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
-            tvInfo.setText(R.string.error_insufficient_categories_selected);
+            tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
         } else {
-            btnBottomSubmit.setEnabled(false);
             ParseUser currUser = ParseUser.getCurrentUser();
             String myPhoneNumber = currUser.getString("phoneNumber");
             if (myPhoneNumber == null) {
@@ -331,12 +336,15 @@ public class RequestPickupFragment extends MapHostingFragment
         ConfirmRequestDialogFragment confirmRequestDialogFragment =
                 ConfirmRequestDialogFragment.newInstance(getString(R.string.confirm_pickup_dialog_title), name, phoneNumber,
                         getResources().getText(R.string.donor_dialog_disclaimer));
+        confirmRequestDialogFragment.setOnDismissListener(dialog ->
+                btnBottomSubmit.setEnabled(true));
         confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
     // after donor enters name and number and hits Confirm
     @Override
     public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+        hideKeyboardFrom(getActivity(), getView());
         //update the current user's name and phone
         ParseUserHelper.setName(name);
         ParseUserHelper.setPhoneNumber(phoneNumber);
@@ -384,9 +392,11 @@ public class RequestPickupFragment extends MapHostingFragment
             // saved successfully
             mRequestSubmitted = true;
             // detach this detail fragment, we're done here
-            hideCategoryLayout();
-            hideConfirmAddress();
-            showCurrentRequestLayout();
+            hideCategoryLayout().subscribe(v -> {
+                hideConfirmAddress().subscribe();
+                showCurrentRequestLayout().subscribe();
+            });
+
         } else {
             // save did not succeed
             getActivity().setProgressBarIndeterminateVisibility(false);
@@ -407,10 +417,8 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         // entering animations
-        fade_in = AnimatorInflater.loadAnimator(activity, R.animator.fade_in);
-        inflate_to_height = AnimatorInflater.loadAnimator(activity, R.animator.inflate_to_height);
+//        inflate_to_height = AnimatorInflater.loadAnimator(activity, R.animator.inflate_to_height);
 
-        fade_out = AnimatorInflater.loadAnimator(activity, R.animator.fade_out);
 
         try {
             mListener = (PickUpDetailInteractionListener) activity;
@@ -420,116 +428,82 @@ public class RequestPickupFragment extends MapHostingFragment
         }
 
     }
-//    @butterknife.Bind(R.attr.actionBarSize)
-//    int actionBarSize;
 
-    public void showConfirmAddress() {
-        mConfirmAddressShowing = true;
+//    public void showConfirmAddressNow() {
+//        showCurrentRequestLayout().subscribe();
+//    }
 
-        tvInfo.setText(R.string.request_pickup_info_confirm_address);
-        btnBottomSubmit.setText(getString(R.string.continue_label));
+    public Observable<Void> showConfirmAddress() {
+        return Observable.create(subscriber -> {
+            mConfirmAddressShowing = true;
 
-        // zoom in map
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, new GoogleMap.CancelableCallback() {
-            @Override
-            public void onFinish() {
+            tsInfo.setText(getString(R.string.request_pickup_info_confirm_address));
+            btnBottomSubmit.setText(getString(R.string.continue_label));
 
-            }
+            // zoom in map
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, null);
+            Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
 
-            @Override
-            public void onCancel() {
-
-            }
+            fade_in.setTarget(adaptableGradientRectView);
+            fade_in.addListener((AnimatorEndListener) animation -> {
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            });
+            fade_in.start();
         });
-
-        ValueAnimator infoGrow = getInfoGrowAnimator();
-
-        llInfo.setAlpha(0);
-        fade_in.setTarget(llInfo);
-        Animator fade_in_clone = fade_in.clone();
-        fade_in_clone.setTarget(adaptableGradientRectView);
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(infoGrow).with(fade_in).with(fade_in_clone);
-        set.start();
     }
 
-    @NonNull
-    private ValueAnimator getInfoGrowAnimator() {
-        TypedValue typedValue = new TypedValue();
-        getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true);
-        TypedArray typedArray = getActivity().obtainStyledAttributes(typedValue.data, new int[]{R.attr.actionBarSize});
-        int targetHeight = typedArray.getDimensionPixelSize(0, -1);
-        typedArray.recycle();
+//    @NonNull
+//    private ValueAnimator getInfoGrowAnimator() {
+//        TypedValue typedValue = new TypedValue();
+//        getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true);
+//        TypedArray typedArray = getActivity().obtainStyledAttributes(typedValue.data, new int[]{R.attr.actionBarSize});
+//        int targetHeight = typedArray.getDimensionPixelSize(0, -1);
+//        typedArray.recycle();
+//
+//        ValueAnimator infoGrow = ValueAnimator.ofInt(llInfo.getMeasuredHeight(), targetHeight);
+//        infoGrow.addUpdateListener(valueAnimator -> {
+//            int val = (Integer) valueAnimator.getAnimatedValue();
+//            ViewGroup.LayoutParams layoutParams = llInfo.getLayoutParams();
+//            layoutParams.height = val;
+//            llInfo.setLayoutParams(layoutParams);
+//        });
+//        infoGrow.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+//        return infoGrow;
+//    }
 
-        ValueAnimator infoGrow = ValueAnimator.ofInt(llInfo.getMeasuredHeight(), targetHeight);
-        infoGrow.addUpdateListener(valueAnimator -> {
-            int val = (Integer) valueAnimator.getAnimatedValue();
-            ViewGroup.LayoutParams layoutParams = llInfo.getLayoutParams();
-            layoutParams.height = val;
-            llInfo.setLayoutParams(layoutParams);
+    private Observable<Void> hideConfirmAddress() {
+        return Observable.create(subscriber -> {
+//            tsInfo.setText(getString(R.string.request_pickup_choose_location));
+            btnBottomSubmit.setText(getString(R.string.button_set_pickup_location_label));
+
+            Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
+            fade_out.setTarget(adaptableGradientRectView);
+            fade_out.addListener((AnimatorEndListener) animation -> {
+                mConfirmAddressShowing = false;
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            });
+            fade_out.start();
         });
-        infoGrow.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
-        return infoGrow;
-    }
-
-    private void hideConfirmAddress() {
-        //Animate out.
-        ValueAnimator anim = ValueAnimator.ofInt(llInfo.getMeasuredHeight(), 0);
-        anim.addUpdateListener(valueAnimator -> {
-            int val = (Integer) valueAnimator.getAnimatedValue();
-            ViewGroup.LayoutParams layoutParams = llInfo.getLayoutParams();
-            layoutParams.height = val;
-            llInfo.setLayoutParams(layoutParams);
-        });
-        anim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
-
-        fade_out.setTarget(llInfo);
-        fade_out.setTarget(adaptableGradientRectView);
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(fade_out).with(anim);
-        set.start();
-
-        tvInfo.setText(R.string.request_pickup_info_confirm_address);
-        btnBottomSubmit.setText(getString(R.string.button_set_pickup_location_label));
-        mConfirmAddressShowing = false;
     }
 
 
-    private void showCategoryLayout() {
-        mCategoryLayoutShowing = true;
-
-        tvInfo.setText(R.string.request_pickup_info_select_categories);
-        btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
-//        btnBottomSubmit.setBackgroundResource(R.color.disabled);
-
-//        rvDonationCategories.
-        slidingRLContainer.setVisibility(View.VISIBLE);
-        Animator slide_down_from_top = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
-        slide_down_from_top.setTarget(slidingRLContainer);
-        slide_down_from_top.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
+    private Observable<Void> showCategoryLayout() {
+        return Observable.create(subscriber -> {
+            mCategoryLayoutShowing = true;
+            tsInfo.setText(getString(R.string.request_pickup_info_select_categories));
+            btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
+            slidingRLContainer.setVisibility(View.VISIBLE);
+            Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
+            slideDownFromTop.setTarget(slidingRLContainer);
+            slideDownFromTop.addListener((AnimatorEndListener) animation -> {
                 buildCategoryGrid();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            });
+            slideDownFromTop.start();
         });
-        slide_down_from_top.start();
     }
 
     private void buildCategoryGrid() {
@@ -544,74 +518,63 @@ public class RequestPickupFragment extends MapHostingFragment
         });
     }
 
-    private void hideCategoryLayout() {
-        //Animate down
-        Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
-        slideUpToTop.setTarget(slidingRLContainer);
-        slideUpToTop.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+    private Observable<Void> hideCategoryLayout() {
+        return Observable.create(subscriber -> {
+//            tsInfo.setText(getString(R.string.request_pickup_info_confirm_address));
+            btnBottomSubmit.setText(getString(R.string.continue_label));
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
+            Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
+            slideUpToTop.setTarget(slidingRLContainer);
+            slideUpToTop.addListener((AnimatorEndListener) animation -> {
                 slidingRLContainer.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
+                mCategoryLayoutShowing = false;
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            });
+            slideUpToTop.start();
         });
-        slideUpToTop.start();
-        tvInfo.setText(R.string.request_pickup_info_confirm_address);
-        btnBottomSubmit.setText(getString(R.string.continue_label));
-//        btnBottomSubmit.setBackgroundResource(R.color.colorAccent);
-        mCategoryLayoutShowing = false;
     }
 
 
-    private void showCurrentRequestLayout() {
+    private Observable<Void> showCurrentRequestLayout() {
+        return Observable.create(subscriber -> {
 //        mCurrentRequestLayoutShowing = true;
 
-        Collection<DonationCategory> items = mPickupRequest.getDonationCategories();
-        for (DonationCategory item : items) {
-            item.setSelected(true);
-            item.setClickable(false);
-        }
-        mCurrentRequestCategoriesAdapter.setItems(items); //TODO might need to use List to preserve order
-//        mCurrentRequestCategoriesAdapter.setItemsClickable(false);
+            Collection<DonationCategory> items = mPickupRequest.getDonationCategories();
+            for (DonationCategory item : items) {
+                item.setSelected(true);
+                item.setClickable(false);
+            }
+            mCurrentRequestCategoriesAdapter.setItems(items); //TODO might need to use List to preserve order
 
-        tvInfo.setText(R.string.request_status_waiting);
-        btnBottomSubmit.setVisibility(View.GONE);
-        btnBottomSubmit.setEnabled(false);
-        Animator slideUp = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_from_bottom);
-        slideUp.setTarget(rlCurrentRequestContainer);
+            tsInfo.setText(getString(R.string.request_status_waiting));
+            btnBottomSubmit.setVisibility(View.GONE);
+            btnBottomSubmit.setEnabled(false);
+            Animator slideUp = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_from_bottom);
+            slideUp.setTarget(rlCurrentRequestContainer);
 
-        fade_in.setTarget(adaptableGradientRectView);
-        adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryDark));
+            Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
+            fade_in.setTarget(adaptableGradientRectView);
+            adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryDark));
 
-//        slideUp.start();
-        ValueAnimator infoGrow = getInfoGrowAnimator();
+            rlCurrentRequestContainer.setVisibility(View.VISIBLE);
 
-        AnimatorSet set = new AnimatorSet();
-        set.play(slideUp).with(infoGrow).before(fade_in);
-        set.start();
+            //Disable map
+            mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        rlCurrentRequestContainer.setVisibility(View.VISIBLE);
-        //move & zoom map to location of current pickup request
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mPickupRequest.getPosition(), 18);
-        mGoogleMap.animateCamera(cameraUpdate);
+            //move & zoom map to location of current pickup request
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mPickupRequest.getPosition(), 18);
+            mGoogleMap.animateCamera(cameraUpdate);
 
-        //Disable map
-        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            AnimatorSet set = new AnimatorSet();
+            set.play(slideUp).before(fade_in);
+            set.addListener((AnimatorEndListener) animation -> {
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            });
+            set.start();
+        });
     }
 
     @OnClick(R.id.llCancelContainer)
@@ -623,7 +586,7 @@ public class RequestPickupFragment extends MapHostingFragment
                     mPickupRequest.cancel();
                     mPickupRequest.saveInBackground(e -> {
                         if (e == null) {
-                            hideCurrentRequestLayout();
+                            hideCurrentRequestLayout().subscribe();
                         } else {
                             new AlertDialog.Builder(getActivity())
                                     .setMessage(R.string.error_donation_not_canceled)
@@ -636,28 +599,36 @@ public class RequestPickupFragment extends MapHostingFragment
                 .show();
     }
 
-    private void hideCurrentRequestLayout() {
-        //Re-enable map
-        mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+    private Observable<Void> hideCurrentRequestLayout() {
+        return Observable.create(subscriber -> {
+            //Re-enable map
+            mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
+            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        Animator slideDown = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_to_bottom);
-        slideDown.setTarget(rlCurrentRequestContainer);
+            Animator slideDown = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_to_bottom);
+            slideDown.setTarget(rlCurrentRequestContainer);
 
-        btnBottomSubmit.setVisibility(View.VISIBLE);
-        btnBottomSubmit.setEnabled(true);
-        Animator slideUp = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_from_bottom);
-        slideUp.setTarget(btnBottomSubmit);
+            btnBottomSubmit.setVisibility(View.VISIBLE);
+            btnBottomSubmit.setEnabled(true);
+            Animator slideUp = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_from_bottom);
+            slideUp.setTarget(btnBottomSubmit);
 
-        fade_out.setTarget(adaptableGradientRectView);
-        adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
+            Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
+            fade_out.setTarget(adaptableGradientRectView);
+            adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
 
-        AnimatorSet set = new AnimatorSet();
-        set.play(fade_out).before(slideDown).before(slideUp);
-        set.start();
+            AnimatorSet set = new AnimatorSet();
+            set.play(fade_out).before(slideDown).before(slideUp);
+            set.addListener((AnimatorEndListener) animation -> {
+                rlCurrentRequestContainer.setVisibility(View.GONE);
+                tsInfo.setText(getString(R.string.request_pickup_choose_location));
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            });
+            set.start();
 
-        rlCurrentRequestContainer.setVisibility(View.GONE);
 
+        });
     }
 
     @Override

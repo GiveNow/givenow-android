@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- http://blog.danlew.net/2015/10/12/beware-edittext-on-api-21/ -->
+    <dimen name="edit_text_spacing">0dp</dimen>
+
+</resources>
