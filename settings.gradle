@@ -1,4 +1,3 @@
 include ':app', ':ParseLoginUI'
-include ':stripe'
 include ':PagerSlidingTabStrip-magicgoose-1c26523:library'
 project(':ParseLoginUI').projectDir = new File('ParseUI-Android/ParseLoginUI')
