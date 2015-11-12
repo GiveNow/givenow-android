@@ -16,9 +16,6 @@ import com.google.common.collect.Collections2;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import io.givenow.app.R;
-import io.givenow.app.models.DonationCategory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
@@ -28,6 +25,8 @@ import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.givenow.app.R;
+import io.givenow.app.models.DonationCategory;
 
 
 public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCategoryAdapter.ViewHolder> {
@@ -40,9 +39,9 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         super();
         mDummyCategory = new DonationCategory();
         mItems = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            mItems.add(mDummyCategory);
-        }
+//        for (int i = 0; i < 9; i++) {
+//            mItems.add(mDummyCategory);
+//        }
     }
 
     @Override
@@ -118,11 +117,13 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         }
         mItems.clear();
         mItems.addAll(items);
+        notifyItemRangeRemoved(0, items.size());
         notifyDataSetChanged();
     }
 
     public void clearItems() {
         mItems.clear();
+//        notifyItem
         notifyDataSetChanged();
     }
 

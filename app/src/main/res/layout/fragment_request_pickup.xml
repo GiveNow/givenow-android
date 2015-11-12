@@ -184,7 +184,7 @@
         <io.givenow.app.customviews.SlidingRelativeLayout
             android:id="@+id/rlCurrentRequestContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/bottom_container_height"
             android:background="@color/colorPrimaryDark"
             android:visibility="gone">
 
@@ -247,7 +247,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvCurrentRequestCategories"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/llDonationInfo"
                 android:orientation="horizontal"/>
         </io.givenow.app.customviews.SlidingRelativeLayout>

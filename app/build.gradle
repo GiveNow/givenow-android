@@ -14,6 +14,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    jcenter()
 }
 
 android {
@@ -96,6 +97,7 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:library:2.6.0'
     compile 'com.squareup.picasso:picasso:2.3.4'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+//    compile 'jp.wasabeef:recyclerview-animators:2.0.1'
 
 //    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
 
@@ -124,6 +126,8 @@ dependencies {
     // https://github.com/magicgoose/PagerSlidingTabStrip
     compile project(':PagerSlidingTabStrip-magicgoose-1c26523:library')
 
+//    compile project(':recyclerview-animators')
+    compile project(':animators')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }

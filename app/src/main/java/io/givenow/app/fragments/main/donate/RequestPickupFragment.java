@@ -17,15 +17,14 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
-import android.widget.TextView;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
@@ -41,6 +40,12 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
+import java.util.Collection;
+
+import butterknife.Bind;
+import butterknife.BindDimen;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DonationCategoryAdapter;
 import io.givenow.app.adapters.PlaceAutocompleteAdapter;
@@ -48,16 +53,14 @@ import io.givenow.app.customviews.AdaptableGradientRectView;
 import io.givenow.app.customviews.SlidingRelativeLayout;
 import io.givenow.app.fragments.main.common.ConfirmRequestDialogFragment;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
+import io.givenow.app.helpers.AttributeGetter;
+import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.interfaces.AnimatorEndListener;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-
-import java.util.Collection;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import rx.Observable;
 
 
@@ -93,7 +96,8 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @Bind(R.id.tsInfo)
     TextSwitcher tsInfo;
-
+    @BindDimen(R.dimen.bottom_container_height)
+    int bottomContainerHeight;
     private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
     private boolean mConfirmAddressShowing = false;
@@ -192,6 +196,7 @@ public class RequestPickupFragment extends MapHostingFragment
         rvDonationCategories.setHasFixedSize(true);
 
         mDonationCategoryAdapter = new DonationCategoryAdapter();
+        rvDonationCategories.setItemAnimator(new ScaleInAnimator(new AccelerateDecelerateInterpolator()));
         rvDonationCategories.setAdapter(mDonationCategoryAdapter);
 
         // The number of Columns
@@ -201,6 +206,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
         rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mCurrentRequestCategoriesAdapter = new DonationCategoryAdapter();
+        rvCurrentRequestCategories.setItemAnimator(new SlideInRightAnimator());
         rvCurrentRequestCategories.setAdapter(mCurrentRequestCategoriesAdapter);
 
         tsInfo.setFactory(() -> LayoutInflater.from(getActivity()).inflate(R.layout.textview_info, null));
@@ -476,13 +482,14 @@ public class RequestPickupFragment extends MapHostingFragment
     private Observable<Void> showCategoryLayout() {
         return Observable.create(subscriber -> {
             mCategoryLayoutShowing = true;
-            buildCategoryGrid();
+            mDonationCategoryAdapter.clearItems();
             tsInfo.setText(getString(R.string.request_pickup_info_select_categories));
             btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
             slidingRLContainer.setVisibility(View.VISIBLE);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
             slideDownFromTop.setTarget(slidingRLContainer);
             slideDownFromTop.addListener((AnimatorEndListener) animation -> {
+                buildCategoryGrid();
                 subscriber.onNext(null);
                 subscriber.onCompleted();
             });
@@ -527,23 +534,19 @@ public class RequestPickupFragment extends MapHostingFragment
 //        mCurrentRequestLayoutShowing = true;
 
             Collection<DonationCategory> items = mPickupRequest.getDonationCategories();
-            for (DonationCategory item : items) {
-                item.setSelected(true);
-                item.setClickable(false);
-            }
-            mCurrentRequestCategoriesAdapter.setItems(items); //TODO might need to use List to preserve order
+            mCurrentRequestCategoriesAdapter.clearItems();
+
+//            mCurrentRequestCategoriesAdapter.setItems(items); //TODO might need to use List to preserve order
 
             tsInfo.setText(getString(R.string.request_status_waiting));
-            btnBottomSubmit.setVisibility(View.GONE);
-            btnBottomSubmit.setEnabled(false);
-            Animator slideUp = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_from_bottom);
-            slideUp.setTarget(rlCurrentRequestContainer);
+//            btnBottomSubmit.setEnabled(false);
+            Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
+            Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
 
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
             fade_in.setTarget(adaptableGradientRectView);
+            adaptableGradientRectView.setAlpha(0);
             adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryDark));
-
-            rlCurrentRequestContainer.setVisibility(View.VISIBLE);
 
             //Disable map
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
@@ -554,8 +557,14 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.animateCamera(cameraUpdate);
 
             AnimatorSet set = new AnimatorSet();
-            set.play(slideUp).before(fade_in);
+            set.play(slideDown).before(slideUp).with(fade_in);
             set.addListener((AnimatorEndListener) animation -> {
+                btnBottomSubmit.setVisibility(View.GONE);
+                for (DonationCategory item : items) {
+                    item.setSelected(true);
+                    item.setClickable(false);
+                    mCurrentRequestCategoriesAdapter.addItem(item);
+                }
                 subscriber.onNext(null);
                 subscriber.onCompleted();
             });
@@ -566,7 +575,6 @@ public class RequestPickupFragment extends MapHostingFragment
     @OnClick(R.id.llCancelContainer)
     public void onCancelDonation(LinearLayout llCancelContainer) {
         new AlertDialog.Builder(getActivity())
-//                .setTitle("Cancel donation?")
                 .setMessage(R.string.dialog_cancelDonation_message)
                 .setPositiveButton(R.string.dialog_cancelDonation_positiveButton, (dialog, which) -> {
                     mPickupRequest.cancel();
@@ -591,29 +599,24 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-            Animator slideDown = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_to_bottom);
-            slideDown.setTarget(rlCurrentRequestContainer);
+            Animator slideDown = CustomAnimations.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
 
-            btnBottomSubmit.setVisibility(View.VISIBLE);
-            btnBottomSubmit.setEnabled(true);
-            Animator slideUp = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_from_bottom);
-            slideUp.setTarget(btnBottomSubmit);
+            Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize));
 
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);
-            adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
 
             AnimatorSet set = new AnimatorSet();
-            set.play(fade_out).before(slideDown).before(slideUp);
+            set.play(fade_out).with(slideDown).before(slideUp);
             set.addListener((AnimatorEndListener) animation -> {
+                adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
                 rlCurrentRequestContainer.setVisibility(View.GONE);
+                btnBottomSubmit.setEnabled(true);
                 tsInfo.setText(getString(R.string.request_pickup_choose_location));
                 subscriber.onNext(null);
                 subscriber.onCompleted();
             });
             set.start();
-
-
         });
     }
 
