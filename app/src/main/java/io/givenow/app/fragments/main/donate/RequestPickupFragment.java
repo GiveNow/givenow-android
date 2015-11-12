@@ -531,6 +531,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private Observable<Void> showCurrentRequestLayout() {
         return Observable.create(subscriber -> {
+            Log.e(logTag(), "showCurrentREquestLayout");
 //        mCurrentRequestLayoutShowing = true;
 
             Collection<DonationCategory> items = mPickupRequest.getDonationCategories();
@@ -560,6 +561,11 @@ public class RequestPickupFragment extends MapHostingFragment
             set.play(slideDown).before(slideUp).with(fade_in);
             set.addListener((AnimatorEndListener) animation -> {
                 btnBottomSubmit.setVisibility(View.GONE);
+                //LISTENER GETS CALLED TWICE.
+                animation.getListeners(); //THE FIX?!?!?!?!?!?!?
+                //(OR CALL ANY OTHER METHOD THAT ACCESSES A MEMBER VARIABLE OF animation
+
+//                Log.e(logTag(), "Adding items!!!!!" + animation.isStarted());
                 for (DonationCategory item : items) {
                     item.setSelected(true);
                     item.setClickable(false);
@@ -609,6 +615,7 @@ public class RequestPickupFragment extends MapHostingFragment
             AnimatorSet set = new AnimatorSet();
             set.play(fade_out).with(slideDown).before(slideUp);
             set.addListener((AnimatorEndListener) animation -> {
+//                Log.e(logTag(), "Hiding currentREquestLayout!");
                 adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
                 rlCurrentRequestContainer.setVisibility(View.GONE);
                 btnBottomSubmit.setEnabled(true);
