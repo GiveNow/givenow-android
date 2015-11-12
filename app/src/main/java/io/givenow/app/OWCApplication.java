@@ -2,11 +2,13 @@ package io.givenow.app;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import io.fabric.sdk.android.Fabric;
 import io.givenow.app.models.Donation;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.PickupRequest;
@@ -24,6 +26,7 @@ public class OWCApplication extends Application {
 
         // Enable Crash Reporting
 //        ParseCrashReporting.enable(this);
+        Fabric.with(this, new Crashlytics());
 
         ParseObject.registerSubclass(Donation.class);
         ParseObject.registerSubclass(DonationCategory.class);

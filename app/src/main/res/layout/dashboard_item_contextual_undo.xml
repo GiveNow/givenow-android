@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             android:scaleType="centerCrop"
 
-            android:src="@drawable/ic_launcher"
+            android:src="@mipmap/ic_launcher"
             android:textColor="#ffffffff" />
 
         <TextView

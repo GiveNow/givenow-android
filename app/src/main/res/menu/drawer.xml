@@ -4,21 +4,23 @@
         <item
             android:id="@+id/navigation_give"
             android:checked="true"
-            android:icon="@drawable/ic_marker"
+            android:icon="@drawable/ic_pin_drop_black_24dp"
             android:title="@string/navigation_item_1" />
         <item
             android:id="@+id/navigation_volunteer"
-            android:icon="@drawable/ic_action_directions"
+            android:icon="@drawable/ic_drive_eta_black_24dp"
             android:title="@string/navigation_item_2" />
         <item
             android:id="@+id/navigation_dropoff"
-            android:icon="@drawable/iconmonstr_location_17_icon_256"
+            android:icon="@drawable/ic_location_city_black_24dp"
             android:title="@string/navigation_item_3" />
     </group>
-    <group>
+    <group
+        android:id="@+id/nav_footer"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_sign_out"
-            android:icon="@drawable/ic_action_check"
+            android:icon="@drawable/ic_power_settings_new_black_24dp"
             android:title="@string/title_sign_out" />
     </group>
 </menu>

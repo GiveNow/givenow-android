@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseAnalytics;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -52,7 +53,6 @@ public class MainActivity extends BaseActivity implements
     private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
-    private Intent mIntent;
     private Fragment fragToHide = null;
 
     @Override
@@ -60,8 +60,10 @@ public class MainActivity extends BaseActivity implements
         //TODO: Now that we use a toolbar, the action bar progressbar doesn't exist anymore.
 //        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 //        requestWindowFeature(Window.FEATURE_PROGRESS);
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        mIntent = getIntent();
+        ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
         initializeDrawer();
 
         if (savedInstanceState == null) {
@@ -105,7 +107,7 @@ public class MainActivity extends BaseActivity implements
 
     private boolean handlePushNotifResume() {
 //        Log.d("detectPushNotificationMessage", "handlePushNotif");
-        String notificationData = mIntent.getStringExtra("com.parse.Data");
+        String notificationData = getIntent().getStringExtra("com.parse.Data");
         if (notificationData != null) {
 //                Log.d("detectPushNotificationMessage", "notificationData =" + notificationData);
 
@@ -119,7 +121,7 @@ public class MainActivity extends BaseActivity implements
 //                        Log.d("detectPushNotificationMessage", "switch to volunteer fragment");
 
                     //remove the push notif data, so we don't process it next app resume
-                    mIntent.removeExtra("com.parse.Data");
+                    getIntent().removeExtra("com.parse.Data");
 
                     //try setting us to the Volunteer fragment
 //                    selectItem(POSITION_VOLUNTEER);
@@ -131,7 +133,7 @@ public class MainActivity extends BaseActivity implements
                     return true;
                 } else if (notifType.equals(PickupRequest.PICKUP_COMPLETE)) {
                     //remove the push notif data, so we don't process it next app resume
-                    mIntent.removeExtra("com.parse.Data");
+                    getIntent().removeExtra("com.parse.Data");
 
                     String title = getResources().getString(R.string.donate_success);
                     String message = getResources().getString(R.string.donate_pickup_complete);
@@ -176,7 +178,7 @@ public class MainActivity extends BaseActivity implements
                 .setMessage(Html.fromHtml("Is your donation available for pickup today?" + address))
                 .setPositiveButton("Yes", (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
                 .setNegativeButton("No", (dialog, which) -> cancelPendingVolunteer(pickupRequest))
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.mipmap.ic_launcher)
                 .show();
     }
 
