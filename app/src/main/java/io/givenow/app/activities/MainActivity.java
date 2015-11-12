@@ -24,6 +24,9 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import fj.data.Option;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.VolunteerFragment;
 import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
@@ -35,9 +38,6 @@ import io.givenow.app.fragments.main.volunteer.PickupRequestsFragment;
 import io.givenow.app.helpers.CroutonHelper;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import fj.data.Option;
 
 public class MainActivity extends BaseActivity implements
         RequestPickupFragment.PickUpDetailInteractionListener,
@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity implements
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
         ParseUser pendingVolunteer = pickupRequest.getPendingVolunteer();
         String title = ParseUserHelper.getFirstName(ParseUserHelper.getName(pendingVolunteer)) + " is ready to pick up your donation!";
-        String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddresss() + "</font>";
+        String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
 
         if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
             acceptPendingDialog.dismiss();

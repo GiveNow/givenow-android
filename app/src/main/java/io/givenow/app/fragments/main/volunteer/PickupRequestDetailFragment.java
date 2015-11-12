@@ -25,6 +25,10 @@ import android.widget.TextView;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 import io.givenow.app.R;
 import io.givenow.app.customviews.SlidingRelativeLayout;
 import io.givenow.app.fragments.main.common.ConfirmRequestDialogFragment;
@@ -32,11 +36,6 @@ import io.givenow.app.helpers.CroutonHelper;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 public class PickupRequestDetailFragment extends Fragment implements
         ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
@@ -128,7 +127,7 @@ public class PickupRequestDetailFragment extends Fragment implements
         mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
 
         tvDonorName.setText(ParseUserHelper.getFirstName(mPickupRequest.getName()));
-        tvDonorAddress.setText(mPickupRequest.getAddresss());
+        tvDonorAddress.setText(mPickupRequest.getAddress());
 
         return fragmentView;
     }

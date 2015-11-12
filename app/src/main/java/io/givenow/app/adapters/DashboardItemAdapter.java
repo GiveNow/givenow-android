@@ -17,13 +17,12 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.models.Donation;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 
 public class DashboardItemAdapter extends ParseQueryAdapter {
@@ -54,7 +53,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         holder.readyLayout.setVisibility(View.GONE);
 //        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
         holder.tvName.setText(ParseUserHelper.getFirstName(pickupRequest.getName()));
-        holder.tvAddress.setText(pickupRequest.getAddresss());
+        holder.tvAddress.setText(pickupRequest.getAddress());
 
         ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
         //if there is a confirmed volunteer and it is me, then say it is ready for pickup
@@ -84,7 +83,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
 
         holder.ivMapContainer.setOnClickListener(v -> {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW);
-            String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddresss());
+            String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddress());
 
 //                "geo:" + lat + "," + lng + "?q="+lat+","+ lng +"("")"
             mapIntent.setData(Uri.parse(uriStr));
@@ -113,7 +112,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         // String uriBegin = "geo:" + gp.getLatitude() + "," + gp.getLongitude();
         // navigation intent:
         String uriBegin = "google.navigation:"; // + gp.getLatitude() + "," + gp.getLongitude();
-        String query = pickupRequest.getAddresss();
+        String query = pickupRequest.getAddress();
         String encodedQuery = Uri.encode(query);
         String uriString = uriBegin + "q=" + encodedQuery;
         holder.btnMap.setTag(uriString);

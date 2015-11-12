@@ -10,11 +10,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
-import io.givenow.app.R;
-import io.givenow.app.models.PickupRequest;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.givenow.app.R;
+import io.givenow.app.models.PickupRequest;
 
 public class PickupsAdapter extends ParseQueryAdapter {
 
@@ -43,7 +43,7 @@ public class PickupsAdapter extends ParseQueryAdapter {
         pickupDateView.setText(dateStr);
 
         TextView pickupAddressView = (TextView) v.findViewById(R.id.pickupAddress);
-        String pickupAddress = pickupRequest.getAddresss();
+        String pickupAddress = pickupRequest.getAddress();
         pickupAddressView.setText(pickupAddress);
 
 //        TextView numItemsView = (TextView) v.findViewById(R.id.numItems);

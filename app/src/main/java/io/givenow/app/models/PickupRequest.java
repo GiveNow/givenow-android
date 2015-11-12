@@ -14,13 +14,14 @@ import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import io.givenow.app.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import io.givenow.app.R;
 
 /**
  * Data model for a post.
@@ -198,7 +199,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("name", value);
     }
 
-    public String getAddresss() {
+    public String getAddress() {
         return getString("address");
     }
 
