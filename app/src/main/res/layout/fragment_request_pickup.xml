@@ -108,7 +108,10 @@
         android:layout_above="@+id/flBottomContainer"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/llAddressInfoContainer"
-        android:layout_marginLeft="0dp">
+        android:layout_marginLeft="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <FrameLayout
             android:id="@+id/flMapContainer"

@@ -151,21 +151,10 @@ public class RequestPickupFragment extends MapHostingFragment
 
         //Clear address button is only visible if address field has focus.
         actvAddress.setOnFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus)
-                btnClearAddress.setVisibility(View.VISIBLE);
-            else
-                btnClearAddress.setVisibility(View.INVISIBLE);
+            if (btnClearAddress != null) {
+                btnClearAddress.setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+            }
         });
-
-        //TODO: deselect address field/hide keyboard if map is touched
-//        FrameLayout flMapContainer = ButterKnife.findById(v, R.id.flMapContainer);
-//        flMapContainer..setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                deselectAddressField();
-//                return false;
-//            }
-//        });
 
         //Catch back button and animate away relevant views
         viewRoot.setOnKeyListener((v, keyCode, event) -> {
@@ -271,7 +260,6 @@ public class RequestPickupFragment extends MapHostingFragment
                 .getPlaceById(RequestPickupFragment.this.getmGoogleApiClient(), placeId)
                 .setResultCallback(RequestPickupFragment.this);
 
-        //Toast.makeText(getActivity(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
         setAddressFieldText(primaryText.toString());
         deselectAddressField();
         Log.i(logTag(), "Called getPlaceById to get Place details for " + placeId);
@@ -283,7 +271,8 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     public void deselectAddressField() {
-        flMapLayout.requestFocus();
+        actvAddress.clearFocus();
+//        flMapLayout.requestFocus();
         hideKeyboardFrom(getActivity(), flMapLayout);
     }
 
@@ -495,6 +484,7 @@ public class RequestPickupFragment extends MapHostingFragment
             mCategoryLayoutShowing = true;
             mDonationCategoryAdapter.clearItems();
             tsInfo.setText(getString(R.string.request_pickup_info_select_categories));
+            actvAddress.setEnabled(false);
             btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
             slidingRLContainer.setVisibility(View.VISIBLE);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
@@ -528,6 +518,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private Observable<Void> hideCategoryLayout() {
         return Observable.create(subscriber -> {
 //            tsInfo.setText(getString(R.string.request_pickup_info_confirm_address));
+            actvAddress.setEnabled(true);
             btnBottomSubmit.setText(getString(R.string.continue_label));
 
             Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
@@ -557,7 +548,6 @@ public class RequestPickupFragment extends MapHostingFragment
 //            mCurrentRequestCategoriesAdapter.setItems(items); //TODO might need to use List to preserve order
 
             tsInfo.setText(getString(R.string.request_status_waiting));
-//            btnBottomSubmit.setEnabled(false);
             Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
             Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
 
