@@ -435,10 +435,14 @@ public class RequestPickupFragment extends MapHostingFragment
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
 
             fade_in.setTarget(adaptableGradientRectView);
-            fade_in.addListener((AnimatorEndListener) animation -> {
-                subscriber.onNext(null);
-                subscriber.onCompleted();
+            fade_in.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    subscriber.onNext(null);
+                    subscriber.onCompleted();
+                }
             });
+
             fade_in.start();
         });
     }
@@ -469,10 +473,13 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);
-            fade_out.addListener((AnimatorEndListener) animation -> {
-                mConfirmAddressShowing = false;
-                subscriber.onNext(null);
-                subscriber.onCompleted();
+            fade_out.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mConfirmAddressShowing = false;
+                    subscriber.onNext(null);
+                    subscriber.onCompleted();
+                }
             });
             fade_out.start();
         });
@@ -488,10 +495,13 @@ public class RequestPickupFragment extends MapHostingFragment
             slidingRLContainer.setVisibility(View.VISIBLE);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
             slideDownFromTop.setTarget(slidingRLContainer);
-            slideDownFromTop.addListener((AnimatorEndListener) animation -> {
-                buildCategoryGrid();
-                subscriber.onNext(null);
-                subscriber.onCompleted();
+            slideDownFromTop.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    buildCategoryGrid();
+                    subscriber.onNext(null);
+                    subscriber.onCompleted();
+                }
             });
             slideDownFromTop.start();
         });
@@ -518,11 +528,14 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
             slideUpToTop.setTarget(slidingRLContainer);
-            slideUpToTop.addListener((AnimatorEndListener) animation -> {
-                slidingRLContainer.setVisibility(View.INVISIBLE);
-                mCategoryLayoutShowing = false;
-                subscriber.onNext(null);
-                subscriber.onCompleted();
+            slideUpToTop.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    slidingRLContainer.setVisibility(View.INVISIBLE);
+                    mCategoryLayoutShowing = false;
+                    subscriber.onNext(null);
+                    subscriber.onCompleted();
+                }
             });
             slideUpToTop.start();
         });
@@ -559,20 +572,23 @@ public class RequestPickupFragment extends MapHostingFragment
 
             AnimatorSet set = new AnimatorSet();
             set.play(slideDown).before(slideUp).with(fade_in);
-            set.addListener((AnimatorEndListener) animation -> {
-                btnBottomSubmit.setVisibility(View.GONE);
-                //LISTENER GETS CALLED TWICE.
-                animation.getListeners(); //THE FIX?!?!?!?!?!?!?
-                //(OR CALL ANY OTHER METHOD THAT ACCESSES A MEMBER VARIABLE OF animation
+            set.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    btnBottomSubmit.setVisibility(View.GONE);
+                    //LISTENER GETS CALLED TWICE.
+//                    animation.getListeners(); //THE FIX?!?!?!?!?!?!?
+                    //(OR CALL ANY OTHER METHOD THAT ACCESSES A MEMBER VARIABLE OF animation
 
 //                Log.e(logTag(), "Adding items!!!!!" + animation.isStarted());
-                for (DonationCategory item : items) {
-                    item.setSelected(true);
-                    item.setClickable(false);
-                    mCurrentRequestCategoriesAdapter.addItem(item);
+                    for (DonationCategory item : items) {
+                        item.setSelected(true);
+                        item.setClickable(false);
+                        mCurrentRequestCategoriesAdapter.addItem(item);
+                    }
+                    subscriber.onNext(null);
+                    subscriber.onCompleted();
                 }
-                subscriber.onNext(null);
-                subscriber.onCompleted();
             });
             set.start();
         });
@@ -614,14 +630,17 @@ public class RequestPickupFragment extends MapHostingFragment
 
             AnimatorSet set = new AnimatorSet();
             set.play(fade_out).with(slideDown).before(slideUp);
-            set.addListener((AnimatorEndListener) animation -> {
+            set.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
 //                Log.e(logTag(), "Hiding currentREquestLayout!");
-                adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
-                rlCurrentRequestContainer.setVisibility(View.GONE);
-                btnBottomSubmit.setEnabled(true);
-                tsInfo.setText(getString(R.string.request_pickup_choose_location));
-                subscriber.onNext(null);
-                subscriber.onCompleted();
+                    adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
+                    rlCurrentRequestContainer.setVisibility(View.GONE);
+                    btnBottomSubmit.setEnabled(true);
+                    tsInfo.setText(getString(R.string.request_pickup_choose_location));
+                    subscriber.onNext(null);
+                    subscriber.onCompleted();
+                }
             });
             set.start();
         });

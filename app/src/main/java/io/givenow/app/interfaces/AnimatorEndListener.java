@@ -6,22 +6,19 @@ import android.util.Log;
 /**
  * Created by aphex on 11/10/15.
  */
-public interface AnimatorEndListener extends Animator.AnimatorListener {
+public abstract class AnimatorEndListener implements Animator.AnimatorListener {
     @Override
-    default void onAnimationStart(Animator animation) {
+    public void onAnimationStart(Animator animation) {
         Log.e("AEL", "STARTED" + animation);
     }
 
     @Override
-    void onAnimationEnd(Animator animation);
-
-    @Override
-    default void onAnimationCancel(Animator animation) {
+    public void onAnimationCancel(Animator animation) {
         Log.e("AEL", "CANCELED" + animation);
     }
 
     @Override
-    default void onAnimationRepeat(Animator animation) {
+    public void onAnimationRepeat(Animator animation) {
 
     }
 }
