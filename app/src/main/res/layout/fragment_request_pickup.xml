@@ -81,7 +81,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPostalAddress"
                     android:singleLine="true"
-                    android:text="Anklamer Straße 33"
+                    android:text="Loading..."
                     android:textColor="@color/white"
                     android:textColorHint="@color/colorPrimaryDark"
                     android:theme="@style/MyEditTextTheme" />
