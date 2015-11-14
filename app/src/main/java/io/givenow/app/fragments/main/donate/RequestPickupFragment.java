@@ -241,8 +241,12 @@ public class RequestPickupFragment extends MapHostingFragment
                 null //AutocompleteFilter.create(Collections.singletonList(Place.TYPE_STREET_ADDRESS)) //Ugh, this doesnt work because google doesn't actually support the `address` filter on android.
         );
         actvAddress.setAdapter(mAdapter);
+    }
 
-        //may need to move to onResume?
+    @Override
+    public void onResume() {
+        super.onResume();
+
         PickupRequest.getMySubmittedRequests().getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
                 mPickupRequest = pickupRequest;
