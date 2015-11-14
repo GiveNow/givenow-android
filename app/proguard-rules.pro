@@ -20,3 +20,30 @@
 -keepclassmembers class io.card.** {
     *;
 }
+
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+-keep class com.parse.* { *; }
+-dontwarn com.parse.**
+
+
+-dontwarn java.lang.invoke.*
+-dontwarn com.squareup.okhttp.**
+-dontwarn javax.annotation.**
+-dontwarn sun.misc.Unsafe
+-dontwarn java.util.function.Consumer
+-dontwarn com.facebook.*
+-dontwarn okio.*
+-dontwarn android.net.http.AndroidHttpClient
+-dontwarn fj.function.*
+
