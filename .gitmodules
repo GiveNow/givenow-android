@@ -4,4 +4,4 @@ url = https://github.com/ParsePlatform/ParseUI-Android.git
 
 [submodule "recyclerview-animators"]
 path = recyclerview-animators
-url = https://github.com/wasabeef/recyclerview-animators.git
+url = https://github.com/aphexcx/recyclerview-animators.git 
