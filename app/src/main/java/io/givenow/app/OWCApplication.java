@@ -1,6 +1,8 @@
 package io.givenow.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.parse.Parse;
@@ -35,5 +37,11 @@ public class OWCApplication extends Application {
         ParseUser.enableAutomaticUser();
 //        PushService.setDefaultPushCallback(this, MainActivity.class, R.drawable.ic_launcher);
         ParseInstallation.getCurrentInstallation().saveInBackground();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
