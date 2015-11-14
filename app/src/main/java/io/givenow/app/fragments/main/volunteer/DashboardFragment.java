@@ -4,9 +4,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -18,14 +15,13 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.contextualu
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.parse.ParseQueryAdapter;
 
-import io.givenow.app.R;
-import io.givenow.app.adapters.DashboardItemAdapter;
-import io.givenow.app.interfaces.ViewPagerChangeListener;
-
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.givenow.app.R;
+import io.givenow.app.adapters.DashboardItemAdapter;
+import io.givenow.app.interfaces.ViewPagerChangeListener;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -118,23 +114,23 @@ public class DashboardFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dashboard_menu, menu);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.dashboard_menu, menu);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                loadDashboardItems();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.action_refresh:
+//                loadDashboardItems();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     @Override
     public void onViewPagerShow() {
