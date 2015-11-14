@@ -112,7 +112,8 @@ dependencies {
     }
 
     // Module dependency on ParseLoginUI library sources
-    compile project(':ParseLoginUI')
+    compile 'com.parse:parseui-login-android:0.0.1'
+    compile 'com.parse:parseui-widget-android:0.0.1'
     // Uncomment if using Facebook Login (optional Maven dependency)
 //    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 //    compile fileTree(dir: 'libs', include: 'ParseFacebookUtilsV4-*.jar')
