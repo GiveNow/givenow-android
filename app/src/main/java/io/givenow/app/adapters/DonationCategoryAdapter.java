@@ -63,7 +63,7 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
 
         if (donationCategory.isSelected()) {
             vh.cvRoot.setSelected(true);
-            vh.cvRoot.setElevation(1);
+            vh.cvRoot.setCardElevation(1);
             vh.tvName.setTextColor(vh.white);
             vh.tvName.setTypeface(null, Typeface.BOLD);
 //                vPalette.setBackgroundResource(R.color.colorPrimary);
@@ -71,7 +71,7 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         } else {
             //TODO: this is gross, use statelists for all the things that change when selected/unselected
             vh.cvRoot.setSelected(false);
-            vh.cvRoot.setElevation(vh.card_elevation);
+            vh.cvRoot.setCardElevation(vh.card_elevation);
             vh.tvName.setTextColor(vh.colorPrimary);
             vh.tvName.setTypeface(null, Typeface.NORMAL);
         }
@@ -178,13 +178,13 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
                 //TODO: this is gross, use statelists for all the things that change when selected/unselected
                 tvName.setTextColor(colorPrimary);
                 tvName.setTypeface(null, Typeface.NORMAL);
-                cv.setElevation(card_elevation);
+                cv.setCardElevation(card_elevation);
                 cv.setSelected(false);
             } else {
                 donationCategory.setSelected(true);
                 tvName.setTextColor(white);
                 tvName.setTypeface(null, Typeface.BOLD);
-                cv.setElevation(1);
+                cv.setCardElevation(1);
                 cv.setSelected(true);
 //                vPalette.setBackgroundResource(R.color.colorPrimary);
 //            cv.setStateListAnimator(p);
