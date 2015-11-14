@@ -1,0 +1,7 @@
+[submodule "ParseUI-Android"]
+path = ParseUI-Android
+url = https://github.com/ParsePlatform/ParseUI-Android.git
+
+[submodule "recyclerview-animators"]
+path = recyclerview-animators
+url = https://github.com/wasabeef/recyclerview-animators.git
