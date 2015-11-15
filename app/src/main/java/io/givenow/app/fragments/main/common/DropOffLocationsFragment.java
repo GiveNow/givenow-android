@@ -17,11 +17,10 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import butterknife.ButterKnife;
 import io.givenow.app.R;
 
-import butterknife.ButterKnife;
-
-public class DropOffLocationsFragment extends MapHostingFragment implements GoogleMap.OnInfoWindowClickListener {
+public class DropOffLocationsFragment extends MapHostingFragment {
 
     public DropOffLocationsFragment() {
         // Required empty public constructor
@@ -48,7 +47,15 @@ public class DropOffLocationsFragment extends MapHostingFragment implements Goog
     @Override
     public void onMapReady(final GoogleMap map) {
         super.onMapReady(map);
-        map.setOnInfoWindowClickListener(this);
+
+        map.setOnMarkerClickListener(marker -> {
+            if (marker.isInfoWindowShown()) {
+                launchMapIntent(marker);
+                return true;
+            }
+            return false;
+        });
+        map.setOnInfoWindowClickListener(this::launchMapIntent);
 
         mGoogleMap.setOnCameraChangeListener(cameraPosition -> {
             LatLng pos = mGoogleMap.getCameraPosition().target;
@@ -83,8 +90,7 @@ public class DropOffLocationsFragment extends MapHostingFragment implements Goog
 
     }
 
-    @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void launchMapIntent(Marker marker) {
         LatLng ll = marker.getPosition();
         String uriBegin = "geo:" + ll.latitude + "," + ll.longitude;
         String query = marker.getTitle() + ", " + marker.getSnippet();
