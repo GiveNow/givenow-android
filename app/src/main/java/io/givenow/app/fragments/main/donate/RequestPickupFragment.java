@@ -237,7 +237,7 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onResume() {
         super.onResume();
 
-        PickupRequest.getMySubmittedRequests().getFirstInBackground((pickupRequest, e) -> {
+        PickupRequest.getMyRequests().getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
                 mPickupRequest = pickupRequest;
                 showCurrentRequestLayout().subscribe();

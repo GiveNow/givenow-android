@@ -111,15 +111,11 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     /*
-    All Pickup Requests that I have made,
-    which do not have a pending volunteer,
-    and no confirmed volunteer
+    All Pickup Requests that I have made.
      */
-    public static ParseQuery<PickupRequest> getMySubmittedRequests() {
+    public static ParseQuery<PickupRequest> getMyRequests() {
         ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
-        q.whereDoesNotExist("pendingVolunteer");
-        q.whereDoesNotExist("confirmedVolunteer");
         return q;
     }
 
