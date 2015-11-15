@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -151,6 +152,32 @@ public class MainActivity extends BaseActivity implements
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        getSupportActionBar()
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true; // super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_info:
+                displayInfo();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void displayInfo() {
+        if (mSelectedItemId == R.id.navigation_give) {
+            RequestPickupFragment requestPickupFragment = (RequestPickupFragment) getFragmentManager().findFragmentByTag("don");
+            requestPickupFragment.displayInfo();
+        }
     }
 
     private void checkForPendingRequests() {

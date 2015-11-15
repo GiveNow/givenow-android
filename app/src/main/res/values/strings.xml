@@ -89,5 +89,11 @@
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
     <string name="dialog_cancelDonation_negativeButton">Keep donation</string>
     <string name="request_pickup_choose_location">Where is your donation located?</string>
+    <string name="action_information">Info</string>
+    <string name="help_request_pickup_initial">Move the map to select a pickup location for your donation. Our drivers will pick up your items from this spot, so try to be as precise as possible!</string>
+    <string name="help_request_pickup_confirm_address">Confirm your address is correct and that the pin is in the right place. Tap \"Add a note\" to give your driver additional information (for example, \"second floor\" or \"gate code: 3311\". </string>
+    <string name="help_request_pickup_category_chooser">These are currently the most needed items in your area. Choose one or more by tapping the cards. If you\'re donating items that are not listed, choose \"other\".</string>
+    <string name="help_request_pickup_current_request">Your request has been received! You\'ll be notified when a driver is ready to pick up your donation.</string>
+    <string name="help_title">Help</string>
 
 </resources>

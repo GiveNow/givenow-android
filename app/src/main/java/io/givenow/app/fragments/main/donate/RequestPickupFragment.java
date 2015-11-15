@@ -109,6 +109,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private PickupRequest mPickupRequest;
     private boolean mRequestSubmitted = false;
     private DonationCategoryAdapter mCurrentRequestCategoriesAdapter;
+    private boolean mCurrentRequestLayoutShowing = false;
 
     public RequestPickupFragment() {
         // Required empty public constructor
@@ -540,7 +541,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private Observable<Void> showCurrentRequestLayout() {
         return Observable.create(subscriber -> {
             Log.e(logTag(), "showCurrentREquestLayout");
-//        mCurrentRequestLayoutShowing = true;
+            mCurrentRequestLayoutShowing = true;
 
             Collection<DonationCategory> items = mPickupRequest.getDonationCategories();
             mCurrentRequestCategoriesAdapter.clearItems();
@@ -632,6 +633,7 @@ public class RequestPickupFragment extends MapHostingFragment
                     rlCurrentRequestContainer.setVisibility(View.GONE);
                     btnBottomSubmit.setEnabled(true);
                     tsInfo.setText(getString(R.string.request_pickup_choose_location));
+                    mCurrentRequestLayoutShowing = false;
                     subscriber.onNext(null);
                     subscriber.onCompleted();
                 }
@@ -673,6 +675,20 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onConnected(Bundle dataBundle) {
         super.onConnected(dataBundle);
         mAdapter.setBounds(convertCenterAndRadiusToBounds(getLastLocation().orSome(getMapTarget()), AUTOCOMPLETE_BIAS_RADIUS_METERS));
+    }
+
+    public void displayInfo() {
+        int info = R.string.help_request_pickup_initial;
+
+        if (mCurrentRequestLayoutShowing) {
+            info = R.string.help_request_pickup_current_request;
+        } else if (mCategoryLayoutShowing) {
+            info = R.string.help_request_pickup_category_chooser;
+        } else if (mConfirmAddressShowing) {
+            info = R.string.help_request_pickup_confirm_address;
+        }
+
+        new AlertDialog.Builder(getActivity()).setIcon(R.drawable.ic_help_outline_black_24dp).setTitle(R.string.help_title).setMessage(info).show();
     }
 
     // Container Activity must implement this interface
