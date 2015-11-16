@@ -18,14 +18,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 
+import com.bartoszlipinski.viewpropertyobjectanimator.ViewPropertyObjectAnimator;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
@@ -73,6 +80,9 @@ public class RequestPickupFragment extends MapHostingFragment
     @Bind(R.id.btnBottomSubmit)
     Button btnBottomSubmit;
 
+    @Bind(R.id.llAddressInfoContainer)
+    LinearLayout llAddressInfoContainer;
+
     @Bind(R.id.actvAddress)
     AutoCompleteTextView actvAddress;
 
@@ -96,8 +106,25 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @Bind(R.id.tsInfo)
     TextSwitcher tsInfo;
+
+    @Bind(R.id.ivNote)
+    ImageView ivNote;
+
+    @Bind(R.id.ivNoteSubmit)
+    ImageView ivNoteSubmit;
+
+    @Bind(R.id.llNote)
+    LinearLayout llNote;
+
+    @Bind(R.id.etNote)
+    EditText etNote;
+
     @BindDimen(R.dimen.bottom_container_height)
     int bottomContainerHeight;
+
+    @BindDimen(R.dimen.icon_size)
+    int iconSize;
+
     private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
     private boolean mConfirmAddressShowing = false;
@@ -186,7 +213,7 @@ public class RequestPickupFragment extends MapHostingFragment
         rvDonationCategories.setHasFixedSize(true);
 
         mDonationCategoryAdapter = new DonationCategoryAdapter();
-        rvDonationCategories.setItemAnimator(new ScaleInAnimator(new AccelerateDecelerateInterpolator()));
+        rvDonationCategories.setItemAnimator(new ScaleInAnimator(new DecelerateInterpolator()));
         rvDonationCategories.setAdapter(mDonationCategoryAdapter);
 
         // The number of Columns
@@ -196,7 +223,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
         rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mCurrentRequestCategoriesAdapter = new DonationCategoryAdapter();
-        rvCurrentRequestCategories.setItemAnimator(new SlideInRightAnimator());
+        rvCurrentRequestCategories.setItemAnimator(new SlideInRightAnimator(new DecelerateInterpolator()));
         rvCurrentRequestCategories.setAdapter(mCurrentRequestCategoriesAdapter);
 
         tsInfo.setFactory(() -> LayoutInflater.from(getActivity()).inflate(R.layout.textview_info, null));
@@ -350,13 +377,14 @@ public class RequestPickupFragment extends MapHostingFragment
 //\
 
         //get selected categories
-        LatLng target = getMapTarget();
-//        //ship it off to parse
         Collection<DonationCategory> selectedItems = mDonationCategoryAdapter.getSelectedItems();
+//        //ship it off to parse
+        LatLng target = getMapTarget();
         mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(target.latitude, target.longitude),
                 name,
                 actvAddress.getText().toString(),
+                etNote.getText().toString(),
                 phoneNumber,
                 ParseUser.getCurrentUser(),
                 selectedItems
@@ -426,48 +454,86 @@ public class RequestPickupFragment extends MapHostingFragment
 
             // zoom in map
             mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(18.0f), 1000, null);
-            Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
 
-            fade_in.setTarget(adaptableGradientRectView);
-            fade_in.addListener(new AnimatorEndListener() {
+            Animator fadeInGradient = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
+            fadeInGradient.setTarget(adaptableGradientRectView);
+
+            Animator growNote = CustomAnimations.animateWidth(ivNote, 0, iconSize);
+            growNote.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+            growNote.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+                    ivNote.startAnimation(shake);
+                }
+            });
+
+            AnimatorSet set = new AnimatorSet();
+            set.addListener(new AnimatorEndListener() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     subscriber.onNext(null);
                     subscriber.onCompleted();
                 }
             });
-
-            fade_in.start();
+            set.play(fadeInGradient).before(growNote);
+            set.start();
         });
     }
 
-//    @NonNull
-//    private ValueAnimator getInfoGrowAnimator() {
-//        TypedValue typedValue = new TypedValue();
-//        getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, typedValue, true);
-//        TypedArray typedArray = getActivity().obtainStyledAttributes(typedValue.data, new int[]{R.attr.actionBarSize});
-//        int targetHeight = typedArray.getDimensionPixelSize(0, -1);
-//        typedArray.recycle();
-//
-//        ValueAnimator infoGrow = ValueAnimator.ofInt(llInfo.getMeasuredHeight(), targetHeight);
-//        infoGrow.addUpdateListener(valueAnimator -> {
-//            int val = (Integer) valueAnimator.getAnimatedValue();
-//            ViewGroup.LayoutParams layoutParams = llInfo.getLayoutParams();
-//            layoutParams.height = val;
-//            llInfo.setLayoutParams(layoutParams);
-//        });
-//        infoGrow.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
-//        return infoGrow;
-//    }
+    @OnClick(R.id.ivNote)
+    public void onNoteClick(ImageView iv) {
+        //show llNote by sliding it down from top (over map)
+        Animator slideDownllNote = ViewPropertyObjectAnimator.animate(llNote).translationY(llAddressInfoContainer.getBottom()).setInterpolator(new DecelerateInterpolator()).get();
+
+        //animate ivNote down to bottom of llnote
+        Animator dropIvNoteDown = ViewPropertyObjectAnimator.animate(ivNote).translationY(llNote.getBottom()).setInterpolator(new AccelerateInterpolator()).get();
+
+        //shrink ivNote
+        Animator shrinkIvNote = CustomAnimations.circularHide(ivNote);
+
+        //grow ivNoteSubmit
+        Animator growIvNoteSubmit = CustomAnimations.circularReveal(ivNoteSubmit);
+
+        //or maybe animate ivNote left to where ivNoteOpen is
+        AnimatorSet set = new AnimatorSet();
+        set.play(slideDownllNote).with(dropIvNoteDown);
+        set.play(shrinkIvNote).before(growIvNoteSubmit).after(dropIvNoteDown); //TODO: experiemnt
+        set.start();
+    }
+
+    @OnClick(R.id.ivNoteSubmit)
+    public void onNoteSubmit(ImageView iv) {
+
+        //shrink ivNoteSubmit
+        Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
+        //grow ivNote
+        Animator growIvNote = CustomAnimations.circularReveal(ivNote);
+        //animate ivNote up to height of llAddress
+        Animator flyIvNoteUp = ViewPropertyObjectAnimator.animate(ivNote).translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).get();
+
+        // maybe fade out llNote
+        //hide slidingRLNoteLayout by sliding it up to top (over map)
+        Animator slideUpllNote = ViewPropertyObjectAnimator.animate(llNote).translationY(0).setInterpolator(new AccelerateInterpolator()).get();
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(shrinkIvNoteSubmit).before(growIvNote);
+        set.play(flyIvNoteUp).with(slideUpllNote).after(growIvNote);
+        set.start();
+    }
+
 
     private Observable<Void> hideConfirmAddress() {
         return Observable.create(subscriber -> {
 //            tsInfo.setText(getString(R.string.request_pickup_choose_location));
             btnBottomSubmit.setText(getString(R.string.button_set_pickup_location_label));
+            Animator shrinkNote = CustomAnimations.animateWidth(ivNote, iconSize, 0);
+            shrinkNote.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+            Animator fadeOutGradient = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
+            fadeOutGradient.setTarget(adaptableGradientRectView);
 
-            Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
-            fade_out.setTarget(adaptableGradientRectView);
-            fade_out.addListener(new AnimatorEndListener() {
+            AnimatorSet set = new AnimatorSet();
+            set.addListener(new AnimatorEndListener() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mConfirmAddressShowing = false;
@@ -475,7 +541,8 @@ public class RequestPickupFragment extends MapHostingFragment
                     subscriber.onCompleted();
                 }
             });
-            fade_out.start();
+            set.play(fadeOutGradient).with(shrinkNote);
+            set.start();
         });
     }
 
@@ -489,6 +556,7 @@ public class RequestPickupFragment extends MapHostingFragment
             btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
             slidingRLContainer.setVisibility(View.VISIBLE);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
+            slideDownFromTop.setInterpolator(new DecelerateInterpolator());
             slideDownFromTop.setTarget(slidingRLContainer);
             slideDownFromTop.addListener(new AnimatorEndListener() {
                 @Override
@@ -523,6 +591,7 @@ public class RequestPickupFragment extends MapHostingFragment
             btnBottomSubmit.setText(getString(R.string.continue_label));
 
             Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
+            slideUpToTop.setInterpolator(new AccelerateInterpolator());
             slideUpToTop.setTarget(slidingRLContainer);
             slideUpToTop.addListener(new AnimatorEndListener() {
                 @Override
@@ -550,7 +619,9 @@ public class RequestPickupFragment extends MapHostingFragment
 
             tsInfo.setText(getString(R.string.request_status_waiting));
             Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
+            slideUp.setInterpolator(new DecelerateInterpolator());
             Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
+            slideDown.setInterpolator(new AccelerateInterpolator());
 
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
             fade_in.setTarget(adaptableGradientRectView);
@@ -617,9 +688,9 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
             Animator slideDown = CustomAnimations.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
-
+            slideDown.setInterpolator(new AccelerateInterpolator());
             Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize));
-
+            slideUp.setInterpolator(new DecelerateInterpolator());
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);
 
