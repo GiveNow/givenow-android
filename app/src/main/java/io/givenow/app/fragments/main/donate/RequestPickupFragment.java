@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.location.Address;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -125,16 +124,13 @@ public class RequestPickupFragment extends MapHostingFragment
     @BindDimen(R.dimen.icon_size)
     int iconSize;
 
-    private PickUpDetailInteractionListener mListener;
     private PlaceAutocompleteAdapter mAdapter;
     private boolean mConfirmAddressShowing = false;
     private boolean mKeyCodeBackEventHandled = false;
     private DonationCategoryAdapter mDonationCategoryAdapter;
     private boolean mCategoryLayoutShowing = false;
     private GridLayoutManager mGridLayoutManager;
-    private boolean mInputValidated = false;
     private PickupRequest mPickupRequest;
-    private boolean mRequestSubmitted = false;
     private DonationCategoryAdapter mCurrentRequestCategoriesAdapter;
     private boolean mCurrentRequestLayoutShowing = false;
 
@@ -171,12 +167,9 @@ public class RequestPickupFragment extends MapHostingFragment
         View viewRoot = inflater.inflate(R.layout.fragment_request_pickup, container, false);
         ButterKnife.bind(this, viewRoot);
 
-
         btnClearAddress.setVisibility(View.INVISIBLE);
-
         // Register a listener that receives callbacks when a suggestion has been selected
         actvAddress.setOnItemClickListener(this);
-
         //Clear address button is only visible if address field has focus.
         actvAddress.setOnFocusChangeListener((view, hasFocus) -> {
             if (btnClearAddress != null) {
@@ -209,20 +202,15 @@ public class RequestPickupFragment extends MapHostingFragment
             }
         });
 
-        // Calling the RecyclerView
-        rvDonationCategories.setHasFixedSize(true);
-
         mDonationCategoryAdapter = new DonationCategoryAdapter();
+        rvDonationCategories.setHasFixedSize(true);
         rvDonationCategories.setItemAnimator(new ScaleInAnimator(new DecelerateInterpolator()));
         rvDonationCategories.setAdapter(mDonationCategoryAdapter);
-
-        // The number of Columns
-        mGridLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        rvDonationCategories.setItemAnimator
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 3);  // The number of Columns
         rvDonationCategories.setLayoutManager(mGridLayoutManager);
 
-        rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         mCurrentRequestCategoriesAdapter = new DonationCategoryAdapter();
+        rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rvCurrentRequestCategories.setItemAnimator(new SlideInRightAnimator(new DecelerateInterpolator()));
         rvCurrentRequestCategories.setAdapter(mCurrentRequestCategoriesAdapter);
 
@@ -300,7 +288,6 @@ public class RequestPickupFragment extends MapHostingFragment
 
     public void deselectAddressField() {
         actvAddress.clearFocus();
-//        flMapLayout.requestFocus();
         hideKeyboardFrom(getActivity(), flMapLayout);
     }
 
@@ -323,7 +310,6 @@ public class RequestPickupFragment extends MapHostingFragment
     private void confirmPickupRequest() {
         Collection<DonationCategory> items = mDonationCategoryAdapter.getSelectedItems();
         if (items.size() < 1) {
-            //TODO: Highlight rlNumberCoats background to hint user to enter number of coats
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
             btnBottomSubmit.setEnabled(true);
         } else {
@@ -335,7 +321,6 @@ public class RequestPickupFragment extends MapHostingFragment
             } else {
                 //they have entered their phone before, let's pre-populate it and their name
                 String myName = currUser.getString("name");
-//                showConfirmPickupDialog(myName, myPhoneNumber);
                 onFinishConfirmPickupDialog(myName, myPhoneNumber);
             }
 
@@ -365,20 +350,9 @@ public class RequestPickupFragment extends MapHostingFragment
         installation.put("user", ParseUser.getCurrentUser());
         installation.saveInBackground();
 
-        //grab donation details
-//        double donationValue;
-//        String estimatedValueString = etEstimatedValue.getText().toString();
-//        if (!estimatedValueString.equals("")) {
-//            donationValue = Double.parseDouble(estimatedValueString);
-//        } else {
-//            donationValue = 0.0;
-//        }
-//        int numcoats = Integer.parseInt(etNumCoatsValue.getText().toString());
-//\
-
         //get selected categories
         Collection<DonationCategory> selectedItems = mDonationCategoryAdapter.getSelectedItems();
-//        //ship it off to parse
+        //ship it off to parse
         LatLng target = getMapTarget();
         mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(target.latitude, target.longitude),
@@ -398,17 +372,11 @@ public class RequestPickupFragment extends MapHostingFragment
         mPickupRequest.saveInBackground(this::shouldWeRetrySave);
     }
 
-
     public void shouldWeRetrySave(ParseException e) {
         if (e == null) {
             // saved successfully
-            mRequestSubmitted = true;
             // detach this detail fragment, we're done here
-            hideCategoryLayout().subscribe(v -> {
-                hideConfirmAddress().subscribe();
-                showCurrentRequestLayout().subscribe();
-            });
-
+            onPickupRequestSaved();
         } else {
             // save did not succeed
             getActivity().setProgressBarIndeterminateVisibility(false);
@@ -425,20 +393,11 @@ public class RequestPickupFragment extends MapHostingFragment
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        // entering animations
-//        inflate_to_height = AnimatorInflater.loadAnimator(activity, R.animator.inflate_to_height);
-
-
-        try {
-            mListener = (PickUpDetailInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnLaunchPickUpDetailListener");
-        }
-
+    private void onPickupRequestSaved() {
+        hideCategoryLayout().subscribe(v -> {
+            hideConfirmAddress().subscribe();
+            showCurrentRequestLayout().subscribe();
+        });
     }
 
 //    public void showConfirmAddressNow() {
@@ -642,11 +601,6 @@ public class RequestPickupFragment extends MapHostingFragment
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     btnBottomSubmit.setVisibility(View.GONE);
-                    //LISTENER GETS CALLED TWICE.
-//                    animation.getListeners(); //THE FIX?!?!?!?!?!?!?
-                    //(OR CALL ANY OTHER METHOD THAT ACCESSES A MEMBER VARIABLE OF animation
-
-//                Log.e(logTag(), "Adding items!!!!!" + animation.isStarted());
                     for (DonationCategory item : items) {
                         item.setSelected(true);
                         item.setClickable(false);
@@ -699,7 +653,6 @@ public class RequestPickupFragment extends MapHostingFragment
             set.addListener(new AnimatorEndListener() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-//                Log.e(logTag(), "Hiding currentREquestLayout!");
                     adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
                     rlCurrentRequestContainer.setVisibility(View.GONE);
                     btnBottomSubmit.setEnabled(true);
@@ -711,11 +664,6 @@ public class RequestPickupFragment extends MapHostingFragment
             });
             set.start();
         });
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
@@ -758,14 +706,10 @@ public class RequestPickupFragment extends MapHostingFragment
         } else if (mConfirmAddressShowing) {
             info = R.string.help_request_pickup_confirm_address;
         }
-
-        new AlertDialog.Builder(getActivity()).setIcon(R.drawable.ic_help_outline_black_24dp).setTitle(R.string.help_title).setMessage(info).show();
-    }
-
-    // Container Activity must implement this interface
-    public interface PickUpDetailInteractionListener {
-        void onLaunchRequestPickUpDetail(String addr, double lat, double lng);
-
-        void updateAddress(Address address);
+        new AlertDialog.Builder(getActivity())
+                .setIcon(R.drawable.ic_help_outline_black_24dp)
+                .setTitle(R.string.help_title)
+                .setMessage(info)
+                .show();
     }
 }

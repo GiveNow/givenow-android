@@ -47,7 +47,6 @@ import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 
 public class MainActivity extends BaseActivity implements
-        RequestPickupFragment.PickUpDetailInteractionListener,
         PickupRequestsFragment.PickupRequestDetailInteractionListener,
         PickupRequestDetailFragment.PickupRequestConfirmedListener,
         NavigationView.OnNavigationItemSelectedListener {

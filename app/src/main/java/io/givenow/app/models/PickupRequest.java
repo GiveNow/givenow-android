@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import io.givenow.app.R;
 
@@ -229,15 +228,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     }
 
     public Collection<DonationCategory> getDonationCategories() {
-        List<DonationCategory> l = getList("donationCategories");
-//        ArrayList<DonationCategory> al = (ArrayList<DonationCategory>) get("donationCategories");
-//        ArrayList<DonationCategory> list= new ArrayList<DonationCategory>();
-//        JSONArray list = getJSONArray("arrayName");
-//        list.
-//        for (DonationCategory c : l) {
-//            c.fetchIfNeeded()
-//        }
-        return l;
+        return getList("donationCategories");
 
     }
 
