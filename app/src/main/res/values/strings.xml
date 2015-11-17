@@ -95,5 +95,9 @@
     <string name="help_request_pickup_category_chooser">These are currently the most needed items in your area. Choose one or more by tapping the cards. If you\'re donating items that are not listed, choose \"other\".</string>
     <string name="help_request_pickup_current_request">Your request has been received! You\'ll be notified when a driver is ready to pick up your donation.</string>
     <string name="help_title">Help</string>
+    <string name="onboarding_1_title">Welcome to GiveNow.</string>
+    <string name="onboarding_1_description">GiveNow lets you donate from anywhere.</string>
+    <string name="onboarding_2_title">Drop a pin.</string>
+    <string name="onboarding_2_description">We show you what\'s needed most in your area.</string>
 
 </resources>
