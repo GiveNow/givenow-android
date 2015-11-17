@@ -313,16 +313,14 @@ public class RequestPickupFragment extends MapHostingFragment
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
             btnBottomSubmit.setEnabled(true);
         } else {
-            ParseUser currUser = ParseUser.getCurrentUser();
-            String myPhoneNumber = currUser.getString("phoneNumber");
-            if (myPhoneNumber == null) {
-                //user hasn't entered their phone before
+            if (ParseUserHelper.isStillAnonymous()) {
+                //user is still anonymous
                 showConfirmPickupDialog("", "");
             } else {
                 //they have entered their phone before, let's pre-populate it and their name
-                String myName = currUser.getString("name");
-                onFinishConfirmPickupDialog(myName, myPhoneNumber);
+                onFinishConfirmPickupDialog(ParseUserHelper.getName(), ParseUserHelper.getPhoneNumber());
             }
+
 
         }
     }
@@ -342,8 +340,11 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
         hideKeyboardFrom(getActivity(), getView());
         //update the current user's name and phone
-        ParseUserHelper.setName(name);
-        ParseUserHelper.setPhoneNumber(phoneNumber);
+//        ParseUserHelper.setName(name);
+//        ParseUserHelper.setPhoneNumber(phoneNumber);
+        ParseUser.getCurrentUser().put("name", name);
+        ParseUser.getCurrentUser().put("phoneNumber", phoneNumber);
+        ParseUser.getCurrentUser().saveInBackground();
 
         // Associate the device with a user //TODO: maybe don't do this every time, only at the first time
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();

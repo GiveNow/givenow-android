@@ -1,5 +1,6 @@
 package io.givenow.app.models;
 
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -7,7 +8,7 @@ import com.parse.ParseUser;
 public class ParseUserHelper {
 
     public static boolean isStillAnonymous() {
-        return ParseUser.getCurrentUser().getUsername() == null;
+        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
     }
 
     public static String getName() {
