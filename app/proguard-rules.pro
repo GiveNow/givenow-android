@@ -15,11 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontobfuscate #if obfuscation is enabled, we get "java.lang.NoSuchFieldException: producerIndex" (wtf?)
 
--keep class io.card.**
--keepclassmembers class io.card.** {
-    *;
-}
+#Retrolambda
+-dontwarn java.lang.invoke.*
+
 
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
@@ -37,13 +37,27 @@
 -dontwarn com.parse.**
 
 
--dontwarn java.lang.invoke.*
--dontwarn com.squareup.okhttp.**
--dontwarn javax.annotation.**
+-dontwarn okio.**
+-dontwarn fj.**
+#-dontwarn fj.function.*
+
+# Guava:
+#-dontwarn javax.annotation.**
+#-dontwarn javax.inject.**
 -dontwarn sun.misc.Unsafe
--dontwarn java.util.function.Consumer
--dontwarn com.facebook.*
--dontwarn okio.*
--dontwarn android.net.http.AndroidHttpClient
--dontwarn fj.function.*
+
+# Picasso
+-dontwarn com.squareup.okhttp.**
+
+#-keep class android.support.v4.** { *; }
+#-keep class android.support.v7.** { *; }
+
+#-dontwarn java.lang.invoke.*
+#-dontwarn com.squareup.okhttp.**
+#-dontwarn javax.annotation.**
+#-dontwarn sun.misc.Unsafe
+#-dontwarn java.util.function.Consumer
+#-dontwarn com.facebook.*
+#-dontwarn okio.*
+#-dontwarn android.net.http.AndroidHttpClient
 

@@ -1,6 +1,6 @@
-include ':app', ':ParseLoginUI', ':animators'
+include ':app', ':animators'
 include ':PagerSlidingTabStrip-magicgoose-1c26523:library'
-project(':ParseLoginUI').projectDir = new File('ParseUI-Android/ParseLoginUI')
+//project(':ParseLoginUI').projectDir = new File('ParseUI-Android/ParseLoginUI')
 //project(':recyclerview-animators').projectDir = new File('recyclerview-animators/animators')
 //include ':recyclerview-animators'
 project(':animators').projectDir = new File('recyclerview-animators/animators')
