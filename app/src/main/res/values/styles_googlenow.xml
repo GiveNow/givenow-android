@@ -71,19 +71,19 @@
         <item name="android:textColor">#ffffffff</item>
     </style>
 
-    <style name="ClingButton">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#ffffffff</item>
-        <item name="android:background">@drawable/cling_button_bg</item>
-        <item name="android:paddingLeft">50.0dip</item>
-        <item name="android:paddingTop">15.0dip</item>
-        <item name="android:paddingRight">50.0dip</item>
-        <item name="android:paddingBottom">15.0dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">@string/cling_dismiss</item>
-    </style>
+    <!--<style name="ClingButton">-->
+    <!--<item name="android:textSize">16.0sp</item>-->
+    <!--<item name="android:textStyle">bold</item>-->
+    <!--<item name="android:textColor">#ffffffff</item>-->
+    <!--<item name="android:background">@drawable/cling_button_bg</item>-->
+    <!--<item name="android:paddingLeft">50.0dip</item>-->
+    <!--<item name="android:paddingTop">15.0dip</item>-->
+    <!--<item name="android:paddingRight">50.0dip</item>-->
+    <!--<item name="android:paddingBottom">15.0dip</item>-->
+    <!--<item name="android:layout_width">wrap_content</item>-->
+    <!--<item name="android:layout_height">wrap_content</item>-->
+    <!--<item name="android:text">@string/cling_dismiss</item>-->
+    <!--</style>-->
 
     <style name="ClingTitleText">
         <item name="android:textSize">@dimen/cling_title_text_size</item>
@@ -1437,39 +1437,39 @@
 
     <style name="SearchFooter" />
 
-    <style name="ModularActionArgumentTextStyle">
-        <item name="android:textColorHint">@color/gray</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:paddingTop">4.0dip</item>
-        <item name="android:paddingBottom">4.0dip</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/unit</item>
-        <item name="android:layout_marginRight">@dimen/unit</item>
-        <item name="android:minHeight">64.0dip</item>
-        <item name="android:text">@string/empty_text</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:lineSpacingExtra">2.0sp</item>
-        <item name="android:layout_marginStart">@dimen/unit</item>
-        <item name="android:layout_marginEnd">@dimen/unit</item>
-        <item name="android:layout_alignParentStart">true</item>
-    </style>
+    <!--<style name="ModularActionArgumentTextStyle">-->
+    <!--<item name="android:textColorHint">@color/gray</item>-->
+    <!--<item name="android:gravity">center_vertical</item>-->
+    <!--<item name="android:background">@android:color/transparent</item>-->
+    <!--<item name="android:paddingTop">4.0dip</item>-->
+    <!--<item name="android:paddingBottom">4.0dip</item>-->
+    <!--<item name="android:layout_width">fill_parent</item>-->
+    <!--<item name="android:layout_height">wrap_content</item>-->
+    <!--<item name="android:layout_marginLeft">@dimen/unit</item>-->
+    <!--<item name="android:layout_marginRight">@dimen/unit</item>-->
+    <!--<item name="android:minHeight">64.0dip</item>-->
+    <!--<item name="android:text">@string/empty_text</item>-->
+    <!--<item name="android:layout_alignParentLeft">true</item>-->
+    <!--<item name="android:lineSpacingExtra">2.0sp</item>-->
+    <!--<item name="android:layout_marginStart">@dimen/unit</item>-->
+    <!--<item name="android:layout_marginEnd">@dimen/unit</item>-->
+    <!--<item name="android:layout_alignParentStart">true</item>-->
+    <!--</style>-->
 
-    <style name="ModularActionArgumentLabelStyle" parent="@style/ModularActionArgumentTextStyle">
-        <item name="android:textSize">14.0sp</item>
-        <item name="android:textColor">@color/gray</item>
-    </style>
+    <!--<style name="ModularActionArgumentLabelStyle" parent="@style/ModularActionArgumentTextStyle">-->
+    <!--<item name="android:textSize">14.0sp</item>-->
+    <!--<item name="android:textColor">@color/gray</item>-->
+    <!--</style>-->
 
-    <style name="ModularActionArgumentValueStyle" parent="@style/ModularActionArgumentTextStyle">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">@color/dark_gray</item>
-    </style>
+    <!--<style name="ModularActionArgumentValueStyle" parent="@style/ModularActionArgumentTextStyle">-->
+    <!--<item name="android:textSize">16.0sp</item>-->
+    <!--<item name="android:textColor">@color/dark_gray</item>-->
+    <!--</style>-->
 
-    <style name="ActionCardUserIntentTitle" parent="@style/ModularActionArgumentTextStyle">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textColor">@color/dark_gray</item>
-    </style>
+    <!--<style name="ActionCardUserIntentTitle" parent="@style/ModularActionArgumentTextStyle">-->
+    <!--<item name="android:textSize">18.0sp</item>-->
+    <!--<item name="android:textColor">@color/dark_gray</item>-->
+    <!--</style>-->
 
     <style name="Theme.FirstRun" parent="@android:style/Theme.Holo.Light">
         <item name="android:windowBackground">@color/activity_background</item>

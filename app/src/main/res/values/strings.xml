@@ -8,18 +8,12 @@
     <string name="title_sign_out">Sign Out</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
-    <string name="donate_cash_button">Donate</string>
-    <string name="donate_cash_motivational"> One Warm Coat’s mission is simple:</string>
     <string name="button_set_pickup_location_label">Set Pickup Location</string>
     <string name="submit_pickup_label">Submit Pickup Request</string>
-    <string name="title_activity_login">LoginActivity</string>
     <string name="login_greeting">Login anonymously using your phone number</string>
-    <string name="hello_world">Hello world!</string>
     <string name="login_label">Log in Anonymously</string>
     <string name="confirm_pickup">Are you sure you want to pick up this donation?</string>
     <string name="accept">Accept</string>
@@ -41,17 +35,10 @@
     <string name="action_cancel">Cancel</string>
     <string name="addrHdr">Address</string>
     <string name="itypeHdr">Type</string>
-    <string name="cashValHdr">Value</string>
     <string name="dateHdr">Pickup Date</string>
     <string name="action_refresh">Refresh</string>
-    <string name="donate_cash_amount">Your generous donation of $%1$s was successful!</string>
-    <string name="donate_cash_success">Thank You!</string>
     <string name="donate_pickup_complete">Your donation has been successfully picked up.  Thanks for making a difference!</string>
     <string name="donate_success">Donation Successful</string>
-    <string name="credit_card_invalid">Credit Card Invalid</string>
-    <string name="invalid_donation_amount">$%1$s is not valid input. Please enter a valid donation amount greater than 0</string>
-    <string name="donate_cash_msg">Your generous donations will help One Warm Coat provide a warmer winter for your neighbors in need.</string>
-    <string name="tax_id_msg">Our non-profit 501(c)3 Tax ID is #74-3045243.</string>
     <string name="notif_pending_volunteer_assigned_title">Is your donation ready?</string>
     <string name="notif_pending_volunteer_assigned_msg">%1$s wants to pick up your donation. Confirm?</string>
     <string name="notif_volunteer_confirmed_title">Ready for Pickup</string>
@@ -69,7 +56,6 @@
     <string name="report_problem_reason_cant_find_place">I can\'t find the place</string>
     <string name="report_problem_reason_cant_find_coats">I found the place, but I can\'t find the coats</string>
     <string name="report_problem_reason_other">Other: </string>
-    <string name="credit_card_error">Error processing card - please try again later!</string>
     <string name="navigation_item_1">Give Now</string>
     <string name="navigation_item_2">Volunteer</string>
     <string name="navigation_item_3">Dropoff Centers</string>
@@ -89,9 +75,9 @@
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
     <string name="dialog_cancelDonation_negativeButton">Keep donation</string>
     <string name="request_pickup_choose_location">Where is your donation located?</string>
-    <string name="action_information">Info</string>
+    <string name="action_contextual_help">Help</string>
     <string name="help_request_pickup_initial">Move the map to select a pickup location for your donation. Our drivers will pick up your items from this spot, so try to be as precise as possible!</string>
-    <string name="help_request_pickup_confirm_address">Confirm your address is correct and that the pin is in the right place. Tap \"Add a note\" to give your driver additional information (for example, \"second floor\" or \"gate code: 3311\". </string>
+    <string name="help_request_pickup_confirm_address">Confirm your address is correct and that the pin is in the right place. Tap \"Add a note\" to give your driver additional information (for example, \"second floor\" or \"gate code: 3311\"). </string>
     <string name="help_request_pickup_category_chooser">These are currently the most needed items in your area. Choose one or more by tapping the cards. If you\'re donating items that are not listed, choose \"other\".</string>
     <string name="help_request_pickup_current_request">Your request has been received! You\'ll be notified when a driver is ready to pick up your donation.</string>
     <string name="help_title">Help</string>
@@ -99,5 +85,6 @@
     <string name="onboarding_1_description">GiveNow lets you donate from anywhere.</string>
     <string name="onboarding_2_title">Drop a pin.</string>
     <string name="onboarding_2_description">We show you what\'s needed most in your area.</string>
+    <string name="get_directions">Get Directions</string>
 
 </resources>

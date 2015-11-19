@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="drawer_titles">
-        <item>Donate</item>
-        <item>Volunteer</item>
-        <item>Profile</item>
-        <item>Sign Out</item>
-</string-array>
 </resources>
