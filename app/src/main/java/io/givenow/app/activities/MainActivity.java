@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity implements
         //TODO: Now that we use a toolbar, the action bar progressbar doesn't exist anymore.
 //        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 //        requestWindowFeature(Window.FEATURE_PROGRESS);
-        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 

@@ -83,8 +83,8 @@
     <string name="help_title">Help</string>
     <string name="onboarding_1_title">Welcome to GiveNow.</string>
     <string name="onboarding_1_description">GiveNow lets you donate from anywhere.</string>
-    <string name="onboarding_2_title">Drop a pin.</string>
-    <string name="onboarding_2_description">We show you what\'s needed most in your area.</string>
+    <string name="onboarding_2_title">We show you what\'s needed most in your area.</string>
+    <string name="onboarding_2_description">You select what you want to donate.</string>
     <string name="get_directions">Get Directions</string>
 
 </resources>

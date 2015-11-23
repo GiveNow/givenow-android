@@ -107,6 +107,9 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     //    compile 'jp.wasabeef:recyclerview-animators:2.0.1'
     compile 'com.bartoszlipinski:viewpropertyobjectanimator:1.1.0'
+
+    compile 'com.github.paolorotolo:appintro:3.2.0'
+
     //    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
 
     compile 'com.parse.bolts:bolts-android:1.2.1'

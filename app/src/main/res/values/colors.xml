@@ -16,7 +16,9 @@
     <color name="colorPrimaryLight">#ffe1f5fe</color>
     <color name="colorAccent">#ff66bb6a</color>
     <color name="onboarding_1_color">@color/colorPrimary</color>
-    <color name="onboarding_2_color">@color/colorAccent</color>
+    <color name="onboarding_2_color">@color/colorPrimaryDark</color>
+    <color name="onboarding_3_color">@color/colorPrimaryLight</color>
+    <color name="onboarding_4_color">@color/colorAccent</color>
 
     <!--<color name="primary_text_default_material_light">#000000</color>-->
     <!--<color name="foreground_material_light">#ffffff</color>-->
