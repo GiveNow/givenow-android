@@ -12,6 +12,7 @@ import io.givenow.app.R;
 
 /**
  * Created by aphex on 11/16/15.
+ *
  */
 public class OnboardingActivity extends AppIntro2 {
 
@@ -21,11 +22,6 @@ public class OnboardingActivity extends AppIntro2 {
 
         // Add your slide's fragments here
         // AppIntro will automatically generate the dots indicator and buttons.
-//        addSlide(first_fragment);
-//        addSlide(second_fragment);
-//        addSlide(third_fragment);
-//        addSlide(fourth_fragment);
-
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest
         addSlide(AppIntroFragment.newInstance(getString(R.string.onboarding_1_title),
@@ -58,11 +54,6 @@ public class OnboardingActivity extends AppIntro2 {
         setVibrateIntensity(30);
     }
 
-//    @Override
-//    public void onSkipPressed() {
-//        // Do something when users tap on Skip button.
-//    }
-
     @Override
     public void onDonePressed() {
         // Do something when users tap on Done button.
@@ -72,7 +63,6 @@ public class OnboardingActivity extends AppIntro2 {
         editor.putBoolean("RanBefore", true);
         editor.apply();
 
-        //Can also start MainActivity here if i don't use startActivities in SplashActivity.
         startActivity(new Intent(this, MainActivity.class));
 
         finish();

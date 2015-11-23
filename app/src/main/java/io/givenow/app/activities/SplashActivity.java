@@ -16,10 +16,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (isFirstTime()) {
-//            startActivities(new Intent[]{
-//                    new Intent(this, MainActivity.class),
-//                    new Intent(this, OnboardingActivity.class)
-//            });
             startActivity(new Intent(this, OnboardingActivity.class));
         } else {
             startActivity(new Intent(this, MainActivity.class));
