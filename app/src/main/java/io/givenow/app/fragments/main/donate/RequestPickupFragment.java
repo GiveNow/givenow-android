@@ -334,11 +334,11 @@ public class RequestPickupFragment extends MapHostingFragment
     @Override
     public void onFinishPhoneNumberDialog(String phoneNumber) {
         hideKeyboardFrom(getActivity(), getView());
-        //update the current user's phone and associate with device
-        ParseUserHelper.registerUserWithDevice(phoneNumber);
-
-        constructPickupRequest();
-        savePickupRequest();
+        //we have the user's phone, execute signup or login
+        ParseUserHelper.signUpOrLogin(phoneNumber, () -> {
+            constructPickupRequest();
+            savePickupRequest();
+        });
     }
 
     private void constructPickupRequest() {

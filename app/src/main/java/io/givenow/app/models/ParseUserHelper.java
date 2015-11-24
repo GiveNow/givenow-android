@@ -10,6 +10,7 @@ import com.parse.ParseUser;
 import java.util.HashMap;
 
 import fj.data.Option;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.parse.ParseObservable;
 
@@ -46,25 +47,28 @@ public class ParseUserHelper {
         //TODO could do additional phone number verification here
 
         ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
-                .doOnError(e -> {
-                    //user doesn't exist, let's sign them up
-                    Log.d("Onboarding", "User query error result: " + e.getMessage());
-                    Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
-                    ParseUserHelper.registerUserWithDevice(phoneNumber);
-                    loginComplete.call();
-                })
-                .subscribe(user -> {
-                    //user does already exist, let's "log them in"
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("phoneNumber", phoneNumber);
-                    ParseObservable.callFunction("getUserSessionToken", params).subscribe(sessionToken -> {
-                        ParseObservable.become(sessionToken.toString()).subscribe(becameUser -> {
-                            Log.d("Onboarding", "Became user " + becameUser.get("phoneNumber"));
-                            ParseUserHelper.associateWithDevice(becameUser);
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        user -> {
+                            //user does already exist, let's "log them in"
+                            HashMap<String, Object> params = new HashMap<>();
+                            params.put("phoneNumber", phoneNumber);
+                            ParseObservable.callFunction("getUserSessionToken", params).subscribe(sessionToken -> {
+                                ParseObservable.become(sessionToken.toString()).observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(becameUser -> {
+                                            Log.d("Onboarding", "Became user " + becameUser.get("phoneNumber"));
+                                            ParseUserHelper.associateWithDevice(becameUser);
+                                            loginComplete.call();
+                                        });
+                            });
+                        },
+                        error -> {
+                            //user doesn't exist, let's sign them up
+                            Log.d("Onboarding", "Existing user query error result: " + error.getMessage());
+                            Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
+                            ParseUserHelper.registerUserWithDevice(phoneNumber);
                             loginComplete.call();
                         });
-                    });
-                });
     }
 
     public static String getName() {
@@ -92,7 +96,7 @@ public class ParseUserHelper {
             e.printStackTrace();
         }
 
-        if(name == null || name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             name = "Anonymous";
         }
         return name;
@@ -122,7 +126,7 @@ public class ParseUserHelper {
     }
 
     //this way we only do 1 network call to save user.
-    public static void setNameAndNumber(String name, String phoneNumber){
+    public static void setNameAndNumber(String name, String phoneNumber) {
         ParseUser user = ParseUser.getCurrentUser();
         user.put("name", name);
         user.put("phoneNumber", phoneNumber);
@@ -143,7 +147,7 @@ public class ParseUserHelper {
         ParseUser user = ParseUser.getCurrentUser();
         String stripeCustomerId = user.getString("stripeCustomerId");
 
-        if(stripeCustomerId == null){
+        if (stripeCustomerId == null) {
             stripeCustomerId = "";
         }
 
@@ -157,7 +161,7 @@ public class ParseUserHelper {
     }
 
     public static boolean hasStripeCustomerId() {
-        if(getStripeCustomerId().isEmpty()){
+        if (getStripeCustomerId().isEmpty()) {
             return false;
         }
         return true;

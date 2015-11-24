@@ -97,26 +97,24 @@ public class OnboardingActivity extends AppIntro2
     }
 
     public void onUserLoginComplete() {
-        runOnUiThread(() -> {
-            //set first time var
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("RanBefore", true);
-            editor.apply();
+        //set first time var
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("RanBefore", true);
+        editor.apply();
 
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            //change done button to givenow smiley
-            ivDone.setImageResource(R.mipmap.ic_launcher);
-            Animator reveal = CustomAnimations.circularReveal(ivDone);
-            reveal.addListener(new AnimatorEndListener() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    Log.d("Onboarding", "Starting MainActivity");
-                    startActivity(mainIntent);
-                    finish();
-                }
-            });
-            reveal.start();
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        //change done button to givenow smiley
+        ivDone.setImageResource(R.mipmap.ic_launcher);
+        Animator reveal = CustomAnimations.circularReveal(ivDone);
+        reveal.addListener(new AnimatorEndListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Log.d("Onboarding", "Starting MainActivity");
+                startActivity(mainIntent);
+                finish();
+            }
         });
+        reveal.start();
     }
 }
