@@ -1,11 +1,17 @@
 package io.givenow.app.models;
 
+import android.util.Log;
+
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
+import java.util.HashMap;
+
 import fj.data.Option;
+import rx.functions.Action0;
+import rx.parse.ParseObservable;
 
 public class ParseUserHelper {
 
@@ -34,6 +40,31 @@ public class ParseUserHelper {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("user", user);
         installation.saveInBackground();
+    }
+
+    public static void signUpOrLogin(String phoneNumber, Action0 loginComplete) {
+        //TODO could do additional phone number verification here
+
+        ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
+                .doOnError(e -> {
+                    //user doesn't exist, let's sign them up
+                    Log.d("Onboarding", "User query error result: " + e.getMessage());
+                    Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
+                    ParseUserHelper.registerUserWithDevice(phoneNumber);
+                    loginComplete.call();
+                })
+                .subscribe(user -> {
+                    //user does already exist, let's "log them in"
+                    HashMap<String, Object> params = new HashMap<>();
+                    params.put("phoneNumber", phoneNumber);
+                    ParseObservable.callFunction("getUserSessionToken", params).subscribe(sessionToken -> {
+                        ParseObservable.become(sessionToken.toString()).subscribe(becameUser -> {
+                            Log.d("Onboarding", "Became user " + becameUser.get("phoneNumber"));
+                            ParseUserHelper.associateWithDevice(becameUser);
+                            loginComplete.call();
+                        });
+                    });
+                });
     }
 
     public static String getName() {

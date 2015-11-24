@@ -12,16 +12,12 @@ import android.widget.ImageView;
 
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
-import com.parse.ParseUser;
-
-import java.util.HashMap;
 
 import io.givenow.app.R;
 import io.givenow.app.fragments.PhoneNumberOnboardingFragment;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.interfaces.AnimatorEndListener;
 import io.givenow.app.models.ParseUserHelper;
-import rx.parse.ParseObservable;
 
 /**
  * Created by aphex on 11/16/15.
@@ -84,35 +80,12 @@ public class OnboardingActivity extends AppIntro2
     @Override
     public void onDonePressed() {
         // Do something when users tap on Done button.
-        // first time
 //        Prefs.setRanBefore(true);
-
         String phoneNumber = phoneNumberOnboardingFragment.getPhoneNumber();
         if (phoneNumber.length() > 0) {
             //change done button to spinner
             CustomAnimations.circularHide(ivDone).start();
-
-            //TODO could do additional phone number verification here
-            ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
-                    .doOnError(e -> {
-                        //user doesn't exist, let's sign them up
-                        Log.d("Onboarding", "User query error result: " + e.getMessage());
-                        Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
-                        ParseUserHelper.registerUserWithDevice(phoneNumber);
-                        onUserLoginComplete();
-                    })
-                    .subscribe(user -> {
-                        //user does already exist, let's "log them in"
-                        HashMap<String, Object> params = new HashMap<>();
-                        params.put("phoneNumber", phoneNumber);
-                        ParseObservable.callFunction("getUserSessionToken", params).subscribe(sessionToken -> {
-                            ParseObservable.become(sessionToken.toString()).subscribe(becameUser -> {
-                                Log.d("Onboarding", "Became user " + becameUser.get("phoneNumber"));
-                                ParseUserHelper.associateWithDevice(becameUser);
-                                onUserLoginComplete();
-                            });
-                        });
-                    });
+            ParseUserHelper.signUpOrLogin(phoneNumber, this::onUserLoginComplete);
         } else {
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             ivDone.startAnimation(shake);
@@ -131,7 +104,6 @@ public class OnboardingActivity extends AppIntro2
             editor.putBoolean("RanBefore", true);
             editor.apply();
 
-            // TODO fix the observable calling this to observe on the right thread (the thread that created ivDone)
             Intent mainIntent = new Intent(this, MainActivity.class);
             //change done button to givenow smiley
             ivDone.setImageResource(R.mipmap.ic_launcher);
