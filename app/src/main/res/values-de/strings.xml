@@ -26,7 +26,7 @@
     <string name="cancel">Abbrechen</string>
     <string name="donation_history">Alle Spenden</string>
     <string name="pickup_history">Alle Abholungen</string>
-    <string name="donor_dialog_disclaimer">Diese Information wird nur verwendet, wenn Probleme bei der Abholung deiner Spenden auftreten.</string>
+    <!--<string name="donor_dialog_disclaimer">Diese Information wird nur verwendet, wenn Probleme bei der Abholung deiner Spenden auftreten.</string>-->
     <string name="volunteer_dialog_disclaimer">Dein Name und deine Telefonnummer werden nur zur Verifizierung verwendet.</string>
     <string name="anonymous">Unbekannt</string>
     <string name="address">Unbekannte Adresse</string>
@@ -76,9 +76,9 @@
     <string name="continue_label">Weiter</string>
     <string name="button_confirm_donation_label">Jetzt spenden</string>
     <string name="error_insufficient_categories_selected">Bitte mindestens eines auswählen.</string>
-    <string name="confirm_pickup_dialog_title">Wie können wir dich kontaktieren?</string>
-    <string name="confirm_pickup_dialog_phone_number_hint">Deine Telefonnummer</string>
-    <string name="confirm_pickup_dialog_name_hint">Dein Name</string>
+    <string name="dialog_phoneNumber_title">Wie können wir dich kontaktieren?</string>
+    <string name="dialog_phoneNumber_hint">Deine Telefonnummer</string>
+    <!--<string name="confirm_pickup_dialog_name_hint">Dein Name</string>-->
     <string name="anonymous_user_name">Unbekannt</string>
     <string name="request_pickup_info_confirm_address">Ist deine Adresse richtig?</string>
     <string name="request_pickup_info_select_categories">Was möchtest du spenden?</string>

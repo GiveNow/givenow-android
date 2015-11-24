@@ -50,6 +50,7 @@
 
         <activity
             android:name=".activities.OnboardingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
         </activity>
 

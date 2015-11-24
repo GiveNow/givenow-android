@@ -7,7 +7,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     tools:context="io.givenow.app.fragments.main.donate.RequestPickupFragment">
-
+<!-- TODO: https://www.google.com/design/spec/components/text-fields.html#text-fields-single-line-text-field -->
     <LinearLayout
         android:id="@+id/llNote"
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
             android:layout_weight="0"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_subject_white_24dp" />
+            android:src="@drawable/ic_subject_white_24dp"
+            android:contentDescription="Add address notes"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -41,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="Add a note..."
+                android:hint="@string/address_field_note_hint"
                 android:inAnimation="@android:anim/slide_in_left"
                 android:maxLines="4"
                 android:outAnimation="@android:anim/slide_out_right"

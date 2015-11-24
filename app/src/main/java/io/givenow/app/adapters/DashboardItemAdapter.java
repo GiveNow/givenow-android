@@ -52,12 +52,12 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         holder.tvStatus.setText("Waiting for Donor");
         holder.readyLayout.setVisibility(View.GONE);
 //        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
-        holder.tvName.setText(ParseUserHelper.getFirstName(pickupRequest.getName()));
+        holder.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()));
         holder.tvAddress.setText(pickupRequest.getAddress());
 
         ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
         //if there is a confirmed volunteer and it is me, then say it is ready for pickup
-        if(confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
+        if (confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
             holder.tvStatus.setText("Ready for Pickup");
             holder.readyLayout.setVisibility(View.VISIBLE);
             setupStaticMap(holder, pickupRequest);
@@ -71,7 +71,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         ParseGeoPoint gp = pickupRequest.getLocation();
         final Double lat = gp.getLatitude();
         final Double lng = gp.getLongitude();
-        final String label = pickupRequest.getName();
+//        final String label = pickupRequest.getName();
         //TODO: use our custom marker
         String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
                 "center=" + gp.getLatitude() + "," + gp.getLongitude() +
@@ -95,7 +95,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
 
 
     private void setupCardActionButtons(ViewHolder holder, final PickupRequest pickupRequest) {
-        holder.btnCall.setTag(pickupRequest.getPhoneNumber());
+        holder.btnCall.setTag(ParseUserHelper.getPhoneNumber(pickupRequest.getDonor()).orSome(""));
         holder.btnCall.setOnClickListener(v -> {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             String donorPhoneNum = (String) v.getTag();

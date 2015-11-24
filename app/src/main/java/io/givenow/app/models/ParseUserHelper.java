@@ -1,14 +1,39 @@
 package io.givenow.app.models;
 
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+
+import fj.data.Option;
 
 public class ParseUserHelper {
 
-    public static boolean isStillAnonymous() {
-        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
+    public static boolean isSignedUpWithPhoneNumber() {
+        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
+//        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
+    }
+
+//    public static void registerUser(String phoneNumber) {
+//        ParseUser currentUser = ParseUser.getCurrentUser();
+//        currentUser.put("phoneNumber", phoneNumber);
+//        currentUser.saveInBackground();
+//    }
+
+    public static void registerUserWithDevice(String phoneNumber) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.put("phoneNumber", phoneNumber);
+//        currentUser.put("AuthData", "signedup!"); //clear out Anonymous status
+        currentUser.saveInBackground(e -> associateWithDevice(currentUser));
+//        ParseUser.getCurrentUser().signUpInBackground();
+
+    }
+
+    public static void associateWithDevice(ParseUser user) {
+        // Associate the device with a user
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("user", user);
+        installation.saveInBackground();
     }
 
     public static String getName() {
@@ -53,8 +78,8 @@ public class ParseUserHelper {
         user.saveInBackground();
     }
 
-    public static String getPhoneNumber(ParseUser user) {
-        String number = "";
+    public static Option<String> getPhoneNumber(ParseUser user) {
+        String number = null;
         try {
             user.fetchIfNeeded();
             number = user.getString("phoneNumber");
@@ -62,7 +87,7 @@ public class ParseUserHelper {
             e.printStackTrace();
         }
 
-        return number;
+        return Option.fromNull(number);
     }
 
     //this way we only do 1 network call to save user.
@@ -116,5 +141,4 @@ public class ParseUserHelper {
         //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
         return name.split(" ")[0];
     }
-
 }

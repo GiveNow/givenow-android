@@ -5,10 +5,12 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.location.Address;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,7 +39,6 @@ import fj.data.Option;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.VolunteerFragment;
 import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
-import io.givenow.app.fragments.main.donate.RequestPickupDetailFragment;
 import io.givenow.app.fragments.main.donate.RequestPickupFragment;
 import io.givenow.app.fragments.main.profile.ProfileFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestDetailFragment;
@@ -55,7 +56,6 @@ public class MainActivity extends BaseActivity implements
     ActionBarDrawerToggle mDrawerToggle;
 
     private int mSelectedItemId;
-    private RequestPickupDetailFragment requestPickUpDetailFragment;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
     private Fragment fragToHide = null;
@@ -268,7 +268,7 @@ public class MainActivity extends BaseActivity implements
                 TextView navigation_label_username = (TextView) drawerView.findViewById(R.id.navigation_label_username);
                 TextView navigation_label_phone = (TextView) drawerView.findViewById(R.id.navigation_label_phone);
 
-                if (!ParseUserHelper.isStillAnonymous()) {
+                if (ParseUserHelper.isSignedUpWithPhoneNumber()) {
                     //User is not anonymous
                     navigation_label_username.setText(ParseUserHelper.getName());
                     navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
@@ -380,7 +380,12 @@ public class MainActivity extends BaseActivity implements
             case R.id.navigation_sign_out: //Sign Out
                 ParseUser.logOut();
                 ParseUser currentUser = ParseUser.getCurrentUser(); // this will now be null
-                //take user to login screen
+                //take user to onboarding screen and set the pref so it shows up again if the app is relaunched
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("RanBefore", false);
+                editor.apply();
+                startActivity(new Intent(this, SplashActivity.class));
                 finish();
                 break;
             default:

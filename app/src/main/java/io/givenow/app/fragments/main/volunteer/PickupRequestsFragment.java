@@ -21,12 +21,11 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.parse.ParseQuery;
 
+import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-
-import butterknife.ButterKnife;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -214,7 +213,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats
-            markerOptions.title(ParseUserHelper.getFirstName(pickupRequest.getName()));
+            markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()));
             markerOptions.snippet("Tap to accept this request!");
         }
 

@@ -109,13 +109,15 @@ dependencies {
     compile 'com.bartoszlipinski:viewpropertyobjectanimator:1.1.0'
 
     compile 'com.github.paolorotolo:appintro:3.2.0'
+    compile 'com.googlecode.libphonenumber:libphonenumber:7.2.1'
 
     //    compile 'com.androidmapsextensions:android-maps-extensions:2.1.0+'
 
-    compile 'com.parse.bolts:bolts-android:1.2.1'
     compile 'com.parse:parse-android:1.10.3'
+    compile 'com.parse.bolts:bolts-android:1.2.1'
     compile 'com.parse:parseui-login-android:0.0.1'
     compile 'com.parse:parseui-widget-android:0.0.1'
+    compile 'com.infstory:rxparse:2.0.1'
     // Uncomment if using Facebook Login (optional Maven dependency)
     //    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     //    compile fileTree(dir: 'libs', include: 'Parse-*.jar')

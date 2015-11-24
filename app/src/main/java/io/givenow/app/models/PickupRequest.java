@@ -52,15 +52,15 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 //    }
 
     //Normal use case, the donation and volunteer shouldn't exist.
-    public PickupRequest(ParseGeoPoint location, String name, String address, String note, String phoneNumber,
+    public PickupRequest(ParseGeoPoint location, String address, String note,
                          ParseUser donor, Collection<DonationCategory> donationCategories) {
         super();
         setActive(true);
         setLocation(location);
-        setName(name);
+//        setName(name); //deprecated
         setAddress(address);
         setNote(note);
-        setPhoneNumber(phoneNumber);
+//        setPhoneNumber(phoneNumber); //deprecated
         setDonor(donor);
         setDonationCategories(donationCategories);
     }
@@ -182,19 +182,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("pickupDate", value);
     }
 
-    public String getName() {
-        String name = getString("name");
-
-        if (name == null || name.isEmpty()) {
-            name = "Anonymous";
-        }
-        return name;
-    }
-
-    public void setName(String value) {
-        put("name", value);
-    }
-
     public String getAddress() {
         return getString("address");
     }
@@ -209,14 +196,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public void setNote(String note) {
         put("note", note);
-    }
-
-    public String getPhoneNumber() {
-        return getString("phoneNumber");
-    }
-
-    public void setPhoneNumber(String value) {
-        put("phoneNumber", value);
     }
 
     public ParseUser getDonor() {

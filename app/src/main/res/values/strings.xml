@@ -20,7 +20,7 @@
     <string name="cancel">Cancel</string>
     <string name="donation_history">Donation History</string>
     <string name="pickup_history">Pickup History</string>
-    <string name="donor_dialog_disclaimer">This information will only be used in case we have trouble locating your donated items.</string>
+    <!--<string name="donor_dialog_disclaimer">This information will only be used in case we have trouble locating your donated items.</string>-->
     <string name="volunteer_dialog_disclaimer">Your name and phone number will only be used for verification.</string>
     <string name="anonymous">Anonymous</string>
     <string name="address">Anonymous Address</string>
@@ -62,9 +62,9 @@
     <string name="continue_label">Continue</string>
     <string name="button_confirm_donation_label">Give Now</string>
     <string name="error_insufficient_categories_selected">Please select one or more.</string>
-    <string name="confirm_pickup_dialog_title">How can we contact you?</string>
-    <string name="confirm_pickup_dialog_phone_number_hint">Your phone number</string>
-    <string name="confirm_pickup_dialog_name_hint">Your name</string>
+    <string name="dialog_phoneNumber_title">How can we contact you?</string>
+    <string name="dialog_phoneNumber_hint">Your phone number</string>
+    <!--<string name="confirm_pickup_dialog_name_hint">Your name</string>-->
     <string name="anonymous_user_name">Anonymous</string>
     <string name="request_pickup_info_confirm_address">Is your address correct?</string>
     <string name="request_pickup_info_select_categories">What are you donating?</string>
@@ -81,10 +81,22 @@
     <string name="help_request_pickup_category_chooser">These are currently the most needed items in your area. Choose one or more by tapping the cards. If you\'re donating items that are not listed, choose \"other\".</string>
     <string name="help_request_pickup_current_request">Your request has been received! You\'ll be notified when a driver is ready to pick up your donation.</string>
     <string name="help_title">Help</string>
+    <string name="get_directions">Get Directions</string>
     <string name="onboarding_1_title">Welcome to GiveNow.</string>
     <string name="onboarding_1_description">GiveNow lets you donate from anywhere.</string>
     <string name="onboarding_2_title">We show you what\'s needed most in your area.</string>
     <string name="onboarding_2_description">You select what you want to donate.</string>
-    <string name="get_directions">Get Directions</string>
+    <string name="onboarding_3_title">Tell us where to pick it up.</string>
+    <string name="onboarding_3_description">Simply pinpoint a spot on the map. You can even add special instructions like apartment numbers or gate codes.</string>
+    <string name="onboarding_4_title">We take care of the rest.</string>
+    <string name="onboarding_4_description">A trusted volunteer driver will pick up your donation.\nWe\'ll contact you to coordinate the pickup.</string>
+    <string name="onboarding_5_title">Add a phone number</string>
+    <string name="phone_number_disclaimer">This only lets your driver reach you to arrange pickup.\nWe never share your number with third parties.</string>
+    <string name="address_field_note_hint">Apartment, gate code, name...</string>
+    <string name="phone_number_later">You can also add a phone number later.</string>
+    <string name="dialog_phoneNumber_negativeButton">Cancel</string>
+    <string name="dialog_phoneNumber_positiveButton">Submit</string>
+    <string name="onboarding_or">or</string>
+    <string name="onboarding_add_phone_number_later_button">Add a phone number later</string>
 
 </resources>

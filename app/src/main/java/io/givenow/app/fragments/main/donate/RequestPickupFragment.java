@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -43,7 +42,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.Collection;
@@ -57,8 +55,8 @@ import io.givenow.app.adapters.DonationCategoryAdapter;
 import io.givenow.app.adapters.PlaceAutocompleteAdapter;
 import io.givenow.app.customviews.AdaptableGradientRectView;
 import io.givenow.app.customviews.SlidingRelativeLayout;
-import io.givenow.app.fragments.main.common.ConfirmRequestDialogFragment;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
+import io.givenow.app.fragments.main.common.PhoneNumberDialogFragment;
 import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.interfaces.AnimatorEndListener;
@@ -72,7 +70,7 @@ import rx.Observable;
 
 public class RequestPickupFragment extends MapHostingFragment
         implements ResultCallback<PlaceBuffer>, AdapterView.OnItemClickListener,
-        ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
+        PhoneNumberDialogFragment.PhoneNumberDialogListener {
 
     private static final double AUTOCOMPLETE_BIAS_RADIUS_METERS = 10000;
 
@@ -313,58 +311,47 @@ public class RequestPickupFragment extends MapHostingFragment
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
             btnBottomSubmit.setEnabled(true);
         } else {
-            if (ParseUserHelper.isStillAnonymous()) {
+            if (!ParseUserHelper.isSignedUpWithPhoneNumber()) {
                 //user is still anonymous
-                showConfirmPickupDialog("", "");
+                showConfirmPickupDialog("");
             } else {
-                //they have entered their phone before, let's pre-populate it and their name
-                onFinishConfirmPickupDialog(ParseUserHelper.getName(), ParseUserHelper.getPhoneNumber());
+                constructPickupRequest();
+                savePickupRequest();
             }
-
-
         }
     }
 
-    private void showConfirmPickupDialog(String name, String phoneNumber) {
-        FragmentManager fm = getChildFragmentManager();
-        ConfirmRequestDialogFragment confirmRequestDialogFragment =
-                ConfirmRequestDialogFragment.newInstance(getString(R.string.confirm_pickup_dialog_title), name, phoneNumber,
-                        getResources().getText(R.string.donor_dialog_disclaimer));
-        confirmRequestDialogFragment.setOnDismissListener(dialog ->
+    private void showConfirmPickupDialog(String phoneNumber) {
+        PhoneNumberDialogFragment phoneNumberDialogFragment = PhoneNumberDialogFragment.newInstance(
+                getString(R.string.dialog_phoneNumber_title),
+                phoneNumber,
+                getResources().getText(R.string.phone_number_disclaimer));
+        phoneNumberDialogFragment.setOnDismissListener(dialog ->
                 btnBottomSubmit.setEnabled(true));
-        confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
+        phoneNumberDialogFragment.show(getChildFragmentManager(), "fragment_confirm_request_dialog");
     }
 
-    // after donor enters name and number and hits Confirm
     @Override
-    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+    public void onFinishPhoneNumberDialog(String phoneNumber) {
         hideKeyboardFrom(getActivity(), getView());
-        //update the current user's name and phone
-//        ParseUserHelper.setName(name);
-//        ParseUserHelper.setPhoneNumber(phoneNumber);
-        ParseUser.getCurrentUser().put("name", name);
-        ParseUser.getCurrentUser().put("phoneNumber", phoneNumber);
-        ParseUser.getCurrentUser().saveInBackground();
+        //update the current user's phone and associate with device
+        ParseUserHelper.registerUserWithDevice(phoneNumber);
 
-        // Associate the device with a user //TODO: maybe don't do this every time, only at the first time
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("user", ParseUser.getCurrentUser());
-        installation.saveInBackground();
+        constructPickupRequest();
+        savePickupRequest();
+    }
 
+    private void constructPickupRequest() {
         //get selected categories
-        Collection<DonationCategory> selectedItems = mDonationCategoryAdapter.getSelectedItems();
         //ship it off to parse
         LatLng target = getMapTarget();
         mPickupRequest = new PickupRequest(
                 new ParseGeoPoint(target.latitude, target.longitude),
-                name,
                 actvAddress.getText().toString(),
                 etNote.getText().toString(),
-                phoneNumber,
                 ParseUser.getCurrentUser(),
-                selectedItems
+                mDonationCategoryAdapter.getSelectedItems()
         );
-        savePickupRequest();
     }
 
     private void savePickupRequest() {
@@ -464,7 +451,11 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @OnClick(R.id.ivNoteSubmit)
     public void onNoteSubmit(ImageView iv) {
-
+        if (etNote.getText().length() > 0) {
+            ivNote.setImageResource(R.drawable.ic_playlist_add_check_white_24dp);
+        } else {
+            ivNote.setImageResource(R.drawable.ic_playlist_add_white_24dp);
+        }
         //shrink ivNoteSubmit
         Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
         //grow ivNote

@@ -31,14 +31,14 @@ import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import io.givenow.app.R;
 import io.givenow.app.customviews.SlidingRelativeLayout;
-import io.givenow.app.fragments.main.common.ConfirmRequestDialogFragment;
+import io.givenow.app.fragments.main.common.PhoneNumberDialogFragment;
 import io.givenow.app.helpers.CroutonHelper;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 
 public class PickupRequestDetailFragment extends Fragment implements
-        ConfirmRequestDialogFragment.ConfirmPickupDialogListener {
+        PhoneNumberDialogFragment.PhoneNumberDialogListener {
 
     @Bind(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
@@ -126,7 +126,7 @@ public class PickupRequestDetailFragment extends Fragment implements
 
         mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
 
-        tvDonorName.setText(ParseUserHelper.getFirstName(mPickupRequest.getName()));
+        tvDonorName.setText(ParseUserHelper.getName(mPickupRequest.getDonor()));
         tvDonorAddress.setText(mPickupRequest.getAddress());
 
         return fragmentView;
@@ -238,20 +238,21 @@ public class PickupRequestDetailFragment extends Fragment implements
 
     private void showConfirmPickupDialog(String name, String phoneNumber) {
         FragmentManager fm = getChildFragmentManager();
-        ConfirmRequestDialogFragment confirmRequestDialogFragment =
-                ConfirmRequestDialogFragment.newInstance("Accept Pickup Request", name, phoneNumber,
+        PhoneNumberDialogFragment phoneNumberDialogFragment =
+                PhoneNumberDialogFragment.newInstance("Accept Pickup Request", phoneNumber,
                         getResources().getText(R.string.volunteer_dialog_disclaimer));
-        confirmRequestDialogFragment.show(fm, "fragment_confirm_request_dialog");
+        phoneNumberDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
-    /* after clicking accept in the ConfirmRequestDialogFragment update User with
+    /* after clicking accept in the PhoneNumberDialogFragment update User with
      * volunteer name and phone
      */
     @Override
-    public void onFinishConfirmPickupDialog(String name, String phoneNumber) {
+    public void onFinishPhoneNumberDialog(String phoneNumber) {
         //update the current user's name and phone
-        ParseUserHelper.setNameAndNumber(name, phoneNumber);
-
+//        ParseUserHelper.setNameAndNumber(phoneNumber);
+        ParseUserHelper.setPhoneNumber(phoneNumber);
+        //TODO: change accept pickup flow to rely on phone number given earlier, or only do the dialog once.
         savePickupRequest();
     }
 
