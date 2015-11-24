@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
-import com.parse.ParseCloud;
 import com.parse.ParseUser;
 
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import io.givenow.app.fragments.PhoneNumberOnboardingFragment;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.interfaces.AnimatorEndListener;
 import io.givenow.app.models.ParseUserHelper;
+import rx.parse.ParseObservable;
 
 /**
  * Created by aphex on 11/16/15.
@@ -87,45 +87,36 @@ public class OnboardingActivity extends AppIntro2
         // first time
 //        Prefs.setRanBefore(true);
 
-
         String phoneNumber = phoneNumberOnboardingFragment.getPhoneNumber();
         if (phoneNumber.length() > 0) {
             //change done button to spinner
             CustomAnimations.circularHide(ivDone).start();
 
             //TODO could do additional phone number verification here
-
-//            ParseUserHelper.findUser
-//            ParseObservable.first()
-//            ParseObservable.find()
-            ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber).getFirstInBackground((foundUser, e) -> {
-                if (e == null) {
-                    //user does already exist, let's "log them in"
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("phoneNumber", phoneNumber);
-                    ParseCloud.callFunctionInBackground("getUserSessionToken", params, (sessionToken, callErr) -> {
-                        if (callErr == null) {
-                            ParseUser.becomeInBackground((String) sessionToken, (user, becomeErr) -> {
-                                if (becomeErr == null) {
-                                    Log.d("Onboarding", "Became user " + user);
-                                    ParseUserHelper.associateWithDevice(user);
-                                    onUserLoginComplete();
-                                }
+            ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
+                    .doOnError(e -> {
+                        //user doesn't exist, let's sign them up
+                        Log.d("Onboarding", "User query error result: " + e.getMessage());
+                        Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
+                        ParseUserHelper.registerUserWithDevice(phoneNumber);
+                        onUserLoginComplete();
+                    })
+                    .subscribe(user -> {
+                        //user does already exist, let's "log them in"
+                        HashMap<String, Object> params = new HashMap<>();
+                        params.put("phoneNumber", phoneNumber);
+                        ParseObservable.callFunction("getUserSessionToken", params).subscribe(sessionToken -> {
+                            ParseObservable.become(sessionToken.toString()).subscribe(becameUser -> {
+                                Log.d("Onboarding", "Became user " + becameUser.get("phoneNumber"));
+                                ParseUserHelper.associateWithDevice(becameUser);
+                                onUserLoginComplete();
                             });
-                        }
+                        });
                     });
-                } else {
-                    //user doesn't exist, let's sign them up
-                    Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
-                    ParseUserHelper.registerUserWithDevice(phoneNumber);
-                    onUserLoginComplete();
-                }
-            });
         } else {
             Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
             ivDone.startAnimation(shake);
         }
-
     }
 
     public ImageView getDoneButton() {
@@ -133,24 +124,27 @@ public class OnboardingActivity extends AppIntro2
     }
 
     public void onUserLoginComplete() {
-        //set first time var
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("RanBefore", true);
-        editor.apply();
+        runOnUiThread(() -> {
+            //set first time var
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("RanBefore", true);
+            editor.apply();
 
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        //change done button to givenow smiley
-        ivDone.setImageResource(R.mipmap.ic_launcher);
-        Animator reveal = CustomAnimations.circularReveal(ivDone);
-        reveal.addListener(new AnimatorEndListener() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                startActivity(mainIntent);
-                finish();
-            }
+            // TODO fix the observable calling this to observe on the right thread (the thread that created ivDone)
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            //change done button to givenow smiley
+            ivDone.setImageResource(R.mipmap.ic_launcher);
+            Animator reveal = CustomAnimations.circularReveal(ivDone);
+            reveal.addListener(new AnimatorEndListener() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Log.d("Onboarding", "Starting MainActivity");
+                    startActivity(mainIntent);
+                    finish();
+                }
+            });
+            reveal.start();
         });
-        reveal.start();
-
     }
 }
