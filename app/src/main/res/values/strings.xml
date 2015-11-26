@@ -98,5 +98,8 @@
     <string name="dialog_phoneNumber_positiveButton">Submit</string>
     <string name="onboarding_or">or</string>
     <string name="onboarding_add_phone_number_later_button">Add a phone number later</string>
+    <string name="dialog_sms_code_hint">SMS Code</string>
+    <string name="validate_sms_code">Enter the 4-digit confirmation code:\nIt was sent in an SMS message to %1$s.</string>
+    <string name="sms_body_javascript">{code} is your code for GiveNow.</string>
 
 </resources>

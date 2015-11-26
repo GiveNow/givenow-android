@@ -1,13 +1,6 @@
 package io.givenow.app.activities;
 
-import android.animation.Animator;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.github.paolorotolo.appintro.AppIntro2;
@@ -15,15 +8,11 @@ import com.github.paolorotolo.appintro.AppIntroFragment;
 
 import io.givenow.app.R;
 import io.givenow.app.fragments.PhoneNumberOnboardingFragment;
-import io.givenow.app.helpers.CustomAnimations;
-import io.givenow.app.interfaces.AnimatorEndListener;
-import io.givenow.app.models.ParseUserHelper;
 
 /**
  * Created by aphex on 11/16/15.
  */
-public class OnboardingActivity extends AppIntro2
-        implements PhoneNumberOnboardingFragment.AppIntroInteractionListener {
+public class OnboardingActivity extends AppIntro2 {
 
     private PhoneNumberOnboardingFragment phoneNumberOnboardingFragment;
     private ImageView ivDone;
@@ -79,42 +68,13 @@ public class OnboardingActivity extends AppIntro2
 
     @Override
     public void onDonePressed() {
-        // Do something when users tap on Done button.
-//        Prefs.setRanBefore(true);
-        String phoneNumber = phoneNumberOnboardingFragment.getPhoneNumber();
-        if (phoneNumber.length() > 0) {
-            //change done button to spinner
-            CustomAnimations.circularHide(ivDone).start();
-            ParseUserHelper.signUpOrLogin(phoneNumber, this::onUserLoginComplete);
-        } else {
-            Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-            ivDone.startAnimation(shake);
-        }
+
     }
 
-    public ImageView getDoneButton() {
-        return ivDone;
-    }
 
-    public void onUserLoginComplete() {
-        //set first time var
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("RanBefore", true);
-        editor.apply();
+//    public ImageView getDoneButton() {
+//        return ivDone;
+//    }
 
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        //change done button to givenow smiley
-        ivDone.setImageResource(R.mipmap.ic_launcher);
-        Animator reveal = CustomAnimations.circularReveal(ivDone);
-        reveal.addListener(new AnimatorEndListener() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                Log.d("Onboarding", "Starting MainActivity");
-                startActivity(mainIntent);
-                finish();
-            }
-        });
-        reveal.start();
-    }
+
 }

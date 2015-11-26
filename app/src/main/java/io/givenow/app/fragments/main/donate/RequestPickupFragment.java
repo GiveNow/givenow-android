@@ -335,7 +335,7 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onFinishPhoneNumberDialog(String phoneNumber) {
         hideKeyboardFrom(getActivity(), getView());
         //we have the user's phone, execute signup or login
-        ParseUserHelper.signUpOrLogin(phoneNumber, () -> {
+        ParseUserHelper.signUpOrLogin(phoneNumber, () -> { //TODO add sms flow
             constructPickupRequest();
             savePickupRequest();
         });

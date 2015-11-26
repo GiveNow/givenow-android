@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -75,6 +76,7 @@ public class PhoneNumberDialogFragment extends DialogFragment implements TextWat
         etPhone.requestFocus();
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        etPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         etPhone.addTextChangedListener(this);
 
         return v;

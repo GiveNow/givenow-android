@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_weight="10"
-              android:id="@+id/main">
+<LinearLayout
+    android:id="@+id/main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="10"
+    android:background="@color/colorAccent"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
+        android:layout_weight="3"
         android:gravity="center"
         android:paddingLeft="32dp"
-        android:layout_weight="3"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
         android:paddingRight="32dp"
+        android:textColor="@android:color/white"
         android:textSize="28sp"
-        android:id="@+id/title"/>
+        android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="3"
         android:layout_gravity="center"
+        android:layout_weight="3"
         android:gravity="center"
-        android:textColor="@android:color/white"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:textSize="16sp"
-        android:id="@+id/description"/>
+        android:textColor="@android:color/white"
+        android:textSize="16sp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:layout_weight="4"
         android:gravity="center"
+        android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:layout_weight="4">
+        android:paddingRight="16dp">
 
         <!--<ImageView-->
         <!--android:layout_width="wrap_content"-->
@@ -47,42 +49,98 @@
         <!--android:paddingLeft="16dp"-->
         <!--android:id="@+id/image"-->
         <!--android:paddingRight="16dp" />-->
-        <EditText
-            android:id="@+id/etPhoneNumber"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/dialog_phoneNumber_hint"
-            android:imeOptions="actionDone"
-            android:inputType="phone"/>
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@null"
+                android:src="@drawable/ic_arrow_backward_white_24px"
+                android:visibility="invisible"/>
+
+            <ViewSwitcher
+                android:id="@+id/vsPhoneSMS"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/etPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/dialog_phoneNumber_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"/>
+
+                <EditText
+                    android:id="@+id/etSMSCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:hint="@string/dialog_sms_code_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="4"/>
+            </ViewSwitcher>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"/>
+
+                <ImageButton
+                    android:id="@+id/done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:background="@color/colorAccent"
+                    android:src="@drawable/ic_done_white_24px"
+                    android:visibility="visible"/>
+            </FrameLayout>
+
+        </LinearLayout>
+
 
         <TextView
-            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/onboarding_or"/>
+            android:paddingBottom="8dp"
+            android:text="@string/onboarding_or"
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/btnAddPhoneNumberLater"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/colorPrimaryDark"
+            android:background="#55ffffff"
             android:text="@string/onboarding_add_phone_number_later_button"/>
     </LinearLayout>
 
     <TextView
-        android:visibility="invisible"
+        android:id="@+id/description2"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="3"
         android:layout_gravity="center"
+        android:layout_weight="3"
         android:gravity="center"
-        android:textColor="@android:color/white"
         android:paddingLeft="64dp"
         android:paddingRight="64dp"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:id="@+id/description2"/>
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="fill_parent"

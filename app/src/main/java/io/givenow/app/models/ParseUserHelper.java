@@ -2,6 +2,7 @@ package io.givenow.app.models;
 
 import android.util.Log;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -10,6 +11,7 @@ import com.parse.ParseUser;
 import java.util.HashMap;
 
 import fj.data.Option;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.parse.ParseObservable;
@@ -21,6 +23,7 @@ public class ParseUserHelper {
 //        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
     }
 
+//    public static boolean
 //    public static void registerUser(String phoneNumber) {
 //        ParseUser currentUser = ParseUser.getCurrentUser();
 //        currentUser.put("phoneNumber", phoneNumber);
@@ -45,7 +48,8 @@ public class ParseUserHelper {
 
     public static void signUpOrLogin(String phoneNumber, Action0 loginComplete) {
         //TODO could do additional phone number verification here
-
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+//        phoneNumberUtil.parse(phoneNumber)
         ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -69,6 +73,20 @@ public class ParseUserHelper {
                             ParseUserHelper.registerUserWithDevice(phoneNumber);
                             loginComplete.call();
                         });
+    }
+
+    public static Observable<Object> sendCode(String phoneNumber, String smsBody) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("phoneNumber", phoneNumber);
+        params.put("body", smsBody);
+        return ParseObservable.callFunction("sendCode", params).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static Observable<Object> logIn(String phoneNumber, int smsCode) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("phoneNumber", phoneNumber);
+        params.put("codeEntry", smsCode);
+        return ParseObservable.callFunction("logIn", params).observeOn(AndroidSchedulers.mainThread());
     }
 
     public static String getName() {
@@ -103,6 +121,7 @@ public class ParseUserHelper {
     }
 
     public static String getPhoneNumber() {
+        //TODO possibly excise and replace with just the pretty printed username
         ParseUser user = ParseUser.getCurrentUser();
         return user.getString("phoneNumber");
     }
