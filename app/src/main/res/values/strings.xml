@@ -59,6 +59,7 @@
     <string name="navigation_item_1">Give Now</string>
     <string name="navigation_item_2">Volunteer</string>
     <string name="navigation_item_3">Dropoff Centers</string>
+    <string name="navigation_your_profile">Your Profile</string>
     <string name="continue_label">Continue</string>
     <string name="button_confirm_donation_label">Give Now</string>
     <string name="error_insufficient_categories_selected">Please select one or more.</string>
