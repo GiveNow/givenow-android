@@ -43,7 +43,6 @@ public class OnboardingActivity extends AppIntro2 implements PhoneNumberVerifica
                 getResources().getColor(R.color.onboarding_4_color)));
 
         phoneNumberOnboardingFragment = PhoneNumberOnboardingFragment.newInstance(getString(R.string.onboarding_5_title),
-                getString(R.string.phone_number_disclaimer),
                 getResources().getColor(R.color.onboarding_5_color));
         addSlide(phoneNumberOnboardingFragment);
 

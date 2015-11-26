@@ -26,41 +26,24 @@ import io.givenow.app.activities.MainActivity;
 public class PhoneNumberOnboardingFragment extends Fragment {
 
     private static final String ARG_TITLE = "title";
-    private static final String ARG_DESC = "desc";
-    private static final String ARG_DRAWABLE = "drawable";
     private static final String ARG_COLOUR = "colour";
     @Bind(R.id.title)
     TextView tvTitle;
-    //    @Bind(R.id.description)
-//    TextView tvDescription;
     @Bind(R.id.description2)
     TextView tvDescription2;
     @Bind(R.id.main)
     LinearLayout llMain;
-    //    @Bind(R.id.etPhoneNumber)
-//    EditText etPhoneNumber;
-//    @Bind(R.id.etSMSCode)
-//    EditText etSMSCode;
-//    @Bind(R.id.back)
-//    ImageButton ibBack;
-//    @Bind(R.id.done)
-//    ImageButton ibDone;
-//    @Bind(R.id.vsPhoneSMS)
-//    ViewSwitcher vsPhoneSMS;
-    private int drawable, colour;
-    private String title, description;
-//    private boolean mPhoneNumberFieldShowing = true;
+    private int colour;
+    private String title;
 
     public PhoneNumberOnboardingFragment() {
     }
 
-    public static PhoneNumberOnboardingFragment newInstance(String title, String description, int colour) {
+    public static PhoneNumberOnboardingFragment newInstance(String title, int colour) {
         PhoneNumberOnboardingFragment sampleSlide = new PhoneNumberOnboardingFragment();
 
         Bundle args = new Bundle();
         args.putString(ARG_TITLE, title);
-        args.putString(ARG_DESC, description);
-//        args.putInt(ARG_DRAWABLE, imageDrawable);
         args.putInt(ARG_COLOUR, colour);
         sampleSlide.setArguments(args);
 
@@ -73,11 +56,9 @@ public class PhoneNumberOnboardingFragment extends Fragment {
 
         if (getArguments() != null && getArguments().size() != 0) {
             title = getArguments().getString(ARG_TITLE);
-            description = getArguments().getString(ARG_DESC);
             colour = getArguments().getInt(ARG_COLOUR);
         }
     }
-
 
     @Nullable
     @Override
@@ -86,7 +67,6 @@ public class PhoneNumberOnboardingFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         tvTitle.setText(title);
-//        tvDescription.setText(description);
         tvDescription2.setText(R.string.phone_number_later);
         llMain.setBackgroundColor(colour);
 
