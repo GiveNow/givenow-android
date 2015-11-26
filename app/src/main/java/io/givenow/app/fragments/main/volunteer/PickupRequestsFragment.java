@@ -213,7 +213,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats
-            markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()));
+            markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(""));
             markerOptions.snippet("Tap to accept this request!");
         }
 

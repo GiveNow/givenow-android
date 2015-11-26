@@ -226,6 +226,8 @@ public class PhoneNumberOnboardingFragment extends Fragment {
 
     private void doLogin() {
         if (etSMSCode.getText().toString().length() == 4) {
+            CustomAnimations.circularHide(ibDone).start();
+
             String phoneNumber = getPhoneNumber();
             int code = Integer.parseInt(etSMSCode.getText().toString());
             ParseUserHelper.logIn(phoneNumber, code).subscribe(

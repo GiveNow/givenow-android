@@ -12,13 +12,12 @@ import android.widget.TextView;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.PageSlidingTabStripFragment;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 
 public class ProfileFragment extends PageSlidingTabStripFragment {
@@ -70,7 +69,7 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         ButterKnife.bind(this, rootView);
 
         phonenoTV.setText(ParseUserHelper.getPhoneNumber());
-        usernameTV.setText(ParseUserHelper.getName());
+        usernameTV.setText(ParseUserHelper.getName().orSome("Anonymous"));
 
         return rootView;
     }

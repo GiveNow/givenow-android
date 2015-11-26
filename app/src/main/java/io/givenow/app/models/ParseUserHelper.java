@@ -1,8 +1,12 @@
 package io.givenow.app.models;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -18,10 +22,15 @@ import rx.parse.ParseObservable;
 
 public class ParseUserHelper {
 
-    public static boolean isSignedUpWithPhoneNumber() {
-        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
-//        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
+    public static boolean isRegistered() {
+//        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
+        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
     }
+
+//    public static boolean isRegistered() {
+//        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
+////        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
+//    }
 
 //    public static boolean
 //    public static void registerUser(String phoneNumber) {
@@ -47,7 +56,7 @@ public class ParseUserHelper {
     }
 
     public static void signUpOrLogin(String phoneNumber, Action0 loginComplete) {
-        //TODO could do additional phone number verification here
+        //TODO excise
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 //        phoneNumberUtil.parse(phoneNumber)
         ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
@@ -89,14 +98,9 @@ public class ParseUserHelper {
         return ParseObservable.callFunction("logIn", params).observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static String getName() {
-        ParseUser user = ParseUser.getCurrentUser();
-        String name = user.getString("name");
-
-        if (name == null) {
-            name = "Anonymous";
-        }
-        return name;
+    @NonNull
+    public static Option<String> getName() {
+        return getName(ParseUser.getCurrentUser());
     }
 
     public static void setName(String name) {
@@ -105,7 +109,8 @@ public class ParseUserHelper {
         user.saveInBackground();
     }
 
-    public static String getName(ParseUser user) {
+    @NonNull
+    public static Option<String> getName(ParseUser user) {
         String name = null;
         try {
             user.fetchIfNeeded();
@@ -113,43 +118,42 @@ public class ParseUserHelper {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        if (name == null || name.isEmpty()) {
-            name = "Anonymous";
-        }
-        return name;
+        return Option.fromNull(name);
     }
 
+    @NonNull
+    public static Option<String> getFirstName() {
+        return getFirstName(ParseUser.getCurrentUser());
+    }
+
+    @NonNull
+    public static Option<String> getFirstName(ParseUser user) {
+        return getName(user).map(ParseUserHelper::splitIntoFirstName);
+    }
+
+    public static String splitIntoFirstName(String name) {
+        //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
+        return name.split(" ")[0];
+    }
+
+    @NonNull
     public static String getPhoneNumber() {
-        //TODO possibly excise and replace with just the pretty printed username
-        ParseUser user = ParseUser.getCurrentUser();
-        return user.getString("phoneNumber");
+        return getPhoneNumber(ParseUser.getCurrentUser());
     }
 
-    public static void setPhoneNumber(String phoneNumber) {
-        ParseUser user = ParseUser.getCurrentUser();
-        user.put("phoneNumber", phoneNumber);
-        user.saveInBackground();
-    }
-
-    public static Option<String> getPhoneNumber(ParseUser user) {
-        String number = null;
+    @NonNull
+    public static String getPhoneNumber(ParseUser user) {
+        String username = user.getUsername();
+        String phoneNumberString;
         try {
-            user.fetchIfNeeded();
-            number = user.getString("phoneNumber");
-        } catch (ParseException e) {
+            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+            Phonenumber.PhoneNumber pn = phoneUtil.parse("+" + username, null);
+            phoneNumberString = phoneUtil.format(pn, PhoneNumberUtil.PhoneNumberFormat.RFC3966).replace("tel:", "");
+        } catch (NumberParseException e) {
+            phoneNumberString = username;
             e.printStackTrace();
         }
-
-        return Option.fromNull(number);
-    }
-
-    //this way we only do 1 network call to save user.
-    public static void setNameAndNumber(String name, String phoneNumber) {
-        ParseUser user = ParseUser.getCurrentUser();
-        user.put("name", name);
-        user.put("phoneNumber", phoneNumber);
-        user.saveInBackground();
+        return phoneNumberString;
     }
 
     public static ParseFile getProfileImage() {
@@ -160,39 +164,5 @@ public class ParseUserHelper {
     public static void setProfileImage(ParseFile imageFile) {
         ParseUser user = ParseUser.getCurrentUser();
         user.put("profileImage", imageFile);
-    }
-
-    public static String getStripeCustomerId() {
-        ParseUser user = ParseUser.getCurrentUser();
-        String stripeCustomerId = user.getString("stripeCustomerId");
-
-        if (stripeCustomerId == null) {
-            stripeCustomerId = "";
-        }
-
-        return stripeCustomerId;
-    }
-
-    public static void setStripeCustomerId(String value) {
-        ParseUser user = ParseUser.getCurrentUser();
-        user.put("stripeCustomerId", value);
-        user.saveInBackground();
-    }
-
-    public static boolean hasStripeCustomerId() {
-        if (getStripeCustomerId().isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    public static String getFirstName() {
-        //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
-        return ParseUserHelper.getName().split(" ")[0];
-    }
-
-    public static String getFirstName(String name) {
-        //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
-        return name.split(" ")[0];
     }
 }

@@ -195,7 +195,7 @@ public class MainActivity extends BaseActivity implements
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
         ParseUser pendingVolunteer = pickupRequest.getPendingVolunteer();
-        String title = ParseUserHelper.getFirstName(ParseUserHelper.getName(pendingVolunteer)) + " is ready to pick up your donation!";
+        String title = ParseUserHelper.getFirstName(pendingVolunteer).orSome(getString(R.string.push_notif_volunteer_default_name)) + getString(R.string.push_notif_volunteer_is_ready_to_pickup);
         String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
 
         if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
@@ -204,10 +204,10 @@ public class MainActivity extends BaseActivity implements
         acceptPendingDialog = new AlertDialog.Builder(this)
 //                .setTitle(R.string.acceptRequest_submittedDialog_title)
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
-                .setTitle(Html.fromHtml("<font color='#246d9e'>" + title + "</font>")) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
-                .setMessage(Html.fromHtml("Is your donation available for pickup today?" + address))
-                .setPositiveButton("Yes", (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
-                .setNegativeButton("No", (dialog, which) -> cancelPendingVolunteer(pickupRequest))
+                .setTitle(Html.fromHtml(title)) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
+                .setMessage(Html.fromHtml(getString(R.string.dialog_accept_pending_volunteer) + address))
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
+                .setNegativeButton(R.string.no, (dialog, which) -> cancelPendingVolunteer(pickupRequest))
                 .setIcon(R.mipmap.ic_launcher)
                 .show();
     }
@@ -268,13 +268,13 @@ public class MainActivity extends BaseActivity implements
                 TextView navigation_label_username = (TextView) drawerView.findViewById(R.id.navigation_label_username);
                 TextView navigation_label_phone = (TextView) drawerView.findViewById(R.id.navigation_label_phone);
 
-                if (ParseUserHelper.isSignedUpWithPhoneNumber()) {
-                    //User is not anonymous
-                    navigation_label_username.setText(ParseUserHelper.getName());
+//                if (ParseUserHelper.isRegistered()) {
+//                    User is not anonymous
+                navigation_label_username.setText(Option.fromNull(ParseUser.getCurrentUser().get("name")).orSome(getString(R.string.navigation_your_profile)).toString());
                     navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
                     Option.fromNull(ParseUserHelper.getProfileImage()).foreachDoEffect(parseFile ->
                             Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(navigation_profile_image));
-                }
+//                }
 
                 navigation_profile_image.setOnClickListener(v -> {
                     //Deselect current item and close drawer

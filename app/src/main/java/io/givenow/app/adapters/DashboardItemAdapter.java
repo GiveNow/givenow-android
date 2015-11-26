@@ -49,16 +49,16 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         final PickupRequest pickupRequest = (PickupRequest) object;
 
         //set this as default case
-        holder.tvStatus.setText("Waiting for Donor");
+        holder.tvStatus.setText(R.string.volunteer_dashboard_status_waiting);
         holder.readyLayout.setVisibility(View.GONE);
 //        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
-        holder.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()));
+        holder.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(v.getResources().getString(R.string.donor_default_name)));
         holder.tvAddress.setText(pickupRequest.getAddress());
 
         ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
         //if there is a confirmed volunteer and it is me, then say it is ready for pickup
         if (confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
-            holder.tvStatus.setText("Ready for Pickup");
+            holder.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
             holder.readyLayout.setVisibility(View.VISIBLE);
             setupStaticMap(holder, pickupRequest);
             setupCardActionButtons(holder, pickupRequest);
@@ -95,7 +95,7 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
 
 
     private void setupCardActionButtons(ViewHolder holder, final PickupRequest pickupRequest) {
-        holder.btnCall.setTag(ParseUserHelper.getPhoneNumber(pickupRequest.getDonor()).orSome(""));
+        holder.btnCall.setTag(ParseUserHelper.getPhoneNumber(pickupRequest.getDonor()));
         holder.btnCall.setOnClickListener(v -> {
             Intent callIntent = new Intent(Intent.ACTION_CALL);
             String donorPhoneNum = (String) v.getTag();

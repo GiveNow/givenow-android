@@ -100,7 +100,15 @@
     <string name="onboarding_or">or</string>
     <string name="onboarding_add_phone_number_later_button">Add a phone number later</string>
     <string name="dialog_sms_code_hint">SMS Code</string>
-    <string name="validate_sms_code">Enter the 4-digit confirmation code:\nIt was sent in an SMS message to %1$s.</string>
+    <string name="validate_sms_code">Enter the 4-digit confirmation code:\nIt `was sent in an SMS message to %1$s.</string>
     <string name="sms_body_javascript">{code} is your code for GiveNow.</string>
+    <string name="push_notif_volunteer_default_name">A volunteer</string>
+    <string name="push_notif_volunteer_is_ready_to_pickup">" is ready to pick up your donation!"</string>
+    <string name="dialog_accept_pending_volunteer">Is your donation available for pickup today?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="donor_default_name">Anonymous</string>
+    <string name="volunteer_dashboard_status_waiting">Waiting for Donor</string>
+    <string name="volunteer_dashboard_status_ready">Ready for Pickup</string>
 
 </resources>

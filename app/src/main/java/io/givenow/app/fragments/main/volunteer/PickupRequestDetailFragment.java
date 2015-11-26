@@ -126,7 +126,7 @@ public class PickupRequestDetailFragment extends Fragment implements
 
         mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
 
-        tvDonorName.setText(ParseUserHelper.getName(mPickupRequest.getDonor()));
+        tvDonorName.setText(ParseUserHelper.getName(mPickupRequest.getDonor()).orSome("Anonymous"));
         tvDonorAddress.setText(mPickupRequest.getAddress());
 
         return fragmentView;
@@ -251,7 +251,7 @@ public class PickupRequestDetailFragment extends Fragment implements
     public void onFinishPhoneNumberDialog(String phoneNumber) {
         //update the current user's name and phone
 //        ParseUserHelper.setNameAndNumber(phoneNumber);
-        ParseUserHelper.setPhoneNumber(phoneNumber);
+//        ParseUserHelper.setPhoneNumber(phoneNumber);
         //TODO: change accept pickup flow to rely on phone number given earlier, or only do the dialog once.
         savePickupRequest();
     }

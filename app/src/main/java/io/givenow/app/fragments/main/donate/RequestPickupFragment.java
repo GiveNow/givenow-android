@@ -311,7 +311,7 @@ public class RequestPickupFragment extends MapHostingFragment
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
             btnBottomSubmit.setEnabled(true);
         } else {
-            if (!ParseUserHelper.isSignedUpWithPhoneNumber()) {
+            if (!ParseUserHelper.isRegistered()) {
                 //user is still anonymous
                 showConfirmPickupDialog("");
             } else {
