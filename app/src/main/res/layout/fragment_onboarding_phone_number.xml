@@ -39,12 +39,11 @@
         <!--android:paddingLeft="16dp"-->
         <!--android:id="@+id/image"-->
         <!--android:paddingRight="16dp" />-->
-        <fragment
-            android:id="@+id/phoneNumberVerificationFragment"
-            android:name="io.givenow.app.fragments.PhoneNumberVerificationFragment"
+        <FrameLayout
+            android:id="@+id/phoneNumberFragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </fragment>
+        </FrameLayout>
 
 
         <TextView

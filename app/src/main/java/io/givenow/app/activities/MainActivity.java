@@ -1,8 +1,6 @@
 package io.givenow.app.activities;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +10,8 @@ import android.location.Address;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -173,7 +173,7 @@ public class MainActivity extends BaseActivity implements
 
     private void displayInfo() {
         if (mSelectedItemId == R.id.navigation_give) {
-            RequestPickupFragment requestPickupFragment = (RequestPickupFragment) getFragmentManager().findFragmentByTag("don");
+            RequestPickupFragment requestPickupFragment = (RequestPickupFragment) getSupportFragmentManager().findFragmentByTag("don");
             requestPickupFragment.displayInfo();
         }
     }
@@ -271,9 +271,9 @@ public class MainActivity extends BaseActivity implements
 //                if (ParseUserHelper.isRegistered()) {
 //                    User is not anonymous
                 navigation_label_username.setText(Option.fromNull(ParseUser.getCurrentUser().get("name")).orSome(getString(R.string.navigation_your_profile)).toString());
-                    navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
-                    Option.fromNull(ParseUserHelper.getProfileImage()).foreachDoEffect(parseFile ->
-                            Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(navigation_profile_image));
+                navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
+                Option.fromNull(ParseUserHelper.getProfileImage()).foreachDoEffect(parseFile ->
+                        Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(navigation_profile_image));
 //                }
 
                 navigation_profile_image.setOnClickListener(v -> {
@@ -314,18 +314,18 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void selectItem(int itemId) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out); //not supported by SupportFM
+//        ft.setTransition();
 //        Fragment fragToHide = getFragmentManager().findFragmentById(R.id.content_frame);
         if (fragToHide != null) {
             ft.hide(fragToHide);
         }
 
-        RequestPickupFragment requestPickupFragment = (RequestPickupFragment) getFragmentManager().findFragmentByTag("don");
-        VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
-        ProfileFragment profileFragment = (ProfileFragment) getFragmentManager().findFragmentByTag("prof");
-        DropOffLocationsFragment dropoffFragment = (DropOffLocationsFragment) getFragmentManager().findFragmentByTag("drop");
+        RequestPickupFragment requestPickupFragment = (RequestPickupFragment) getSupportFragmentManager().findFragmentByTag("don");
+        VolunteerFragment volunteerFragment = (VolunteerFragment) getSupportFragmentManager().findFragmentByTag("vol");
+        ProfileFragment profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("prof");
+        DropOffLocationsFragment dropoffFragment = (DropOffLocationsFragment) getSupportFragmentManager().findFragmentByTag("drop");
         switch (itemId) {
             case R.id.navigation_give: //Donate
                 if (requestPickupFragment == null) {
@@ -429,7 +429,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onPickupConfirmed(PickupRequest pickupRequest) {
-        VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
+        VolunteerFragment volunteerFragment = (VolunteerFragment) getSupportFragmentManager().findFragmentByTag("vol");
         if (volunteerFragment != null) {
             // removing individual marker for this pickup request
             // won't work if the orientation changed during the PickupConfirmDialog, because the pickupRequest we get back from the dialog
@@ -472,5 +472,4 @@ public class MainActivity extends BaseActivity implements
         }
         return super.dispatchTouchEvent(event);
     }
-
 }

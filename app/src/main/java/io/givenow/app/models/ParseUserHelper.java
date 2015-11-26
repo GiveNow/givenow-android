@@ -23,14 +23,13 @@ import rx.parse.ParseObservable;
 public class ParseUserHelper {
 
     public static boolean isRegistered() {
-//        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
-        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
+        return isRegistered(ParseUser.getCurrentUser());
     }
 
-//    public static boolean isRegistered() {
-//        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
-////        return ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser());// ParseUser.getCurrentUser().getUsername() == null;
-//    }
+    public static boolean isRegistered(ParseUser user) {
+        //        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
+        return !ParseAnonymousUtils.isLinked(user);// ParseUser.getCurrentUser().getUsername() == null;
+    }
 
 //    public static boolean
 //    public static void registerUser(String phoneNumber) {
@@ -150,7 +149,7 @@ public class ParseUserHelper {
             Phonenumber.PhoneNumber pn = phoneUtil.parse("+" + username, null);
             phoneNumberString = phoneUtil.format(pn, PhoneNumberUtil.PhoneNumberFormat.RFC3966).replace("tel:", "");
         } catch (NumberParseException e) {
-            phoneNumberString = username;
+            phoneNumberString = ParseUserHelper.isRegistered(user) ? username : "";
             e.printStackTrace();
         }
         return phoneNumberString;

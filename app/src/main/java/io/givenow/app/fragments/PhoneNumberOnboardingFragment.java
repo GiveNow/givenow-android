@@ -1,5 +1,6 @@
 package io.givenow.app.fragments;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,7 +24,8 @@ import io.givenow.app.activities.MainActivity;
 /**
  * Created by aphex on 11/23/15.
  */
-public class PhoneNumberOnboardingFragment extends Fragment {
+public class PhoneNumberOnboardingFragment extends Fragment implements
+        PhoneNumberVerificationFragment.OnUserLoginCompleteListener {
 
     private static final String ARG_TITLE = "title";
     private static final String ARG_COLOUR = "colour";
@@ -70,6 +72,12 @@ public class PhoneNumberOnboardingFragment extends Fragment {
         tvDescription2.setText(R.string.phone_number_later);
         llMain.setBackgroundColor(colour);
 
+        PhoneNumberVerificationFragment phoneNumberVerificationFragment = PhoneNumberVerificationFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.phoneNumberFragmentContainer,
+                        phoneNumberVerificationFragment,
+                        "phoneNumberVerificationFragment")
+                .commit();
         return v;
     }
 
@@ -78,6 +86,7 @@ public class PhoneNumberOnboardingFragment extends Fragment {
         onUserLoginComplete();
     }
 
+    @Override
     public void onUserLoginComplete() {
         //set first time var
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());

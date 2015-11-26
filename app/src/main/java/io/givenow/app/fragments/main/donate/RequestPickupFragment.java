@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -55,8 +56,8 @@ import io.givenow.app.adapters.DonationCategoryAdapter;
 import io.givenow.app.adapters.PlaceAutocompleteAdapter;
 import io.givenow.app.customviews.AdaptableGradientRectView;
 import io.givenow.app.customviews.SlidingRelativeLayout;
+import io.givenow.app.fragments.PhoneNumberVerificationFragment;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
-import io.givenow.app.fragments.main.common.PhoneNumberDialogFragment;
 import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.interfaces.AnimatorEndListener;
@@ -69,8 +70,10 @@ import rx.Observable;
 
 
 public class RequestPickupFragment extends MapHostingFragment
-        implements ResultCallback<PlaceBuffer>, AdapterView.OnItemClickListener,
-        PhoneNumberDialogFragment.PhoneNumberDialogListener {
+        implements ResultCallback<PlaceBuffer>,
+        AdapterView.OnItemClickListener,
+        PhoneNumberVerificationFragment.OnUserLoginCompleteListener,
+        DialogInterface.OnDismissListener {
 
     private static final double AUTOCOMPLETE_BIAS_RADIUS_METERS = 10000;
 
@@ -313,7 +316,7 @@ public class RequestPickupFragment extends MapHostingFragment
         } else {
             if (!ParseUserHelper.isRegistered()) {
                 //user is still anonymous
-                showConfirmPickupDialog("");
+                showPhoneNumberDialog();
             } else {
                 constructPickupRequest();
                 savePickupRequest();
@@ -321,24 +324,23 @@ public class RequestPickupFragment extends MapHostingFragment
         }
     }
 
-    private void showConfirmPickupDialog(String phoneNumber) {
-        PhoneNumberDialogFragment phoneNumberDialogFragment = PhoneNumberDialogFragment.newInstance(
-                getString(R.string.dialog_phoneNumber_title),
-                phoneNumber,
-                getResources().getText(R.string.phone_number_disclaimer));
-        phoneNumberDialogFragment.setOnDismissListener(dialog ->
-                btnBottomSubmit.setEnabled(true));
-        phoneNumberDialogFragment.show(getChildFragmentManager(), "fragment_confirm_request_dialog");
+    private void showPhoneNumberDialog() {
+        PhoneNumberVerificationFragment phoneNumberVerificationFragment = PhoneNumberVerificationFragment.newInstance();
+//        phoneNumberVerificationFragment.setTitle
+//        getString(R.string.dialog_phoneNumber_title)
+        phoneNumberVerificationFragment.show(getChildFragmentManager(), "fragment_confirm_request_dialog");
     }
 
     @Override
-    public void onFinishPhoneNumberDialog(String phoneNumber) {
+    public void onDismiss(DialogInterface dialog) {
+        btnBottomSubmit.setEnabled(true);
+    }
+
+    @Override
+    public void onUserLoginComplete() {
         hideKeyboardFrom(getActivity(), getView());
-        //we have the user's phone, execute signup or login
-        ParseUserHelper.signUpOrLogin(phoneNumber, () -> { //TODO add sms flow
-            constructPickupRequest();
-            savePickupRequest();
-        });
+        constructPickupRequest();
+        savePickupRequest();
     }
 
     private void constructPickupRequest() {

@@ -1,8 +1,9 @@
 package io.givenow.app.fragments;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,11 +12,11 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.lang.reflect.Field;
+
 import io.givenow.app.R;
 import io.givenow.app.adapters.SmartFragmentStatePagerAdapter;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
-
-import java.lang.reflect.Field;
 
 public class PageSlidingTabStripFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
@@ -181,7 +182,7 @@ public class PageSlidingTabStripFragment extends Fragment implements ViewPager.O
 
         private String[] mtitles;
 
-        public MyPagerAdapter(android.app.FragmentManager fm, String[] titles) {
+        public MyPagerAdapter(FragmentManager fm, String[] titles) {
             super(fm);
             mtitles = titles;
         }

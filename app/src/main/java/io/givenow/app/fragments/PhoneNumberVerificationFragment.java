@@ -5,9 +5,10 @@ package io.givenow.app.fragments;
  */
 
 import android.animation.Animator;
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,7 +36,7 @@ import rx.parse.ParseObservable;
 /**
  * Created by aphex on 11/23/15.
  */
-public class PhoneNumberVerificationFragment extends Fragment {
+public class PhoneNumberVerificationFragment extends DialogFragment {
 
     @Bind(R.id.description)
     TextView tvDescription;
@@ -51,7 +52,7 @@ public class PhoneNumberVerificationFragment extends Fragment {
     ViewSwitcher vsPhoneSMS;
     private boolean mPhoneNumberFieldShowing = true;
 
-    private OnUserLoginCompleteListener mListener;
+//    private OnUserLoginCompleteListener mListener;
 
     public PhoneNumberVerificationFragment() {
     }
@@ -62,11 +63,11 @@ public class PhoneNumberVerificationFragment extends Fragment {
         return phoneNumberVerificationFragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//    }
 
 
     @Nullable
@@ -198,7 +199,6 @@ public class PhoneNumberVerificationFragment extends Fragment {
             ibDone.startAnimation(shake);
             ibDone.setClickable(true);
         }
-
     }
 
     private void doLogin() {
@@ -232,27 +232,26 @@ public class PhoneNumberVerificationFragment extends Fragment {
         reveal.addListener(new AnimatorEndListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mListener.onUserLoginComplete();
+                Fragment parentFragment = getParentFragment();
+                if (parentFragment instanceof OnUserLoginCompleteListener) {
+                    ((OnUserLoginCompleteListener) parentFragment).onUserLoginComplete();
+                }
+                dismiss();
             }
         });
         reveal.start();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            mListener = (OnUserLoginCompleteListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnUserLoginCompleteListener");
+        Fragment parentFragment = getParentFragment();
+        if (parentFragment instanceof DialogInterface.OnDismissListener) {
+            ((DialogInterface.OnDismissListener) parentFragment).onDismiss(dialog);
         }
     }
 
-    // Container Activity must implement this interface
     public interface OnUserLoginCompleteListener {
         void onUserLoginComplete();
     }

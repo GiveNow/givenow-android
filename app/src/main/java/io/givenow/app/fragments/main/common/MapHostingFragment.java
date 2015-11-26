@@ -1,6 +1,5 @@
 package io.givenow.app.fragments.main.common;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -8,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
@@ -19,15 +19,11 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
-
-import io.givenow.app.R;
-import io.givenow.app.fragments.GoogleMapFragment;
-import io.givenow.app.helpers.MapFragmentCounter;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +32,9 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import fj.data.Option;
+import io.givenow.app.R;
+import io.givenow.app.fragments.GoogleMapFragment;
+import io.givenow.app.helpers.MapFragmentCounter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -51,7 +50,7 @@ public class MapHostingFragment extends Fragment
         GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleMap mGoogleMap;
-    protected MapFragment mapFragment;
+    protected SupportMapFragment mapFragment;
     protected boolean mMapIsTouched;
 
     @Bind(R.id.flMapLayout)
@@ -98,7 +97,7 @@ public class MapHostingFragment extends Fragment
     protected void attachMapFragment() {
         if (isAdded()) {
             Log.w(this.getClass().getSimpleName(), "Attaching map fragment now.");
-            mapFragment = MapFragment.newInstance();
+            mapFragment = SupportMapFragment.newInstance();
             getChildFragmentManager().beginTransaction()
                     .add(R.id.flMapContainer, mapFragment, "MAP")
                     .commit();

@@ -1,14 +1,14 @@
 package io.givenow.app.fragments.main;
 
 import android.app.Activity;
- import android.app.Fragment;
- import android.os.Bundle;
- import android.util.Log;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 
- import io.givenow.app.fragments.PageSlidingTabStripFragment;
- import io.givenow.app.fragments.SuperAwesomeCardFragment;
- import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
- import io.givenow.app.fragments.main.donate.RequestPickupFragment;
+import io.givenow.app.fragments.PageSlidingTabStripFragment;
+import io.givenow.app.fragments.SuperAwesomeCardFragment;
+import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
+import io.givenow.app.fragments.main.donate.RequestPickupFragment;
 
 
 public class DonateFragment extends PageSlidingTabStripFragment {
