@@ -8,11 +8,12 @@ import com.github.paolorotolo.appintro.AppIntroFragment;
 
 import io.givenow.app.R;
 import io.givenow.app.fragments.PhoneNumberOnboardingFragment;
+import io.givenow.app.fragments.PhoneNumberVerificationFragment;
 
 /**
  * Created by aphex on 11/16/15.
  */
-public class OnboardingActivity extends AppIntro2 {
+public class OnboardingActivity extends AppIntro2 implements PhoneNumberVerificationFragment.OnUserLoginCompleteListener {
 
     private PhoneNumberOnboardingFragment phoneNumberOnboardingFragment;
     private ImageView ivDone;
@@ -69,6 +70,11 @@ public class OnboardingActivity extends AppIntro2 {
     @Override
     public void onDonePressed() {
 
+    }
+
+    @Override
+    public void onUserLoginComplete() {
+        phoneNumberOnboardingFragment.onUserLoginComplete();
     }
 
 
