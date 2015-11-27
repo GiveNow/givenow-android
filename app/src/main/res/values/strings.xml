@@ -91,7 +91,7 @@
     <string name="onboarding_3_description">Simply pinpoint a spot on the map. You can even add special instructions like apartment numbers or gate codes.</string>
     <string name="onboarding_4_title">We take care of the rest.</string>
     <string name="onboarding_4_description">A trusted volunteer driver will pick up your donation.\nWe\'ll contact you to coordinate the pickup.</string>
-    <string name="onboarding_5_title">Add a phone number</string>
+    <string name="phone_number_verification_title">Add a phone number</string>
     <string name="phone_number_disclaimer">This only lets your driver reach you to arrange pickup.\nWe never share your number with third parties.</string>
     <string name="address_field_note_hint">Apartment, gate code, name...</string>
     <string name="phone_number_later">You can also add a phone number later.</string>

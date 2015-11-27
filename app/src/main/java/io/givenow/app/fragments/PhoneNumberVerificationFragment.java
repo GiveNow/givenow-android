@@ -20,12 +20,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fj.data.Option;
 import io.givenow.app.R;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.interfaces.AnimatorEndListener;
@@ -38,6 +41,10 @@ import rx.parse.ParseObservable;
  */
 public class PhoneNumberVerificationFragment extends DialogFragment {
 
+    @Bind(R.id.llContainer)
+    LinearLayout llContainer;
+    @Bind(R.id.title)
+    TextView tvTitle;
     @Bind(R.id.description)
     TextView tvDescription;
     @Bind(R.id.etPhoneNumber)
@@ -50,6 +57,8 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     ImageButton ibDone;
     @Bind(R.id.vsPhoneSMS)
     ViewSwitcher vsPhoneSMS;
+    @Bind(R.id.progressIndicator)
+    ProgressBar progressIndicator;
     private boolean mPhoneNumberFieldShowing = true;
 
 //    private OnUserLoginCompleteListener mListener;
@@ -132,8 +141,30 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         vsPhoneSMS.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
 
         tvDescription.setText(R.string.phone_number_disclaimer);
+
+        //If we're being displayed in a dialog, modify a few views.
+        Option.fromNull(getDialog()).foreachDoEffect(dialog -> {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(R.string.phone_number_verification_title);
+            progressIndicator.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimaryLight), android.graphics.PorterDuff.Mode.SRC_ATOP);
+
+            int pad = getResources().getDimensionPixelSize(R.dimen.dialog_container_padding);
+            llContainer.setPadding(pad, pad, pad, pad);
+            llContainer.requestLayout();
+        });
+
         return v;
     }
+
+    //
+//    @NonNull
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        Dialog dialog = super.onCreateDialog(savedInstanceState);
+//        Log.d("dddd", "createdialog");
+//        //seems to happen before createView
+//        return dialog;
+//    }
 
     public String getPhoneNumber() {
         return etPhoneNumber.getText().toString();
@@ -147,6 +178,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         else
             doLogin();
     }
+
 
     @OnClick(R.id.back)
     public void onIbBackPressed(ImageButton ibBack) {
