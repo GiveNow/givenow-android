@@ -110,5 +110,8 @@
     <string name="donor_default_name">Anonymous</string>
     <string name="volunteer_dashboard_status_waiting">Waiting for Donor</string>
     <string name="volunteer_dashboard_status_ready">Ready for Pickup</string>
+    <string name="dialog_loggedin_existing_donation_found_title">Existing donation found!</string>
+    <string name="dialog_loggedin_existing_donation_found_message">Your existing donation request will be loaded instead.</string>
+    <string name="dialog_loggedin_existing_donation_found_button">OK</string>
 
 </resources>

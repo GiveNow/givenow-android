@@ -338,9 +338,23 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @Override
     public void onUserLoginComplete() {
-        hideKeyboardFrom(getActivity(), getView());
-        constructPickupRequest();
-        savePickupRequest();
+        PickupRequest.getMyRequests().getFirstInBackground((pickupRequest, e) -> {
+            if (pickupRequest != null) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(getString(R.string.dialog_loggedin_existing_donation_found_title))
+                        .setMessage(getString(R.string.dialog_loggedin_existing_donation_found_message))
+                        .setPositiveButton(getString(R.string.dialog_loggedin_existing_donation_found_button), null)
+                        .setOnDismissListener(dialog -> {
+                            mPickupRequest = pickupRequest;
+                            onPickupRequestSaved();
+                        })
+                        .show();
+            } else {
+                hideKeyboardFrom(getActivity(), getView());
+                constructPickupRequest();
+                savePickupRequest();
+            }
+        });
     }
 
     private void constructPickupRequest() {
