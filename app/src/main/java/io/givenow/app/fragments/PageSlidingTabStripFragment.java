@@ -1,6 +1,5 @@
 package io.givenow.app.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -60,14 +59,15 @@ public class PageSlidingTabStripFragment extends Fragment implements ViewPager.O
 //        tabStrip.setDividerPadding(padding - 1);
 //        tabStrip.setBackgroundResource(R.drawable.tab);
 //        tabStrip.setIndicatorColorResource(R.drawable.tab_selected_onewarmcoat);
-        tabStrip.setIndicatorColor(getResources().getColor(R.color.accent));
-        tabStrip.setTextColor(getResources().getColorStateList(R.color.tab_text));
-        tabStrip.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
-        tabStrip.setBackgroundResource(R.drawable.ab_background_textured_onewarmcoat);
+        tabStrip.setIndicatorColor(getResources().getColor(R.color.colorAccent));
+//        tabStrip.setTextColor(getResources().getColorStateList(R.color.tab_text));
+//        tabStrip.setBackgroundColor(Color.argb(0xFF, 0xdd, 0xe8, 0xed));
+        tabStrip.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         tabStrip.setOnPageChangeListener(this);
 
         tabStrip.setViewPager(mViewPager);
     }
+
 
     @Override
     public void onHiddenChanged(boolean hidden) {

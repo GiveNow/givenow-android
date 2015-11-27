@@ -1,21 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <com.astuetz.PagerSlidingTabStrip
-        android:id="@+id/tabs"
-        style="@style/Theme.Onewarmcoat"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.astuetz.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            style="@style/AppTheme"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tabs"
+            tools:context=".MainActivity"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/overlay"
         android:layout_width="match_parent"
-        android:layout_height="48dip" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tabs"
-        tools:context=".MainActivity" />
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingBottom="16dp"
+            android:text="Lorem"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
-    
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_margin="8dp"
+            android:background="@drawable/button_color_state_list"
+            android:foreground="?attr/selectableItemBackground"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#ffffffff"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>

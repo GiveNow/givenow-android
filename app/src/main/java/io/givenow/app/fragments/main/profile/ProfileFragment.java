@@ -74,6 +74,11 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         return rootView;
     }
 
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        setupTabs(view);
+//    }
 
     public void setReadableName(String columnName, ParseUser currentUser) {
         ParseQuery<PickupRequest> query = ParseQuery.getQuery(PickupRequest.class);
