@@ -22,6 +22,8 @@
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="bottom_container_height">220dp</dimen>
     <dimen name="dialog_container_padding">24dp</dimen>
+    <dimen name="card_horizontal_column_width">140dp</dimen>
+    <dimen name="card_height">150dp</dimen>
 
     <!-- http://blog.danlew.net/2015/10/12/beware-edittext-on-api-21/ -->
     <dimen name="edit_text_spacing">6dp</dimen>

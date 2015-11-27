@@ -211,6 +211,7 @@ public class RequestPickupFragment extends MapHostingFragment
         rvDonationCategories.setLayoutManager(mGridLayoutManager);
 
         mCurrentRequestCategoriesAdapter = new DonationCategoryAdapter();
+        mCurrentRequestCategoriesAdapter.setCardWidth(getResources().getDimensionPixelSize(R.dimen.card_horizontal_column_width));
         rvCurrentRequestCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rvCurrentRequestCategories.setItemAnimator(new SlideInRightAnimator(new DecelerateInterpolator()));
         rvCurrentRequestCategories.setAdapter(mCurrentRequestCategoriesAdapter);

@@ -2,6 +2,7 @@ package io.givenow.app.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fj.data.Option;
 import io.givenow.app.R;
 import io.givenow.app.models.DonationCategory;
 
@@ -34,6 +37,8 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
     private final DonationCategory mDummyCategory;
     ArrayList<DonationCategory> mItems;
     private Context mContext;
+    @NonNull
+    private Option<Integer> cardWidth = Option.none();
 
     public DonationCategoryAdapter() {
         super();
@@ -44,6 +49,14 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
 //        }
     }
 
+    public Option<Integer> getCardWidth() {
+        return cardWidth;
+    }
+
+    public void setCardWidth(int cardWidth) {
+        this.cardWidth = Option.some(cardWidth);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         mContext = viewGroup.getContext();
@@ -52,12 +65,30 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         return viewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(ViewHolder vh, int i) {
         DonationCategory donationCategory = mItems.get(i);
         if (donationCategory.equals(mDummyCategory)) {
             return;
         }
+
+        //This whole cardWidth thing is a hack to get the width to display correctly in
+        // a horizontal linear layout while keeping wrap_content card widths for grid layouts.
+        // This should really use cardUseCompatPadding or something instead, I just don't have the time to do it.
+        // http://stackoverflow.com/questions/29197737/set-margins-in-cardview-programmatically
+        cardWidth.foreachDoEffect(width -> {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width,
+                    vh.cvRoot.getResources().getDimensionPixelSize(R.dimen.card_height));
+            layoutParams.setMargins(
+                    vh.cvRoot.getResources().getDimensionPixelSize(R.dimen.grid_margin),
+                    vh.cvRoot.getResources().getDimensionPixelSize(R.dimen.cell_margin),
+                    vh.cvRoot.getResources().getDimensionPixelSize(R.dimen.grid_margin),
+                    vh.cvRoot.getResources().getDimensionPixelSize(R.dimen.cell_margin)
+            );
+
+            vh.cvRoot.setLayoutParams(layoutParams);
+        });
 
         vh.cvRoot.setClickable(donationCategory.isClickable());
 
