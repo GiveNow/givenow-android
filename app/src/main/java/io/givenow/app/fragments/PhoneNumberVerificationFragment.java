@@ -25,6 +25,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -39,7 +43,11 @@ import rx.parse.ParseObservable;
 /**
  * Created by aphex on 11/23/15.
  */
+@FragmentWithArgs
 public class PhoneNumberVerificationFragment extends DialogFragment {
+
+    @Arg(required = false) //optiona args with an initializer here doesn't seem to work, the initializer seems to clobber whatever magic fragmentargs is doing
+            int mMessageResource = R.string.phone_number_disclaimer;
 
     @Bind(R.id.llContainer)
     LinearLayout llContainer;
@@ -63,21 +71,20 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
 
 //    private OnUserLoginCompleteListener mListener;
 
-    public PhoneNumberVerificationFragment() {
-    }
-
-    public static PhoneNumberVerificationFragment newInstance() {
-        PhoneNumberVerificationFragment phoneNumberVerificationFragment = new PhoneNumberVerificationFragment();
-
-        return phoneNumberVerificationFragment;
-    }
-
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
+//    public PhoneNumberVerificationFragment() {
+//    }
 //
+//    public static PhoneNumberVerificationFragment newInstance() {
+//        PhoneNumberVerificationFragment phoneNumberVerificationFragment = new PhoneNumberVerificationFragment();
+//
+//        return phoneNumberVerificationFragment;
 //    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FragmentArgs.inject(this); // read @Arg fields
+    }
 
     @Nullable
     @Override
@@ -140,7 +147,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         vsPhoneSMS.setInAnimation(getActivity(), android.R.anim.slide_in_left);
         vsPhoneSMS.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
 
-        tvDescription.setText(R.string.phone_number_disclaimer);
+        tvDescription.setText(mMessageResource);
 
         //If we're being displayed in a dialog, modify a few views.
         Option.fromNull(getDialog()).foreachDoEffect(dialog -> {
@@ -182,21 +189,21 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
 
     @OnClick(R.id.back)
     public void onIbBackPressed(ImageButton ibBack) {
-        phoneNumberUI();
+        uiPhoneNumber();
         if (getPhoneNumber().length() > 0) {
             CustomAnimations.circularReveal(ibDone).start();
         }
     }
 
-    private void phoneNumberUI() {
+    private void uiPhoneNumber() {
         vsPhoneSMS.setDisplayedChild(0);
         mPhoneNumberFieldShowing = true;
         CustomAnimations.circularHide(ibBack).start();
-        tvDescription.setText(R.string.phone_number_disclaimer);
+        tvDescription.setText(mMessageResource);
         ibDone.setClickable(true);
     }
 
-    private void codeUI(String phoneNumber) {
+    private void uiSMSCode(String phoneNumber) {
         vsPhoneSMS.setDisplayedChild(1);
         mPhoneNumberFieldShowing = false;
         tvDescription.setText(getString(R.string.validate_sms_code, phoneNumber));
@@ -219,12 +226,12 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                     response -> {
                         Log.d("Cloud Response", response.toString());
                         //switch to sendSMS edittext
-                        codeUI(phoneNumber);
+                        uiSMSCode(phoneNumber);
                     },
                     error -> {
                         Log.d("Cloud Response", "Error received from sendCode cloud function: ", error);
                         CustomAnimations.circularReveal(ibDone).start();
-                        phoneNumberUI();
+                        uiPhoneNumber();
                     });
         } else { //Or just hide ibdone
             Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
@@ -251,7 +258,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                     },
                     error -> {
                         Log.d("Cloud Response", "Error received from logIn cloud function: ", error);
-                        phoneNumberUI();
+                        uiPhoneNumber();
                     }
             );
         }
@@ -286,5 +293,11 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
 
     public interface OnUserLoginCompleteListener {
         void onUserLoginComplete();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

@@ -5,12 +5,17 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.PageSlidingTabStripFragment;
+import io.givenow.app.fragments.PhoneNumberVerificationFragment;
+import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.SuperAwesomeCardFragment;
 import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
 import io.givenow.app.fragments.main.volunteer.DashboardFragment;
@@ -18,12 +23,22 @@ import io.givenow.app.fragments.main.volunteer.PickupRequestsFragment;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 import io.givenow.app.models.Volunteer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.parse.ParseObservable;
 
-public class VolunteerFragment extends PageSlidingTabStripFragment {
+public class VolunteerFragment extends PageSlidingTabStripFragment
+        implements PhoneNumberVerificationFragment.OnUserLoginCompleteListener {
 
     private PickupRequestsFragment pickupRequestsFragment;
     private DropOffLocationsFragment dropOffLocationsFragment;
     private DashboardFragment dashboardFragment;
+
+    @Bind(R.id.button)
+    Button button;
+    @Bind(R.id.description)
+    TextView tvDescription;
+    @Bind((R.id.overlay))
+    LinearLayout llOverlay;
 
     public VolunteerFragment() {
         // Required empty public constructor
@@ -52,19 +67,22 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
         }
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState); //TODO maybe dont even initialize the tabs if volunteer not approved
         Log.w("VolunteerFragment", "onViewCreated");
-        Button button = (Button) view.findViewById(R.id.button);
+        ButterKnife.bind(this, view);
+
         button.setOnClickListener(btn -> {
-            Volunteer volunteer = new Volunteer(ParseUser.getCurrentUser(), false);
-            volunteer.saveInBackground(e -> {
-                if (e == null) {
-                    uiAwaitingApproval(view, button);
-                }
-            });
+            if (ParseUserHelper.isRegistered()) {
+                applyToVolunteer();
+            } else {
+                //show phone number dialog
+                new PhoneNumberVerificationFragmentBuilder()
+                        .messageResource(R.string.dialog_phoneNumber_for_volunteer)
+                        .build()
+                        .show(getChildFragmentManager(), "phdialog");
+            }
         });
         Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
                 volunteer -> {
@@ -75,24 +93,35 @@ public class VolunteerFragment extends PageSlidingTabStripFragment {
                         view.findViewById(R.id.overlay).setVisibility(View.GONE);
                     } else {
                         //Awaiting approval
-                        uiAwaitingApproval(view, button);
+                        uiAwaitingApproval();
                     }
                 },
                 error -> {
                     //Never applied to be a volunteer
                     Log.w("VolunteerFragment", "Never applied to be a volunteer");
                     view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.description)).setText("Want to volunteer to pickup donations?\nThe only thing you need is a car and some spare time!");
-                    button.setText("Apply to volunteer");
+                    tvDescription.setText(R.string.volunteer_label_user_has_not_applied);
+                    button.setText(R.string.volunteer_button_user_has_not_applied);
                 });
     }
 
-    private void uiAwaitingApproval(View view, Button button) {
+    private void uiAwaitingApproval() {
         Log.w("VolunteerFragment", "Awaiting approval");
-        view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
-        ((TextView) view.findViewById(R.id.description)).setText("Thanks for applying to volunteer!\nWe'll contact you soon at " + ParseUserHelper.getPhoneNumber());
-        button.setText("You applied to volunteer");
+        llOverlay.setVisibility(View.VISIBLE);
+        tvDescription.setText(getString(R.string.volunteer_label_user_has_applied, ParseUserHelper.getPhoneNumber()));
+        button.setText(R.string.volunteer_button_user_has_applied);
         button.setEnabled(false);
+    }
+
+    @Override
+    public void onUserLoginComplete() {
+        applyToVolunteer();
+    }
+
+    private void applyToVolunteer() {
+        Volunteer volunteer = new Volunteer(ParseUser.getCurrentUser(), false);
+        ParseObservable.save(volunteer).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(vol -> uiAwaitingApproval());
     }
 
     @Override

@@ -72,7 +72,9 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
         tvDescription2.setText(R.string.phone_number_later);
         llMain.setBackgroundColor(colour);
 
-        PhoneNumberVerificationFragment phoneNumberVerificationFragment = PhoneNumberVerificationFragment.newInstance();
+        PhoneNumberVerificationFragment phoneNumberVerificationFragment =
+                new PhoneNumberVerificationFragmentBuilder()
+                        .build();
         getChildFragmentManager().beginTransaction()
                 .add(R.id.phoneNumberFragmentContainer,
                         phoneNumberVerificationFragment,
