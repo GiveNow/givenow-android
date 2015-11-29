@@ -63,7 +63,7 @@
     <string name="button_confirm_donation_label">Jetzt spenden</string>
     <string name="error_insufficient_categories_selected">Bitte mindestens eines auswählen.</string>
     <string name="dialog_phoneNumber_title">Wie können wir dich kontaktieren?</string>
-    <string name="dialog_phoneNumber_hint">Deine Telefonnummer</string>
+    <string name="dialog_phoneNumber_hint">+49 123 456 7890</string>
     <!--<string name="confirm_pickup_dialog_name_hint">Dein Name</string>-->
     <string name="anonymous_user_name">Unbekannt</string>
     <string name="request_pickup_info_confirm_address">Ist deine Adresse richtig?</string>

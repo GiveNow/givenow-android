@@ -25,6 +25,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -54,7 +57,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     @Bind(R.id.title)
     TextView tvTitle;
     @Bind(R.id.description)
-    TextView tvDescription;
+    TextView tvDescription; //TODO should use a TextSwitcher
     @Bind(R.id.etPhoneNumber)
     EditText etPhoneNumber;
     @Bind(R.id.etSMSCode)
@@ -213,26 +216,41 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
 
     private void sendCode() {
         String phoneNumber = getPhoneNumber();
-
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         if (phoneNumber.length() > 0) {
-            //validate phone number
-//            PhoneNumberUtil.getInstance().parse(phoneNumber)
-            //change done button to spinner
-            CustomAnimations.circularHide(ibDone).start();
-
-            //if phone number is valid
-            //call sendCode
-            ParseUserHelper.sendCode(phoneNumber, getString(R.string.sms_body_javascript)).subscribe(
-                    response -> {
-                        Log.d("Cloud Response", response.toString());
-                        //switch to sendSMS edittext
-                        uiSMSCode(phoneNumber);
-                    },
-                    error -> {
-                        Log.d("Cloud Response", "Error received from sendCode cloud function: ", error);
-                        CustomAnimations.circularReveal(ibDone).start();
-                        uiPhoneNumber();
-                    });
+            if (phoneNumber.contains("+")) {
+                //validate phone number
+                try {
+                    Phonenumber.PhoneNumber pn = phoneUtil.parse(phoneNumber, null);
+                    if (phoneUtil.isValidNumber(pn)) {
+                        //phone number is valid
+                        //change done button to spinner
+                        CustomAnimations.circularHide(ibDone).start();
+                        //request a code
+                        ParseUserHelper.sendCode(phoneNumber, getString(R.string.sms_body_javascript)).subscribe(
+                                response -> {
+                                    Log.d("Cloud Response", response.toString());
+                                    //switch to sendSMS edittext
+                                    uiSMSCode(phoneNumber);
+                                },
+                                error -> {
+                                    Log.d("Cloud Response", "Error received from sendCode cloud function: ", error);
+                                    CustomAnimations.circularReveal(ibDone).start();
+                                    uiPhoneNumber();
+                                });
+                    } else {
+                        tvDescription.setText("Please enter a valid phone number.\nExample: +49 123 456 7890");
+                        ibDone.setClickable(true);
+                    }
+                } catch (NumberParseException e) {
+                    e.printStackTrace();
+                    tvDescription.setText("Please enter a phone number in the format:\n+49 123 456 7890");
+                    ibDone.setClickable(true);
+                }
+            } else {
+                tvDescription.setText("Please include the country code.\nExample: +49 123 456 7890");
+                ibDone.setClickable(true);
+            }
         } else { //Or just hide ibdone
             Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
             ibDone.startAnimation(shake);
@@ -291,13 +309,13 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         }
     }
 
-    public interface OnUserLoginCompleteListener {
-        void onUserLoginComplete();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    public interface OnUserLoginCompleteListener {
+        void onUserLoginComplete();
     }
 }
