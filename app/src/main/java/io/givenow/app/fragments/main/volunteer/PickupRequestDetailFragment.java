@@ -228,8 +228,8 @@ public class PickupRequestDetailFragment extends Fragment {
 
     private void showConfirmPickupDialog() {
         new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.dialog_volunteer_accept_pickuprequest)
-                .setMessage(mPickupRequest.getAddress())
+                .setTitle(R.string.dialog_volunteer_accept_pickuprequest_title)
+                .setMessage(R.string.dialog_volunteer_accept_pickuprequest_message)
                 .setPositiveButton(R.string.accept, (dialog, which) -> onFinishConfirmPickupDialog())
                 .setNegativeButton(R.string.cancel, null)
                 .show();
