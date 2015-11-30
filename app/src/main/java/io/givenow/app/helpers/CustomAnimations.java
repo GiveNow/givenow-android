@@ -71,6 +71,7 @@ public class CustomAnimations {
             anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
         } else { //Or fall back to a simple fade in
             anim = AnimatorInflater.loadAnimator(v.getContext(), R.animator.fade_in);
+            anim.setTarget(v);
         }
 
         // make the view visible and start the animation
@@ -106,6 +107,7 @@ public class CustomAnimations {
             anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
         } else { //Or fall back to a simple fade out
             anim = AnimatorInflater.loadAnimator(v.getContext(), R.animator.fade_out);
+            anim.setTarget(v);
         }
 
         // make the view invisible when the animation is done
