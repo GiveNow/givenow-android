@@ -29,16 +29,15 @@ import rx.parse.ParseObservable;
 public class VolunteerFragment extends PageSlidingTabStripFragment
         implements PhoneNumberVerificationFragment.OnUserLoginCompleteListener {
 
-    private PickupRequestsFragment pickupRequestsFragment;
-    private DropOffLocationsFragment dropOffLocationsFragment;
-    private DashboardFragment dashboardFragment;
-
     @Bind(R.id.button)
     Button button;
     @Bind(R.id.description)
     TextView tvDescription;
     @Bind((R.id.overlay))
     LinearLayout llOverlay;
+    private PickupRequestsFragment pickupRequestsFragment;
+    private DropOffLocationsFragment dropOffLocationsFragment;
+    private DashboardFragment dashboardFragment;
 
     public VolunteerFragment() {
         // Required empty public constructor
@@ -86,31 +85,15 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
         });
         Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
                 volunteer -> {
-                    if (volunteer.isApproved()) {
-                        //Approved volunteer
-                        //Create volunteer fragment
-                        Log.w("VolunteerFragment", "Approved volunteer");
-                        view.findViewById(R.id.overlay).setVisibility(View.GONE);
-                    } else {
-                        //Awaiting approval
-                        uiAwaitingApproval();
-                    }
+                    uiVolunteerApplied(volunteer);
                 },
                 error -> {
                     //Never applied to be a volunteer
                     Log.w("VolunteerFragment", "Never applied to be a volunteer");
-                    view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                    llOverlay.setVisibility(View.VISIBLE);
                     tvDescription.setText(R.string.volunteer_label_user_has_not_applied);
                     button.setText(R.string.volunteer_button_user_has_not_applied);
                 });
-    }
-
-    private void uiAwaitingApproval() {
-        Log.w("VolunteerFragment", "Awaiting approval");
-        llOverlay.setVisibility(View.VISIBLE);
-        tvDescription.setText(getString(R.string.volunteer_label_user_has_applied, ParseUserHelper.getPhoneNumber()));
-        button.setText(R.string.volunteer_button_user_has_applied);
-        button.setEnabled(false);
     }
 
     @Override
@@ -119,9 +102,39 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
     }
 
     private void applyToVolunteer() {
-        Volunteer volunteer = new Volunteer(ParseUser.getCurrentUser(), false);
-        ParseObservable.save(volunteer).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(vol -> uiAwaitingApproval());
+        Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
+                volunteer -> {
+                    uiVolunteerApplied(volunteer);
+                },
+                error -> {
+                    // User logged in, and they never applied to be a volunteer before.
+                    // Add them to volunteer table.
+                    Log.w("VolunteerFragment", "User logged in, and they never applied to be a volunteer before. Adding them to volunteer table.");
+                    Volunteer volunteer = new Volunteer(ParseUser.getCurrentUser(), false);
+                    ParseObservable.save(volunteer).observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(vol -> uiAwaitingApproval());
+                });
+
+    }
+
+    private void uiVolunteerApplied(Volunteer volunteer) {
+        if (volunteer.isApproved()) {
+            //Approved volunteer
+            //Create volunteer fragment
+            Log.w("VolunteerFragment", "Approved volunteer");
+            llOverlay.setVisibility(View.GONE);
+        } else {
+            //Awaiting approval
+            uiAwaitingApproval();
+        }
+    }
+
+    private void uiAwaitingApproval() {
+        Log.w("VolunteerFragment", "Awaiting approval");
+        llOverlay.setVisibility(View.VISIBLE);
+        tvDescription.setText(getString(R.string.volunteer_label_user_has_applied, ParseUserHelper.getPhoneNumber()));
+        button.setText(R.string.volunteer_button_user_has_applied);
+        button.setEnabled(false);
     }
 
     @Override
