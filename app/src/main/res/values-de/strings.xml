@@ -112,6 +112,7 @@
     <string name="dialog_loggedin_existing_donation_found_title">Eine weitere Spende gefunden!</string>
     <string name="dialog_loggedin_existing_donation_found_message">Diese Spende wird stattdessen geladen.</string>
     <string name="dialog_loggedin_existing_donation_found_button">OK</string>
+    <string name="request_status_volunteer_pending">Ein Helfer möchte deine Spende abholen!</string>
 
 
 </resources>

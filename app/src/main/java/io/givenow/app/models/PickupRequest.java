@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import fj.data.Option;
 import io.givenow.app.R;
 
 /**
@@ -215,8 +216,8 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("donationCategories", new ArrayList<>(donationCategories));
     }
 
-    public ParseUser getPendingVolunteer() {
-        return getParseUser("pendingVolunteer");
+    public Option<ParseUser> getPendingVolunteer() {
+        return Option.fromNull(getParseUser("pendingVolunteer"));
     }
 
     public void setPendingVolunteer(ParseUser value) {
@@ -231,8 +232,8 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("donation", donation);
     }
 
-    public ParseUser getConfirmedVolunteer() {
-        return getParseUser("confirmedVolunteer");
+    public Option<ParseUser> getConfirmedVolunteer() {
+        return Option.fromNull(getParseUser("confirmedVolunteer"));
     }
 
     public void setConfirmedVolunteer(ParseUser value) {
@@ -285,26 +286,29 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public void generateVolunteerConfirmedNotif(Context context) {
         //send pickup confirmed notif to volunteer
-        generatePushNotif(this.getPendingVolunteer(),
+        this.getPendingVolunteer().foreachDoEffect(volunteer ->
+                generatePushNotif(volunteer,
                 context.getResources().getString(R.string.notif_volunteer_confirmed_title),
                 context.getResources().getString(R.string.notif_volunteer_confirmed_msg, ParseUserHelper.getFirstName()),
-                VOLUNTEER_CONFIRMED);
+                VOLUNTEER_CONFIRMED));
     }
 
     public void generatePickupCompleteNotif(Context context) {
         //send pickup complete notif back to donor
-        generatePushNotif(this.getPendingVolunteer(),
+        this.getPendingVolunteer().foreachDoEffect(volunteer ->
+                generatePushNotif(volunteer,
                 context.getResources().getString(R.string.notif_pickup_complete_title),
                 context.getResources().getString(R.string.notif_pickup_complete_msg, ParseUserHelper.getFirstName()),
-                PICKUP_COMPLETE);
+                PICKUP_COMPLETE));
     }
 
     public void reportProblem(Context context) {
         //there's a problem. send a notif to the donor with the problem description.
-        generatePushNotif(this.getPendingVolunteer(),
+        this.getPendingVolunteer().foreachDoEffect(volunteer ->
+                generatePushNotif(volunteer,
                 context.getResources().getString(R.string.notif_problem_reported_title),
                 context.getResources().getString(R.string.notif_problem_reported_msg, ParseUserHelper.getFirstName()),
-                PROBLEM_REPORTED);
+                PROBLEM_REPORTED));
     }
 
     /* Cancel this pickup request.

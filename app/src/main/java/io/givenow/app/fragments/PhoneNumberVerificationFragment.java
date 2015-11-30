@@ -5,17 +5,21 @@ package io.givenow.app.fragments;
  */
 
 import android.animation.Animator;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -115,10 +119,12 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                     if (ibDone.getVisibility() != View.VISIBLE) {
                         CustomAnimations.circularReveal(ibDone).start();
                     }
+                    progressIndicator.setVisibility(View.VISIBLE);
                 } else {
                     if (ibDone.getVisibility() == View.VISIBLE) {
                         CustomAnimations.circularHide(ibDone).start();
                     }
+                    progressIndicator.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -150,12 +156,17 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         vsPhoneSMS.setInAnimation(getActivity(), android.R.anim.slide_in_left);
         vsPhoneSMS.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
 
+        String locale = getResources().getConfiguration().locale.getCountry();
+        Log.d("phfrag", "locale is " + locale);
+        etPhoneNumber.setText("+" + String.valueOf(PhoneNumberUtil.getInstance().getCountryCodeForRegion(locale)));
+        etPhoneNumber.setSelection(etPhoneNumber.getText().length() - 1);
         tvDescription.setText(mMessageResource);
 
         //If we're being displayed in a dialog, modify a few views.
         Option.fromNull(getDialog()).foreachDoEffect(dialog -> {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(R.string.phone_number_verification_title);
+            tvDescription.setGravity(Gravity.START);
             progressIndicator.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimaryLight), android.graphics.PorterDuff.Mode.SRC_ATOP);
 
             int pad = getResources().getDimensionPixelSize(R.dimen.dialog_container_padding);
@@ -166,15 +177,15 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         return v;
     }
 
-    //
-//    @NonNull
-//    @Override
-//    public Dialog onCreateDialog(Bundle savedInstanceState) {
-//        Dialog dialog = super.onCreateDialog(savedInstanceState);
-//        Log.d("dddd", "createdialog");
-//        //seems to happen before createView
-//        return dialog;
-//    }
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        //seems to happen before onCreateView
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        //no title for this dialog please (a title bar appears on API<21)
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
 
     public String getPhoneNumber() {
         return etPhoneNumber.getText().toString();

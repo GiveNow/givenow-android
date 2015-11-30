@@ -185,7 +185,7 @@ public class MainActivity extends BaseActivity implements
         query.getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
 //                    Toast.makeText(getBaseContext(), "found pickup confirmation = " + pickupRequest.getNumberOfCoats() + pickupRequest.getDonationCategories(), Toast.LENGTH_LONG).show();
-                Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
+//                Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
 
                 //show dialog to user
                 createAcceptPendingVolunteerDialog(pickupRequest);
@@ -194,22 +194,29 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
-        ParseUser pendingVolunteer = pickupRequest.getPendingVolunteer();
-        String title = ParseUserHelper.getFirstName(pendingVolunteer).orSome(getString(R.string.push_notif_volunteer_default_name)) + getString(R.string.push_notif_volunteer_is_ready_to_pickup);
-        String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
+        pickupRequest.getPendingVolunteer().foreachDoEffect(pendingVolunteer -> {
+            Option<String> nameOption = ParseUserHelper.getName(pendingVolunteer);
+            String name = getString(R.string.push_notif_volunteer_default_name);
+            if (nameOption.isSome()) {
+                name = ParseUserHelper.getFirstName(pendingVolunteer).orSome(name);
+            }
+            String title = name + getString(R.string.push_notif_volunteer_is_ready_to_pickup);
+            String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
 
-        if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
-            acceptPendingDialog.dismiss();
-        }
-        acceptPendingDialog = new AlertDialog.Builder(this)
+
+            if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
+                acceptPendingDialog.dismiss();
+            }
+            acceptPendingDialog = new AlertDialog.Builder(this)
 //                .setTitle(R.string.acceptRequest_submittedDialog_title)
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
-                .setTitle(Html.fromHtml(title)) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
-                .setMessage(Html.fromHtml(getString(R.string.dialog_accept_pending_volunteer) + address))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
-                .setNegativeButton(R.string.no, (dialog, which) -> cancelPendingVolunteer(pickupRequest))
-                .setIcon(R.mipmap.ic_launcher)
-                .show();
+                    .setTitle(Html.fromHtml(title)) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
+                    .setMessage(Html.fromHtml(getString(R.string.dialog_accept_pending_volunteer) + address))
+                    .setPositiveButton(getString(R.string.yes), (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
+                    .setNegativeButton(R.string.no, (dialog, which) -> cancelPendingVolunteer(pickupRequest))
+                    .setIcon(R.mipmap.ic_launcher)
+                    .show();
+        });
     }
 
     private void cancelPendingVolunteer(PickupRequest pickupRequest) {
@@ -220,11 +227,13 @@ public class MainActivity extends BaseActivity implements
 
     private void pendingVolunteerConfirmed(final PickupRequest pickupRequest) {
         // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
-        pickupRequest.generateVolunteerConfirmedNotif(this);
-        pickupRequest.setConfirmedVolunteer(pickupRequest.getPendingVolunteer());
+        pickupRequest.getPendingVolunteer().foreachDoEffect(volunteer -> {
+            pickupRequest.generateVolunteerConfirmedNotif(this);
+            pickupRequest.setConfirmedVolunteer(volunteer);
 
-        //removed this, and added it to done method below
-        pickupRequest.saveInBackground();
+            //removed this, and added it to done method below
+            pickupRequest.saveInBackground();
+        });
     }
 
     //stupid helper method, can go away whenever

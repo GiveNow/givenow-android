@@ -31,14 +31,12 @@ import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import io.givenow.app.R;
 import io.givenow.app.customviews.SlidingRelativeLayout;
-import io.givenow.app.fragments.main.common.PhoneNumberDialogFragment;
 import io.givenow.app.helpers.CroutonHelper;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 
-public class PickupRequestDetailFragment extends Fragment implements
-        PhoneNumberDialogFragment.PhoneNumberDialogListener {
+public class PickupRequestDetailFragment extends Fragment {
 
     @Bind(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
@@ -224,35 +222,29 @@ public class PickupRequestDetailFragment extends Fragment implements
     public void onAccept(Button b) {
         mPickupRequest.setPendingVolunteer(ParseUser.getCurrentUser());
 
-        ParseUser currUser = ParseUser.getCurrentUser();
-        String myPhoneNumber = currUser.getString("phoneNumber");
-        if (myPhoneNumber == null) {
-            //volunteer hasn't entered their phone before
-            showConfirmPickupDialog("", "");
-        } else {
-            //they have entered their name and phone before, let's pre-populate it and their name
-            String myName = currUser.getString("name");
-            showConfirmPickupDialog(myName, myPhoneNumber);
-        }
+        showConfirmPickupDialog();
+
     }
 
-    private void showConfirmPickupDialog(String name, String phoneNumber) {
-        FragmentManager fm = getChildFragmentManager();
-        PhoneNumberDialogFragment phoneNumberDialogFragment =
-                PhoneNumberDialogFragment.newInstance("Accept Pickup Request", phoneNumber,
-                        getResources().getText(R.string.volunteer_dialog_disclaimer));
-        phoneNumberDialogFragment.show(fm, "fragment_confirm_request_dialog");
+    private void showConfirmPickupDialog() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.dialog_volunteer_accept_pickuprequest)
+                .setMessage(mPickupRequest.getAddress())
+                .setPositiveButton(R.string.accept, (dialog, which) -> onFinishConfirmPickupDialog())
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+
+//        FragmentManager fm = getChildFragmentManager();
+//        PhoneNumberDialogFragment phoneNumberDialogFragment =
+//                PhoneNumberDialogFragment.newInstance("Accept Pickup Request", phoneNumber,
+//                        getResources().getText(R.string.volunteer_dialog_disclaimer));
+//        phoneNumberDialogFragment.show(fm, "fragment_confirm_request_dialog");
     }
 
     /* after clicking accept in the PhoneNumberDialogFragment update User with
      * volunteer name and phone
      */
-    @Override
-    public void onFinishPhoneNumberDialog(String phoneNumber) {
-        //update the current user's name and phone
-//        ParseUserHelper.setNameAndNumber(phoneNumber);
-//        ParseUserHelper.setPhoneNumber(phoneNumber);
-        //TODO: change accept pickup flow to rely on phone number given earlier, or only do the dialog once.
+    public void onFinishConfirmPickupDialog() {
         savePickupRequest();
     }
 

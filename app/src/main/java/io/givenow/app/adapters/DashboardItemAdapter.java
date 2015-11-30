@@ -55,14 +55,15 @@ public class DashboardItemAdapter extends ParseQueryAdapter {
         holder.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(v.getResources().getString(R.string.donor_default_name)));
         holder.tvAddress.setText(pickupRequest.getAddress());
 
-        ParseUser confirmedVolunteer = pickupRequest.getConfirmedVolunteer();
-        //if there is a confirmed volunteer and it is me, then say it is ready for pickup
-        if (confirmedVolunteer != null && confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
-            holder.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
-            holder.readyLayout.setVisibility(View.VISIBLE);
-            setupStaticMap(holder, pickupRequest);
-            setupCardActionButtons(holder, pickupRequest);
-        }
+        pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
+            //if there is a confirmed volunteer and it is me, then say it is ready for pickup
+            if (confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
+                holder.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
+                holder.readyLayout.setVisibility(View.VISIBLE);
+                setupStaticMap(holder, pickupRequest);
+                setupCardActionButtons(holder, pickupRequest);
+            }
+        });
         return v;
     }
 

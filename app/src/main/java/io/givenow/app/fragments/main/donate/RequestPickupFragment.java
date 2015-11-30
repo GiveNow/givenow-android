@@ -585,7 +585,14 @@ public class RequestPickupFragment extends MapHostingFragment
 
 //            mCurrentRequestCategoriesAdapter.setItems(items); //TODO might need to use List to preserve order
 
-            tsInfo.setText(getString(R.string.request_status_waiting));
+            if (mPickupRequest.getPendingVolunteer().isNone()) {
+                tsInfo.setText(getString(R.string.request_status_waiting));
+            } else if (mPickupRequest.getPendingVolunteer().isSome() && mPickupRequest.getConfirmedVolunteer().isNone()) {
+                tsInfo.setText(getString(R.string.request_status_volunteer_pending));
+            } else if (mPickupRequest.getPendingVolunteer().isSome() && mPickupRequest.getConfirmedVolunteer().isSome()) {
+                tsInfo.setText(getString(R.string.request_status_volunteer_confirmed, ParseUserHelper.getPhoneNumber()));
+            }
+
             Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
             slideUp.setInterpolator(new DecelerateInterpolator());
             Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
