@@ -100,7 +100,7 @@
     <string name="onboarding_add_phone_number_later_button">Telefonnummer später hinzufügen</string>
     <string name="dialog_sms_code_hint">SMS Code</string>
     <string name="validate_sms_code">Du bekommst einen 4-stelligen Code per SMS zugesandt:\n %1$s.\nBitte gib ihn unten ein.</string>
-    <string name="sms_body_javascript">Dein Code für GiveNow ist {code}.</string>
+    <string name="sms_body_javascript">{code} ist dein Code für GiveNow.</string>
     <string name="push_notif_volunteer_default_name">Helfer</string>
     <string name="push_notif_volunteer_is_ready_to_pickup">" ist bereit deine Spende abzuholen!"</string>
     <string name="dialog_accept_pending_volunteer">Kann deine Spende heute abgeholt werden?</string>
