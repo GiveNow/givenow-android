@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/llContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
     android:gravity="center"
-    android:padding="0dp"
     android:orientation="vertical"
-    android:background="@color/colorAccent">
+    android:padding="0dp">
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
         android:text="@string/phone_number_verification_title"
         android:textColor="@android:color/primary_text_dark"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:paddingBottom="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
         android:paddingBottom="16dp"
         android:textColor="@android:color/white"
         android:textSize="16sp"/>
