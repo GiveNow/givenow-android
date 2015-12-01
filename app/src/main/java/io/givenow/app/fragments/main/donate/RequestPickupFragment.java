@@ -599,7 +599,6 @@ public class RequestPickupFragment extends MapHostingFragment
     private Observable<Void> hideCategoryLayout() {
         return Observable.create(subscriber -> {
 //            tsInfo.setText(getString(R.string.request_pickup_info_confirm_address));
-            actvAddress.setEnabled(true);
             btnBottomSubmit.setText(getString(R.string.continue_label));
 
             Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
@@ -609,6 +608,7 @@ public class RequestPickupFragment extends MapHostingFragment
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     slidingRLContainer.setVisibility(View.INVISIBLE);
+                    actvAddress.setEnabled(true);
                     mCategoryLayoutShowing = false;
                     subscriber.onNext(null);
                     subscriber.onCompleted();
@@ -649,7 +649,8 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator growNote = CustomAnimations.growWidthAndShake(ivNote, 0, iconSize);
 
-            //Disable map
+            //Disable map and address field
+            actvAddress.setEnabled(false);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -704,7 +705,8 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private Observable<Void> hideCurrentRequestLayout() {
         return Observable.create(subscriber -> {
-            //Re-enable map
+            //Re-enable map and address field
+            actvAddress.setEnabled(true);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
