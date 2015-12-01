@@ -150,5 +150,7 @@ dependencies {
         transitive = true;
     }
 
+    compile "com.mixpanel.android:mixpanel-android:4.6.4"
+
 //    compile project(':countryflags')
 }

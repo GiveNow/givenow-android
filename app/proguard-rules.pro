@@ -51,9 +51,14 @@
 # Picasso
 -dontwarn com.squareup.okhttp.**
 
-#Fragmentargs
+# Fragmentargs
 -keep class com.hannesdorfmann.fragmentargs.** { *; }
 
+# Mixpanel
+-dontwarn com.mixpanel.**
+-keep class **.R$* {
+     <fields>;
+}
 
 #-keep class android.support.v4.** { *; }
 #-keep class android.support.v7.** { *; }

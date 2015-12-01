@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.parse.ParseAnalytics;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -75,6 +76,17 @@ public class MainActivity extends BaseActivity implements
         // Obtain the shared Tracker instance.
         OWCApplication application = (OWCApplication) getApplication();
         mTracker = application.getDefaultTracker();
+
+        String projectToken = "f9cec240b1fd9edf74c9cbf578481ad0";
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
+        mixpanel.identify(ParseUser.getCurrentUser().getObjectId());
+        try {
+            JSONObject props = new JSONObject();
+            props.put("IsRegistered", ParseUserHelper.isRegistered());
+            mixpanel.track("MainActivity - onCreate called", props);
+        } catch (JSONException e) {
+            Log.e("MYAPP", "Unable to add properties to JSONObject", e);
+        }
 
         initializeDrawer();
 
