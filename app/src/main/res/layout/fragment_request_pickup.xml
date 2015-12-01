@@ -26,10 +26,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="0"
+            android:contentDescription="Add address notes"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_subject_white_24dp"
-            android:contentDescription="Add address notes"/>
+            android:src="@drawable/ic_subject_white_24dp"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -238,6 +238,13 @@
             android:background="#ECEFF1"
             android:elevation="4dp"
             android:visibility="invisible">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:indeterminate="true"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvDonationCategories"

@@ -68,6 +68,8 @@ import io.givenow.app.models.PickupRequest;
 import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.parse.ParseObservable;
 
 
 public class RequestPickupFragment extends MapHostingFragment
@@ -195,7 +197,7 @@ public class RequestPickupFragment extends MapHostingFragment
                                 tsInfo.setText(getString(R.string.request_pickup_info_confirm_address)));
                         return true;
                     } else if (mConfirmAddressShowing) {
-                        hideConfirmAddress().subscribe(s ->
+                        hideConfirmAddress(true).subscribe(s ->
                                 tsInfo.setText(getString(R.string.request_pickup_choose_location)));
                         return true;
                     }
@@ -400,7 +402,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private void onPickupRequestSaved() {
         hideCategoryLayout().subscribe(v -> {
-            hideConfirmAddress().subscribe();
+            hideConfirmAddress(false).subscribe();
             showCurrentRequestLayout().subscribe();
         });
     }
@@ -422,15 +424,7 @@ public class RequestPickupFragment extends MapHostingFragment
             Animator fadeInGradient = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
             fadeInGradient.setTarget(adaptableGradientRectView);
 
-            Animator growNote = CustomAnimations.animateWidth(ivNote, 0, iconSize);
-            growNote.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-            growNote.addListener(new AnimatorEndListener() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-                    ivNote.startAnimation(shake);
-                }
-            });
+            Animator growNote = CustomAnimations.growWidthAndShake(ivNote, 0, iconSize);
 
             AnimatorSet set = new AnimatorSet();
             set.addListener(new AnimatorEndListener() {
@@ -473,30 +467,41 @@ public class RequestPickupFragment extends MapHostingFragment
         } else {
             ivNote.setImageResource(R.drawable.ic_playlist_add_white_24dp);
         }
-        //shrink ivNoteSubmit
-        Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
-        //grow ivNote
-        Animator growIvNote = CustomAnimations.circularReveal(ivNote);
-        //animate ivNote up to height of llAddress
-        Animator flyIvNoteUp = ViewPropertyObjectAnimator.animate(ivNote).translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).get();
+        mPickupRequest.setNote(etNote.getText().toString());
+        ParseObservable.save(mPickupRequest).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                pickupRequest -> {
+                    //shrink ivNoteSubmit
+                    Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
+                    //grow ivNote
+                    Animator growIvNote = CustomAnimations.circularReveal(ivNote);
+                    //animate ivNote up to height of llAddress
+                    Animator flyIvNoteUp = ViewPropertyObjectAnimator.animate(ivNote).translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).get();
 
-        // maybe fade out llNote
-        //hide slidingRLNoteLayout by sliding it up to top (over map)
-        Animator slideUpllNote = ViewPropertyObjectAnimator.animate(llNote).translationY(0).setInterpolator(new AccelerateInterpolator()).get();
+                    // maybe fade out llNote
+                    //hide slidingRLNoteLayout by sliding it up to top (over map)
+                    Animator slideUpllNote = ViewPropertyObjectAnimator.animate(llNote).translationY(0).setInterpolator(new AccelerateInterpolator()).get();
 
-        AnimatorSet set = new AnimatorSet();
-        set.play(shrinkIvNoteSubmit).before(growIvNote);
-        set.play(flyIvNoteUp).with(slideUpllNote).after(growIvNote);
-        set.start();
+                    AnimatorSet set = new AnimatorSet();
+                    set.play(shrinkIvNoteSubmit).before(growIvNote);
+                    set.play(flyIvNoteUp).with(slideUpllNote).after(growIvNote);
+                    set.start();
+                },
+                error -> {
+                    //TODO: could standardize this into a general 'error' lambda since the same error is displayed elsehwere too
+                    new AlertDialog.Builder(getActivity())
+                            .setMessage(R.string.error_note_not_saved)
+                            .setIcon(android.R.attr.alertDialogIcon)
+                            .show();
+                });
+
     }
 
 
-    private Observable<Void> hideConfirmAddress() {
+    private Observable<Void> hideConfirmAddress(boolean shrinkNoteButton) {
         return Observable.create(subscriber -> {
 //            tsInfo.setText(getString(R.string.request_pickup_choose_location));
             btnBottomSubmit.setText(getString(R.string.button_set_pickup_location_label));
-            Animator shrinkNote = CustomAnimations.animateWidth(ivNote, iconSize, 0);
-            shrinkNote.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+
             Animator fadeOutGradient = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fadeOutGradient.setTarget(adaptableGradientRectView);
 
@@ -509,7 +514,14 @@ public class RequestPickupFragment extends MapHostingFragment
                     subscriber.onCompleted();
                 }
             });
-            set.play(fadeOutGradient).with(shrinkNote);
+
+            if (shrinkNoteButton) {
+                Animator shrinkNote = CustomAnimations.animateWidth(ivNote, iconSize, 0);
+                shrinkNote.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+                set.play(fadeOutGradient).with(shrinkNote);
+            } else {
+                set.play(fadeOutGradient);
+            }
             set.start();
         });
     }
@@ -529,11 +541,11 @@ public class RequestPickupFragment extends MapHostingFragment
             slideDownFromTop.addListener(new AnimatorEndListener() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    buildCategoryGrid();
                     subscriber.onNext(null);
                     subscriber.onCompleted();
                 }
             });
+            buildCategoryGrid();
             slideDownFromTop.start();
         });
     }
@@ -603,6 +615,8 @@ public class RequestPickupFragment extends MapHostingFragment
             adaptableGradientRectView.setAlpha(0);
             adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryDark));
 
+            Animator growNote = CustomAnimations.growWidthAndShake(ivNote, 0, iconSize);
+
             //Disable map
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -612,7 +626,7 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.animateCamera(cameraUpdate);
 
             AnimatorSet set = new AnimatorSet();
-            set.play(slideDown).before(slideUp).with(fade_in);
+            set.play(slideDown).before(slideUp).with(fade_in).with(growNote);
             set.addListener(new AnimatorEndListener() {
                 @Override
                 public void onAnimationEnd(Animator animation) {

@@ -9,8 +9,12 @@ import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import io.givenow.app.R;
+import io.givenow.app.interfaces.AnimatorEndListener;
 import io.givenow.app.interfaces.AnimatorStartListener;
 
 public class CustomAnimations {
@@ -53,6 +57,19 @@ public class CustomAnimations {
             v.setLayoutParams(layoutParams);
         });
         anim.setDuration(v.getResources().getInteger(android.R.integer.config_longAnimTime));
+        return anim;
+    }
+
+    public static Animator growWidthAndShake(View v, int from, int to) {
+        Animation shake = AnimationUtils.loadAnimation(v.getContext(), R.anim.shake);
+        Animator anim = animateWidth(v, from, to);
+        anim.setDuration(v.getResources().getInteger(android.R.integer.config_shortAnimTime));
+        anim.addListener(new AnimatorEndListener() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                v.startAnimation(shake);
+            }
+        });
         return anim;
     }
 

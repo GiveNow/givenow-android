@@ -72,6 +72,7 @@
     <string name="your_donation_label">Your Donation</string>
     <string name="request_status_waiting">Waiting for a volunteer to accept your request!</string>
     <string name="error_donation_not_canceled">Couldn\'t connect - please try again later.</string>
+    <string name="error_note_not_saved">Couldn\'t connect - please try again later.</string>
     <string name="dialog_cancelDonation_message">Cancel your donation?</string>
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
     <string name="dialog_cancelDonation_negativeButton">Keep donation</string>
