@@ -159,7 +159,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         String locale = getResources().getConfiguration().locale.getCountry();
         Log.d("phfrag", "locale is " + locale);
         etPhoneNumber.setText("+" + String.valueOf(PhoneNumberUtil.getInstance().getCountryCodeForRegion(locale)));
-        etPhoneNumber.setSelection(etPhoneNumber.getText().length() - 1);
+        etPhoneNumber.setSelection(etPhoneNumber.getText().length());
         tvDescription.setText(mMessageResource);
 
         //If we're being displayed in a dialog, modify a few views.
@@ -304,7 +304,9 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                 if (parentFragment instanceof OnUserLoginCompleteListener) {
                     ((OnUserLoginCompleteListener) parentFragment).onUserLoginComplete();
                 }
-                dismiss();
+                if (getDialog() != null) {
+                    dismiss();
+                }
             }
         });
         reveal.start();

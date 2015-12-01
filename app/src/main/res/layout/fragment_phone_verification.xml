@@ -38,8 +38,8 @@
 
         <ImageButton
             android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_gravity="left"
             android:background="@null"
             android:src="@drawable/ic_arrow_backward_white_24px"
@@ -93,10 +93,11 @@
 
             <ImageButton
                 android:id="@+id/done"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_gravity="right"
                 android:background="@color/colorAccent"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_done_white_24px"
                 android:visibility="visible"/>
         </FrameLayout>
