@@ -20,6 +20,8 @@
 #Retrolambda
 -dontwarn java.lang.invoke.*
 
+#Annotations
+-keepattributes *Annotation*
 
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
@@ -48,6 +50,10 @@
 
 # Picasso
 -dontwarn com.squareup.okhttp.**
+
+#Fragmentargs
+-keep class com.hannesdorfmann.fragmentargs.** { *; }
+
 
 #-keep class android.support.v4.** { *; }
 #-keep class android.support.v7.** { *; }

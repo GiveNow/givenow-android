@@ -26,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.parse.ParseAnalytics;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -36,6 +38,7 @@ import org.json.JSONObject;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import fj.data.Option;
+import io.givenow.app.OWCApplication;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.VolunteerFragment;
 import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
@@ -59,6 +62,7 @@ public class MainActivity extends BaseActivity implements
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
     private Fragment fragToHide = null;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,10 @@ public class MainActivity extends BaseActivity implements
 //        requestWindowFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
+        // Obtain the shared Tracker instance.
+        OWCApplication application = (OWCApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         initializeDrawer();
 
@@ -97,6 +105,13 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        mTracker.setScreenName("MainActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("Share")
+                .build());
 
         //if the user resumed the app by entering through a Volunteer push notif, show dashboard
         boolean isPushNotif = handlePushNotifResume();

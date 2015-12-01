@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="MissingTranslation">
+        <ignore regexp="ga_trackingId"/>
+        <ignore regexp="google_app_id"/>
+    </issue>
+
+    <issue id="ResourceType">
+        <!-- Remove this when this is fixed: https://github.com/JakeWharton/butterknife/issues/338 -->
+        <ignore path="**/*$$ViewBinder.java"/>
+    </issue>
+</lint>
