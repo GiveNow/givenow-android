@@ -18,8 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -32,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 
 import com.bartoszlipinski.viewpropertyobjectanimator.ViewPropertyObjectAnimator;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
@@ -51,6 +51,7 @@ import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.givenow.app.OWCApplication;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DonationCategoryAdapter;
 import io.givenow.app.adapters.PlaceAutocompleteAdapter;
@@ -137,6 +138,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private PickupRequest mPickupRequest;
     private DonationCategoryAdapter mCurrentRequestCategoriesAdapter;
     private boolean mCurrentRequestLayoutShowing = false;
+    private Tracker mTracker;
 
     public RequestPickupFragment() {
         // Required empty public constructor
@@ -162,6 +164,9 @@ public class RequestPickupFragment extends MapHostingFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OWCApplication application = (OWCApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
     }
 
     @Override
@@ -298,21 +303,33 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @OnClick(R.id.btnBottomSubmit)
     protected void onBottomSubmit(Button button) {
+        HitBuilders.EventBuilder hit = new HitBuilders.EventBuilder();
+        hit.setCategory("RequestPickup").setAction("BottomButtonClicked");
+
         btnBottomSubmit.setEnabled(false);
         if (!mConfirmAddressShowing) {
             showConfirmAddress().subscribe();
+            hit.setLabel("withSetPickupLocationShowing");
         } else {
             if (!mCategoryLayoutShowing) {
                 showCategoryLayout().subscribe();
+                hit.setLabel("withConfirmAddressShowing");
             } else {
                 confirmPickupRequest();
+                hit.setLabel("withCategoryLayoutShowing");
+                mTracker.send(hit.build());
                 return; //leave button disabled
             }
         }
+        mTracker.send(hit.build());
         btnBottomSubmit.setEnabled(true);
+
     }
 
     private void confirmPickupRequest() {
+        HitBuilders.EventBuilder hit = new HitBuilders.EventBuilder();
+        hit.setCategory("RequestPickup").setAction("PickupRequestPreSave");
+
         Collection<DonationCategory> items = mDonationCategoryAdapter.getSelectedItems();
         if (items.size() < 1) {
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
@@ -320,12 +337,15 @@ public class RequestPickupFragment extends MapHostingFragment
         } else {
             if (!ParseUserHelper.isRegistered()) {
                 //user is still anonymous
+                hit.setLabel("ByAnonymousUser");
                 showPhoneNumberDialog();
             } else {
+                hit.setLabel(ParseUser.getCurrentUser().getObjectId());
                 constructPickupRequest();
                 savePickupRequest();
             }
         }
+        mTracker.send(hit.build());
     }
 
     private void showPhoneNumberDialog() {
@@ -374,6 +394,12 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void savePickupRequest() {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("RequestPickup")
+                .setAction("PickupRequestTrySave")
+                .setLabel(ParseUser.getCurrentUser().getObjectId())
+                .build());
+
         getActivity().setProgressBarIndeterminateVisibility(true);
 
         mPickupRequest.saveInBackground(this::shouldWeRetrySave);
@@ -401,6 +427,12 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void onPickupRequestSaved() {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("RequestPickup")
+                .setAction("PickupRequestSaved")
+                .setLabel(ParseUser.getCurrentUser().getObjectId())
+                .build());
+
         hideCategoryLayout().subscribe(v -> {
             hideConfirmAddress(false).subscribe();
             showCurrentRequestLayout().subscribe();
@@ -652,6 +684,11 @@ public class RequestPickupFragment extends MapHostingFragment
                     mPickupRequest.cancel();
                     mPickupRequest.saveInBackground(e -> {
                         if (e == null) {
+                            mTracker.send(new HitBuilders.EventBuilder()
+                                    .setCategory("RequestPickup")
+                                    .setAction("DonationCanceled")
+                                    .setLabel(ParseUser.getCurrentUser().getObjectId())
+                                    .build());
                             hideCurrentRequestLayout().subscribe();
                         } else {
                             new AlertDialog.Builder(getActivity())
@@ -728,14 +765,27 @@ public class RequestPickupFragment extends MapHostingFragment
 
     public void displayInfo() {
         int info = R.string.help_request_pickup_initial;
+        int ga_label = 0;
+
 
         if (mCurrentRequestLayoutShowing) {
             info = R.string.help_request_pickup_current_request;
+            ga_label = 1;
         } else if (mCategoryLayoutShowing) {
             info = R.string.help_request_pickup_category_chooser;
+            ga_label = 2;
         } else if (mConfirmAddressShowing) {
             info = R.string.help_request_pickup_confirm_address;
+            ga_label = 3;
         }
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Help")
+                .setAction("Clicked")
+                .setLabel(ParseUser.getCurrentUser().getObjectId())
+                .setValue(ga_label)
+                .build());
+
         new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_help_outline_black_24dp)
                 .setTitle(R.string.help_title)

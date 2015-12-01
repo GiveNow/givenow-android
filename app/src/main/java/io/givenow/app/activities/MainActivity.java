@@ -108,11 +108,6 @@ public class MainActivity extends BaseActivity implements
         mTracker.setScreenName("MainActivity");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction("Share")
-                .build());
-
         //if the user resumed the app by entering through a Volunteer push notif, show dashboard
         boolean isPushNotif = handlePushNotifResume();
 
@@ -235,12 +230,23 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void cancelPendingVolunteer(PickupRequest pickupRequest) {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("RequestPickup")
+                .setAction("PendingVolunteerCanceled")
+                .setLabel(ParseUser.getCurrentUser().getObjectId())
+                .build());
+
         //donor doesn't accept volunteer request, so remove the pending volunteer
         pickupRequest.remove("pendingVolunteer");
         pickupRequest.saveInBackground();
     }
 
     private void pendingVolunteerConfirmed(final PickupRequest pickupRequest) {
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("RequestPickup")
+                .setAction("PendingVolunteerConfirmed")
+                .setLabel(ParseUser.getCurrentUser().getObjectId())
+                .build());
         // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
         pickupRequest.getPendingVolunteer().foreachDoEffect(volunteer -> {
             pickupRequest.generateVolunteerConfirmedNotif(this);

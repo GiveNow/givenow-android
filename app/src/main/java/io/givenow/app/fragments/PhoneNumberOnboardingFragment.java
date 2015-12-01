@@ -15,9 +15,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.parse.ParseUser;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.givenow.app.OWCApplication;
 import io.givenow.app.R;
 import io.givenow.app.activities.MainActivity;
 
@@ -85,6 +89,14 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
 
     @OnClick(R.id.btnAddPhoneNumberLater)
     public void onAddPhoneNumberLater(Button btnAddPhoneNumberLater) {
+        ((OWCApplication) getActivity().getApplication()).getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory("OnBoarding")
+                        .setAction("AddPhoneNumberLaterClicked")
+//                        .setLabel()
+                        .setValue(1)
+                        .build());
+
         onUserLoginComplete();
     }
 
@@ -95,6 +107,13 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("RanBefore", true);
         editor.apply();
+
+        ((OWCApplication) getActivity().getApplication()).getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory("OnBoarding")
+                        .setAction("UserLoginComplete")
+                        .setLabel(ParseUser.getCurrentUser().getObjectId())
+                        .build());
 
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         Log.d("Onboarding", "Starting MainActivity");

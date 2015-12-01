@@ -1,11 +1,15 @@
 package io.givenow.app.activities;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
+import io.givenow.app.OWCApplication;
 import io.givenow.app.R;
 import io.givenow.app.fragments.PhoneNumberOnboardingFragment;
 import io.givenow.app.fragments.PhoneNumberVerificationFragment;
@@ -64,6 +68,14 @@ public class OnboardingActivity extends AppIntro2 implements PhoneNumberVerifica
 
         ivDone = (ImageView) findViewById(com.github.paolorotolo.appintro.R.id.done);
 
+        getPager().addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                Tracker tracker = ((OWCApplication) getApplication()).getDefaultTracker();
+                tracker.setScreenName("Onboarding:" + String.valueOf(position));
+                tracker.send(new HitBuilders.ScreenViewBuilder().build());
+            }
+        });
     }
 
     @Override
