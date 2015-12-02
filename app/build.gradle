@@ -31,8 +31,8 @@ android {
         applicationId "io.givenow.app"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 4
-        versionName "0.3.1"
+        versionCode 6
+        versionName "0.3.2"
 
         // Enabling multidex support.
         multiDexEnabled true
