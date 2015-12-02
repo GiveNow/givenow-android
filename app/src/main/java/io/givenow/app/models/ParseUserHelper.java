@@ -1,7 +1,6 @@
 package io.givenow.app.models;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 import fj.data.Option;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.parse.ParseObservable;
 
 public class ParseUserHelper {
@@ -31,56 +29,11 @@ public class ParseUserHelper {
         return !ParseAnonymousUtils.isLinked(user);// ParseUser.getCurrentUser().getUsername() == null;
     }
 
-//    public static boolean
-//    public static void registerUser(String phoneNumber) {
-//        ParseUser currentUser = ParseUser.getCurrentUser();
-//        currentUser.put("phoneNumber", phoneNumber);
-//        currentUser.saveInBackground();
-//    }
-
-    public static void registerUserWithDevice(String phoneNumber) {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.put("phoneNumber", phoneNumber);
-//        currentUser.put("AuthData", "signedup!"); //clear out Anonymous status
-        currentUser.saveInBackground(e -> associateWithDevice(currentUser));
-//        ParseUser.getCurrentUser().signUpInBackground();
-
-    }
-
     public static void associateWithDevice(ParseUser user) {
         // Associate the device with a user
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         installation.put("user", user);
         installation.saveInBackground();
-    }
-
-    public static void signUpOrLogin(String phoneNumber, Action0 loginComplete) {
-        //TODO excise
-        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-//        phoneNumberUtil.parse(phoneNumber)
-        ParseObservable.first(ParseUser.getQuery().whereEqualTo("phoneNumber", phoneNumber))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        user -> {
-                            //user does already exist, let's "log them in"
-                            HashMap<String, Object> params = new HashMap<>();
-                            params.put("phoneNumber", phoneNumber);
-                            ParseObservable.callFunction("getUserSessionToken", params).subscribe(sessionToken -> {
-                                ParseObservable.become(sessionToken.toString()).observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(becameUser -> {
-                                            Log.d("Onboarding", "Became user " + becameUser.get("phoneNumber"));
-                                            ParseUserHelper.associateWithDevice(becameUser);
-                                            loginComplete.call();
-                                        });
-                            });
-                        },
-                        error -> {
-                            //user doesn't exist, let's sign them up
-                            Log.d("Onboarding", "Existing user query error result: " + error.getMessage());
-                            Log.d("Onboarding", "User with # " + phoneNumber + " doesn't exist, registering.");
-                            ParseUserHelper.registerUserWithDevice(phoneNumber);
-                            loginComplete.call();
-                        });
     }
 
     public static Observable<Object> sendCode(String phoneNumber, String smsBody) {
