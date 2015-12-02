@@ -48,7 +48,9 @@ android {
     productFlavors {
         // Define separate dev and prod product flavors.
         dev {
-
+            apply from: 'parse.properties.dev.gradle'
+            resValue "string", "parse_application_id", application_id
+            resValue "string", "parse_client_key", client_key
         }
         dev21 {
             // Faster build.
@@ -56,9 +58,16 @@ android {
             // to pre-dex each module and produce an APK that can be tested on
             // Android Lollipop without time consuming dex merging processes.
             minSdkVersion 21
+
+            apply from: 'parse.properties.dev.gradle'
+            resValue "string", "parse_application_id", application_id
+            resValue "string", "parse_client_key", client_key
         }
         prod {
-
+            //Use production database.
+            apply from: 'parse.properties.prod.gradle'
+            resValue "string", "parse_application_id", application_id
+            resValue "string", "parse_client_key", client_key
         }
     }
 
@@ -78,6 +87,11 @@ android {
 
     lintOptions {
         lintConfig file("lint.xml")
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
     }
 }
 

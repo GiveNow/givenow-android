@@ -45,14 +45,12 @@ public class GiveNowApplication extends Application {
             GoogleAnalytics.getInstance(this).setDryRun(true);
             //disable MixPanel
             setMixPanelProjectToken("none");
-            //use dev parse db
         } else {
             Log.d("Application", "BuildConfig.DEBUG is false. Running in release mode.");
             //enable crashlytics
             Fabric.with(this, new Crashlytics());
             //enable MixPanel
             setMixPanelProjectToken("f9cec240b1fd9edf74c9cbf578481ad0");
-            //use prod parse db
         }
 
         registerParseClasses();
@@ -67,7 +65,7 @@ public class GiveNowApplication extends Application {
     }
 
     private void initializeParse() {
-        Parse.initialize(this, "c8IKIZkRcbkiMkDqdxkM4fKrBymrX7p7glVQ6u8d", "EFY5RxFnVEKzNOMKGKa3JqLR6zJlS4P6z0OPF3Mt");
+        Parse.initialize(this, getString(R.string.parse_application_id), getString(R.string.parse_client_key));
         ParseUser.enableAutomaticUser();
         ParseUser.enableRevocableSessionInBackground();
         ParseInstallation.getCurrentInstallation().saveInBackground();

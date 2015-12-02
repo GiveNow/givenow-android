@@ -1,0 +1,4 @@
+ext {
+    application_id = "PARSE_PROD_APP_ID"
+    client_key = "PARSE_PROD_CLIENT_KEY"
+}
