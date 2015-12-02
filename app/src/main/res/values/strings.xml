@@ -73,6 +73,7 @@
     <string name="request_status_waiting">Waiting for a volunteer to accept your request!</string>
     <string name="error_donation_not_canceled">Couldn\'t connect - please try again later.</string>
     <string name="error_note_not_saved">Couldn\'t connect - please try again later.</string>
+    <string name="cancel_donation_button">Cancel</string>
     <string name="dialog_cancelDonation_message">Cancel your donation?</string>
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
     <string name="dialog_cancelDonation_negativeButton">Keep donation</string>
@@ -93,8 +94,11 @@
     <string name="onboarding_4_title">We take care of the rest.</string>
     <string name="onboarding_4_description">A trusted volunteer driver will pick up your donation.\nWe\'ll contact you to coordinate the pickup.</string>
     <string name="phone_number_verification_title">Add a phone number</string>
+    <string name="phone_number_verification_error_number_invalid">Please enter a valid phone number.\nExample: +49 123 456 7890</string>
+    <string name="phone_number_verification_error_number_failed_to_parse">Please enter a phone number in the format:\n+49 123 456 7890</string>
+    <string name="phone_number_verification_error_no_country_code">Please include the country code.\nExample: +49 123 456 7890</string>
     <string name="phone_number_disclaimer">This only lets your driver reach you to arrange pickup.\nWe never share your number with third parties.</string>
-    <string name="address_field_note_hint">Apartment, gate code, name...</string>
+    <string name="address_field_note_hint">Apartment, gate code, name…</string>
     <string name="phone_number_later">You can also add a phone number later.</string>
     <string name="dialog_phoneNumber_negativeButton">Cancel</string>
     <string name="dialog_phoneNumber_positiveButton">Submit</string>
@@ -119,6 +123,7 @@
     <string name="volunteer_button_user_has_applied">You applied to volunteer</string>
     <string name="volunteer_button_user_has_not_applied">I want to volunteer!</string>
     <string name="volunteer_label_user_has_not_applied">Want to volunteer to pickup donations?\nThe only thing you need is a car and some spare time!</string>
+    <string name="volunteer_accept_request_marker_cta">Tap to accept this request!</string>
     <string name="request_status_volunteer_pending">A volunteer is ready to pick up your donation!</string>
     <string name="request_status_volunteer_confirmed">Your volunteer will contact you soon at %1$s!</string>
     <string name="dialog_volunteer_accept_pickuprequest_title">Accept this Pickup Request?</string>
