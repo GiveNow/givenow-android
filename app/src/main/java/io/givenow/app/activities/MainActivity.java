@@ -39,7 +39,7 @@ import org.json.JSONObject;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import fj.data.Option;
-import io.givenow.app.OWCApplication;
+import io.givenow.app.GiveNowApplication;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.VolunteerFragment;
 import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
@@ -74,10 +74,10 @@ public class MainActivity extends BaseActivity implements
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         // Obtain the shared Tracker instance.
-        OWCApplication application = (OWCApplication) getApplication();
+        GiveNowApplication application = (GiveNowApplication) getApplication();
         mTracker = application.getDefaultTracker();
 
-        String projectToken = "f9cec240b1fd9edf74c9cbf578481ad0";
+        String projectToken = application.getMixPanelProjectToken();
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
         mixpanel.identify(ParseUser.getCurrentUser().getObjectId());
         try {

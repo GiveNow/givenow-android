@@ -51,7 +51,7 @@ import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.givenow.app.OWCApplication;
+import io.givenow.app.GiveNowApplication;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DonationCategoryAdapter;
 import io.givenow.app.adapters.PlaceAutocompleteAdapter;
@@ -165,7 +165,7 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        OWCApplication application = (OWCApplication) getActivity().getApplication();
+        GiveNowApplication application = (GiveNowApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
     }
 

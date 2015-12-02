@@ -21,7 +21,7 @@ import com.parse.ParseUser;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.givenow.app.OWCApplication;
+import io.givenow.app.GiveNowApplication;
 import io.givenow.app.R;
 import io.givenow.app.activities.MainActivity;
 
@@ -89,7 +89,7 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
 
     @OnClick(R.id.btnAddPhoneNumberLater)
     public void onAddPhoneNumberLater(Button btnAddPhoneNumberLater) {
-        ((OWCApplication) getActivity().getApplication()).getDefaultTracker()
+        ((GiveNowApplication) getActivity().getApplication()).getDefaultTracker()
                 .send(new HitBuilders.EventBuilder()
                         .setCategory("OnBoarding")
                         .setAction("AddPhoneNumberLaterClicked")
@@ -108,7 +108,7 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
         editor.putBoolean("RanBefore", true);
         editor.apply();
 
-        ((OWCApplication) getActivity().getApplication()).getDefaultTracker()
+        ((GiveNowApplication) getActivity().getApplication()).getDefaultTracker()
                 .send(new HitBuilders.EventBuilder()
                         .setCategory("OnBoarding")
                         .setAction("UserLoginComplete")

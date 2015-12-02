@@ -65,6 +65,8 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            //Disable sending the crashlytics mapping file, which speeds up builds.
+            ext.enableCrashlytics = false
         }
 
         release {
