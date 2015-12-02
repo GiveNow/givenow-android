@@ -499,33 +499,41 @@ public class RequestPickupFragment extends MapHostingFragment
         } else {
             ivNote.setImageResource(R.drawable.ic_playlist_add_white_24dp);
         }
-        mPickupRequest.setNote(etNote.getText().toString());
-        ParseObservable.save(mPickupRequest).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                pickupRequest -> {
-                    //shrink ivNoteSubmit
-                    Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
-                    //grow ivNote
-                    Animator growIvNote = CustomAnimations.circularReveal(ivNote);
-                    //animate ivNote up to height of llAddress
-                    Animator flyIvNoteUp = ViewPropertyObjectAnimator.animate(ivNote).translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).get();
+        if (mPickupRequest == null) {
+            hideNoteField();
+        } else {
+            mPickupRequest.setNote(etNote.getText().toString());
+            ParseObservable.save(mPickupRequest).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    pickupRequest -> {
+                        hideNoteField();
+                    },
+                    error -> {
+                        //TODO: could standardize this into a general 'error' lambda since the same error is displayed elsehwere too
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage(R.string.error_note_not_saved)
+                                .setIcon(android.R.attr.alertDialogIcon)
+                                .show();
+                    });
+        }
 
-                    // maybe fade out llNote
-                    //hide slidingRLNoteLayout by sliding it up to top (over map)
-                    Animator slideUpllNote = ViewPropertyObjectAnimator.animate(llNote).translationY(0).setInterpolator(new AccelerateInterpolator()).get();
+    }
 
-                    AnimatorSet set = new AnimatorSet();
-                    set.play(shrinkIvNoteSubmit).before(growIvNote);
-                    set.play(flyIvNoteUp).with(slideUpllNote).after(growIvNote);
-                    set.start();
-                },
-                error -> {
-                    //TODO: could standardize this into a general 'error' lambda since the same error is displayed elsehwere too
-                    new AlertDialog.Builder(getActivity())
-                            .setMessage(R.string.error_note_not_saved)
-                            .setIcon(android.R.attr.alertDialogIcon)
-                            .show();
-                });
+    private void hideNoteField() {
+        //shrink ivNoteSubmit
+        Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
+        //grow ivNote
+        Animator growIvNote = CustomAnimations.circularReveal(ivNote);
+        //animate ivNote up to height of llAddress
+        Animator flyIvNoteUp = ViewPropertyObjectAnimator.animate(ivNote).translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).get();
 
+        // maybe fade out llNote
+        //hide slidingRLNoteLayout by sliding it up to top (over map)
+        Animator slideUpllNote = ViewPropertyObjectAnimator.animate(llNote).translationY(0).setInterpolator(new AccelerateInterpolator()).get();
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(shrinkIvNoteSubmit).before(growIvNote);
+        set.play(flyIvNoteUp).with(slideUpllNote).after(growIvNote);
+        set.start();
     }
 
 
