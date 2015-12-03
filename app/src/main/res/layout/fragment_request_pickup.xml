@@ -43,9 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:hint="@string/address_field_note_hint"
-                android:inAnimation="@android:anim/slide_in_left"
+                android:inAnimation="@anim/slide_in_right"
                 android:maxLines="4"
-                android:outAnimation="@android:anim/slide_out_right"
+                android:outAnimation="@anim/slide_out_left"
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:theme="@style/MyEditTextTheme" />
@@ -111,8 +111,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:inAnimation="@android:anim/slide_in_left"
-                android:outAnimation="@android:anim/slide_out_right">
+                android:inAnimation="@anim/slide_in_right"
+                android:outAnimation="@anim/slide_out_left">
                 <!--<include layout="@layout/textview_info"></include>-->
             </TextSwitcher>
         </LinearLayout>

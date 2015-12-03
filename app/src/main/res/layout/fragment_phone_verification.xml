@@ -19,15 +19,25 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone"/>
-    <TextView
-        android:id="@+id/description"
+
+    <TextSwitcher
+        android:id="@+id/tsDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"/>
+        android:inAnimation="@anim/slide_in_right"
+        android:outAnimation="@anim/slide_out_left">
+    </TextSwitcher>
+
+    <!--<TextView-->
+    <!--android:id="@+id/description"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:gravity="center"-->
+    <!--android:paddingBottom="16dp"-->
+    <!--android:textColor="@android:color/white"-->
+    <!--android:textSize="16sp"/>-->
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,8 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:inAnimation="@android:anim/slide_in_left"
-            android:outAnimation="@android:anim/slide_out_right">
+            android:inAnimation="@anim/slide_in_right"
+            android:outAnimation="@anim/slide_out_left">
 
             <EditText
                 android:id="@+id/etPhoneNumber"

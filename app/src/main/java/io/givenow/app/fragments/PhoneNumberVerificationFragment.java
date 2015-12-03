@@ -5,6 +5,7 @@ package io.givenow.app.fragments;
  */
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -39,10 +41,8 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import fj.data.Option;
 import io.givenow.app.R;
 import io.givenow.app.helpers.CustomAnimations;
-import io.givenow.app.interfaces.AnimatorEndListener;
 import io.givenow.app.models.ParseUserHelper;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
@@ -60,8 +60,8 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     LinearLayout llContainer;
     @Bind(R.id.title)
     TextView tvTitle;
-    @Bind(R.id.description)
-    TextView tvDescription; //TODO should use a TextSwitcher
+    @Bind(R.id.tsDescription)
+    TextSwitcher tsDescription;
     @Bind(R.id.etPhoneNumber)
     EditText etPhoneNumber;
     @Bind(R.id.etSMSCode)
@@ -100,17 +100,14 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         ButterKnife.bind(this, v);
 
 //        llMain.setBackgroundColor(colour);
-
         etPhoneNumber.addTextChangedListener(new android.telephony.PhoneNumberFormattingTextWatcher()); //new PhoneNumberFormattingTextWatcher(Locale.getDefault().getCountry()));
         etPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -132,12 +129,10 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         etSMSCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -153,28 +148,37 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                 }
             }
         });
-        vsPhoneSMS.setInAnimation(getActivity(), android.R.anim.slide_in_left);
-        vsPhoneSMS.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
 
         String locale = getResources().getConfiguration().locale.getCountry();
         Log.d("phfrag", "locale is " + locale);
         etPhoneNumber.setText("+" + String.valueOf(PhoneNumberUtil.getInstance().getCountryCodeForRegion(locale)));
         etPhoneNumber.setSelection(etPhoneNumber.getText().length());
-        tvDescription.setText(mMessageResource);
 
-        //If we're being displayed in a dialog, modify a few views.
-        Option.fromNull(getDialog()).foreachDoEffect(dialog -> {
+        if (getShowsDialog()) {
+            //If we're being displayed in a dialog, modify a few views.
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(R.string.phone_number_verification_title);
-            tvDescription.setGravity(Gravity.START);
             progressIndicator.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimaryLight), android.graphics.PorterDuff.Mode.SRC_ATOP);
-
             int pad = getResources().getDimensionPixelSize(R.dimen.dialog_container_padding);
             llContainer.setPadding(pad, pad, pad, pad);
             llContainer.requestLayout();
-        });
 
+            tsDescription.setFactory(() -> {
+                TextView tv = tvFactory();
+                tv.setGravity(Gravity.START);
+                tv.setTextSize(18);
+                return tv;
+            });
+        } else {
+            tsDescription.setFactory(this::tvFactory);
+        }
+
+        tsDescription.setText(getString(mMessageResource));
         return v;
+    }
+
+    private TextView tvFactory() {
+        return (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.textview_phone_verify_description, tsDescription, false);
     }
 
     @NonNull
@@ -213,14 +217,14 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         vsPhoneSMS.setDisplayedChild(0);
         mPhoneNumberFieldShowing = true;
         CustomAnimations.circularHide(ibBack).start();
-        tvDescription.setText(mMessageResource);
+        tsDescription.setText(getString(mMessageResource));
         ibDone.setClickable(true);
     }
 
     private void uiSMSCode(String phoneNumber) {
         vsPhoneSMS.setDisplayedChild(1);
         mPhoneNumberFieldShowing = false;
-        tvDescription.setText(getString(R.string.validate_sms_code, phoneNumber));
+        tsDescription.setText(getString(R.string.validate_sms_code, phoneNumber));
         CustomAnimations.circularReveal(ibBack).start();
         ibDone.setClickable(true);
     }
@@ -250,16 +254,16 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                                     uiPhoneNumber();
                                 });
                     } else {
-                        tvDescription.setText("Please enter a valid phone number.\nExample: +49 123 456 7890");
+                        tsDescription.setText(getString(R.string.phone_number_verification_error_number_invalid));
                         ibDone.setClickable(true);
                     }
                 } catch (NumberParseException e) {
                     e.printStackTrace();
-                    tvDescription.setText("Please enter a phone number in the format:\n+49 123 456 7890");
+                    tsDescription.setText(getString(R.string.phone_number_verification_error_number_failed_to_parse));
                     ibDone.setClickable(true);
                 }
             } else {
-                tvDescription.setText("Please include the country code.\nExample: +49 123 456 7890");
+                tsDescription.setText(getString(R.string.phone_number_verification_error_no_country_code));
                 ibDone.setClickable(true);
             }
         } else { //Or just hide ibdone
@@ -277,10 +281,9 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
             int code = Integer.parseInt(etSMSCode.getText().toString());
             ParseUserHelper.logIn(phoneNumber, code).subscribe(
                     sessionToken -> {
-                        // ParseUserHelper.signUpOrLogin(phoneNumber, this::onUserLoginCompleteAction);
                         ParseObservable.become(sessionToken.toString()).observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(becameUser -> {
-                                    Log.d("Onboarding", "Became user " + becameUser.getUsername());
+                                    Log.d("PhoneVerification", "Became user " + becameUser.getUsername());
                                     ParseUserHelper.associateWithDevice(becameUser);
                                     userLoginComplete();
                                 });
@@ -297,7 +300,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         //change done button to givenow smiley
         ibDone.setImageResource(R.mipmap.ic_launcher);
         Animator reveal = CustomAnimations.circularReveal(ibDone);
-        reveal.addListener(new AnimatorEndListener() {
+        reveal.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 Fragment parentFragment = getParentFragment();
