@@ -1,6 +1,5 @@
 package io.givenow.app.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -462,7 +462,7 @@ public class MainActivity extends BaseActivity implements
             }
         }
         pickupRequestDetailFragment = PickupRequestDetailFragment.newInstance(pickupRequest);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.content_frame, pickupRequestDetailFragment,
                         "PickupRequestDetailFragment")
                 .addToBackStack("PickupRequestDetailFragment")

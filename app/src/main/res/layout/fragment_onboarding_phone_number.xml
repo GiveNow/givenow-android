@@ -55,10 +55,14 @@
 
         <Button
             android:id="@+id/btnAddPhoneNumberLater"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="#55ffffff"
+            android:minHeight="36dp"
+            android:minWidth="64dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:text="@string/onboarding_add_phone_number_later_button"/>
     </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -156,6 +157,7 @@ public class RequestPickupFragment extends MapHostingFragment
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @SuppressLint("NewApi")
     @OnClick(R.id.btnClearAddress)
     public void onClearAddress(ImageButton imageButton) {
         actvAddress.setText("", false);
@@ -291,6 +293,7 @@ public class RequestPickupFragment extends MapHostingFragment
         Log.i(logTag(), "Called getPlaceById to get Place details for " + placeId);
     }
 
+    @SuppressLint("NewApi")
     public void setAddressFieldText(String text) {
         actvAddress.setText(text, false); // setText, and disable autocompletion.
         actvAddress.setSelection(text.length());
