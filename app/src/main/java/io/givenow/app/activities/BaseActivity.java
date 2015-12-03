@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import io.givenow.app.R;
+import io.givenow.app.helpers.ErrorDialogs;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -20,6 +21,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        //Use this activity as the context for standard error dialogs.
+        ErrorDialogs.registerContext(this);
     }
 
     protected abstract int getLayoutResource();

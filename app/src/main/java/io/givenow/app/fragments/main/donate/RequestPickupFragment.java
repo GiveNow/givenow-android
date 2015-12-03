@@ -64,6 +64,7 @@ import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
+import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -510,16 +511,10 @@ public class RequestPickupFragment extends MapHostingFragment
                     pickupRequest -> {
                         hideNoteField();
                     },
-                    error -> {
-                        //TODO: could standardize this into a general 'error' lambda since the same error is displayed elsehwere too
-                        new AlertDialog.Builder(getActivity())
-                                .setMessage(R.string.error_note_not_saved)
-                                .setIcon(android.R.attr.alertDialogIcon)
-                                .show();
-                    });
+                    ErrorDialogs::connectionFailure);
         }
-
     }
+
 
     private void hideNoteField() {
         //shrink ivNoteSubmit
