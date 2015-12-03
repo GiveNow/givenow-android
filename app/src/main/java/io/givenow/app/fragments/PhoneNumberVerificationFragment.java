@@ -164,6 +164,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
             llContainer.requestLayout();
 
             tsDescription.setFactory(() -> {
+                //Dialogs show their text left-justified rather than centered.
                 TextView tv = tvFactory();
                 tv.setGravity(Gravity.START);
                 tv.setTextSize(18);

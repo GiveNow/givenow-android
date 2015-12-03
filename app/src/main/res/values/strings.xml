@@ -97,7 +97,7 @@
     <string name="phone_number_verification_error_number_invalid">Please enter a valid phone number.\nExample: +49 123 456 7890</string>
     <string name="phone_number_verification_error_number_failed_to_parse">Please enter a phone number in the format:\n+49 123 456 7890</string>
     <string name="phone_number_verification_error_no_country_code">Please include the country code.\nExample: +49 123 456 7890</string>
-    <string name="phone_number_disclaimer">This only lets your driver reach you to arrange pickup.\nWe never share your number with third parties.</string>
+    <string name="phone_number_disclaimer">This only lets your driver reach you to arrange pickup. We never share your number with third parties.</string>
     <string name="address_field_note_hint">Apartment, gate code, name…</string>
     <string name="phone_number_later">You can also add a phone number later.</string>
     <string name="dialog_phoneNumber_negativeButton">Cancel</string>
