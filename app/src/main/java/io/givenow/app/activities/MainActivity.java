@@ -314,7 +314,7 @@ public class MainActivity extends BaseActivity implements
 //                    User is not anonymous
                 navigation_label_username.setText(Option.fromNull(ParseUser.getCurrentUser().get("name")).orSome(getString(R.string.navigation_your_profile)).toString());
                 navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
-                Option.fromNull(ParseUserHelper.getProfileImage()).foreachDoEffect(parseFile ->
+                ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
                         Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(navigation_profile_image));
 //                }
 

@@ -108,9 +108,8 @@ public class ParseUserHelper {
         return phoneNumberString;
     }
 
-    public static ParseFile getProfileImage() {
-        ParseUser user = ParseUser.getCurrentUser();
-        return user.getParseFile("profileImage");
+    public static Option<ParseFile> getProfileImage() {
+        return Option.fromNull(ParseUser.getCurrentUser().getParseFile("profileImage"));
     }
 
     public static void setProfileImage(ParseFile imageFile) {
