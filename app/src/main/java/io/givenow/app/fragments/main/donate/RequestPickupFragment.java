@@ -2,6 +2,7 @@ package io.givenow.app.fragments.main.donate;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
@@ -62,7 +63,6 @@ import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
-import io.givenow.app.interfaces.AnimatorEndListener;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -459,7 +459,7 @@ public class RequestPickupFragment extends MapHostingFragment
             Animator growNote = CustomAnimations.growWidthAndShake(ivNote, 0, iconSize);
 
             AnimatorSet set = new AnimatorSet();
-            set.addListener(new AnimatorEndListener() {
+            set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     subscriber.onNext(null);
@@ -546,7 +546,7 @@ public class RequestPickupFragment extends MapHostingFragment
             fadeOutGradient.setTarget(adaptableGradientRectView);
 
             AnimatorSet set = new AnimatorSet();
-            set.addListener(new AnimatorEndListener() {
+            set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mConfirmAddressShowing = false;
@@ -578,7 +578,7 @@ public class RequestPickupFragment extends MapHostingFragment
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
             slideDownFromTop.setInterpolator(new DecelerateInterpolator());
             slideDownFromTop.setTarget(slidingRLContainer);
-            slideDownFromTop.addListener(new AnimatorEndListener() {
+            slideDownFromTop.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     subscriber.onNext(null);
@@ -612,7 +612,7 @@ public class RequestPickupFragment extends MapHostingFragment
             Animator slideUpToTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_up_to_top);
             slideUpToTop.setInterpolator(new AccelerateInterpolator());
             slideUpToTop.setTarget(slidingRLContainer);
-            slideUpToTop.addListener(new AnimatorEndListener() {
+            slideUpToTop.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     slidingRLContainer.setVisibility(View.INVISIBLE);
@@ -668,7 +668,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             AnimatorSet set = new AnimatorSet();
             set.play(slideDown).before(slideUp).with(fade_in).with(growNote);
-            set.addListener(new AnimatorEndListener() {
+            set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     btnBottomSubmit.setVisibility(View.GONE);
@@ -727,7 +727,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             AnimatorSet set = new AnimatorSet();
             set.play(fade_out).with(slideDown).before(slideUp);
-            set.addListener(new AnimatorEndListener() {
+            set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));

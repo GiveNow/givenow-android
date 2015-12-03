@@ -11,11 +11,10 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import io.givenow.app.R;
-import io.givenow.app.interfaces.AnimatorEndListener;
-import io.givenow.app.interfaces.AnimatorStartListener;
+//import io.givenow.app.interfaces.AnimatorEndListener;
+//import io.givenow.app.interfaces.AnimatorStartListener;
 
 public class CustomAnimations {
 
@@ -38,7 +37,12 @@ public class CustomAnimations {
 
     public static ValueAnimator animateHeight(View v, int from, int to) {
         ValueAnimator anim = ValueAnimator.ofInt(from, to);
-        anim.addListener((AnimatorStartListener) animation -> v.setVisibility(View.VISIBLE));
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                v.setVisibility(View.VISIBLE);
+            }
+        });
         anim.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
             layoutParams.height = (Integer) valueAnimator.getAnimatedValue();
@@ -50,7 +54,18 @@ public class CustomAnimations {
 
     public static ValueAnimator animateWidth(View v, int from, int to) {
         ValueAnimator anim = ValueAnimator.ofInt(from, to);
+        /* Once again, a very strange error related to AnimatorStartListener:
         anim.addListener((AnimatorStartListener) animation -> v.setVisibility(View.VISIBLE));
+        12-03 01:25:31.049 13819-13819/io.givenow.app A/art: art/runtime/thread.cc:1329] Throwing new exception 'length=4849; index=11412' with unexpected pending exception: java.lang.ArrayIndexOutOfBoundsException: length=4849; index=11412
+        12-03 01:25:31.050 13819-13819/io.givenow.app A/art: art/runtime/thread.cc:1329]   at io.givenow.app.interfaces.AnimatorStartListener io.givenow.app.helpers.CustomAnimations$$Lambda$3.lambdaFactory$(android.view.View) ((null):-1)
+        12-03 01:25:31.050 13819-13819/io.givenow.app A/art: art/runtime/thread.cc:1329]   at android.animation.ValueAnimator io.givenow.app.helpers.CustomAnimations.animateWidth(android.view.View, int, int) (CustomAnimations.java:53)
+         */
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                v.setVisibility(View.VISIBLE);
+            }
+        });
         anim.addUpdateListener(valueAnimator -> {
             ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
             layoutParams.width = (Integer) valueAnimator.getAnimatedValue();
@@ -64,7 +79,7 @@ public class CustomAnimations {
         Animation shake = AnimationUtils.loadAnimation(v.getContext(), R.anim.shake);
         Animator anim = animateWidth(v, from, to);
         anim.setDuration(v.getResources().getInteger(android.R.integer.config_shortAnimTime));
-        anim.addListener(new AnimatorEndListener() {
+        anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 v.startAnimation(shake);
@@ -92,12 +107,14 @@ public class CustomAnimations {
         }
 
         // make the view visible and start the animation
-//        anim.addListener((AnimatorStartListener) animation -> v.setVisibility(View.VISIBLE));
-        //the above line is a culprit in the following exception:
-//        11-26 01:37:19.330 7938-7938/io.givenow.app A/art: art/runtime/thread.cc:1329] Throwing new exception 'length=3413; index=4199' with unexpected pending exception: java.lang.ArrayIndexOutOfBoundsException: length=3413; index=4199
-//        11-26 01:37:19.331 7938-7938/io.givenow.app A/art: art/runtime/thread.cc:1329]   at io.givenow.app.interfaces.AnimatorStartListener io.givenow.app.helpers.CustomAnimations$$Lambda$5.lambdaFactory$(android.view.View) ((null):-1)
-//        11-26 01:37:19.331 7938-7938/io.givenow.app A/art: art/runtime/thread.cc:1329]   at android.animation.Animator io.givenow.app.helpers.CustomAnimations.circularReveal(android.view.View) (CustomAnimations.java:77)
-        //so let's use an AnimatorListenerAdapter instead!
+        /* the following line is a culprit in the following exception:
+        anim.addListener((AnimatorStartListener) animation -> v.setVisibility(View.VISIBLE));
+        11-26 01:37:19.330 7938-7938/io.givenow.app A/art: art/runtime/thread.cc:1329] Throwing new exception 'length=3413; index=4199' with unexpected pending exception: java.lang.ArrayIndexOutOfBoundsException: length=3413; index=4199
+        11-26 01:37:19.331 7938-7938/io.givenow.app A/art: art/runtime/thread.cc:1329]   at io.givenow.app.interfaces.AnimatorStartListener io.givenow.app.helpers.CustomAnimations$$Lambda$5.lambdaFactory$(android.view.View) ((null):-1)
+        11-26 01:37:19.331 7938-7938/io.givenow.app A/art: art/runtime/thread.cc:1329]   at android.animation.Animator io.givenow.app.helpers.CustomAnimations.circularReveal(android.view.View) (CustomAnimations.java:77)
+
+        ...so let's use an AnimatorListenerAdapter instead!
+        */
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
