@@ -13,6 +13,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -186,6 +188,25 @@ public class RequestPickupFragment extends MapHostingFragment
         actvAddress.setOnFocusChangeListener((view, hasFocus) -> {
             if (btnClearAddress != null) {
                 btnClearAddress.setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+            }
+        });
+
+        etNote.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    ivNote.setImageResource(R.drawable.ic_playlist_add_check_white_24dp);
+                } else {
+                    ivNote.setImageResource(R.drawable.ic_playlist_add_white_24dp);
+                }
             }
         });
 
@@ -498,11 +519,6 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @OnClick(R.id.ivNoteSubmit)
     public void onNoteSubmit(ImageView iv) {
-        if (etNote.getText().length() > 0) {
-            ivNote.setImageResource(R.drawable.ic_playlist_add_check_white_24dp);
-        } else {
-            ivNote.setImageResource(R.drawable.ic_playlist_add_white_24dp);
-        }
         if (mPickupRequest == null) {
             hideNoteField();
         } else {
@@ -660,7 +676,11 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            //move & zoom map to location of current pickup request
+            //Update address and note field
+            actvAddress.setText(mPickupRequest.getAddress(), false);
+            etNote.setText(mPickupRequest.getNote());
+
+            //Move & zoom map to location of current pickup request
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mPickupRequest.getPosition(), 18);
             mGoogleMap.animateCamera(cameraUpdate);
 
