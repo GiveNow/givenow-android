@@ -49,7 +49,7 @@
     <string name="notif_problem_reported_msg">%1$s reported a problem picking up your donation.</string>
     <string name="navigate">Navigate</string>
     <!--<string name="get_directions">Get directions</string>-->
-    <string name="call_donor">Call donor</string>
+    <string name="call_donor">Call</string>
     <string name="report_problem">Report problem</string>
     <string name="finish_pickup">I picked up this donation</string>
     <string name="report_problem_cancel">Never mind</string>
@@ -73,6 +73,7 @@
     <string name="request_status_waiting">Waiting for a volunteer to accept your request!</string>
     <string name="error_donation_not_canceled">Couldn\'t connect - please try again later.</string>
     <string name="error_note_not_saved">Couldn\'t connect - please try again later.</string>
+    <string name="error_connection_failure">Couldn\'t connect - please try again later.</string>
     <string name="cancel_donation_button">Cancel</string>
     <string name="dialog_cancelDonation_message">Cancel your donation?</string>
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
@@ -84,7 +85,7 @@
     <string name="help_request_pickup_category_chooser">These are currently the most needed items in your area. Choose one or more by tapping the cards. If you\'re donating items that are not listed, choose \"other\".</string>
     <string name="help_request_pickup_current_request">Your request has been received! You\'ll be notified when a driver is ready to pick up your donation.</string>
     <string name="help_title">Help</string>
-    <string name="get_directions">Get Directions</string>
+    <string name="get_directions">Navigate</string>
     <string name="onboarding_1_title">Welcome to GiveNow.</string>
     <string name="onboarding_1_description">GiveNow lets you donate from anywhere.</string>
     <string name="onboarding_2_title">We show you what\'s needed most in your area.</string>
@@ -128,5 +129,7 @@
     <string name="request_status_volunteer_confirmed">Your volunteer will contact you soon at %1$s!</string>
     <string name="dialog_volunteer_accept_pickuprequest_title">Accept this Pickup Request?</string>
     <string name="dialog_volunteer_accept_pickuprequest_message">This will notify the donor that you\'d like to pick their donation up.</string>
+    <string name="dashboard_status_ready">Ready for Pickup</string>
+    <string name="dashboard_button_text_donor">Message</string>
 
 </resources>

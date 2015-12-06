@@ -83,6 +83,11 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
                         .show(getChildFragmentManager(), "phdialog");
             }
         });
+
+        checkVolunteerEligibility();
+    }
+
+    public void checkVolunteerEligibility() {
         Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
                 volunteer -> {
                     uiVolunteerApplied(volunteer);

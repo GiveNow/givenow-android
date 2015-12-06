@@ -24,6 +24,7 @@ import com.parse.ParseQuery;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
+import io.givenow.app.interfaces.ViewPagerChangeListener;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -32,7 +33,8 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
-        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest> {
+        ClusterManager.OnClusterItemInfoWindowClickListener<PickupRequest>,
+        ViewPagerChangeListener {
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
@@ -165,16 +167,16 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         mClusterManager.cluster();
     }
 
-//    @Override
-//    public void onViewPagerShow() {
+    @Override
+    public void onViewPagerShow() {
 //        super.onViewPagerShow();
-//        loadMarkers();
-//    }
+        loadMarkers();
+    }
 
-//    @Override
-//    public void onViewPagerHide() {
+    @Override
+    public void onViewPagerHide() {
 //        super.onViewPagerHide();
-//    }
+    }
 
 
 //    @Override
@@ -213,6 +215,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats
+            //TODO none name?
             markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(pickupRequest.getAddress()));
             markerOptions.snippet(getString(R.string.volunteer_accept_request_marker_cta));
         }

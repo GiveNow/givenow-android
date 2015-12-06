@@ -11,8 +11,19 @@
     <dimen name="custom_marker_padding">2dp</dimen>
     <dimen name="grid_margin">5dp</dimen>
     <dimen name="cell_margin">5dp</dimen>
+
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_bottom_height">15dp</dimen>
     <dimen name="card_corner_radius">3dp</dimen>
-    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_image_height">200dp</dimen>
+    <dimen name="card_text_padding">16dp</dimen>
+    <dimen name="card_text_size">14sp</dimen>
+    <dimen name="card_action_padding">8dp</dimen>
+    <dimen name="card_horizontal_column_width">140dp</dimen>
+    <dimen name="card_height">150dp</dimen>
+    <dimen name="card_action_text">14.0sp</dimen>
+
     <dimen name="palette_height">40dp</dimen>
     <dimen name="category_text_size">14sp</dimen>
     <dimen name="category_cell_margin">10dp</dimen>
@@ -22,8 +33,6 @@
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="bottom_container_height">220dp</dimen>
     <dimen name="dialog_container_padding">24dp</dimen>
-    <dimen name="card_horizontal_column_width">140dp</dimen>
-    <dimen name="card_height">150dp</dimen>
 
     <!-- http://blog.danlew.net/2015/10/12/beware-edittext-on-api-21/ -->
     <dimen name="edit_text_spacing">6dp</dimen>

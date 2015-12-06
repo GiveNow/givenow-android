@@ -1,36 +1,42 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffdee8ee"
+    android:background="@color/colorPrimaryLight"
     tools:context="io.givenow.app.fragments.main.volunteer.DashboardFragment">
 
-    <ListView
-        android:id="@+id/lvItems"
+    <!--<ListView-->
+    <!--android:id="@+id/lvItems"-->
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        tools:listitem="@layout/dashboard_item" />
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:divider="@null"-->
+    <!--android:dividerHeight="0dp"-->
+    <!--tools:listitem="@layout/dashboard_item" />-->
 
     <LinearLayout
         android:id="@+id/emptyView"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
-
         <TextView
             android:id="@+id/tvEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="You haven't volunteered to pick up any requests.\nCheck out the Pickup Requests tab!"
-            android:textAllCaps="true"
-            android:textColor="@color/owc_dark_gray"
-            android:textStyle="bold" />
+            android:padding="@dimen/card_text_padding"
+            android:text="You haven't volunteered to pick up any requests yet.\nCheck out the Pickup Requests tab!"
+            android:textColor="@color/card_text"
+            android:textStyle="italic"/>
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvItems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 </FrameLayout>

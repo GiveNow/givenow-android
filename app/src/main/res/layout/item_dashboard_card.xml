@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/card_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="@dimen/card_elevation">
+
+        <LinearLayout
+            android:id="@+id/dashboard_card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_content_background"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlAvatarArea"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:padding="@dimen/card_text_padding">
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    style="@style/CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginLeft="@dimen/card_text_padding"
+                    android:layout_toRightOf="@id/ivProfile"
+                    android:gravity="center_vertical"
+                    android:text="@string/dashboard_status_ready"/>
+
+                <ImageButton
+                    android:id="@+id/btnMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:background="?android:selectableItemBackground"
+                    android:src="@drawable/ic_menu_moreoverflow"/>
+            </RelativeLayout>
+
+            <!--<TextView-->
+            <!--android:id="@+id/tvName"-->
+            <!--style="@style/CardText.MediumCondensedItalic"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/text_block_side_padding"-->
+            <!--android:paddingRight="@dimen/text_block_side_padding"-->
+            <!--android:text="User N."/>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/card_text_padding">
+
+                <TextView
+                    android:id="@+id/tvAddress"
+                    style="@style/CardText.MediumCondensedItalic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="@dimen/text_block_side_padding"
+                    android:paddingRight="@dimen/text_block_side_padding"
+                    android:text="Tucholskystraße 23"/>
+
+                <TextView
+                    android:id="@+id/tvNote"
+                    style="@style/CardText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/card_text_padding"
+                    android:paddingRight="@dimen/card_text_padding"
+                    android:text="Apartment 10P, buzzer name 'Einstein, A'"
+                    android:visibility="visible"/>
+            </LinearLayout>
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/address_info"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/tvAddress"-->
+            <!--style="@style/CardText"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/card_text_padding"-->
+            <!--android:paddingRight="@dimen/card_text_padding"-->
+            <!--android:text="123 Any St. Long Address, Long Boulevard of the Longnames, Longerica, Longited States of america"-->
+            <!--android:visibility="visible"/>-->
+
+
+            <!--</LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/readyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/map_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/horizontal_static_map_height"
+                    android:layout_marginBottom="@dimen/card_text_padding"
+                    android:adjustViewBounds="true"
+                    android:duplicateParentState="true"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible"/>
+
+                <!--<View-->
+                <!--android:id="@+id/card_action_buttons_sep"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="@dimen/card_spacer_margin"-->
+                <!--android:background="@null"/>-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/card_spacer_margin"
+                    android:gravity="center"
+                    android:weightSum="3">
+
+                    <Button
+                        android:id="@+id/btnCall"
+                        style="@style/CardActionButtonWithTopIcon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_action_dial_phone"
+                        android:text="@string/call_donor"
+                        android:visibility="visible"/>
+
+                    <View
+                        android:layout_width="1.0dip"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/card_spacer_margin"
+                        android:layout_marginEnd="@dimen/card_spacer_margin"
+                        android:layout_marginStart="@dimen/card_spacer_margin"
+                        android:layout_marginTop="@dimen/card_spacer_margin"
+                        android:layout_weight="0"
+                        android:background="@color/card_separator"
+                        android:visibility="visible"/>
+
+                    <Button
+                        android:id="@+id/btnText"
+                        style="@style/CardActionButtonWithTopIcon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_action_send"
+                        android:text="@string/dashboard_button_text_donor"
+                        android:visibility="visible"/>
+
+                    <View
+                        android:layout_width="1.0dip"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/card_spacer_margin"
+                        android:layout_marginEnd="@dimen/card_spacer_margin"
+                        android:layout_marginStart="@dimen/card_spacer_margin"
+                        android:layout_marginTop="@dimen/card_spacer_margin"
+                        android:layout_weight="0"
+                        android:background="@color/card_separator"/>
+
+                    <Button
+                        android:id="@+id/btnMap"
+                        style="@style/CardActionButtonWithTopIcon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/ic_action_navigate_normal"
+                        android:text="@string/get_directions"
+                        android:visibility="visible"/>
+                    <!--<Button-->
+                    <!--android:id="@+id/btnProblem"-->
+                    <!--style="@style/CardActionButtonWithTopIcon"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:drawableTop="@drawable/ic_transport_alert"-->
+                    <!--android:text="@string/report_problem"/>-->
+
+                    <!--<Button-->
+                    <!--android:id="@+id/navigate_button"-->
+                    <!--style="@style/CardMenuButton"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:drawableTop="@drawable/ic_action_navigate_normal"-->
+                    <!--android:text="@string/navigate"-->
+                    <!--android:visibility="visible" />-->
+
+                </LinearLayout>
+
+                <!--<View-->
+                <!--android:id="@+id/separator"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="1.0dip"-->
+                <!--android:layout_marginEnd="@dimen/card_spacer_margin"-->
+                <!--android:layout_marginStart="@dimen/card_spacer_margin"-->
+                <!--android:background="@color/card_separator"/>-->
+                <!--android:layout_marginEnd="@dimen/card_spacer_margin"-->
+                <!--android:layout_marginStart="@dimen/card_spacer_margin"-->
+
+                <Button
+                    android:id="@+id/btnFinishPickup"
+                    style="@style/CardActionButtonNoHairlineWithIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/color_accent"
+                    android:drawableLeft="@drawable/ic_done_white_24dp"
+                    android:drawableStart="@drawable/ic_done_white_24dp"
+                    android:drawableTint="@color/white"
+                    android:text="@string/finish_pickup"
+                    android:textColor="@color/white"
+                    android:visibility="visible"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

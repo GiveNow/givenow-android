@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/dashboard_card"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -33,7 +34,7 @@
                     android:layout_marginTop="10dp">
 
                     <ImageView
-                        android:id="@+id/ivMarker"
+                        android:id="@+id/ivProfile"
                         android:layout_width="@dimen/custom_marker_image"
                         android:layout_height="@dimen/custom_marker_image"
                         android:scaleType="fitCenter"

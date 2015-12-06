@@ -389,7 +389,7 @@ public class MainActivity extends BaseActivity implements
                             volunteerFragment,
                             "vol");
                 } else {
-                    volunteerFragment.loadMarkers();
+                    volunteerFragment.checkVolunteerEligibility();
                     ft.show(volunteerFragment);
                 }
                 fragToHide = volunteerFragment;

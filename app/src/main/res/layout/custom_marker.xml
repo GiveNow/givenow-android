@@ -5,7 +5,7 @@
     android:layout_height="@dimen/custom_marker_image">
 
     <ImageView
-        android:id="@+id/ivMarker"
+        android:id="@+id/ivProfile"
         android:layout_width="@dimen/custom_marker_image"
         android:layout_height="@dimen/custom_marker_image"
         android:scaleType="fitCenter"

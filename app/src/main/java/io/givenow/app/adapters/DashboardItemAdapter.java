@@ -3,171 +3,244 @@ package io.givenow.app.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
+import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.Donation;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.parse.ParseObservable;
 
 
-public class DashboardItemAdapter extends ParseQueryAdapter {
+public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdapter.ViewHolder> {
+    ArrayList<PickupRequest> mItems = new ArrayList<>();
+    private Context mContext;
 
-    public DashboardItemAdapter(Context context) {
-        //items are all items where the pending volunteer = current user.
-        super(context, (QueryFactory<PickupRequest>) PickupRequest::getMyDashboardPickups);
-
+    //TODO might have to go back to parsequeryadapter to get pagination and other goodies?
+    //    public DashboardItemAdapter(Context context) {
+//        //items are all items where the pending volunteer = current user.
+//        super(context, (QueryFactory<PickupRequest>) PickupRequest::getMyDashboardPickups);
+//
+//    }
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mContext = parent.getContext();
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_card, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public View getItemView(ParseObject object, View v, ViewGroup parent) {
-        ViewHolder holder;
-        if (v != null) {
-            holder = (ViewHolder) v.getTag();
-        } else {
-            v = LayoutInflater.from(getContext()).inflate(R.layout.dashboard_card_item, parent, false);
-//            v = View.inflate(getContext(), R.layout.dashboard_card_item, null);
-            holder = new ViewHolder(v);
-            v.setTag(holder);
-        }
-        super.getItemView(object, v, parent);
-
-        final PickupRequest pickupRequest = (PickupRequest) object;
+    public void onBindViewHolder(ViewHolder vh, int position) {
+        final PickupRequest pickupRequest = mItems.get(position);
 
         //set this as default case
-        holder.tvStatus.setText(R.string.volunteer_dashboard_status_waiting);
-        holder.readyLayout.setVisibility(View.GONE);
-//        holder.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
-        holder.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(v.getResources().getString(R.string.donor_default_name)));
-        holder.tvAddress.setText(pickupRequest.getAddress());
+        ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
+                Picasso.with(mContext).load(parseFile.getUrl()).into(vh.ivProfile));
+        vh.tvStatus.setText(R.string.volunteer_dashboard_status_waiting);
+        vh.readyLayout.setVisibility(View.GONE);
+//        vh.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
+//        vh.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(mContext.getResources().getString(R.string.donor_default_name)));
+        vh.tvAddress.setText(pickupRequest.getAddress());
+
+        String note = pickupRequest.getNote();
+        vh.tvNote.setText(note);
+        if (note.isEmpty()) {
+            vh.tvNote.setVisibility(View.GONE);
+        }
 
         pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
             //if there is a confirmed volunteer and it is me, then say it is ready for pickup
             if (confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
-                holder.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
-                holder.readyLayout.setVisibility(View.VISIBLE);
-                setupStaticMap(holder, pickupRequest);
-                setupCardActionButtons(holder, pickupRequest);
+                vh.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
+                vh.readyLayout.setVisibility(View.VISIBLE);
+                setupStaticMap(vh, pickupRequest);
+                setupCardActionButtons(vh, pickupRequest);
             }
         });
-        return v;
     }
 
-
-    private void setupStaticMap(ViewHolder holder, final PickupRequest pickupRequest) {
+    private void setupStaticMap(ViewHolder vh, final PickupRequest pickupRequest) {
+        //TODO: use lite mode maps instead of static maps
         ParseGeoPoint gp = pickupRequest.getLocation();
         final Double lat = gp.getLatitude();
         final Double lng = gp.getLongitude();
-//        final String label = pickupRequest.getName();
+        final String label = pickupRequest.getAddress();
         //TODO: use our custom marker
         String mapUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
                 "center=" + gp.getLatitude() + "," + gp.getLongitude() +
                 "&zoom=15&size=512x512&scale=2" +
                 "&markers=color:blue%7Clabel:" + //pickupRequest.getNumberOfCoats() +
-                "%7C" + gp.getLatitude() + "," + gp.getLongitude() +
+                "%7C" + lat + "," + lng +
                 "&maptype=roadmap&key=AIzaSyAtfxdA2mU_Jk_l6BIFRmasWp4H9jrKTuc";
-        Picasso.with(getContext()).load(mapUrl).into(holder.ivMapContainer);
+        Picasso.with(mContext).load(mapUrl).into(vh.ivMapContainer);
 
-        holder.ivMapContainer.setOnClickListener(v -> {
+        vh.ivMapContainer.setOnClickListener(v -> {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW);
             String uriStr = "geo:<" + lat + ">,<" + lng + ">?q=" + Uri.encode(pickupRequest.getAddress());
-
-//                "geo:" + lat + "," + lng + "?q="+lat+","+ lng +"("")"
             mapIntent.setData(Uri.parse(uriStr));
             mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
-            getContext().startActivity(mapIntent);
+            mContext.startActivity(mapIntent);
         });
     }
 
 
-    private void setupCardActionButtons(ViewHolder holder, final PickupRequest pickupRequest) {
-        holder.btnCall.setTag(ParseUserHelper.getPhoneNumber(pickupRequest.getDonor()));
-        holder.btnCall.setOnClickListener(v -> {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            String donorPhoneNum = (String) v.getTag();
-            donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
-            String uriStr = "tel:" + donorPhoneNum;
-            callIntent.setData(Uri.parse(uriStr));
-            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                Toast.makeText(getContext(), "Intent: Calling "+ uriStr, Toast.LENGTH_LONG).show();
-            getContext().startActivity(callIntent);
-        });
+    private void setupCardActionButtons(ViewHolder vh, final PickupRequest pickupRequest) {
+        ParseObservable.fetchIfNeeded(pickupRequest.getDonor())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(
+                donor -> {
+                    vh.btnCall.setOnClickListener(v -> {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        String donorPhoneNum = ParseUserHelper.getPhoneNumber(pickupRequest.getDonor());
+                        donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
+                        String uriStr = "tel:" + donorPhoneNum;
+                        callIntent.setData(Uri.parse(uriStr));
+                        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        // Toast.makeText(getContext(), "Intent: Calling "+ uriStr, Toast.LENGTH_LONG).show();
+                        mContext.startActivity(callIntent);
+                    });
 
-//        ParseGeoPoint gp = object.getParseGeoPoint("location");
+                    vh.btnText.setOnClickListener(v -> { //TODO send text intent
+                        Intent textMsgIntent = new Intent(Intent.ACTION_VIEW);
+                        String donorPhoneNum = ParseUserHelper.getPhoneNumber(pickupRequest.getDonor());
+                        donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
+                        String uriStr = "sms:" + donorPhoneNum;
+                        textMsgIntent.setData(Uri.parse(uriStr));
+                        textMsgIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        // Toast.makeText(getContext(), "Intent: Calling "+ uriStr, Toast.LENGTH_LONG).show();
+                        mContext.startActivity(textMsgIntent);
+                    });
+                },
+                ErrorDialogs::connectionFailure);
+
         // regular map intent:
         // String uriBegin = "geo:" + gp.getLatitude() + "," + gp.getLongitude();
         // navigation intent:
         String uriBegin = "google.navigation:"; // + gp.getLatitude() + "," + gp.getLongitude();
-        String query = pickupRequest.getAddress();
-        String encodedQuery = Uri.encode(query);
-        String uriString = uriBegin + "q=" + encodedQuery;
-        holder.btnMap.setTag(uriString);
-        holder.btnMap.setOnClickListener(v -> {
+        String uriString = uriBegin + "q=" + Uri.encode(pickupRequest.getAddress());
+        vh.btnMap.setOnClickListener(v -> {
             Intent navIntent = new Intent(Intent.ACTION_VIEW);
-            String uriStr = (String) v.getTag();
-            navIntent.setData(Uri.parse(uriStr));
+            navIntent.setData(Uri.parse(uriString));
             navIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                Toast.makeText(getContext(), "Intent: Mapping "+ uriStr, Toast.LENGTH_LONG).show();
-            getContext().startActivity(navIntent);
+            mContext.startActivity(navIntent);
         });
 
-        holder.btnFinishPickup.setOnClickListener(v -> {
+        vh.btnFinishPickup.setOnClickListener(v -> {
+            //TODO: change card view to donation picked up view
+//            new AlertDialog.Builder(mContext).setTitle("Finish dropoff")
             // DONATION CREATION
-            final Donation donation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationCategories());
-            donation.saveInBackground(e -> {
-                if (e == null) {
-                    //send push to donor
-                    pickupRequest.generatePickupCompleteNotif(getContext());
-                    //create donation, and set it in the PickupRequest
-                    pickupRequest.setDonation(donation);
-                    pickupRequest.saveInBackground();
-                    loadObjects();
-                    //TODO: would be nice to make this card slide away
-                }
-            });
+            final Donation newDonation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationCategories());
+            ParseObservable.save(newDonation).subscribe(
+                    donation -> {
+                        //send push to donor
+                        pickupRequest.generatePickupCompleteNotif(mContext);
+                        //create donation, and set it in the PickupRequest
+                        pickupRequest.setDonation(newDonation);
+                        // loadObjects();
+                        ParseObservable.save(pickupRequest).subscribe(
+                                this::removeItem,
+                                ErrorDialogs::connectionFailure);
+                    },
+                    ErrorDialogs::connectionFailure);
         });
         //TODO: Make Report Problem do something
     }
 
-    static class ViewHolder {
-        @Bind(R.id.tvName)
-        TextView tvName;
-        @Bind(R.id.tvAddress)
-        TextView tvAddress;
+
+    @Override
+    public int getItemCount() {
+        return mItems.size();
+    }
+
+    public void setItems(Collection<PickupRequest> items) {
+        if (items.equals(mItems)) {
+            Log.i("DashboardItemAdapter", "New list is the same as the current list.");
+            return;
+        }
+        mItems.clear();
+        mItems.addAll(items);
+        notifyItemRangeRemoved(0, items.size());
+        notifyDataSetChanged();
+    }
+
+//    public void addOrUpdateItem(PickupRequest item) {
+//        int itemIdx = mItems.indexOf(item);
+//
+//        if (itemIdx != -1) {
+//            mItems.set(itemIdx, item);
+//            notifyItemChanged(itemIdx);
+//        } else {
+//            addItem(item);
+//        }
+//    }
+//
+//    public void addItem(PickupRequest item) {
+//        mItems.add(item);
+//        notifyItemInserted(mItems.size() - 1);
+//    }
+
+    public void removeItem(PickupRequest item) {
+        int index = mItems.indexOf(item);
+        mItems.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    public void clearItems() {
+        mItems.clear();
+        notifyDataSetChanged();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.ivProfile)
+        ImageView ivProfile;
         @Bind(R.id.tvStatus)
         TextView tvStatus;
-        //        @Bind(R.id.tvNumCoats)
-//        TextView tvNumCoats;
-        @Bind(R.id.btnCall)
-        Button btnCall;
-        @Bind(R.id.btnMap)
-        Button btnMap;
-        @Bind(R.id.btnProblem)
-        Button btnProblem;
-        @Bind(R.id.btnFinishPickup)
-        Button btnFinishPickup;
+        @Bind(R.id.btnMenu)
+        ImageButton btnMenu;
+        //        @Bind(R.id.tvName)
+//        TextView tvName;
+        @Bind(R.id.tvAddress)
+        TextView tvAddress;
+        @Bind(R.id.tvNote)
+        TextView tvNote;
         @Bind(R.id.readyLayout)
         LinearLayout readyLayout;
         @Bind(R.id.map_container)
         ImageView ivMapContainer;
+        @Bind(R.id.btnCall)
+        Button btnCall;
+        @Bind(R.id.btnText)
+        Button btnText;
+        @Bind(R.id.btnMap)
+        Button btnMap;
+        //        @Bind(R.id.btnProblem)
+//        Button btnProblem;
+        @Bind(R.id.btnFinishPickup)
+        Button btnFinishPickup;
 
-        public ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }
