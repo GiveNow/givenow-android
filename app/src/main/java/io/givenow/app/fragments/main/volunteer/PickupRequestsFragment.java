@@ -27,9 +27,6 @@ import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
         ClusterManager.OnClusterInfoWindowClickListener<PickupRequest>,
@@ -38,7 +35,6 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
-    private PullToRefreshLayout mPullToRefreshLayout;
 
     public PickupRequestsFragment() {
         // Required empty public constructor
@@ -70,19 +66,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         ButterKnife.bind(this, v);
         setHasOptionsMenu(true);
 
-        // add a PullToRefreshLayout, just so we can use its progress bar, heh.
-        // or i could use the indeterminate actionbar spinner instead. point of debate.
-        // Convert view to ViewGroup
-        ViewGroup viewGroup = (ViewGroup) v;
-        // Create a PullToRefreshLayout manually
-        mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
-        // Setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(getActivity())
-                // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-                .insertLayoutInto(viewGroup)
-                        // Commit the setup to our PullToRefreshLayout
-                .setup(mPullToRefreshLayout);
-
+        // TODO: add a loading indicator of some sort to show map loading?
         return v;
     }
 
@@ -127,10 +111,10 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         if (mClusterManager != null) {
             ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
-            mPullToRefreshLayout.setRefreshing(true);
+//            mPullToRefreshLayout.setRefreshing(true);
             query.findInBackground((list, e) -> {
                 if (list == null) {
-                    mPullToRefreshLayout.setRefreshComplete();
+//                    mPullToRefreshLayout.setRefreshComplete();
                     return;
                 }
 
@@ -140,7 +124,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                     mClusterManager.addItem(item);
                     mClusterManager.cluster();
                 }
-                mPullToRefreshLayout.setRefreshComplete();
+//                mPullToRefreshLayout.setRefreshComplete();
             });
         }
 

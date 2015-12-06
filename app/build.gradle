@@ -129,7 +129,6 @@ dependencies {
     apt 'com.hannesdorfmann.fragmentargs:processor:3.0.0'
 
     compile 'com.google.maps.android:android-maps-utils:0.4'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.9'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     //    compile 'jp.wasabeef:recyclerview-animators:2.0.1'

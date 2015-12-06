@@ -2,6 +2,7 @@ package io.givenow.app.fragments.main.volunteer;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +21,6 @@ import io.givenow.app.models.PickupRequest;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class DashboardFragment extends Fragment implements
         ViewPagerChangeListener {
@@ -30,7 +29,10 @@ public class DashboardFragment extends Fragment implements
     LinearLayout emptyView;
     @Bind(R.id.rvItems)
     RecyclerView rvItems;
-    PullToRefreshLayout mPullToRefreshLayout;
+
+    @Bind(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
+
     private DashboardItemAdapter mAdapter;
 
     public DashboardFragment() {
@@ -47,59 +49,23 @@ public class DashboardFragment extends Fragment implements
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
         ButterKnife.bind(this, v);
 
-//        // Convert view to ViewGroup
-//        ViewGroup viewGroup = (ViewGroup) v;
-
-//        rvItemssetEmptyView(emptyView);
+        mAdapter = new DashboardItemAdapter();
 
         //Grab the Recycler View and list all conversation objects in a vertical list
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvItems.setLayoutManager(layoutManager);
         rvItems.setItemAnimator(new SlideInUpAnimator());
-
-        //The Query Adapter drives the recycler view, and calls back to this activity when the user
-        // taps on a Conversation
-        mAdapter = new DashboardItemAdapter();
-
-        //Attach the Query Adapter to the Recycler View
         rvItems.setAdapter(mAdapter);
-        // Create a PullToRefreshLayout manually
-        mPullToRefreshLayout = new PullToRefreshLayout(container.getContext());
-        // Setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(getActivity())
-                // We need to insert the PullToRefreshLayout into the Fragment's ViewGroup
-                .insertLayoutInto(container)
-                // We need to mark the ListView and it's Empty View as pullable
-                // This is because they are not dirent children of the ViewGroup
-                .theseChildrenArePullable(container)
-                // Set a OnRefreshListener
-                .listener(view -> loadDashboardItems())
-                // Commit the setup to our PullToRefreshLayout
-                .setup(mPullToRefreshLayout);
 
+        swipeContainer.setOnRefreshListener(this::loadDashboardItems);
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorAccent,
+                R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight);
 
-//        mAdapter.addOnQueryLoadListener(new ParseQueryAdapter.OnQueryLoadListener() {
-//            @Override
-//            public void onLoading() {
-//                mPullToRefreshLayout.setRefreshing(true);
-//            }
-//
-//            @Override
-//            public void onLoaded(List list, Exception e) {
-//                mPullToRefreshLayout.setRefreshComplete();
-//            }
-//        });
-
-//        // Swipe-to-dismiss // actually, this doesnt make sense atm
-////        SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(swingBottomInAnimationAdapter, this);
-////        swipeDismissAdapter.setAbsListView(lvItems);
-//
-////        // Undo support (used to confirm whether pickup was dropped off)
-////        ContextualUndoAdapter contextualUndoAdapter = new ContextualUndoAdapter(swipeDismissAdapter, R.layout.dashboard_item_contextual_undo, R.id.btnCompleteDropoff, this);
-////        contextualUndoAdapter.setAbsListView(lvItems);
-//
-////        lvItems.setAdapter(contextualUndoAdapter);
-//        lvItems.setAdapter(swingBottomInAnimationAdapter);
+        // Consider adding Swipe-to-dismiss later
 
         return v;
     }
@@ -115,10 +81,10 @@ public class DashboardFragment extends Fragment implements
 //            mAdapter.loadObjects();
 //        }
 //        mAdapter.clearItems();
+
         if (isResumed()) {
-            mPullToRefreshLayout.setRefreshing(true);
+            swipeContainer.setRefreshing(true);
             ParseObservable.find(PickupRequest.getMyDashboardPickups())
-//                .observeOn(AndroidSchedulers.mainThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .toList()
                     .subscribe(
@@ -130,7 +96,7 @@ public class DashboardFragment extends Fragment implements
                                 } else {
                                     CustomAnimations.circularReveal(emptyView);
                                 }
-                                mPullToRefreshLayout.setRefreshComplete();
+                                swipeContainer.setRefreshing(false);
                             }
                     );
         }

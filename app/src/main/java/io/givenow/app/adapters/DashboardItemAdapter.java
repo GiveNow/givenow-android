@@ -64,9 +64,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
         String note = pickupRequest.getNote();
         vh.tvNote.setText(note);
-        if (note.isEmpty()) {
-            vh.tvNote.setVisibility(View.GONE);
-        }
+        vh.tvNote.setVisibility(note.isEmpty() ? View.GONE : View.VISIBLE);
 
         pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
             //if there is a confirmed volunteer and it is me, then say it is ready for pickup

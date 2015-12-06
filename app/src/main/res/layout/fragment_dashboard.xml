@@ -1,42 +1,46 @@
-<FrameLayout
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipeContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimaryLight"
-    tools:context="io.givenow.app.fragments.main.volunteer.DashboardFragment">
+    android:layout_height="match_parent">
 
-    <!--<ListView-->
-    <!--android:id="@+id/lvItems"-->
-
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:divider="@null"-->
-    <!--android:dividerHeight="0dp"-->
-    <!--tools:listitem="@layout/dashboard_item" />-->
-
-    <LinearLayout
-        android:id="@+id/emptyView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvEmpty"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryLight">
+        <!--<ListView-->
+        <!--android:id="@+id/lvItems"-->
+
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:divider="@null"-->
+        <!--android:dividerHeight="0dp"-->
+        <!--tools:listitem="@layout/dashboard_item" />-->
+
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="@dimen/card_text_padding"
-            android:text="You haven't volunteered to pick up any requests yet.\nCheck out the Pickup Requests tab!"
-            android:textColor="@color/card_text"
-            android:textStyle="italic"/>
-    </LinearLayout>
+            android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvItems"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
-</FrameLayout>
+            <TextView
+                android:id="@+id/tvEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/card_text_padding"
+                android:text="You haven't volunteered to pick up any requests yet.\nCheck out the Pickup Requests tab!"
+                android:textColor="@color/card_text"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
