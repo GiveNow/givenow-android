@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/card_text_padding">
+                android:paddingBottom="@dimen/card_margin">
 
                 <TextView
                     android:id="@+id/tvAddress"
@@ -126,7 +126,7 @@
                     android:id="@+id/map_container"
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/horizontal_static_map_height"
-                    android:layout_marginBottom="@dimen/card_text_padding"
+                    android:layout_marginBottom="@dimen/card_margin"
                     android:adjustViewBounds="true"
                     android:duplicateParentState="true"
                     android:scaleType="centerCrop"
