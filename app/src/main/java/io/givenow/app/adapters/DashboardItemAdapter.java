@@ -145,6 +145,8 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
         vh.btnFinishPickup.setOnClickListener(v -> {
             //TODO: change card view to donation picked up view
+            // could change status to Picked Up
+
 //            new AlertDialog.Builder(mContext).setTitle("Finish dropoff")
             // DONATION CREATION
             final Donation newDonation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationCategories());
@@ -155,9 +157,13 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                         //create donation, and set it in the PickupRequest
                         pickupRequest.setDonation(newDonation);
                         // loadObjects();
-                        ParseObservable.save(pickupRequest).subscribe(
-                                this::removeItem,
-                                ErrorDialogs::connectionFailure);
+                        ParseObservable.save(pickupRequest)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        r -> {
+                                            remove(vh.getAdapterPosition());
+                                        },
+                                        ErrorDialogs::connectionFailure);
                     },
                     ErrorDialogs::connectionFailure);
         });
@@ -198,7 +204,10 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 //    }
 
     public void removeItem(PickupRequest item) {
-        int index = mItems.indexOf(item);
+        remove(mItems.indexOf(item));
+    }
+
+    public void remove(int index) {
         mItems.remove(index);
         notifyItemRemoved(index);
     }
