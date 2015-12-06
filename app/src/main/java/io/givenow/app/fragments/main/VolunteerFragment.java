@@ -12,6 +12,7 @@ import com.parse.ParseUser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.givenow.app.R;
 import io.givenow.app.fragments.PageSlidingTabStripFragment;
 import io.givenow.app.fragments.PhoneNumberVerificationFragment;
@@ -72,33 +73,35 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
         Log.w("VolunteerFragment", "onViewCreated");
         ButterKnife.bind(this, view);
 
-        button.setOnClickListener(btn -> {
-            if (ParseUserHelper.isRegistered()) {
-                applyToVolunteer();
-            } else {
-                //show phone number dialog
-                new PhoneNumberVerificationFragmentBuilder()
-                        .messageResource(R.string.dialog_phoneNumber_for_volunteer)
-                        .build()
-                        .show(getChildFragmentManager(), "phdialog");
-            }
-        });
-
         checkVolunteerEligibility();
     }
 
     public void checkVolunteerEligibility() {
+        Log.d("VolunteerFragment", "Checking volunteer eligibility...");
         Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
                 volunteer -> {
                     uiVolunteerApplied(volunteer);
                 },
                 error -> {
                     //Never applied to be a volunteer
-                    Log.w("VolunteerFragment", "Never applied to be a volunteer");
+                    Log.d("VolunteerFragment", "Never applied to be a volunteer");
                     llOverlay.setVisibility(View.VISIBLE);
                     tvDescription.setText(R.string.volunteer_label_user_has_not_applied);
                     button.setText(R.string.volunteer_button_user_has_not_applied);
                 });
+    }
+
+    @OnClick(R.id.button)
+    public void onClick(Button btn) {
+        if (ParseUserHelper.isRegistered()) {
+            applyToVolunteer();
+        } else {
+            //show phone number dialog
+            new PhoneNumberVerificationFragmentBuilder()
+                    .messageResource(R.string.dialog_phoneNumber_for_volunteer)
+                    .build()
+                    .show(getChildFragmentManager(), "phdialog");
+        }
     }
 
     @Override
@@ -114,7 +117,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
                 error -> {
                     // User logged in, and they never applied to be a volunteer before.
                     // Add them to volunteer table.
-                    Log.w("VolunteerFragment", "User logged in, and they never applied to be a volunteer before. Adding them to volunteer table.");
+                    Log.d("VolunteerFragment", "User logged in, and they never applied to be a volunteer before. Adding them to volunteer table.");
                     Volunteer volunteer = new Volunteer(ParseUser.getCurrentUser(), false);
                     ParseObservable.save(volunteer).observeOn(AndroidSchedulers.mainThread())
                             .subscribe(vol -> uiAwaitingApproval());
@@ -126,7 +129,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
         if (volunteer.isApproved()) {
             //Approved volunteer
             //Create volunteer fragment
-            Log.w("VolunteerFragment", "Approved volunteer");
+            Log.d("VolunteerFragment", "Approved volunteer");
             llOverlay.setVisibility(View.GONE);
         } else {
             //Awaiting approval
@@ -135,7 +138,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
     }
 
     private void uiAwaitingApproval() {
-        Log.w("VolunteerFragment", "Awaiting approval");
+        Log.d("VolunteerFragment", "Awaiting approval");
         llOverlay.setVisibility(View.VISIBLE);
         tvDescription.setText(getString(R.string.volunteer_label_user_has_applied, ParseUserHelper.getPhoneNumber()));
         button.setText(R.string.volunteer_button_user_has_applied);
