@@ -156,6 +156,10 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                         pickupRequest.generatePickupCompleteNotif(mContext);
                         //create donation, and set it in the PickupRequest
                         pickupRequest.setDonation(newDonation);
+                        //TODO: Instead of just disabling the pickupRequest, perhaps deal with
+                        // the completed request in some other way later in the donor fragment, such as
+                        // congratulating the user and offering share/brag buttons.
+                        pickupRequest.setActive(false);
                         // loadObjects();
                         ParseObservable.save(pickupRequest)
                                 .observeOn(AndroidSchedulers.mainThread())
