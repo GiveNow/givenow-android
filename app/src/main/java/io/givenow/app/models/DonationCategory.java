@@ -1,9 +1,13 @@
 package io.givenow.app.models;
 
+import android.content.Context;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.Locale;
 
 @ParseClassName("DonationCategory")
 public class DonationCategory extends ParseObject {
@@ -46,6 +50,22 @@ public class DonationCategory extends ParseObject {
 
     public void setClickable(boolean b) {
         mClickable = b;
+    }
+
+    public String getName(Context context) {
+        if (context.getResources().getConfiguration().locale == Locale.GERMAN) {
+            return getNameDE();
+        } else {
+            return getNameEN();
+        }
+    }
+
+    public String getDescription(Context context) {
+        if (context.getResources().getConfiguration().locale == Locale.GERMAN) {
+            return getDescriptionDE();
+        } else {
+            return getDescriptionEN();
+        }
     }
 
     public String getNameEN() {

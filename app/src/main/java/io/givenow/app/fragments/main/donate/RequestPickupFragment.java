@@ -67,14 +67,16 @@ import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.helpers.ErrorDialogs;
+import io.givenow.app.helpers.RateApp;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 
 public class RequestPickupFragment extends MapHostingFragment
@@ -286,12 +288,40 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onResume() {
         super.onResume();
 
-        PickupRequest.getMyRequests().getFirstInBackground((pickupRequest, e) -> {
-            if (pickupRequest != null) {
-                mPickupRequest = pickupRequest;
-                showCurrentRequestLayout().subscribe();
-            }
-        });
+        fetchPickupRequestStatus();
+    }
+
+    private void fetchPickupRequestStatus() {
+        ParseObservable.first(PickupRequest.getMyRequests()).observeOn(mainThread()).subscribe(
+                pickupRequest -> {
+                    mPickupRequest = pickupRequest;
+                    if (pickupRequest.getDonation().isSome()) {
+                        showCurrentRequestLayout().subscribe();
+                    } else {
+                        fj.data.List<DonationCategory> dc = fj.data.List.list(pickupRequest.getDonationCategories());
+                        new AlertDialog.Builder(getActivity())
+                                .setIcon(R.mipmap.ic_launcher)
+                                .setTitle("Thank you for your donation")
+                                .setMessage("Your generous donation of " +
+                                        dc.head().getName(getContext()) +
+                                        dc.tail().init().foldLeft(
+                                                (s, category) -> ", " + s + category.getName(getContext()),
+                                                "") +
+                                        " and " + dc.last().getName(getContext()) +
+                                        " is complete.")
+                                .setPositiveButton("Done", null)
+                                .setNeutralButton("Rate app 5 stars", (d, w) -> RateApp.rateNow(getActivity()))
+                                .setOnDismissListener(d -> {
+                                    mPickupRequest.setActive(false);
+                                    mPickupRequest.saveInBackground();
+                                })
+                                .show();
+                        //TODO: Share on facebook/twitter etc for bragging rights
+                    }
+                },
+                error -> {
+                    Log.d("RPF", "fetchPickupRequest onError");
+                });
     }
 
     @Override
@@ -388,7 +418,7 @@ public class RequestPickupFragment extends MapHostingFragment
     public void onUserLoginComplete() {
         PickupRequest.getMyRequests().getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(getContext())
                         .setTitle(getString(R.string.dialog_loggedin_existing_donation_found_title))
                         .setMessage(getString(R.string.dialog_loggedin_existing_donation_found_message))
                         .setPositiveButton(getString(R.string.dialog_loggedin_existing_donation_found_button), null)
@@ -439,7 +469,7 @@ public class RequestPickupFragment extends MapHostingFragment
             // save did not succeed
             getActivity().setProgressBarIndeterminateVisibility(false);
             // show error notification dialog with retry or cancel
-            new AlertDialog.Builder(getActivity())
+            new AlertDialog.Builder(getContext())
                     .setTitle(R.string.pickupRequest_retryDialog_title)
                     .setMessage(R.string.pickupRequest_retryDialog_message)
                     .setPositiveButton(R.string.pickupRequest_retryDialog_retryLabel, (dialog, which) -> savePickupRequest())
@@ -523,11 +553,11 @@ public class RequestPickupFragment extends MapHostingFragment
             hideNoteField();
         } else {
             mPickupRequest.setNote(etNote.getText().toString());
-            ParseObservable.save(mPickupRequest).observeOn(AndroidSchedulers.mainThread()).subscribe(
+            ParseObservable.save(mPickupRequest).observeOn(mainThread()).subscribe(
                     pickupRequest -> {
                         hideNoteField();
                     },
-                    ErrorDialogs::connectionFailure);
+                    error -> ErrorDialogs.connectionFailure(getContext(), error));
         }
     }
 
@@ -705,7 +735,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @OnClick(R.id.llCancelContainer)
     public void onCancelDonation(LinearLayout llCancelContainer) {
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(getContext())
                 .setMessage(R.string.dialog_cancelDonation_message)
                 .setPositiveButton(R.string.dialog_cancelDonation_positiveButton, (dialog, which) -> {
                     mPickupRequest.cancel();
@@ -718,7 +748,7 @@ public class RequestPickupFragment extends MapHostingFragment
                                     .build());
                             hideCurrentRequestLayout().subscribe();
                         } else {
-                            new AlertDialog.Builder(getActivity())
+                            new AlertDialog.Builder(getContext())
                                     .setMessage(R.string.error_donation_not_canceled)
                                     .setIcon(android.R.attr.alertDialogIcon)
                                     .show();
@@ -814,7 +844,7 @@ public class RequestPickupFragment extends MapHostingFragment
                 .setValue(ga_label)
                 .build());
 
-        new AlertDialog.Builder(getActivity())
+        new AlertDialog.Builder(getContext())
                 .setIcon(R.drawable.ic_help_outline_black_24dp)
                 .setTitle(R.string.help_title)
                 .setMessage(info)

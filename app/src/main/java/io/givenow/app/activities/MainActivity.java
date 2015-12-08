@@ -48,8 +48,12 @@ import io.givenow.app.fragments.main.profile.ProfileFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestsFragment;
 import io.givenow.app.helpers.CroutonHelper;
+import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
+import rx.parse.ParseObservable;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 public class MainActivity extends BaseActivity implements
         PickupRequestsFragment.PickupRequestDetailInteractionListener,
@@ -207,8 +211,7 @@ public class MainActivity extends BaseActivity implements
         query.getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
 //                    Toast.makeText(getBaseContext(), "found pickup confirmation = " + pickupRequest.getNumberOfCoats() + pickupRequest.getDonationCategories(), Toast.LENGTH_LONG).show();
-//                Log.d("query", "me = " + ParseUser.getCurrentUser().getObjectId() + " donor = " + pickupRequest.getDonor().getObjectId() + " pending = " + getId(pickupRequest.getPendingVolunteer()) + " confirmed " + getId(pickupRequest.getConfirmedVolunteer()));
-
+                Log.d("MainActivity", "Pending Volunteer waiting for response, creating accept volunteer dialog.");
                 //show dialog to user
                 createAcceptPendingVolunteerDialog(pickupRequest);
             }
@@ -216,29 +219,32 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
-        pickupRequest.getPendingVolunteer().foreachDoEffect(pendingVolunteer -> {
-            Option<String> nameOption = ParseUserHelper.getName(pendingVolunteer);
-            String name = getString(R.string.push_notif_volunteer_default_name);
-            if (nameOption.isSome()) {
-                name = ParseUserHelper.getFirstName(pendingVolunteer).orSome(name);
-            }
-            String title = name + getString(R.string.push_notif_volunteer_is_ready_to_pickup);
-            String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
+        pickupRequest.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
+                ParseObservable.fetchIfNeeded(pendingVolunteer).observeOn(mainThread()).subscribe(
+                        volunteer -> {
+                            Option<String> nameOption = ParseUserHelper.getName(volunteer);
+                            String name = getString(R.string.push_notif_volunteer_default_name);
+                            if (nameOption.isSome()) {
+                                name = ParseUserHelper.getFirstName(volunteer).orSome(name);
+                            }
+                            String title = name + getString(R.string.push_notif_volunteer_is_ready_to_pickup);
+                            String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
 
 
-            if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
-                acceptPendingDialog.dismiss();
-            }
-            acceptPendingDialog = new AlertDialog.Builder(this)
+                            if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
+                                acceptPendingDialog.dismiss();
+                            }
+                            acceptPendingDialog = new AlertDialog.Builder(this)
 //                .setTitle(R.string.acceptRequest_submittedDialog_title)
 //                .setMessage(R.string.acceptRequest_submittedDialog_msg)
-                    .setTitle(Html.fromHtml(title)) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
-                    .setMessage(Html.fromHtml(getString(R.string.dialog_accept_pending_volunteer) + address))
-                    .setPositiveButton(getString(R.string.yes), (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
-                    .setNegativeButton(R.string.no, (dialog, which) -> cancelPendingVolunteer(pickupRequest))
-                    .setIcon(R.mipmap.ic_launcher)
-                    .show();
-        });
+                                    .setTitle(Html.fromHtml(title)) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
+                                    .setMessage(Html.fromHtml(getString(R.string.dialog_accept_pending_volunteer) + address))
+                                    .setPositiveButton(getString(R.string.yes), (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
+                                    .setNegativeButton(R.string.no, (dialog, which) -> cancelPendingVolunteer(pickupRequest))
+                                    .setIcon(R.mipmap.ic_launcher)
+                                    .show();
+                        },
+                        error -> ErrorDialogs.connectionFailure(getApplicationContext(), error)));
     }
 
     private void cancelPendingVolunteer(PickupRequest pickupRequest) {
@@ -260,13 +266,16 @@ public class MainActivity extends BaseActivity implements
                 .setLabel(ParseUser.getCurrentUser().getObjectId())
                 .build());
         // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
-        pickupRequest.getPendingVolunteer().foreachDoEffect(volunteer -> {
-            pickupRequest.generateVolunteerConfirmedNotif(this);
-            pickupRequest.setConfirmedVolunteer(volunteer);
+        pickupRequest.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
+                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
+                        volunteer -> {
+                            pickupRequest.generateVolunteerConfirmedNotif(this);
+                            pickupRequest.setConfirmedVolunteer(volunteer);
 
-            //removed this, and added it to done method below
-            pickupRequest.saveInBackground();
-        });
+                            //removed this, and added it to done method below
+                            pickupRequest.saveInBackground();
+                        },
+                        error -> ErrorDialogs.connectionFailure(getApplicationContext(), error)));
     }
 
     //stupid helper method, can go away whenever

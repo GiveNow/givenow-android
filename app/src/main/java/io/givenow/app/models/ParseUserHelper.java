@@ -6,7 +6,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.parse.ParseAnonymousUtils;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
@@ -63,14 +62,7 @@ public class ParseUserHelper {
 
     @NonNull
     public static Option<String> getName(ParseUser user) {
-        String name = null;
-        try {
-            user.fetchIfNeeded();
-            name = user.getString("name");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return Option.fromNull(name);
+        return Option.fromNull(user.getString("name"));
     }
 
     @NonNull

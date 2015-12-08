@@ -64,12 +64,13 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
         String note = pickupRequest.getNote();
         vh.tvNote.setText(note);
-        vh.tvNote.setVisibility(note.isEmpty() ? View.GONE : View.VISIBLE);
+        vh.tvNote.setVisibility(View.GONE);
 
         pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
             //if there is a confirmed volunteer and it is me, then say it is ready for pickup
             if (confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
                 vh.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
+                vh.tvNote.setVisibility(note.isEmpty() ? View.GONE : View.VISIBLE);
                 vh.readyLayout.setVisibility(View.VISIBLE);
                 setupStaticMap(vh, pickupRequest);
                 setupCardActionButtons(vh, pickupRequest);
@@ -128,7 +129,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                         mContext.startActivity(textMsgIntent);
                     });
                 },
-                ErrorDialogs::connectionFailure);
+                error -> ErrorDialogs.connectionFailure(mContext, error));
 
         // regular map intent:
         // String uriBegin = "geo:" + gp.getLatitude() + "," + gp.getLongitude();
@@ -156,10 +157,6 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                         pickupRequest.generatePickupCompleteNotif(mContext);
                         //create donation, and set it in the PickupRequest
                         pickupRequest.setDonation(newDonation);
-                        //TODO: Instead of just disabling the pickupRequest, perhaps deal with
-                        // the completed request in some other way later in the donor fragment, such as
-                        // congratulating the user and offering share/brag buttons.
-                        pickupRequest.setActive(false);
                         // loadObjects();
                         ParseObservable.save(pickupRequest)
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -167,9 +164,9 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                                         r -> {
                                             remove(vh.getAdapterPosition());
                                         },
-                                        ErrorDialogs::connectionFailure);
+                                        error -> ErrorDialogs.connectionFailure(mContext, error));
                     },
-                    ErrorDialogs::connectionFailure);
+                    error -> ErrorDialogs.connectionFailure(mContext, error));
         });
         //TODO: Make Report Problem do something
     }
@@ -181,17 +178,19 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
     }
 
     public void setItems(Collection<PickupRequest> items) {
-        if (items.equals(mItems)) {
+        Log.i("DashboardItemAdapter", items.size() + " dashboard items received.");
+        if (items.equals(mItems)) { //TODO still doesnt work, prob due to pr.getDonor being different
             Log.i("DashboardItemAdapter", "New list is the same as the current list.");
             return;
         }
         mItems.clear();
-        mItems.addAll(items);
         notifyItemRangeRemoved(0, items.size());
-        notifyDataSetChanged();
+        fj.data.List.list(items)
+                .foreachDoEffect(this::addItem);
+        Log.i("DashboardItemAdapter", items.size() + " dashboard items added.");
     }
 
-//    public void addOrUpdateItem(PickupRequest item) {
+    //    public void addOrUpdateItem(PickupRequest item) {
 //        int itemIdx = mItems.indexOf(item);
 //
 //        if (itemIdx != -1) {
@@ -202,10 +201,10 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 //        }
 //    }
 //
-//    public void addItem(PickupRequest item) {
-//        mItems.add(item);
-//        notifyItemInserted(mItems.size() - 1);
-//    }
+    public void addItem(PickupRequest item) {
+        mItems.add(item);
+        notifyItemInserted(mItems.size() - 1);
+    }
 
     public void removeItem(PickupRequest item) {
         remove(mItems.indexOf(item));

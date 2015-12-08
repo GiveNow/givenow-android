@@ -20,7 +20,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -49,6 +48,7 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
 //        }
     }
 
+    @NonNull
     public Option<Integer> getCardWidth() {
         return cardWidth;
     }
@@ -108,13 +108,8 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         }
 
         if (vh.tvName != null && vh.tvDescription != null) {
-            if (Locale.getDefault() == Locale.GERMAN) { //TODO locale doesnt work correctly
-                vh.tvName.setText(donationCategory.getNameDE());
-                vh.tvDescription.setText(donationCategory.getDescriptionDE());
-            } else {
-                vh.tvName.setText(donationCategory.getNameEN());
-                vh.tvDescription.setText(donationCategory.getDescriptionEN());
-            }
+            vh.tvName.setText(donationCategory.getName(mContext));
+            vh.tvDescription.setText(donationCategory.getDescription(mContext));
         }
 
         Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(vh.imageView, new Callback() {

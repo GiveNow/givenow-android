@@ -3,6 +3,7 @@ package io.givenow.app.fragments.main.volunteer;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -109,6 +110,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     public void loadMarkers() {
         if (mClusterManager != null) {
+            Log.d("PickupRequestsFragment", "Loading markers...");
             ParseQuery<PickupRequest> query = PickupRequest.getAllActiveRequests();
 
 //            mPullToRefreshLayout.setRefreshing(true);
@@ -124,6 +126,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                     mClusterManager.addItem(item);
                     mClusterManager.cluster();
                 }
+                Log.d("PickupRequestsFragment", list.size() + " markers loaded, done.");
 //                mPullToRefreshLayout.setRefreshComplete();
             });
         }

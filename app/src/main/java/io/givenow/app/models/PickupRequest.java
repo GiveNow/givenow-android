@@ -19,9 +19,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import fj.data.Option;
 import io.givenow.app.R;
+import io.givenow.app.helpers.ErrorDialogs;
+import rx.parse.ParseObservable;
 
 /**
  * Data model for a post.
@@ -68,9 +71,11 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public static ParseQuery<PickupRequest> getQuery() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
-        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        q.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
         q.whereEqualTo("isActive", true);
+        q.include("donor");
         q.include("donationCategories");
+        // may want to include other pointers, but this should do for now
         return q;
     }
 
@@ -88,6 +93,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public static ParseQuery<PickupRequest> getMyDashboardPickups() {
         ParseQuery<PickupRequest> q = getQuery();
+        q.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
         q.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
         //we actually don't want this because then it is too restrictive
 //        q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
@@ -207,7 +213,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("donor", value);
     }
 
-    public Collection<DonationCategory> getDonationCategories() {
+    public List<DonationCategory> getDonationCategories() {
         return getList("donationCategories");
 
     }
@@ -224,8 +230,8 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("pendingVolunteer", value);
     }
 
-    public Donation getDonation() {
-        return (Donation) getParseObject("donation");
+    public Option<Donation> getDonation() {
+        return Option.fromNull((Donation) getParseObject("donation"));
     }
 
     public void setDonation(Donation donation) {
@@ -287,37 +293,64 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public void generateVolunteerConfirmedNotif(Context context) {
         //send pickup confirmed notif to volunteer
-        this.getPendingVolunteer().foreachDoEffect(volunteer ->
-                generatePushNotif(volunteer,
-                        context.getString(R.string.notif_volunteer_confirmed_title),
-                        context.getString(R.string.notif_volunteer_confirmed_msg,
-                                ParseUserHelper.getFirstName(volunteer).orSome("A donor")),
-                        VOLUNTEER_CONFIRMED));
+        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
+                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
+                        volunteer -> generatePushNotif(volunteer,
+                                context.getString(R.string.notif_volunteer_confirmed_title),
+                                context.getString(R.string.notif_volunteer_confirmed_msg,
+                                        ParseUserHelper.getFirstName(volunteer).orSome("A donor")),
+                                VOLUNTEER_CONFIRMED),
+                        error -> ErrorDialogs.connectionFailure(context, error)));
     }
 
     public void generatePickupCompleteNotif(Context context) {
         //send pickup complete notif back to donor
-        this.getPendingVolunteer().foreachDoEffect(volunteer ->
-                generatePushNotif(volunteer,
-                        context.getString(R.string.notif_pickup_complete_title),
-                        context.getString(R.string.notif_pickup_complete_msg,
-                                ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
-                        PICKUP_COMPLETE));
+        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
+                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
+                        volunteer -> generatePushNotif(volunteer,
+                                context.getString(R.string.notif_pickup_complete_title),
+                                context.getString(R.string.notif_pickup_complete_msg,
+                                        ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
+                                PICKUP_COMPLETE),
+                        error -> ErrorDialogs.connectionFailure(context, error)));
     }
 
     public void reportProblem(Context context) {
         //there's a problem. send a notif to the donor with the problem description.
-        this.getPendingVolunteer().foreachDoEffect(volunteer ->
-                generatePushNotif(volunteer,
-                        context.getResources().getString(R.string.notif_problem_reported_title),
-                        context.getResources().getString(R.string.notif_problem_reported_msg,
-                                ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
-                        PROBLEM_REPORTED));
+        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
+                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
+                        volunteer -> generatePushNotif(volunteer,
+                                context.getResources().getString(R.string.notif_problem_reported_title),
+                                context.getResources().getString(R.string.notif_problem_reported_msg,
+                                        ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
+                                PROBLEM_REPORTED),
+                        error -> ErrorDialogs.connectionFailure(context, error)));
     }
 
     /* Cancel this pickup request.
      */
     public void cancel() {
         setActive(false);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PickupRequest that = (PickupRequest) o;
+
+        return getObjectId().equals(that.getObjectId())
+                && getActive() == that.getActive()
+                && getLocation().equals(that.getLocation())
+                && getAddress().equals(that.getAddress())
+                && getNote().equals(that.getNote())
+                && getDonor().equals(that.getDonor())
+                && getDonationCategories().equals(that.getDonationCategories());
+    }
+
+    @Override
+    public int hashCode() {
+        return getObjectId().hashCode();
     }
 }
