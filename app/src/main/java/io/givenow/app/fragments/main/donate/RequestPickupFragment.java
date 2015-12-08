@@ -295,22 +295,22 @@ public class RequestPickupFragment extends MapHostingFragment
         ParseObservable.first(PickupRequest.getMyRequests()).observeOn(mainThread()).subscribe(
                 pickupRequest -> {
                     mPickupRequest = pickupRequest;
-                    if (pickupRequest.getDonation().isSome()) {
+                    if (pickupRequest.getDonation().isNone()) {
                         showCurrentRequestLayout().subscribe();
                     } else {
                         fj.data.List<DonationCategory> dc = fj.data.List.list(pickupRequest.getDonationCategories());
                         new AlertDialog.Builder(getActivity())
                                 .setIcon(R.mipmap.ic_launcher)
-                                .setTitle("Thank you for your donation")
-                                .setMessage("Your generous donation of " +
+                                .setTitle(R.string.donation_complete_title)
+                                .setMessage(getString(R.string.donation_complete_message_head) + " " +
                                         dc.head().getName(getContext()) +
                                         dc.tail().init().foldLeft(
                                                 (s, category) -> ", " + s + category.getName(getContext()),
                                                 "") +
-                                        " and " + dc.last().getName(getContext()) +
-                                        " is complete.")
-                                .setPositiveButton("Done", null)
-                                .setNeutralButton("Rate app 5 stars", (d, w) -> RateApp.rateNow(getActivity()))
+                                        " " + getString(R.string.and) + " " + dc.last().getName(getContext()) +
+                                        " " + getString(R.string.donation_complete_message_tail))
+                                .setPositiveButton(R.string.done, null)
+                                .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
                                 .setOnDismissListener(d -> {
                                     mPickupRequest.setActive(false);
                                     mPickupRequest.saveInBackground();

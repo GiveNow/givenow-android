@@ -131,5 +131,11 @@
     <string name="dialog_volunteer_accept_pickuprequest_message">This will notify the donor that you\'d like to pick their donation up.</string>
     <string name="dashboard_status_ready">Ready for Pickup</string>
     <string name="dashboard_button_text_donor">Message</string>
+    <string name="donation_complete_title">Thank you for your donation</string>
+    <string name="donation_complete_message_head">Your generous donation of</string>
+    <string name="and">and</string>
+    <string name="donation_complete_message_tail">is complete.</string>
+    <string name="done">done</string>
+    <string name="rate_app">Rate app 5 stars</string>
 
 </resources>
