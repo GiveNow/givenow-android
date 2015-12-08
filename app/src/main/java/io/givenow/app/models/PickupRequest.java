@@ -260,7 +260,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
 
-
     private void generatePushNotif(ParseUser target_user, String title, String message, String type) {
         ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
         pushQuery.whereEqualTo("user", target_user);

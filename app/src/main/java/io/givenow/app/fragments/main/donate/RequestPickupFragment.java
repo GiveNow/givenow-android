@@ -305,7 +305,7 @@ public class RequestPickupFragment extends MapHostingFragment
                                 .setMessage(getString(R.string.donation_complete_message_head) + " " +
                                         dc.head().getName(getContext()) +
                                         dc.tail().init().foldLeft(
-                                                (s, category) -> ", " + s + category.getName(getContext()),
+                                                (s, category) -> s + ", " + category.getName(getContext()),
                                                 "") +
                                         " " + getString(R.string.and) + " " + dc.last().getName(getContext()) +
                                         " " + getString(R.string.donation_complete_message_tail))
