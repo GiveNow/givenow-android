@@ -2,6 +2,7 @@ package io.givenow.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -45,6 +46,21 @@ public class GiveNowApplication extends Application {
             GoogleAnalytics.getInstance(this).setDryRun(true);
             //disable MixPanel
             setMixPanelProjectToken("none");
+
+            //enable strict mode
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork()
+                    .detectAll() // for all detectable problems
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
         } else {
             Log.d("Application", "BuildConfig.DEBUG is false. Running in release mode.");
             //enable crashlytics
