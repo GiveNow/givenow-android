@@ -48,44 +48,11 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- TODO excise -->
-        <LinearLayout
-            android:id="@+id/llDonorName"
-            android:layout_width="fill_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_below="@id/llConfirmInfo"
-            android:background="#ffdde8ed"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/ivDonorIcon"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0"
-                android:padding="8dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/iconmonstr_user_icon_256" />
-
-            <TextView
-                android:id="@+id/tvDonorName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:text="User Name"
-                android:textAllCaps="false"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/accent" />
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/llAddress"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_below="@id/llDonorName"
+            android:layout_below="@id/llConfirmInfo"
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
@@ -108,7 +75,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:inputType="textPostalAddress"
                 android:text="123 Address Lane"
                 android:textColor="@color/white"/>
         </LinearLayout>
