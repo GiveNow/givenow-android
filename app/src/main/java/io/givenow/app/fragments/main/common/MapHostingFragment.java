@@ -19,8 +19,10 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
@@ -33,20 +35,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import fj.data.Option;
 import io.givenow.app.R;
-import io.givenow.app.fragments.GoogleMapFragment;
-import io.givenow.app.helpers.MapFragmentCounter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-
-//import com.google.android.gms.location.LocationClient;
-
 public class MapHostingFragment extends Fragment
         implements
-        GoogleMapFragment.OnGoogleMapFragmentListener,
-        GoogleApiClient.ConnectionCallbacks,
         OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleMap mGoogleMap;
@@ -57,10 +53,9 @@ public class MapHostingFragment extends Fragment
     protected FrameLayout flMapLayout;
 
     private GoogleApiClient mGoogleApiClient;
-    private boolean mZoomToLocation;
+    private boolean mZoomToLocation = true;
     private Geocoder mGeocoder;
-    //    private boolean mShouldAttachMapFragmentOnStart = false;
-//    private boolean isVisibleInViewPager = false;
+    private CameraPosition mCameraPosition;
 
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
@@ -69,6 +64,7 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w(this.getClass().getSimpleName(), "onCreate.");
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
@@ -78,30 +74,25 @@ public class MapHostingFragment extends Fragment
                 .build();
 
         mGeocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-        if (savedInstanceState == null) {
-            mZoomToLocation = true;
-        } else {
-            //TODO: Re-enable mapfragment saving for correct app restoring behavior.
-            Log.w(((Object) this).getClass().getSimpleName(), "loading mapFragment");
-            // Disabled map fragment reloading for now because of how fragile GPS 6.5.87 is.
-//            mapFragment = (GoogleMapFragment) getChildFragmentManager().getFragment(savedInstanceState, "mapFragment");
-//            mapFragment = (GoogleMapFragment) getFragmentManager().getFragment(savedInstanceState, ((Object) this).getClass().getSimpleName());
-//            mapFragment = (GoogleMapFragment) getChildFragmentManager().findFragmentById(R.id.flMapContainer);
-//            mapFragment = savedInstanceState.getParcelable("mapFragment");
-            Log.w(((Object) this).getClass().getSimpleName(), "mapFragment loaded");
-            mZoomToLocation = false;
-        }
     }
 
     protected void attachMapFragment() {
         if (isAdded()) {
             Log.w(this.getClass().getSimpleName(), "Attaching map fragment now.");
-            mapFragment = SupportMapFragment.newInstance();
+            if (mCameraPosition != null) {
+                Log.w(this.getClass().getSimpleName(), "Initializing map with saved camera position " + mCameraPosition.toString());
+                mapFragment = SupportMapFragment.newInstance(new GoogleMapOptions()
+                        .camera(mCameraPosition));
+                mZoomToLocation = false;
+            } else {
+                Log.w(this.getClass().getSimpleName(), "Initializing map with default camera position.");
+                mapFragment = SupportMapFragment.newInstance();
+                mZoomToLocation = true;
+            }
+
             getChildFragmentManager().beginTransaction()
                     .add(R.id.flMapContainer, mapFragment, "MAP")
                     .commit();
-            mZoomToLocation = true;
             mGoogleApiClient.connect();
 
             mapFragment.getMapAsync(this);
@@ -113,25 +104,25 @@ public class MapHostingFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        if (mapFragment != null) {
+        if (mapFragment != null) {
+            outState.putParcelable("mCameraPosition", mapFragment.getMap().getCameraPosition());
 //            pauseMapFragment();
 //            getChildFragmentManager().putFragment(outState, "mapFragment", mapFragment);
-//        }
-//        Log.w(this.getClass().getSimpleName(), "onSaveInstanceState: Fragments saved");
+        }
+        Log.w(this.getClass().getSimpleName(), "onSaveInstanceState: Map saved");
     }
 
     @Override
-    public void onActivityCreated(Bundle inState) {
-        super.onActivityCreated(inState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         Log.w(this.getClass().getSimpleName(), "onActivityCreated called.");
-//        if (inState != null) {
-//            mapFragment = (MapFragment) getChildFragmentManager().getFragment(inState, "mapFragment");
-//            if (mapFragment != null) {
-////                attachMapFragment();
-////                resumeMapFragment();
-//            }
-//            Log.w(((Object) this).getClass().getSimpleName(), "onActivityCreated: Fragments restored");
-//        }
+        if (savedInstanceState != null) {
+            mCameraPosition = savedInstanceState.getParcelable("mCameraPosition");
+            Log.w(this.getClass().getSimpleName(), "onActivityCreated: Map restored");
+        }
+
+        Log.w(this.getClass().getSimpleName(), "onActivityCreated: Calling attachMapFragment.");
+        attachMapFragment();
     }
 
     @Override
@@ -200,76 +191,6 @@ public class MapHostingFragment extends Fragment
         return new LatLngBounds(southwest, northeast);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        if (isVisibleInViewPager) {
-        attachMapFragment();
-//        }
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e(getClass().getSimpleName(), "OnPause.");
-
-        // To work around "DirectByteBuffer.put Attempt to get length of null array" errors in the Google Maps 6.5.87 library,
-        // we must not have more than one map fragment running at once.
-        // When we want a map fragment to Resume, any other map fragments must Pause, or the fatal crash occurs.
-        // By judicious use of the mapFragment's onPause and onResume calls, we can facilitate this.
-        if (mapFragment != null) {
-            if (mapFragment.isAdded()) {
-                mapFragment.onPause();
-                MapFragmentCounter.dec();
-                Log.w(this.getClass().getSimpleName(), "mapFragment paused.");
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e(getClass().getSimpleName(), "OnResume.");
-
-        if (mapFragment != null) {
-            if (mapFragment.isAdded()) {
-                mapFragment.onResume();
-                MapFragmentCounter.inc();
-                Log.w(this.getClass().getSimpleName(), "mapFragment resumed.");
-            } else {
-                // possible cause of crashes after long-term returns from background.
-                // if this is hit, do we need to attach the map fragment?
-                Log.e(this.getClass().getSimpleName(), "onResume: mapFragment is not null, but is not Added!.");
-            }
-        } else {
-//            if (isVisibleInViewPager) { //gotta detect if we're visible and only then attach
-            attachMapFragment();
-//            }
-        }
-    }
-
-//    @Override
-//    public void onViewPagerShow() {
-//        isVisibleInViewPager = true;
-//        Log.w(this.getClass().getSimpleName(), "I've been marked as visible in the Viewpager.");
-//    }
-//
-//    @Override
-//    public void onViewPagerHide() {
-//        isVisibleInViewPager = false;
-//    }
-
-    /*
-     * Called when the Fragment is no longer visible.
-     */
-    @Override
-    public void onStop() {
-        // Disconnecting the client invalidates it.
-//        disconnectMap();
-        super.onStop();
-    }
-
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -299,8 +220,7 @@ public class MapHostingFragment extends Fragment
 
     public Option<LatLng> getLastLocation() {
         return Option.fromNull(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient))
-                .map(location -> new LatLng(location.getLatitude(), location.getLongitude())
-                );
+                .map(location -> new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     @Override
