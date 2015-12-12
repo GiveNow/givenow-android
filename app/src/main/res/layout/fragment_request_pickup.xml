@@ -8,6 +8,66 @@
     android:focusableInTouchMode="true"
     tools:context="io.givenow.app.fragments.main.donate.RequestPickupFragment">
 <!-- TODO: https://www.google.com/design/spec/components/text-fields.html#text-fields-single-line-text-field -->
+    <FrameLayout
+        android:id="@+id/flMapLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/flBottomContainer"
+        android:layout_below="@+id/llAddressInfoContainer"
+        android:layout_marginLeft="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <FrameLayout
+            android:id="@+id/flMapContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"></FrameLayout>
+
+        <io.givenow.app.customviews.AdaptableGradientRectView
+            android:id="@+id/agrv"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.0"
+            app:gradientColorFrom="@color/white"
+            app:gradientColorTo="@color/colorPrimaryLight"/>
+
+        <ImageView
+            android:id="@+id/btnMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/ic_marker"/>
+
+        <io.givenow.app.customviews.SlidingRelativeLayout
+            android:id="@+id/slidingRLContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ECEFF1"
+            android:elevation="4dp"
+            android:visibility="invisible">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:indeterminate="true"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvDonationCategories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/cell_margin"
+                android:paddingTop="@dimen/cell_margin">
+
+            </android.support.v7.widget.RecyclerView>
+        </io.givenow.app.customviews.SlidingRelativeLayout>
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/llNote"
         android:layout_width="match_parent"
@@ -188,77 +248,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/flMapLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/flBottomContainer"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/llAddressInfoContainer"
-        android:layout_marginLeft="0dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-
-        <FrameLayout
-            android:id="@+id/flMapContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical"></FrameLayout>
-
-        <!--<EditText-->
-        <!--android:id="@+id/etAddress"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="top"-->
-        <!--android:hint="Address"-->
-        <!--android:inputType="textPostalAddress"-->
-        <!--android:minHeight="56dp"-->
-        <!--android:padding="15dp"-->
-        <!--android:textColor="@color/accent"-->
-        <!--android:textSize="14sp" />-->
-        <io.givenow.app.customviews.AdaptableGradientRectView
-            android:id="@+id/agrv"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.0"
-            app:gradientColorFrom="@color/white"
-            app:gradientColorTo="@color/colorPrimaryLight" />
-
-        <ImageView
-            android:id="@+id/btnMarker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/ic_marker" />
-
-        <io.givenow.app.customviews.SlidingRelativeLayout
-            android:id="@+id/slidingRLContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ECEFF1"
-            android:elevation="4dp"
-            android:visibility="invisible">
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:indeterminate="true"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvDonationCategories"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/cell_margin"
-                android:paddingTop="@dimen/cell_margin">
-
-            </android.support.v7.widget.RecyclerView>
-        </io.givenow.app.customviews.SlidingRelativeLayout>
-
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/flBottomContainer"

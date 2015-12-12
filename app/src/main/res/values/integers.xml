@@ -219,4 +219,5 @@
     <integer name="WallpaperPicker">6851</integer>
     <integer name="Widget">6849</integer>
     <integer name="WidgetPicker">6852</integer>
+    <integer name="revealAnimTime">300</integer>
 </resources>

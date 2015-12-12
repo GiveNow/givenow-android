@@ -103,6 +103,7 @@ public class CustomAnimations {
             anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, finalRadius);
         } else { //Or fall back to a simple fade in
             anim = AnimatorInflater.loadAnimator(v.getContext(), R.animator.fade_in);
+            anim.setDuration(v.getResources().getInteger(android.R.integer.config_shortAnimTime));
             anim.setTarget(v);
         }
 
@@ -141,6 +142,7 @@ public class CustomAnimations {
             anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, initialRadius, 0);
         } else { //Or fall back to a simple fade out
             anim = AnimatorInflater.loadAnimator(v.getContext(), R.animator.fade_out);
+            anim.setDuration(v.getResources().getInteger(android.R.integer.config_shortAnimTime));
             anim.setTarget(v);
         }
 
