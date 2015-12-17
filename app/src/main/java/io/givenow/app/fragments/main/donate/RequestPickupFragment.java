@@ -292,7 +292,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void fetchPickupRequestStatus() {
-        ParseObservable.first(PickupRequest.getMyRequests()).observeOn(mainThread()).subscribe(
+        ParseObservable.first(PickupRequest.queryMyRequests()).observeOn(mainThread()).subscribe(
                 pickupRequest -> {
                     mPickupRequest = pickupRequest;
                     if (pickupRequest.getDonation().isNone()) {
@@ -416,7 +416,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @Override
     public void onUserLoginComplete() {
-        PickupRequest.getMyRequests().getFirstInBackground((pickupRequest, e) -> {
+        PickupRequest.queryMyRequests().getFirstInBackground((pickupRequest, e) -> {
             if (pickupRequest != null) {
                 new AlertDialog.Builder(getContext())
                         .setTitle(getString(R.string.dialog_loggedin_existing_donation_found_title))

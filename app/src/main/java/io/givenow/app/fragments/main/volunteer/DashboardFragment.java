@@ -85,14 +85,14 @@ public class DashboardFragment extends Fragment implements
         if (isResumed()) {
             swipeContainer.setRefreshing(true);
             Log.d("DashboardFragment", "Finding Dashboard items...");
-            ParseObservable.find(PickupRequest.getMyDashboardPickups()) //todo possible hang is here
+            ParseObservable.find(PickupRequest.queryMyDashboardPickups()) //todo possible hang is here
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             mAdapter::setItems,
                             error -> Log.e("DashboardFragment", "Error getting dashboard pickups: " + error.getMessage()),
                             () -> { //OnComplete:
-                                Log.d("DashboardFragment", "getMyDashboardPickups OnComplete");
+                                Log.d("DashboardFragment", "queryMyDashboardPickups OnComplete");
                                 if (mAdapter.getItemCount() > 0) {
                                     CustomAnimations.circularHide(emptyView);
                                 } else {

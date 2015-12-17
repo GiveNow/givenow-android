@@ -39,7 +39,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
     //TODO might have to go back to parsequeryadapter to get pagination and other goodies?
     //    public DashboardItemAdapter(Context context) {
 //        //items are all items where the pending volunteer = current user.
-//        super(context, (QueryFactory<PickupRequest>) PickupRequest::getMyDashboardPickups);
+//        super(context, (QueryFactory<PickupRequest>) PickupRequest::queryMyDashboardPickups);
 //
 //    }
     @Override

@@ -22,7 +22,7 @@ public class PickupsAdapter extends ParseQueryAdapter {
 
     public PickupsAdapter(Context context) {
 
-        super(context, (QueryFactory<PickupRequest>) PickupRequest::getMyCompletedPickups);
+        super(context, PickupRequest::queryMyCompletedPickups);
     }
 
     @Override

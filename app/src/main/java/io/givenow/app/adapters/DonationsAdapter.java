@@ -9,17 +9,17 @@ import android.widget.TextView;
 import com.parse.ParseObject;
 import com.parse.ParseQueryAdapter;
 
-import io.givenow.app.R;
-import io.givenow.app.models.Donation;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.givenow.app.R;
+import io.givenow.app.models.Donation;
 
 public class DonationsAdapter extends ParseQueryAdapter {
 
     //public DonationsAdapter(Context context, final ParseUser donor) {
     public DonationsAdapter(Context context) {
-        super(context, (QueryFactory<Donation>) Donation::getAllMyDonations);
+        super(context, (QueryFactory<Donation>) Donation::queryAllMyDonations);
     }
 
     @Override

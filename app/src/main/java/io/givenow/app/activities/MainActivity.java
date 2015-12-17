@@ -215,7 +215,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void checkForPendingRequests() {
-        ParseQuery<PickupRequest> query = PickupRequest.getMyPendingRequests();
+        ParseQuery<PickupRequest> query = PickupRequest.queryMyPendingRequests();
 
         //only want to get 1 at a time (there shouldn't be more than 1 anyway)
         query.getFirstInBackground((pickupRequest, e) -> {

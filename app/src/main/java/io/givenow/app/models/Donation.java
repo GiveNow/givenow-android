@@ -10,19 +10,10 @@ import java.util.Collection;
 
 @ParseClassName("Donation")
 public class Donation extends ParseObject {
-    public static final String CASH = "Cash";
-    public static final String COAT = "Coat";
-    public static final String Misc = "Misc";
 
     public Donation() {
         super();
     }
-
-//    public Donation(ParseUser donor, String donationType, double donationValue) {
-//        super();
-//        setDonor(donor);
-//        setDonationCategories(donationType);
-//    }
 
     public Donation(ParseUser donor, Collection<DonationCategory> donationCategories) {
         super();
@@ -30,7 +21,7 @@ public class Donation extends ParseObject {
         setDonationCategories(donationCategories);
     }
 
-    public static ParseQuery<Donation> getAllMyDonations() {
+    public static ParseQuery<Donation> queryAllMyDonations() {
         ParseQuery<Donation> q = ParseQuery.getQuery(Donation.class);
         q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         q.whereEqualTo("donor", ParseUser.getCurrentUser());

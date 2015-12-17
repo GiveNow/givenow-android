@@ -111,7 +111,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void loadMarkers() {
         if (mClusterManager != null) {
             Log.d("PickupRequestsFragment", "Loading markers...");
-            ParseQuery<PickupRequest> query = PickupRequest.getAllOpenRequests();
+            ParseQuery<PickupRequest> query = PickupRequest.queryAllOpenRequests();
 
 //            mPullToRefreshLayout.setRefreshing(true);
             query.findInBackground((list, e) -> {
