@@ -24,8 +24,7 @@ public class ParseUserHelper {
     }
 
     public static boolean isRegistered(ParseUser user) {
-        //        return ParseUserHelper.getPhoneNumber(ParseUser.getCurrentUser()).isSome();
-        return !ParseAnonymousUtils.isLinked(user);// ParseUser.getCurrentUser().getUsername() == null;
+        return !ParseAnonymousUtils.isLinked(user); // isLinked() returns True if Anonymous.
     }
 
     public static void associateWithDevice(ParseUser user) {
@@ -75,7 +74,6 @@ public class ParseUserHelper {
     }
 
     public static String splitIntoFirstName(String name) {
-        //TODO: don't be so ghetto . . . we only want to show first name, but this is a sucky way to do it
         return name.split(" ")[0];
     }
 
