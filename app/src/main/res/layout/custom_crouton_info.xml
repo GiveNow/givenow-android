@@ -10,7 +10,7 @@
         android:id="@+id/rlMain"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/background"
+        android:background="@color/colorPrimary"
         android:padding="15dp">
 
 
@@ -18,9 +18,10 @@
             android:id="@+id/ivCroutonIcon"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/iconmonstr_info_6_icon_256" />
+            android:src="@drawable/ic_info_outline_white_24dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:layout_marginLeft="10dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/accent"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
 
             <TextView
@@ -48,7 +49,7 @@
                 android:layout_below="@+id/tvCroutonTitle"
                 android:text=""
                 android:textAllCaps="true"
-                android:textColor="@color/owc_dark_gray"
+                android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
