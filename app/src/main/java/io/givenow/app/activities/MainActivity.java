@@ -37,6 +37,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import fj.data.Option;
 import io.givenow.app.GiveNowApplication;
@@ -60,9 +62,12 @@ public class MainActivity extends BaseActivity implements
         PickupRequestDetailFragment.PickupRequestConfirmedListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-    DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mDrawerToggle;
-
+    @Bind(R.id.navigation_view)
+    NavigationView navigationView;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    ImageView mProfileImage;
     private int mSelectedItemId;
     private PickupRequestDetailFragment pickupRequestDetailFragment;
     private AlertDialog acceptPendingDialog;
@@ -75,6 +80,8 @@ public class MainActivity extends BaseActivity implements
 //        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 //        requestWindowFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
+
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         // Obtain the shared Tracker instance.
@@ -94,7 +101,10 @@ public class MainActivity extends BaseActivity implements
 
         initializeDrawer();
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState != null) {
+            mSelectedItemId = savedInstanceState.getInt("mSelectedItemId");
+            selectItem(mSelectedItemId);
+        } else {
             mSelectedItemId = R.id.navigation_give;
             selectItem(mSelectedItemId);
         }
@@ -294,17 +304,13 @@ public class MainActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         //Initializing NavigationView
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(this);
 
         // Initializing Drawer Layout and ActionBarToggle
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout,
-                toolbar,
-                R.string.drawer_open, R.string.drawer_close) {
+                mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -315,25 +321,7 @@ public class MainActivity extends BaseActivity implements
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
-                ImageView navigation_profile_image = (ImageView) drawerView.findViewById(R.id.navigation_profile_image);
-                TextView navigation_label_username = (TextView) drawerView.findViewById(R.id.navigation_label_username);
-                TextView navigation_label_phone = (TextView) drawerView.findViewById(R.id.navigation_label_phone);
-
-//                if (ParseUserHelper.isRegistered()) {
-//                    User is not anonymous
-                navigation_label_username.setText(Option.fromNull(ParseUser.getCurrentUser().get("name")).orSome(getString(R.string.navigation_your_profile)).toString());
-                navigation_label_phone.setText(ParseUserHelper.getPhoneNumber());
-                ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
-                        Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(navigation_profile_image));
-//                }
-
-                navigation_profile_image.setOnClickListener(v -> {
-                    //Deselect current item and close drawer
-                    navigationView.getMenu().findItem(mSelectedItemId).setChecked(false);
-                    mDrawerLayout.closeDrawers();
-                    //Select Profile page
-                    selectItem(R.id.navigation_profile_image);
-                });
+                updateProfileHeader(drawerView);
             }
         };
 
@@ -342,6 +330,32 @@ public class MainActivity extends BaseActivity implements
 
         //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
+
+        View headerView = navigationView.getHeaderView(0);
+        mProfileImage = (ImageView) headerView.findViewById(R.id.navigation_profile_image);
+        mProfileImage.setOnClickListener(this::onProfileImageClick);
+
+        updateProfileHeader(headerView);
+    }
+
+    private void updateProfileHeader(View drawerView) {
+        TextView labelUsername = (TextView) drawerView.findViewById(R.id.navigation_label_username);
+        TextView labelPhone = (TextView) drawerView.findViewById(R.id.navigation_label_phone);
+
+        labelUsername.setText(Option.fromNull(ParseUser.getCurrentUser().get("name")).orSome(getString(R.string.navigation_your_profile)).toString());
+        labelPhone.setText(ParseUserHelper.getPhoneNumber());
+        ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
+                Picasso.with(getApplicationContext()).load(parseFile.getUrl()).into(mProfileImage));
+    }
+
+    public void onProfileImageClick(View v) {
+        //Deselect current item and close drawer
+        if (mSelectedItemId != R.id.navigation_profile_image) {
+            navigationView.getMenu().findItem(mSelectedItemId).setChecked(false);
+        }
+        mDrawerLayout.closeDrawers();
+        //Select Profile page
+        selectItem(R.id.navigation_profile_image);
     }
 
     @Override
