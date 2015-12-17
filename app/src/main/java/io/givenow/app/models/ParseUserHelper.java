@@ -57,7 +57,6 @@ public class ParseUserHelper {
     public static void setName(String name) {
         ParseUser user = ParseUser.getCurrentUser();
         user.put("name", name);
-        user.saveInBackground();
     }
 
     @NonNull
