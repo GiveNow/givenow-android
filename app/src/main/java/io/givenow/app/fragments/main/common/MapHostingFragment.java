@@ -218,6 +218,7 @@ public class MapHostingFragment extends Fragment
 
     }
 
+    @NonNull
     public Option<LatLng> getLastLocation() {
         return Option.fromNull(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient))
                 .map(location -> new LatLng(location.getLatitude(), location.getLongitude()));

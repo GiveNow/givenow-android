@@ -1,6 +1,7 @@
 package io.givenow.app.models;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
@@ -201,6 +202,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("donationCategories", new ArrayList<>(donationCategories));
     }
 
+    @NonNull
     public Option<ParseUser> getPendingVolunteer() {
         return Option.fromNull(getParseUser("pendingVolunteer"));
     }
@@ -209,6 +211,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("pendingVolunteer", value);
     }
 
+    @NonNull
     public Option<ParseUser> getConfirmedVolunteer() {
         return Option.fromNull(getParseUser("confirmedVolunteer"));
     }
@@ -217,6 +220,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("confirmedVolunteer", value);
     }
 
+    @NonNull
     public Option<Donation> getDonation() {
         return Option.fromNull((Donation) getParseObject("donation"));
     }

@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -498,6 +499,7 @@ public class RequestPickupFragment extends MapHostingFragment
 //        showCurrentRequestLayout().subscribe();
 //    }
 
+    @NonNull
     public Observable<Void> showConfirmAddress() {
         return Observable.create(subscriber -> {
             mConfirmAddressShowing = true;
@@ -581,6 +583,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
 
+    @NonNull
     private Observable<Void> hideConfirmAddress(boolean shrinkNoteButton) {
         return Observable.create(subscriber -> {
 //            tsInfo.setText(getString(R.string.request_pickup_choose_location));
@@ -611,6 +614,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
 
+    @NonNull
     private Observable<Void> showCategoryLayout() {
         return Observable.create(subscriber -> {
             mCategoryLayoutShowing = true;
@@ -648,6 +652,7 @@ public class RequestPickupFragment extends MapHostingFragment
         });
     }
 
+    @NonNull
     private Observable<Void> hideCategoryLayout() {
         return Observable.create(subscriber -> {
 //            tsInfo.setText(getString(R.string.request_pickup_info_confirm_address));
@@ -671,6 +676,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
 
+    @NonNull
     private Observable<Void> showCurrentRequestLayout() {
         return Observable.create(subscriber -> {
             Log.e(logTag(), "showCurrentREquestLayout");
@@ -756,6 +762,7 @@ public class RequestPickupFragment extends MapHostingFragment
                 .show();
     }
 
+    @NonNull
     private Observable<Void> hideCurrentRequestLayout() {
         return Observable.create(subscriber -> {
             //Re-enable map and address field

@@ -97,6 +97,7 @@ public class ParseUserHelper {
         return phoneNumberString;
     }
 
+    @NonNull
     public static Option<ParseFile> getProfileImage() {
         return Option.fromNull(ParseUser.getCurrentUser().getParseFile("profileImage"));
     }
