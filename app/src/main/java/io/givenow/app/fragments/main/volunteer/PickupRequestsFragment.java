@@ -202,7 +202,12 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
             //set the title to the users name, and snippet to be number of coats
-            markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(pickupRequest.getAddress()));
+            //TODO the following should never happen. I don't know why donor is null when the data browser shows there is a user there
+            if (pickupRequest.getDonor() == null) {
+                Log.e("PickupRequestsFragment", "Pickup request with id " + pickupRequest.getObjectId() + " has a null donor!");
+            } else {
+                markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(pickupRequest.getAddress()));
+            }
             markerOptions.snippet(getString(R.string.volunteer_accept_request_marker_cta));
         }
 
