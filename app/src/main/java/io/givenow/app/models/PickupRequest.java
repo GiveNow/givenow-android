@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import fj.data.Option;
@@ -27,7 +26,7 @@ import io.givenow.app.helpers.ErrorDialogs;
 import rx.parse.ParseObservable;
 
 /**
- * Data model for a post.
+ * Data model for a PickupRequest.
  */
 @ParseClassName("PickupRequest")
 public class PickupRequest extends ParseObject implements ClusterItem, Serializable {
@@ -39,35 +38,20 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         // A default constructor is required.
     }
 
-    //Full constructor, not sure if it will ever actually be used.
-//    public PickupRequest(ParseGeoPoint location, Date pickupDate, String name, String address, String phoneNumber,
-//                         ParseUser donor, String donationType, double donationValue, ParseUser pendingVolunteer, Donation donation, ParseUser confirmedVolunteer) {
-//        super();
-//        setLocation(location);
-//        setPickupDate(pickupDate);
-//        setName(name);
-//        setAddress(address);
-//        setPhoneNumber(phoneNumber);
-//        setDonor(donor);
-//        setDonationCategories(donationCategories);
-//        setPendingVolunteer(pendingVolunteer);
-//        setDonation(donation);
-//        setConfirmedVolunteer(confirmedVolunteer);
-//    }
-
-    //Normal use case, the donation and volunteer shouldn't exist.
     public PickupRequest(ParseGeoPoint location, String address, String note,
                          ParseUser donor, Collection<DonationCategory> donationCategories) {
         super();
         setActive(true);
         setLocation(location);
-//        setName(name); //deprecated
         setAddress(address);
         setNote(note);
-//        setPhoneNumber(phoneNumber); //deprecated
         setDonor(donor);
         setDonationCategories(donationCategories);
     }
+
+    /**
+     * Static Query Providers
+     **/
 
     public static ParseQuery<PickupRequest> getQuery() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
@@ -79,18 +63,15 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return q;
     }
 
-    public static ParseQuery<PickupRequest> getAllActiveRequests() {
+    /* All Pickup Requests which need volunteers to accept them. */
+    public static ParseQuery<PickupRequest> getAllOpenRequests() {
         ParseQuery<PickupRequest> q = getQuery();
         q.whereDoesNotExist("pendingVolunteer");
         return q;
     }
 
-    public static ParseQuery<PickupRequest> getMyPendingPickups() {
-        ParseQuery<PickupRequest> q = getQuery();
-        q.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
-        return q;
-    }
 
+    /* All Pickup Requests that I have accepted but have not picked up. */
     public static ParseQuery<PickupRequest> getMyDashboardPickups() {
         ParseQuery<PickupRequest> q = getQuery();
         q.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
@@ -102,6 +83,8 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return q;
     }
 
+    /* All Pickup Requests that I'm picking up and the donor has confirmed.
+     * (This query is not currently used anywhere.) */
     public static ParseQuery<PickupRequest> getMyConfirmedPickups() {
         ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
@@ -109,6 +92,9 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return q;
     }
 
+
+    /* All Pickup Requests that I've picked up and successfully completed.
+     * (Used in profile screen for volunteering history.) */
     public static ParseQuery<PickupRequest> getMyCompletedPickups() {
         ParseQuery<PickupRequest> q = getQuery();
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
@@ -173,20 +159,14 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return q;
     }
 
+    /** Properties **/
+
     public ParseGeoPoint getLocation() {
         return getParseGeoPoint("location");
     }
 
     public void setLocation(ParseGeoPoint value) {
         put("location", value);
-    }
-
-    public Date getPickupDate() {
-        return getDate("pickupDate");
-    }
-
-    public void setPickupDate(Date value) {
-        put("pickupDate", value);
     }
 
     public String getAddress() {
@@ -215,7 +195,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public List<DonationCategory> getDonationCategories() {
         return getList("donationCategories");
-
     }
 
     public void setDonationCategories(Collection<DonationCategory> donationCategories) {
@@ -230,20 +209,20 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("pendingVolunteer", value);
     }
 
-    public Option<Donation> getDonation() {
-        return Option.fromNull((Donation) getParseObject("donation"));
-    }
-
-    public void setDonation(Donation donation) {
-        put("donation", donation);
-    }
-
     public Option<ParseUser> getConfirmedVolunteer() {
         return Option.fromNull(getParseUser("confirmedVolunteer"));
     }
 
     public void setConfirmedVolunteer(ParseUser value) {
         put("confirmedVolunteer", value);
+    }
+
+    public Option<Donation> getDonation() {
+        return Option.fromNull((Donation) getParseObject("donation"));
+    }
+
+    public void setDonation(Donation donation) {
+        put("donation", donation);
     }
 
     public boolean getActive() {
@@ -254,11 +233,18 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("isActive", b);
     }
 
+    /* Cancel this pickup request.*/
+    public void cancel() {
+        setActive(false);
+    }
+
     @Override
     public LatLng getPosition() {
         ParseGeoPoint loc = getLocation();
         return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
+
+    /** Push notifications **/
 
     private void generatePushNotif(ParseUser target_user, String title, String message, String type) {
         ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
@@ -324,12 +310,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
                                         ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
                                 PROBLEM_REPORTED),
                         error -> ErrorDialogs.connectionFailure(context, error)));
-    }
-
-    /* Cancel this pickup request.
-     */
-    public void cancel() {
-        setActive(false);
     }
 
     @Override
