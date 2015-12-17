@@ -20,12 +20,6 @@ public class Volunteer extends ParseObject {
         super();
     }
 
-//    public Donation(ParseUser donor, String donationType, double donationValue) {
-//        super();
-//        setDonor(donor);
-//        setDonationCategories(donationType);
-//    }
-
     public Volunteer(ParseUser user, boolean isApproved) {
         super();
         setUser(user);
@@ -49,13 +43,6 @@ public class Volunteer extends ParseObject {
     public boolean isApproved() {
         return getBoolean("isApproved");
     }
-
-//    public static ParseQuery<Volunteer> isAVolunteer() {
-//        ParseQuery<Volunteer> q = ParseQuery.getQuery(Volunteer.class);
-//        q.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-//        q.whereEqualTo("user", ParseUser.getCurrentUser());
-//        return q;
-//    }
 
     public void setApproved(boolean isApproved) {
         put("isApproved", isApproved);
