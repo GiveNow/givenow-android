@@ -53,7 +53,8 @@ public class DonationCategory extends ParseObject {
     }
 
     public String getName(Context context) {
-        if (context.getResources().getConfiguration().locale == Locale.GERMAN) {
+        if (context.getResources().getConfiguration().locale.getLanguage()
+                .equals(Locale.GERMAN.getLanguage())) {
             return getNameDE();
         } else {
             return getNameEN();
@@ -61,7 +62,8 @@ public class DonationCategory extends ParseObject {
     }
 
     public String getDescription(Context context) {
-        if (context.getResources().getConfiguration().locale == Locale.GERMAN) {
+        if (context.getResources().getConfiguration().locale.getLanguage()
+                .equals(Locale.GERMAN.getLanguage())) {
             return getDescriptionDE();
         } else {
             return getDescriptionEN();
@@ -108,14 +110,6 @@ public class DonationCategory extends ParseObject {
 
     public void setImage(ParseFile imageFile) {
         put("image", imageFile);
-    }
-
-    public double getDonationValue() {
-        return getDouble("donationValue");
-    }
-
-    public void setDonationValue(double value) {
-        put("donationValue", value);
     }
 
     @Override
