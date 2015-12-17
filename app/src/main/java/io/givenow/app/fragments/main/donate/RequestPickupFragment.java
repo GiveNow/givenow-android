@@ -748,10 +748,7 @@ public class RequestPickupFragment extends MapHostingFragment
                                     .build());
                             hideCurrentRequestLayout().subscribe();
                         } else {
-                            new AlertDialog.Builder(getContext())
-                                    .setMessage(R.string.error_donation_not_canceled)
-                                    .setIcon(android.R.attr.alertDialogIcon)
-                                    .show();
+                            ErrorDialogs.connectionFailure(getContext(), e);
                         }
                     });
                 })
