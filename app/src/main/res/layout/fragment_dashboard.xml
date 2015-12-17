@@ -32,7 +32,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:padding="@dimen/card_text_padding"
-                android:text="You haven't volunteered to pick up any requests yet.\nCheck out the Pickup Requests tab!"
+                android:text="@string/dashboard_empty_view"
                 android:textColor="@color/card_text"
                 android:textStyle="italic"/>
         </LinearLayout>

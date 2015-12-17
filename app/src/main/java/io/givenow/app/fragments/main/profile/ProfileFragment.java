@@ -6,18 +6,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.PageSlidingTabStripFragment;
+import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.ParseUserHelper;
-import io.givenow.app.models.PickupRequest;
+import rx.parse.ParseObservable;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 
 public class ProfileFragment extends PageSlidingTabStripFragment {
@@ -69,37 +72,34 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         ButterKnife.bind(this, rootView);
 
         phonenoTV.setText(ParseUserHelper.getPhoneNumber());
-        usernameTV.setText(ParseUserHelper.getName().orSome("Anonymous"));
+        usernameTV.setText(ParseUserHelper.getName().orSome(""));
 
+        usernameTV.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                saveName();
+            }
+            return false;
+        });
+
+        usernameTV.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                saveName();
+            }
+        });
         return rootView;
     }
 
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        setupTabs(view);
-//    }
-
-    public void setReadableName(String columnName, ParseUser currentUser) {
-        ParseQuery<PickupRequest> query = ParseQuery.getQuery(PickupRequest.class);
-        query.whereEqualTo(columnName, currentUser);
-
-        // Execute the find asynchronously
-        query.findInBackground((itemList, e) -> {
-            if (e == null) {
-                if (itemList.size() != 0) {
-                    readableUsername = itemList.get(0).getString("name");
-                    usernameTV.setText(readableUsername);
-                }
-
-            } else {
-                Log.d("item", "Error: " + e.getMessage());
-            }
-        });
+    private void saveName() {
+        ParseUserHelper.setName(usernameTV.getText().toString());
+        ParseObservable.save(ParseUser.getCurrentUser()).observeOn(mainThread()).subscribe(
+                parseUser -> {
+                    Log.d("ProfileFragment", "Name saved");
+                },
+                error -> ErrorDialogs.connectionFailure(getContext(), error));
     }
 
     public void refreshProfile() {
-        dhFragment.refreshList();
+        dhFragment.refreshList(); //TODO crahses
         phFragment.refreshList();
     }
 

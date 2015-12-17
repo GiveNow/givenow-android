@@ -72,6 +72,7 @@
     <string name="request_status_waiting">Es hat sich noch kein Helfer zur Abholung gefunden!</string>
     <string name="error_donation_not_canceled">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
     <string name="error_note_not_saved">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
+    <string name="error_connection_failure">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
     <string name="dialog_cancelDonation_message">Diese Spende zurückziehen?</string>
     <string name="dialog_cancelDonation_positiveButton">Spende zurückziehen</string>
     <string name="dialog_cancelDonation_negativeButton">Doch nicht</string>

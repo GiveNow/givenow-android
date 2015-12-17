@@ -73,7 +73,8 @@
     <string name="request_status_waiting">Waiting for a volunteer to accept your request!</string>
     <string name="error_donation_not_canceled">Couldn\'t connect - please try again later.</string>
     <string name="error_note_not_saved">Couldn\'t connect - please try again later.</string>
-    <string name="error_connection_failure">Couldn\'t connect - please try again later.</string>
+    <string name="error_connection_failure_title">Couldn\'t connect</string>
+    <string name="error_connection_failure_message">Please try again later!</string>
     <string name="cancel_donation_button">Cancel</string>
     <string name="dialog_cancelDonation_message">Cancel your donation?</string>
     <string name="dialog_cancelDonation_positiveButton">Cancel donation</string>
@@ -137,5 +138,7 @@
     <string name="donation_complete_message_tail">is complete.</string>
     <string name="done">done</string>
     <string name="rate_app">Rate app 5 stars</string>
+    <string name="dashboard_empty_view">You haven\'t volunteered to pick up any requests yet.\nCheck out the Pickup Requests tab!</string>
+    <string name="label_name">Your name</string>
 
 </resources>

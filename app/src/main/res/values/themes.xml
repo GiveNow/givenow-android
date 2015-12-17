@@ -64,12 +64,16 @@
         <item name="color">@color/foreground_material_dark</item>
     </style>
 
-    <style name="MyEditTextTheme">
+    <style name="MyEditTextTheme" parent="@android:style/Widget.EditText">
         <!-- Used for the bottom line when not selected / focused -->
         <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/white</item>
         <item name="colorControlHighlight">@color/white</item>
         <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
+
+        <!-- doesn't seem to have any effect: -->
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColorHint">@color/colorPrimaryDark</item>
     </style>
 </resources>
 
