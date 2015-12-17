@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,7 +32,6 @@ import io.givenow.app.R;
 import io.givenow.app.customviews.SlidingRelativeLayout;
 import io.givenow.app.helpers.CroutonHelper;
 import io.givenow.app.helpers.CustomAnimations;
-import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 
 public class PickupRequestDetailFragment extends Fragment {
@@ -42,8 +40,6 @@ public class PickupRequestDetailFragment extends Fragment {
     SlidingRelativeLayout rlInfoContainer;
     @Bind(R.id.rlButtonContainer)
     SlidingRelativeLayout rlButtonContainer;
-    @Bind(R.id.tvDonorName)
-    TextView tvDonorName;
     @Bind(R.id.tvDonorAddress)
     TextView tvDonorAddress;
     @Bind(R.id.btnAccept)
@@ -78,20 +74,12 @@ public class PickupRequestDetailFragment extends Fragment {
         if (getArguments() != null) {
             mPickupRequest = (PickupRequest) getArguments().getSerializable("mPickupRequest");
         }
-        getToolbar().setTitle("Accept Pickup");
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getToolbar().setTitle(R.string.app_name);
     }
-
-    private Toolbar getToolbar() {
-        return (Toolbar) getActivity().findViewById(R.id.toolbar);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
@@ -124,7 +112,6 @@ public class PickupRequestDetailFragment extends Fragment {
 
         mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
 
-        tvDonorName.setText(ParseUserHelper.getName(mPickupRequest.getDonor()).orSome("Anonymous"));
         tvDonorAddress.setText(mPickupRequest.getAddress());
 
         return fragmentView;
