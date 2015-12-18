@@ -60,7 +60,7 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         mContext = viewGroup.getContext();
-        View v = LayoutInflater.from(mContext).inflate(R.layout.item_category, viewGroup, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.card_category, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }

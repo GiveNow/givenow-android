@@ -45,7 +45,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_card, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dashboard, parent, false);
         return new ViewHolder(v);
     }
 
