@@ -332,6 +332,7 @@ public class MainActivity extends BaseActivity implements
         actionBarDrawerToggle.syncState();
 
         View headerView = navigationView.getHeaderView(0);
+        headerView.setOnClickListener(this::onProfileImageClick);
         mProfileImage = (ImageView) headerView.findViewById(R.id.navigation_profile_image);
         mProfileImage.setOnClickListener(this::onProfileImageClick);
 
@@ -353,6 +354,8 @@ public class MainActivity extends BaseActivity implements
         if (mSelectedItemId != R.id.navigation_profile_image) {
             navigationView.getMenu().findItem(mSelectedItemId).setChecked(false);
         }
+        navigationView.getHeaderView(0).findViewById(R.id.navigation_header)
+                .setBackgroundColor(getResources().getColor(R.color.colorAccent));
         mDrawerLayout.closeDrawers();
         //Select Profile page
         selectItem(R.id.navigation_profile_image);
@@ -513,6 +516,9 @@ public class MainActivity extends BaseActivity implements
             //Check to see which item was being clicked and perform appropriate action
             selectItem(menuItem.getItemId());
             menuItem.setChecked(true);
+            //Reset header to normal color (because a navigation item was clicked, not the profile)
+            navigationView.getHeaderView(0).findViewById(R.id.navigation_header)
+                    .setBackgroundColor(getResources().getColor(R.color.drawerHeaderBGColor));
             //Closing drawer on item click
             mDrawerLayout.closeDrawers();
             return true;
