@@ -8,48 +8,48 @@
     tools:context="io.givenow.app.fragments.main.profile.DonationHistoryFragment">
 
 
-    <LinearLayout
-        android:id="@+id/donationHeaders"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/donationHeaders"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:paddingRight="10dp">-->
 
-        <TextView
-            android:id="@+id/dateHdr"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="@string/dateHdr"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="#ffffffff"
-            android:textStyle="bold" />
+    <!--<TextView-->
+    <!--android:id="@+id/dateHdr"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="4"-->
+    <!--android:text="@string/dateHdr"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textColor="#ffffffff"-->
+    <!--android:textStyle="bold" />-->
 
-        <TextView
-            android:id="@+id/typeHdr"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/itypeHdr"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="#ffffffff"
-            android:textStyle="bold" />
+    <!--<TextView-->
+    <!--android:id="@+id/typeHdr"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="3"-->
+    <!--android:text="@string/itypeHdr"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textColor="#ffffffff"-->
+    <!--android:textStyle="bold" />-->
 
-        <TextView
-            android:id="@+id/valueHdr"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Value"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="#ffffffff"
-            android:textStyle="bold" />
-    </LinearLayout>
+    <!--<TextView-->
+    <!--android:id="@+id/valueHdr"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="3"-->
+    <!--android:text="Value"-->
+    <!--android:textAlignment="center"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textColor="#ffffffff"-->
+    <!--android:textStyle="bold" />-->
+    <!--</LinearLayout>-->
 
     <!--<View-->
     <!--android:layout_width="fill_parent"-->
@@ -61,6 +61,5 @@
     <ListView
         android:id="@+id/donations"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/donationHeaders" />
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

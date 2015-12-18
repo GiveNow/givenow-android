@@ -140,5 +140,7 @@
     <string name="rate_app">Rate app 5 stars</string>
     <string name="dashboard_empty_view">You haven\'t volunteered to pick up any requests yet.\nCheck out the Pickup Requests tab!</string>
     <string name="label_name">Your name</string>
+    <string name="tab_title_donation_history">Donation History</string>
+    <string name="tab_title_volunteer_history">Volunteer History</string>
 
 </resources>

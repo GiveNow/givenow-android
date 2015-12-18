@@ -1,7 +1,8 @@
 package io.givenow.app.fragments.main.profile;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,8 @@ import com.parse.ParseUser;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
-import io.givenow.app.fragments.PageSlidingTabStripFragment;
+import io.givenow.app.adapters.ViewPagerAdapter;
+import io.givenow.app.fragments.main.BaseFragment;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.ParseUserHelper;
 import rx.parse.ParseObservable;
@@ -23,15 +25,20 @@ import rx.parse.ParseObservable;
 import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 
-public class ProfileFragment extends PageSlidingTabStripFragment {
+public class ProfileFragment extends BaseFragment {
 
-    String readableUsername;
     @Bind(R.id.silhouette)
     ImageView profileIV;
     @Bind(R.id.username)
     TextView usernameTV;
     @Bind(R.id.phoneno)
     TextView phonenoTV;
+    @Bind(R.id.viewpager)
+    ViewPager mViewPager;
+    @Bind(R.id.tablayout)
+    TabLayout tabLayout;
+
+    private ViewPagerAdapter mAdapter;
 
     private DonationHistoryFragment dhFragment;
     private PickupHistoryFragment phFragment;
@@ -43,24 +50,6 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
     public static ProfileFragment newInstance() {
         ProfileFragment f = new ProfileFragment();
         return f;
-    }
-
-    @Override
-    protected String[] getTitles() {
-        return new String[]{"Donation History", "Volunteer History"};
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-        if (savedInstanceState == null) {
-            //create fragments
-            dhFragment = DonationHistoryFragment.newInstance();
-            phFragment = PickupHistoryFragment.newInstance();
-            Log.w("ProfileFragment", "onCreate: child fragments created");
-        }
     }
 
     @Override
@@ -86,7 +75,20 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
                 saveName();
             }
         });
+
+        setupViewPager();
+        tabLayout.setupWithViewPager(mViewPager);
+
         return rootView;
+    }
+
+    private void setupViewPager() {
+        mAdapter = new ViewPagerAdapter(getChildFragmentManager());
+        dhFragment = DonationHistoryFragment.newInstance();
+        phFragment = PickupHistoryFragment.newInstance();
+        mAdapter.addFrag(dhFragment, getString(R.string.tab_title_donation_history));
+        mAdapter.addFrag(phFragment, getString(R.string.tab_title_volunteer_history));
+        mViewPager.setAdapter(mAdapter);
     }
 
     private void saveName() {
@@ -102,20 +104,4 @@ public class ProfileFragment extends PageSlidingTabStripFragment {
         dhFragment.refreshList(); //TODO crahses
         phFragment.refreshList();
     }
-
-    @Override
-    protected Fragment getFragmentForPosition(int position) {
-        Fragment frag = null;
-
-        switch (position) {
-            case 0: //PickUp Requests
-                frag = dhFragment;
-                break;
-            case 1: //Drop Off Locations
-                frag = phFragment;
-                break;
-        }
-        return frag;
-    }
-
 }
