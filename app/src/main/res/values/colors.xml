@@ -20,7 +20,11 @@
     <color name="onboarding_3_color">@color/colorPrimary</color>
     <color name="onboarding_4_color">#ff039BE5</color>
     <color name="onboarding_5_color">@color/colorAccent</color>
+    <color name="drawerHeaderBGColor">@color/colorPrimaryDark</color>
+
     <color name="darkBGTextHint">#64000000</color>
+    <!--<color name="card_title_text">#ff444444</color>-->
+    <color name="card_subtitle_text">#ff999999</color>
 
     <!--<color name="primary_text_default_material_light">#000000</color>-->
     <!--<color name="foreground_material_light">#ffffff</color>-->

@@ -54,19 +54,25 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
      * Static Query Providers
      **/
 
+
     public static ParseQuery<PickupRequest> queryAll() {
         ParseQuery<PickupRequest> q = ParseQuery.getQuery(PickupRequest.class);
         q.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
-        q.whereEqualTo("isActive", true);
         q.include("donor");
         q.include("donationCategories");
         // may want to include other pointers, but this should do for now
         return q;
     }
 
+    public static ParseQuery<PickupRequest> queryAllActive() {
+        ParseQuery<PickupRequest> q = queryAll();
+        q.whereEqualTo("isActive", true);
+        return q;
+    }
+
     /* All Pickup Requests which need volunteers to accept them. */
     public static ParseQuery<PickupRequest> queryAllOpenRequests() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereDoesNotExist("pendingVolunteer");
         return q;
     }
@@ -74,7 +80,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     /* All Pickup Requests that I have accepted but have not picked up. */
     public static ParseQuery<PickupRequest> queryMyDashboardPickups() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.setCachePolicy(ParseQuery.CachePolicy.IGNORE_CACHE);
         q.whereEqualTo("pendingVolunteer", ParseUser.getCurrentUser());
         //we actually don't want this because then it is too restrictive
@@ -87,7 +93,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     /* All Pickup Requests that I'm picking up and the donor has confirmed.
      * (This query is not currently used anywhere.) */
     public static ParseQuery<PickupRequest> queryMyConfirmedPickups() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
         q.orderByDescending("createdAt");
         return q;
@@ -97,7 +103,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     /* All Pickup Requests that I've picked up and successfully completed.
      * (Used in profile screen for volunteering history.) */
     public static ParseQuery<PickupRequest> queryMyCompletedPickups() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("confirmedVolunteer", ParseUser.getCurrentUser());
         q.whereExists("donation");
         q.orderByDescending("createdAt");
@@ -108,7 +114,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     All Pickup Requests that I have made.
      */
     public static ParseQuery<PickupRequest> queryMyRequests() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         return q;
     }
@@ -119,7 +125,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     but no confirmed volunteer
      */
     public static ParseQuery<PickupRequest> queryMyPendingRequests() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("pendingVolunteer");
         q.whereDoesNotExist("confirmedVolunteer");
@@ -132,7 +138,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     but not delivered
      */
     public static ParseQuery<PickupRequest> queryMyConfirmedRequests() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("confirmedVolunteer");
         q.whereDoesNotExist("donation");
@@ -144,7 +150,7 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     which currently have a volunteer confirmed to be completing the pickup
      */
     public static ParseQuery<PickupRequest> queryAllMyConfirmedRequests() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("confirmedVolunteer");
         return q;
@@ -154,9 +160,16 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     All Pickup Requests that I have made, which were successfully delivered to the charity as a donation
      */
     public static ParseQuery<PickupRequest> queryMyCompletedRequests() {
-        ParseQuery<PickupRequest> q = queryAll();
+        ParseQuery<PickupRequest> q = queryAllActive();
         q.whereEqualTo("donor", ParseUser.getCurrentUser());
         q.whereExists("donation");
+        return q;
+    }
+
+    public static ParseQuery<PickupRequest> queryPickupRequestForDonation(Donation donation) {
+        ParseQuery<PickupRequest> q = queryAll();
+        q.whereEqualTo("donation", donation);
+        q.orderByDescending("createdAt");
         return q;
     }
 

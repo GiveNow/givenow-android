@@ -1,65 +1,21 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipeContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="#ff246d9e"
-    android:padding="10dp"
+    android:layout_height="match_parent"
     tools:context="io.givenow.app.fragments.main.profile.DonationHistoryFragment">
 
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/donationHeaders"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:gravity="center"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:paddingLeft="10dp"-->
-    <!--android:paddingRight="10dp">-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/dateHdr"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="4"-->
-    <!--android:text="@string/dateHdr"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textAllCaps="true"-->
-    <!--android:textColor="#ffffffff"-->
-    <!--android:textStyle="bold" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/typeHdr"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="3"-->
-    <!--android:text="@string/itypeHdr"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textAllCaps="true"-->
-    <!--android:textColor="#ffffffff"-->
-    <!--android:textStyle="bold" />-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/valueHdr"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="3"-->
-    <!--android:text="Value"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textAllCaps="true"-->
-    <!--android:textColor="#ffffffff"-->
-    <!--android:textStyle="bold" />-->
-    <!--</LinearLayout>-->
-
-    <!--<View-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="2dp"-->
-    <!--android:layout_below="@id/donationHeaders"-->
-    <!--android:layout_marginBottom="5dp"-->
-    <!--android:background="#ffcacaca" />-->
-
-    <ListView
-        android:id="@+id/donations"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        android:padding="4dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvDonations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

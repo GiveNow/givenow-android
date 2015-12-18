@@ -2,21 +2,34 @@ package io.givenow.app.fragments.main.profile;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.givenow.app.R;
-import io.givenow.app.adapters.DonationsAdapter;
-import io.givenow.app.interfaces.ViewPagerChangeListener;
+import io.givenow.app.adapters.DonationHistoryAdapter;
+import io.givenow.app.fragments.main.BaseFragment;
+import io.givenow.app.models.Donation;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.parse.ParseObservable;
 
 
-public class DonationHistoryFragment extends Fragment implements ViewPagerChangeListener {
+public class DonationHistoryFragment extends BaseFragment {
 
-    private ListView donationsHist;
-    private DonationsAdapter mDonationsAdapter;
+    @Bind(R.id.rvDonations)
+    RecyclerView rvDonations;
+
+    @Bind(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
+
+    private DonationHistoryAdapter mDonationHistoryAdapter;
 
     public DonationHistoryFragment() {
         // Required empty public constructor
@@ -39,26 +52,63 @@ public class DonationHistoryFragment extends Fragment implements ViewPagerChange
         final View rootView = inflater.inflate(R.layout.fragment_donation_history, container,
                 false);
 
-        mDonationsAdapter = new DonationsAdapter(getActivity());
-        donationsHist = (ListView) rootView.findViewById(R.id.donations);
-        donationsHist.setAdapter(mDonationsAdapter);
+        ButterKnife.bind(this, rootView);
+
+        mDonationHistoryAdapter = new DonationHistoryAdapter();
+        rvDonations.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        rvDonations.setItemAnimator(new SlideInUpAnimator());
+        rvDonations.setAdapter(mDonationHistoryAdapter);
+
+        swipeContainer.setOnRefreshListener(this::loadList);
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorAccent,
+                R.color.colorPrimaryDark,
+                R.color.colorPrimaryLight);
 
         return rootView;
     }
 
     @Override
-    public void onViewPagerShow() {
-        refreshList();
+    public void onResume() {
+        super.onResume();
+        loadList();
     }
+//    @Override
+//    public void onViewPagerShow() {
+//        refreshList();
+//    }
+//
+//    @Override
+//    public void onViewPagerHide() {
+//
+//    }
 
-    @Override
-    public void onViewPagerHide() {
-
-    }
-
-    public void refreshList() {
-        if (mDonationsAdapter != null) {
-            mDonationsAdapter.loadObjects();
+    public void loadList() {
+//        if (mDonationHistoryAdapter != null) {
+//            mDonationHistoryAdapter.loadObjects();
+//        }
+        if (isResumed()) {
+            swipeContainer.setRefreshing(true);
+            Log.d("DashboardFragment", "Finding Dashboard items...");
+            ParseObservable.find(Donation.queryAllMyDonations()) //todo possible hang is here
+                    .toList()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            mDonationHistoryAdapter::setItems,
+                            error -> Log.e("DashboardFragment", "Error getting dashboard pickups: " + error.getMessage()),
+                            () -> { //OnComplete:
+                                Log.d("DashboardFragment", "queryMyDashboardPickups OnComplete");
+                                //TODO if i add an empty view...
+//                                if (mDonationHistoryAdapter.getItemCount() > 0) {
+//                                    CustomAnimations.circularHide(emptyView);
+//                                } else {
+//                                    CustomAnimations.circularReveal(emptyView);
+//                                }
+                                swipeContainer.setRefreshing(false);
+                            }
+                    );
         }
     }
 }

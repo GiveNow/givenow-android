@@ -101,7 +101,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     public void refreshProfile() {
-        dhFragment.refreshList(); //TODO crahses
-        phFragment.refreshList();
+//        dhFragment.refreshList(); //TODO crahses
+//        phFragment.refreshList();
     }
 }

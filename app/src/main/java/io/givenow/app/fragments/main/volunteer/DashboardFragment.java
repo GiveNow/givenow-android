@@ -52,8 +52,7 @@ public class DashboardFragment extends Fragment implements
         mAdapter = new DashboardItemAdapter();
 
         //Grab the Recycler View and list all conversation objects in a vertical list
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        rvItems.setLayoutManager(layoutManager);
+        rvItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvItems.setItemAnimator(new SlideInUpAnimator());
         rvItems.setAdapter(mAdapter);
 

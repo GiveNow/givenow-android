@@ -1,21 +1,24 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     tools:context="io.givenow.app.fragments.main.donate.RequestPickupFragment">
-<!-- TODO: https://www.google.com/design/spec/components/text-fields.html#text-fields-single-line-text-field -->
+    <!-- TODO: https://www.google.com/design/spec/components/text-fields.html#text-fields-single-line-text-field -->
     <FrameLayout
         android:id="@+id/flMapLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/flBottomContainer"
         android:layout_below="@+id/llAddressInfoContainer"
-        android:layout_marginLeft="0dp"
         android:clickable="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
@@ -74,6 +77,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:clipChildren="false"
+        android:clipToPadding="false"
         android:elevation="@dimen/appbar_elevation"
         android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
@@ -108,7 +112,7 @@
                 android:outAnimation="@anim/slide_out_left"
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorPrimaryDark"
-                android:theme="@style/MyEditTextTheme" />
+                android:theme="@style/MyEditTextTheme"/>
 
         </FrameLayout>
 
@@ -123,7 +127,7 @@
             android:padding="5dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_done_white_24dp"
-            android:visibility="invisible" />
+            android:visibility="invisible"/>
         <!--<ImageView-->
         <!--android:id="@+id/ivNoteSubmit"-->
         <!--android:layout_width="@dimen/icon_size"-->
@@ -144,6 +148,7 @@
         android:layout_below="@id/llConfirmInfo"
         android:background="@color/colorPrimary"
         android:clipChildren="false"
+        android:clipToPadding="false"
         android:elevation="@dimen/appbar_elevation"
         android:orientation="vertical"
         android:visibility="visible">
@@ -165,7 +170,7 @@
                 android:layout_weight="0"
                 android:padding="6dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_info_white_24dp" />
+                android:src="@drawable/ic_info_white_24dp"/>
 
             <TextSwitcher
                 android:id="@+id/tsInfo"
@@ -185,6 +190,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal">
 
             <ImageView
@@ -195,7 +201,7 @@
                 android:layout_weight="0"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_location_on_white_24dp" />
+                android:src="@drawable/ic_location_on_white_24dp"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -217,7 +223,7 @@
                     android:text="Loading..."
                     android:textColor="@color/white"
                     android:textColorHint="@color/colorPrimaryDark"
-                    android:theme="@style/MyEditTextTheme" />
+                    android:theme="@style/MyEditTextTheme"/>
                 <!--android:popupAnimationStyle="@animator/slide_down_from_top"-->
                 <!--doesn't work ^-->
 
@@ -228,7 +234,7 @@
                     android:layout_gravity="right|center_vertical"
                     android:layout_marginRight="3dp"
                     android:background="@drawable/ic_clear_white_24dp"
-                    android:contentDescription="Clear" />
+                    android:contentDescription="Clear"/>
 
             </FrameLayout>
 
@@ -240,11 +246,13 @@
                 android:layout_marginRight="0dp"
                 android:layout_weight="0"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:contentDescription="Add note"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_playlist_add_white_24dp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -264,7 +272,7 @@
             android:text="@string/button_set_pickup_location_label"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#ffffffff"
-            android:visibility="visible" />
+            android:visibility="visible"/>
 
         <io.givenow.app.customviews.SlidingRelativeLayout
             android:id="@+id/rlCurrentRequestContainer"
@@ -291,7 +299,7 @@
                     android:padding="1dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/donate_icon_2x"
-                    android:tint="@color/white" />
+                    android:tint="@color/white"/>
 
                 <TextView
                     android:id="@+id/tvYourDonation"
@@ -301,7 +309,7 @@
                     android:layout_marginRight="10dp"
                     android:text="@string/your_donation_label"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -318,7 +326,7 @@
                     android:layout_gravity="center"
                     android:text="@string/cancel_donation_button"
                     android:textAlignment="center"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"/>
 
                 <ImageButton
                     android:id="@+id/btnCancelDonation"
@@ -327,7 +335,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="3dp"
                     android:background="@drawable/ic_clear_white_24dp"
-                    android:contentDescription="Cancel Donation" />
+                    android:contentDescription="Cancel Donation"/>
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -335,7 +343,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/llDonationInfo"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"/>
         </io.givenow.app.customviews.SlidingRelativeLayout>
     </FrameLayout>
 
