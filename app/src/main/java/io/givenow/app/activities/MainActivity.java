@@ -102,7 +102,9 @@ public class MainActivity extends BaseActivity implements
         initializeDrawer();
 
         if (savedInstanceState != null) {
+            fragToHide = getSupportFragmentManager().findFragmentByTag(savedInstanceState.getString("fragToHideTag"));
             mSelectedItemId = savedInstanceState.getInt("mSelectedItemId");
+            Log.d("MainActivity", "OnCreate state restored. mSelectedItemId=" + mSelectedItemId + " fragToHide=" + fragToHide.getTag());
             selectItem(mSelectedItemId);
         } else {
             mSelectedItemId = R.id.navigation_give;
@@ -111,21 +113,16 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.d("MainActivity", "Saving state. mSelectedItemId=" + mSelectedItemId + " fragToHideTag=" + fragToHide.getTag());
+        savedInstanceState.putInt("mSelectedItemId", mSelectedItemId);
+        savedInstanceState.putString("fragToHideTag", fragToHide.getTag());
+    }
+
+    @Override
     protected int getLayoutResource() {
         return R.layout.activity_main;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("mSelectedItemId", mSelectedItemId);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle inState) {
-        super.onRestoreInstanceState(inState);
-        mSelectedItemId = inState.getInt("mSelectedItemId");
-        selectItem(mSelectedItemId);
     }
 
     @Override
@@ -415,7 +412,7 @@ public class MainActivity extends BaseActivity implements
                             volunteerFragment,
                             "vol");
                 } else {
-                    volunteerFragment.checkVolunteerEligibility();
+                    volunteerFragment.checkVolunteerEligibility(); //TODO minor optimization issue: this causes the check to be run twice.
                     ft.show(volunteerFragment);
                 }
                 fragToHide = volunteerFragment;
