@@ -72,7 +72,6 @@
     <string name="request_status_waiting">Es hat sich noch kein Helfer zur Abholung gefunden!</string>
     <string name="error_donation_not_canceled">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
     <string name="error_note_not_saved">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
-    <string name="error_connection_failure">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
     <string name="dialog_cancelDonation_message">Diese Spende zurückziehen?</string>
     <string name="dialog_cancelDonation_positiveButton">Spende zurückziehen</string>
     <string name="dialog_cancelDonation_negativeButton">Doch nicht</string>
@@ -128,6 +127,17 @@
     <string name="phone_number_verification_error_number_failed_to_parse">Die Telefonnummer sollte so angegeben werden:\n+49 123 456 7890</string>
     <string name="phone_number_verification_error_number_invalid">Bitte eine gültige Telefonnummer angeben.\nBeispiel: +49 123 456 7890</string>
     <string name="volunteer_accept_request_marker_cta">Diese Spende abholen</string>
+    <string name="dashboard_button_text_donor">Nachricht</string>
+    <string name="dashboard_empty_view">Du hast bisher keine Spenden freiwillig abgeholt. Probiere es doch einfach mal aus!</string>
+    <string name="dashboard_status_ready"></string>
+    <string name="donation_complete_message_head">Deine grosszügige Spende von</string>
+    <string name="donation_complete_title">und</string>
+    <string name="donation_complete_message_tail">ist abgeschlossen.</string>
+    <string name="done">fertig</string>
+    <string name="error_connection_failure_title">Verbindung fehlgeschlagen</string>
+    <string name="error_connection_failure_message">bitte versuch es später noch einmal.</string>
+    <string name="label_name">Dein Name</string>
+    <string name="and">und</string>
 
 
 </resources>
