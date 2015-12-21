@@ -109,7 +109,7 @@
     <string name="no">Nein</string>
     <string name="donor_default_name">Unbekannt</string>
     <string name="volunteer_dashboard_status_waiting">Auf Spender warten</string>
-    <string name="volunteer_dashboard_status_ready">Abholbereit</string>
+    <string name="volunteer_dashboard_status_ready">@string/dashboard_status_ready</string>
     <string name="dialog_loggedin_existing_donation_found_title">Eine weitere Spende gefunden!</string>
     <string name="dialog_loggedin_existing_donation_found_message">Diese Spende wird stattdessen geladen.</string>
     <string name="dialog_loggedin_existing_donation_found_button">OK</string>
@@ -129,8 +129,8 @@
     <string name="volunteer_accept_request_marker_cta">Diese Spende abholen</string>
     <string name="dashboard_button_text_donor">Nachricht</string>
     <string name="dashboard_empty_view">Du hast bisher keine Spenden freiwillig abgeholt. Probiere es doch einfach mal aus!</string>
-    <string name="dashboard_status_ready"></string>
-    <string name="donation_complete_message_head">Deine grosszügige Spende von</string>
+    <string name="dashboard_status_ready">Abholbereit</string>
+    <string name="donation_complete_message_head">Deine großzügige Spende von</string>
     <string name="donation_complete_title">und</string>
     <string name="donation_complete_message_tail">ist abgeschlossen.</string>
     <string name="done">fertig</string>
@@ -138,6 +138,9 @@
     <string name="error_connection_failure_message">bitte versuch es später noch einmal.</string>
     <string name="label_name">Dein Name</string>
     <string name="and">und</string>
+    <string name="rate_app">App bewerten</string>
+    <string name="tab_title_donation_history">@string/donation_history</string>
+    <string name="tab_title_volunteer_history">@string/pickup_history</string>
 
 
 </resources>
