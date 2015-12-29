@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -211,7 +212,13 @@ public class MapHostingFragment extends Fragment
             getLastLocation().foreachDoEffect(latLng -> {
 //                Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
-                mGoogleMap.animateCamera(cameraUpdate);
+                try {
+                    mGoogleMap.animateCamera(cameraUpdate);
+                } catch (NullPointerException npe) {
+                    Crashlytics.log("Can't animate map to location " + latLng.toString() + ", map is null!");
+                    Crashlytics.logException(npe);
+                }
+
                 mZoomToLocation = false;
             });
         }
