@@ -35,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 
 import com.bartoszlipinski.viewpropertyobjectanimator.ViewPropertyObjectAnimator;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.ResultCallback;
@@ -65,6 +66,7 @@ import io.givenow.app.customviews.SlidingRelativeLayout;
 import io.givenow.app.fragments.PhoneNumberVerificationFragment;
 import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
+import io.givenow.app.helpers.Analytics;
 import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.helpers.ErrorDialogs;
@@ -359,25 +361,24 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @OnClick(R.id.btnBottomSubmit)
     protected void onBottomSubmit(Button button) {
-        HitBuilders.EventBuilder hit = new HitBuilders.EventBuilder();
-        hit.setCategory("RequestPickup").setAction("BottomButtonClicked");
-
+        String label;
         btnBottomSubmit.setEnabled(false);
         if (!mConfirmAddressShowing) {
             showConfirmAddress().subscribe();
-            hit.setLabel("withSetPickupLocationShowing");
+            label = "withSetPickupLocationShowing";
         } else {
             if (!mCategoryLayoutShowing) {
                 showCategoryLayout().subscribe();
-                hit.setLabel("withConfirmAddressShowing");
+                label = "withConfirmAddressShowing";
             } else {
                 confirmPickupRequest();
-                hit.setLabel("withCategoryLayoutShowing");
-                mTracker.send(hit.build());
+                label = "withCategoryLayoutShowing";
+                Analytics.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
                 return; //leave button disabled
             }
         }
-        mTracker.send(hit.build());
+        Crashlytics.setString("RequestPickup.BottomButtonClicked", label);
+        Analytics.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
         btnBottomSubmit.setEnabled(true);
 
     }
@@ -450,11 +451,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void savePickupRequest() {
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("RequestPickup")
-                .setAction("PickupRequestTrySave")
-                .setLabel(ParseUser.getCurrentUser().getObjectId())
-                .build());
+        Analytics.sendHit(mTracker, "RequestPickup", "PickupRequestTrySave", ParseUser.getCurrentUser().getObjectId());
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
@@ -483,11 +480,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void onPickupRequestSaved() {
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("RequestPickup")
-                .setAction("PickupRequestSaved")
-                .setLabel(ParseUser.getCurrentUser().getObjectId())
-                .build());
+        Analytics.sendHit(mTracker, "RequestPickup", "PickupRequestSaved", ParseUser.getCurrentUser().getObjectId());
 
         hideCategoryLayout().subscribe(v -> {
             hideConfirmAddress(false).subscribe();
@@ -747,11 +740,8 @@ public class RequestPickupFragment extends MapHostingFragment
                     mPickupRequest.cancel();
                     mPickupRequest.saveInBackground(e -> {
                         if (e == null) {
-                            mTracker.send(new HitBuilders.EventBuilder()
-                                    .setCategory("RequestPickup")
-                                    .setAction("DonationCanceled")
-                                    .setLabel(ParseUser.getCurrentUser().getObjectId())
-                                    .build());
+                            Analytics.sendHit(mTracker, "RequestPickup", "DonationCanceled", ParseUser.getCurrentUser().getObjectId());
+
                             hideCurrentRequestLayout().subscribe();
                         } else {
                             ErrorDialogs.connectionFailure(getContext(), e);
