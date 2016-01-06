@@ -13,9 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -85,7 +82,6 @@ public class PickupRequestDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inf, ViewGroup parent, Bundle savedInstanceState) {
         View fragmentView = inf.inflate(R.layout.fragment_pickup_request_detail, parent, false);
         ButterKnife.bind(this, fragmentView);
-        setHasOptionsMenu(true);
 
         //Hack to catch back button and animate away before popping backstack
         fragmentView.setFocusableInTouchMode(true);
@@ -115,25 +111,6 @@ public class PickupRequestDetailFragment extends Fragment {
         tvDonorAddress.setText(mPickupRequest.getAddress());
 
         return fragmentView;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.removeItem(R.id.action_refresh);
-        inflater.inflate(R.menu.pickup_request_detail_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_cancel:
-                animateAndDetach();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
