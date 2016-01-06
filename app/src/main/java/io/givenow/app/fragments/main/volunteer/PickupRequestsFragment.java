@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
-import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
@@ -179,13 +178,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
             Bitmap icon = mIconGenerator.makeIcon(""); //TODO: express categories in icon somehow?
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-            //set the title to the users name, and snippet to be number of coats
-            //TODO the following should never happen. I don't know why donor is null when the data browser shows there is a user there
-            if (pickupRequest.getDonor() == null) {
-                Log.e("PickupRequestsFragment", "Pickup request with id " + pickupRequest.getObjectId() + " has a null donor!");
-            } else {
-                markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(pickupRequest.getAddress()));
-            }
+            markerOptions.title(pickupRequest.getAddress());
             markerOptions.snippet(getString(R.string.volunteer_accept_request_marker_cta));
         }
 
