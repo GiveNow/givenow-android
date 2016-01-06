@@ -7,9 +7,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.crashlytics.android.Crashlytics;
@@ -34,6 +36,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fj.data.Option;
 import io.givenow.app.R;
 import rx.Observable;
@@ -57,6 +60,7 @@ public class MapHostingFragment extends Fragment
     private boolean mZoomToLocation = true;
     private Geocoder mGeocoder;
     private CameraPosition mCameraPosition;
+    private View mMyLocationButton;
 
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
@@ -148,6 +152,12 @@ public class MapHostingFragment extends Fragment
         mGoogleMap = map;
         mGoogleMap.setMyLocationEnabled(true);
 
+        // Disabling the MyLocationButton this way apparently removes the button from the view hierarchy
+        // in a way that we can't perform clicks on it later. So let's just set the visibility to Gone instead.
+        //        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMyLocationButton = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
+                .findViewById(Integer.parseInt("2"));
+        mMyLocationButton.setVisibility(View.GONE);
     }
 
     public boolean isMapTouched() {
@@ -222,7 +232,6 @@ public class MapHostingFragment extends Fragment
                 mZoomToLocation = false;
             });
         }
-
     }
 
     @NonNull
@@ -240,6 +249,18 @@ public class MapHostingFragment extends Fragment
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    @OnClick(R.id.fabMyLocation)
+    public void onMyLocationClick(FloatingActionButton fabMyLocation) {
+        mMyLocationButton.performClick();
+        // More robust but less correct way: (doesn't replicate zoom level behavior of original myLocationButton)
+        //        getLastLocation().foreachDoEffect(latLng -> {
+        //            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
+        //            if (mGoogleMap != null) {
+        //                mGoogleMap.animateCamera(cameraUpdate);
+        //            }
+        //        });
     }
 
 }

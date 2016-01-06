@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -137,6 +138,9 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @BindDimen(R.dimen.icon_size)
     int iconSize;
+
+    @Bind(R.id.fabMyLocation)
+    FloatingActionButton fabMyLocation;
 
     private PlaceAutocompleteAdapter mAdapter;
     private boolean mConfirmAddressShowing = false;
@@ -703,7 +707,7 @@ public class RequestPickupFragment extends MapHostingFragment
             //Disable map and address field
             actvAddress.setEnabled(false);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            Animator hideFab = CustomAnimations.circularHide(fabMyLocation);
 
             //Update address and note field
             actvAddress.setText(mPickupRequest.getAddress(), false);
@@ -714,6 +718,7 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.animateCamera(cameraUpdate);
 
             AnimatorSet set = new AnimatorSet();
+            set.play(hideFab);
             set.play(slideDown).before(slideUp).with(fade_in).with(growNote);
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
@@ -758,7 +763,7 @@ public class RequestPickupFragment extends MapHostingFragment
             //Re-enable map and address field
             actvAddress.setEnabled(true);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            Animator showFab = CustomAnimations.circularReveal(fabMyLocation);
 
             Animator slideDown = CustomAnimations.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
@@ -772,6 +777,7 @@ public class RequestPickupFragment extends MapHostingFragment
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    showFab.start();
                     adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
                     rlCurrentRequestContainer.setVisibility(View.GONE);
                     btnBottomSubmit.setEnabled(true);
