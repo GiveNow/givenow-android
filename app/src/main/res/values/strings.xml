@@ -125,7 +125,7 @@
     <string name="volunteer_button_user_has_applied">You applied to volunteer</string>
     <string name="volunteer_button_user_has_not_applied">I want to volunteer!</string>
     <string name="volunteer_label_user_has_not_applied">Want to volunteer to pickup donations?\nThe only thing you need is a car and some spare time!</string>
-    <string name="volunteer_accept_request_marker_cta">Tap to accept this request!</string>
+    <string name="volunteer_accept_request_marker_cta">Tap here to accept this request!</string>
     <string name="request_status_volunteer_pending">A volunteer is ready to pick up your donation!</string>
     <string name="request_status_volunteer_confirmed">Your volunteer will contact you soon at %1$s!</string>
     <string name="dialog_volunteer_accept_pickuprequest_title">Accept this Pickup Request?</string>
