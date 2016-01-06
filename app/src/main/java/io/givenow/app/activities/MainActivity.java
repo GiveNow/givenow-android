@@ -251,7 +251,7 @@ public class MainActivity extends BaseActivity implements
                                     .setIcon(R.mipmap.ic_launcher)
                                     .show();
                         },
-                        error -> ErrorDialogs.connectionFailure(getApplicationContext(), error)));
+                        error -> ErrorDialogs.connectionFailure(this, error)));
     }
 
     private void cancelPendingVolunteer(PickupRequest pickupRequest) {
@@ -282,7 +282,7 @@ public class MainActivity extends BaseActivity implements
                             //removed this, and added it to done method below
                             pickupRequest.saveInBackground();
                         },
-                        error -> ErrorDialogs.connectionFailure(getApplicationContext(), error)));
+                        error -> ErrorDialogs.connectionFailure(this, error)));
     }
 
     //stupid helper method, can go away whenever
