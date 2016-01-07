@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import fj.data.Option;
 import io.givenow.app.R;
 
 /**
@@ -14,6 +15,10 @@ public class ErrorDialogs {
     public static void connectionFailure(Context context, Throwable error) {
         Log.d("ErrorDialogs", "Showing connectionFailure dialog for throwable: " + error.getMessage());
         error.printStackTrace();
+        Option.fromNull(error.getCause()).foreachDoEffect(cause -> {
+            Log.d("ErrorDialogs", "Error caused by: ");
+            cause.printStackTrace();
+        });
         if (Looper.myLooper() == Looper.getMainLooper()) {
             new AlertDialog.Builder(context)
                     .setTitle(R.string.error_connection_failure_title)
