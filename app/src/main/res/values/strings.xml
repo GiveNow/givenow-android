@@ -39,8 +39,8 @@
     <string name="action_refresh">Refresh</string>
     <string name="donate_pickup_complete">Your donation has been successfully picked up.  Thanks for making a difference!</string>
     <string name="donate_success">Donation Successful</string>
-    <string name="notif_pending_volunteer_assigned_title">Is your donation ready?</string>
-    <string name="notif_pending_volunteer_assigned_msg">%1$s wants to pick up your donation. Confirm?</string>
+    <string name="notif_pickup_request_claimed_title">Is your donation ready?</string>
+    <string name="notif_pickup_request_claimed_msg">%1$s wants to pick up your donation. Confirm?</string>
     <string name="notif_volunteer_confirmed_title">Ready for Pickup</string>
     <string name="notif_volunteer_confirmed_msg">%1$s\'s donation is ready to be picked up.</string>
     <string name="notif_pickup_complete_title">Donation Picked Up</string>

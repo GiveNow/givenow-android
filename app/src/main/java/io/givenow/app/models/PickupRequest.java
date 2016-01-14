@@ -297,8 +297,8 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public void generatePendingVolunteerAssignedNotif(Context context) {
         //send pickup response back to donor
         generatePushNotif(this.getDonor(),
-                context.getString(R.string.notif_pending_volunteer_assigned_title),
-                context.getString(R.string.notif_pending_volunteer_assigned_msg,
+                context.getString(R.string.notif_pickup_request_claimed_title),
+                context.getString(R.string.notif_pickup_request_claimed_msg,
                         ParseUserHelper.getFirstName().orSome("A volunteer")),
                 "");
     }

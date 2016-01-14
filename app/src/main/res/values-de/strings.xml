@@ -39,8 +39,8 @@
     <string name="action_refresh">Aktualisieren</string>
     <string name="donate_pickup_complete">Deine Spende wurde erfolgreich abgeholt. Danke für die Hilfe!</string>
     <string name="donate_success">Spende erfolgreich</string>
-    <string name="notif_pending_volunteer_assigned_title">Ist deine Spende abholbereit?</string>
-    <string name="notif_pending_volunteer_assigned_msg">%1$s möchte deine Spende abholen. Bestätigen?</string>
+    <string name="notif_pickup_request_claimed_title">Ist deine Spende abholbereit?</string>
+    <string name="notif_pickup_request_claimed_msg">%1$s möchte deine Spende abholen. Bestätigen?</string>
     <string name="notif_volunteer_confirmed_title">Spende abholbereit</string>
     <string name="notif_volunteer_confirmed_msg">Die Spende von %1$s ist abholbereit.</string>
     <string name="notif_pickup_complete_title">Spende abgeholt</string>

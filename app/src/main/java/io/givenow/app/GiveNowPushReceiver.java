@@ -15,6 +15,7 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -112,9 +113,13 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
                         defaultAlert,
                         alertObject -> {
                             try {
+                                List<String> locArgs = JsonHelper.toList(alertObject.getJSONArray("loc-args"));
+                                if (locArgs.isEmpty()) {
+                                    locArgs.add(context.getString(R.string.push_notif_volunteer_default_name));
+                                }
                                 return ResourceHelper.getLocalizedString(context,
                                         alertObject.getString("loc-key"),
-                                        JsonHelper.toList(alertObject.getJSONArray("loc-args")).toArray());
+                                        locArgs.toArray());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 return defaultAlert;
