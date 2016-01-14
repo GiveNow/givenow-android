@@ -22,8 +22,8 @@ public class ResourceHelper {
     }
 
     @NonNull
-    public static String getLocalizedString(Context context, String id, Object[] args) {
+    public static String getLocalizedString(Context context, String id, Object... args) {
         int stringRes = context.getResources().getIdentifier(id, "string", context.getPackageName());
-        return context.getString(stringRes, args); //TODO: check varargs fuckery
+        return context.getString(stringRes, args);
     }
 }
