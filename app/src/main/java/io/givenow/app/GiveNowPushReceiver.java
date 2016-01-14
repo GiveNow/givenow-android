@@ -101,19 +101,27 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
         switch (pushData.optString("type")) {
             case "claimPickupRequest":
                 // build title
-                title =
-                        Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                                getLocalizedStringFromObject(context, titleObject)
-                        ).orSome(defaultTitle);
+                title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                        getLocalizedStringFromObject(context, titleObject))
+                        .orSome(defaultTitle);
                 // build alert
-                alert =
-                        Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                                getLocalizedStringFromObject(context,
-                                        alertObject,
-                                        Collections.singletonList(context.getString(
-                                                R.string.push_notif_volunteer_default_name)))
-
-                        ).orSome(defaultAlert);
+                alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                        getLocalizedStringFromObject(context,
+                                alertObject,
+                                Collections.singletonList(context.getString(
+                                        R.string.push_notif_volunteer_default_name))))
+                        .orSome(defaultAlert);
+                break;
+            case "confirmVolunteer":
+                // build title
+                title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                        getLocalizedStringFromObject(context, titleObject))
+                        .orSome(defaultTitle);
+                // build alert
+                alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                        getLocalizedStringFromObject(context,
+                                alertObject))
+                        .orSome(defaultAlert);
                 break;
             default:
                 title = defaultTitle;

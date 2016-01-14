@@ -272,17 +272,11 @@ public class MainActivity extends BaseActivity implements
                 .setAction("PendingVolunteerConfirmed")
                 .setLabel(ParseUser.getCurrentUser().getObjectId())
                 .build());
-        // if user accepts, send push notif to pendingVolunteer, and set confirmedVolunteer
-        pickupRequest.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> {
-                            pickupRequest.generateVolunteerConfirmedNotif(this);
-                            pickupRequest.setConfirmedVolunteer(volunteer);
 
-                            //removed this, and added it to done method below
-                            pickupRequest.saveInBackground();
-                        },
-                        error -> ErrorDialogs.connectionFailure(this, error)));
+        pickupRequest.confirmVolunteer().subscribe(
+                response -> Log.d("Cloud Response", response.toString()),
+                error -> ErrorDialogs.connectionFailure(this, error) //TODO: maybe implement Retry dialog here?
+        );
     }
 
     //stupid helper method, can go away whenever

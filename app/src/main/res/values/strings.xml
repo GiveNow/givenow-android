@@ -42,7 +42,8 @@
     <string name="notif_pickup_request_claimed_title">Is your donation ready?</string>
     <string name="notif_pickup_request_claimed_msg">%1$s wants to pick up your donation. Confirm?</string>
     <string name="notif_volunteer_confirmed_title">Ready for Pickup</string>
-    <string name="notif_volunteer_confirmed_msg">%1$s\'s donation is ready to be picked up.</string>
+    <string name="notif_volunteer_confirmed_msg">%1$s\'s donation at %2$s is ready to be picked up.</string>
+    <string name="notif_volunteer_confirmed_msg_no_name">The donation at %1$s is ready to be picked up.</string>
     <string name="notif_pickup_complete_title">Donation Picked Up</string>
     <string name="notif_pickup_complete_msg">%1$s just picked up your donation. Thanks!</string>
     <string name="notif_problem_reported_title">Problem Reported</string>
