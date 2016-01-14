@@ -220,9 +220,10 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
     }
 
     public void clearItems() {
+        int oldSize = mItems.size();
         mItems.clear();
 //        notifyDataSetChanged();
-        notifyItemRangeRemoved(0, mItems.size());
+        notifyItemRangeRemoved(0, oldSize);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
