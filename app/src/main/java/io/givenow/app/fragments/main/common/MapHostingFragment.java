@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -178,21 +177,21 @@ public class MapHostingFragment extends Fragment
     public Observable<Address> getAddressFromLatLng(LatLng pos) {
         return Observable
                 .defer(() -> {
-                    List<Address> addresses = null;
                     try {
                         if (isOnline()) {
-                            addresses = mGeocoder.getFromLocation(pos.latitude, pos.longitude, 1);
+                            return Option.fromNull(mGeocoder.getFromLocation(pos.latitude, pos.longitude, 1)).map(addresses -> {
+                                if (addresses.size() > 0)
+                                    return Observable.just(addresses.get(0));
+                                else
+                                    return Observable.<Address>empty();
+                            }).orSome(Observable.empty());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (addresses != null) {
-                        if (addresses.size() > 0)
-                            return Observable.just(addresses.get(0));
-                    }
                     return Observable.empty();
                 })
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
