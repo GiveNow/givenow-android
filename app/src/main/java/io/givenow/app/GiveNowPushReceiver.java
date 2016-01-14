@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -15,6 +16,7 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -92,40 +94,31 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
         }
 
         String defaultTitle = pushData.optString("title", context.getPackageManager().getApplicationLabel(context.getApplicationInfo()).toString());
-        String title =
-                Option.fromNull(pushData.optJSONObject("title")).option(
-                        defaultTitle,
-                        titleObject -> {
-                            try {
-                                return ResourceHelper.getLocalizedString(context,
-                                        titleObject.getString("loc-key"),
-                                        JsonHelper.toList(titleObject.getJSONArray("loc-args")).toArray());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                return defaultTitle;
-                            }
-                        }
-                );
-
         String defaultAlert = pushData.optString("alert", "Notification received.");
-        String alert =
-                Option.fromNull(pushData.optJSONObject("alert")).option(
-                        defaultAlert,
-                        alertObject -> {
-                            try {
-                                List<String> locArgs = JsonHelper.toList(alertObject.getJSONArray("loc-args"));
-                                if (locArgs.isEmpty()) {
-                                    locArgs.add(context.getString(R.string.push_notif_volunteer_default_name));
-                                }
-                                return ResourceHelper.getLocalizedString(context,
-                                        alertObject.getString("loc-key"),
-                                        locArgs.toArray());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                return defaultAlert;
-                            }
-                        }
-                );
+
+        String title;
+        String alert;
+        switch (pushData.optString("type")) {
+            case "claimPickupRequest":
+                // build title
+                title =
+                        Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                                getLocalizedStringFromObject(context, titleObject)
+                        ).orSome(defaultTitle);
+                // build alert
+                alert =
+                        Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                                getLocalizedStringFromObject(context,
+                                        alertObject,
+                                        Collections.singletonList(context.getString(
+                                                R.string.push_notif_volunteer_default_name)))
+
+                        ).orSome(defaultAlert);
+                break;
+            default:
+                title = defaultTitle;
+                alert = defaultAlert;
+        }
 
         String tickerText = String.format(Locale.getDefault(), "%s: %s", title, alert);
 
@@ -168,9 +161,27 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
         return parseBuilder.build();
     }
 
-//    private String localizeObjectOrDefault(String key, String defaultString) {
-//        return defaultString;
-//    }
+    @NonNull
+    private Option<String> getLocalizedStringFromObject(Context context, JSONObject jsonObject) {
+        return getLocalizedStringFromObject(context, jsonObject, Collections.emptyList());
+    }
+
+    @NonNull
+    private Option<String> getLocalizedStringFromObject(Context context, JSONObject jsonObject, List<String> defaultArgs) {
+        try {
+            String locKey = jsonObject.getString("loc-key");
+            List<String> locArgs = JsonHelper.toList(jsonObject.getJSONArray("loc-args"));
+            if (locArgs.isEmpty()) {
+                locArgs.addAll(defaultArgs);
+            }
+            return Option.some(ResourceHelper.getLocalizedString(context,
+                    locKey,
+                    locArgs.toArray()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return Option.none();
+        }
+    }
 
     @Override
     protected Bitmap getLargeIcon(Context context, Intent intent) {
