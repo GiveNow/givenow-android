@@ -16,7 +16,7 @@
     <string name="login_greeting">Mit Telefonnummer anonym anmelden</string>
     <string name="login_label">Anonym anmelden</string>
     <string name="confirm_pickup">Diese Spende abholen?</string>
-    <string name="accept">Annehmen</string>
+    <string name="claim">Annehmen</string>
     <string name="cancel">Abbrechen</string>
     <string name="donation_history">Alle Spenden</string>
     <string name="pickup_history">Alle Abholungen</string>
@@ -116,8 +116,8 @@
     <string name="dialog_loggedin_existing_donation_found_button">OK</string>
     <string name="request_status_volunteer_pending">Ein Helfer möchte deine Spende abholen!</string>
     <string name="dialog_phoneNumber_for_volunteer">Wir werden dich unter dieser Nummer mit Details kontaktieren. \n Keine Sorge, wir werden sie mit niemandem teilen!</string>
-    <string name="dialog_volunteer_accept_pickuprequest_message">Dies wird dem Spender mitteilen das seine Spende abgeholt werden kann.</string>
-    <string name="dialog_volunteer_accept_pickuprequest_title">Akzeptierst du diese Abhol Anfrage?</string>
+    <string name="dialog_volunteer_claim_pickuprequest_message">Dies wird dem Spender mitteilen das seine Spende abgeholt werden kann.</string>
+    <string name="dialog_volunteer_claim_pickuprequest_title">Akzeptierst du diese Abhol Anfrage?</string>
     <string name="request_status_volunteer_confirmed">Dein freiwilliger Abholer wird dich bald unter %1$s kontaktieren.</string>
     <string name="volunteer_button_user_has_applied">Du hast dich beworben freiwilliger Abholer zu sein.</string>
     <string name="volunteer_button_user_has_not_applied">Ich möchte Spenden transportieren!</string>

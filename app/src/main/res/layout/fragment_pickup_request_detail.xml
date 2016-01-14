@@ -92,14 +92,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnAccept"
+            android:id="@+id/btnClaim"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:background="@drawable/button_color_state_list"
             android:foreground="?attr/selectableItemBackground"
-            android:text="@string/accept"
+            android:text="@string/claim"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#ffffffff" />
     </io.givenow.app.customviews.SlidingRelativeLayout>

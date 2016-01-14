@@ -19,11 +19,14 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import fj.data.Option;
 import io.givenow.app.R;
 import io.givenow.app.helpers.ErrorDialogs;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
 
 /**
@@ -253,6 +256,13 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     /* Cancel this pickup request.*/
     public void cancel() {
         setActive(false);
+    }
+
+    public Observable<Object> claim() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pickupRequestId", getObjectId());
+        return ParseObservable.callFunction("claimPickupRequest", params)
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

@@ -68,10 +68,10 @@ import io.givenow.app.fragments.PhoneNumberVerificationFragment;
 import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.helpers.Analytics;
-import io.givenow.app.helpers.AttributeGetter;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.helpers.RateApp;
+import io.givenow.app.helpers.ResourceHelper;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -327,7 +327,7 @@ public class RequestPickupFragment extends MapHostingFragment
                     }
                 },
                 error -> {
-                    Log.d("RPF", "fetchPickupRequest onError");
+                    Log.d(logTag(), "No outstanding pickup request.");
                 });
     }
 
@@ -694,7 +694,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
             slideUp.setInterpolator(new DecelerateInterpolator());
-            Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
+            Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
 
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
@@ -767,7 +767,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator slideDown = CustomAnimations.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
-            Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize));
+            Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize));
             slideUp.setInterpolator(new DecelerateInterpolator());
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);

@@ -16,7 +16,7 @@
     <string name="login_greeting">Login anonymously using your phone number</string>
     <string name="login_label">Log in Anonymously</string>
     <string name="confirm_pickup">Are you sure you want to pick up this donation?</string>
-    <string name="accept">Accept</string>
+    <string name="claim">Claim</string>
     <string name="cancel">Cancel</string>
     <string name="donation_history">Donation History</string>
     <string name="pickup_history">Pickup History</string>
@@ -128,8 +128,8 @@
     <string name="volunteer_accept_request_marker_cta">Tap here to accept this request!</string>
     <string name="request_status_volunteer_pending">A volunteer is ready to pick up your donation!</string>
     <string name="request_status_volunteer_confirmed">Your volunteer will contact you soon at %1$s!</string>
-    <string name="dialog_volunteer_accept_pickuprequest_title">Accept this Pickup Request?</string>
-    <string name="dialog_volunteer_accept_pickuprequest_message">This will notify the donor that you\'d like to pick their donation up.</string>
+    <string name="dialog_volunteer_claim_pickuprequest_title">Claim this Pickup Request?</string>
+    <string name="dialog_volunteer_claim_pickuprequest_message">This will notify the donor that you\'d like to pick their donation up.</string>
     <string name="dashboard_status_ready">Ready for Pickup</string>
     <string name="dashboard_button_text_donor">Message</string>
     <string name="donation_complete_title">Thank you for your donation</string>
