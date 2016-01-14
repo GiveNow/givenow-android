@@ -354,12 +354,14 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         PickupRequest that = (PickupRequest) o;
 
         return getObjectId().equals(that.getObjectId())
-                && getActive() == that.getActive()
-                && getLocation().equals(that.getLocation())
-                && getAddress().equals(that.getAddress())
-                && getNote().equals(that.getNote())
-                && getDonor().equals(that.getDonor())
-                && getDonationCategories().equals(that.getDonationCategories());
+                && getUpdatedAt().equals(that.getUpdatedAt());
+//                && getActive() == that.getActive()
+//                && getLocation().getLatitude() == that.getLocation().getLatitude()
+//                && getLocation().getLongitude() == that.getLocation().getLongitude()
+//                && getAddress().equals(that.getAddress())
+//                && getNote().equals(that.getNote())
+//                && getDonor().getObjectId().equals(that.getDonor().getObjectId())
+//                && getDonationCategories().equals(that.getDonationCategories());
     }
 
     @Override
