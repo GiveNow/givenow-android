@@ -183,8 +183,12 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
             Log.i("DashboardItemAdapter", "New list is the same as the current list.");
             return;
         }
-        mItems.clear();
-        notifyItemRangeRemoved(0, items.size());
+        // Attempt to fix crash:
+        // java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid item position 3(offset:5).state:4
+        // https://code.google.com/p/android/issues/detail?can=1&q=77846&colspec=ID%20Type%20Status%20Owner%20Summary%20Stars&id=77846
+//        mItems.clear();
+//        notifyItemRangeRemoved(0, items.size()); <--- lol i was using items here, not mItems. probably the cause
+        clearItems();
         fj.data.List.list(items)
                 .foreachDoEffect(this::addItem);
         Log.i("DashboardItemAdapter", items.size() + " dashboard items added.");
@@ -217,7 +221,8 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
     public void clearItems() {
         mItems.clear();
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, mItems.size());
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
