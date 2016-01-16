@@ -143,5 +143,9 @@
     <string name="label_name">Your name</string>
     <string name="tab_title_donation_history">Donation History</string>
     <string name="tab_title_volunteer_history">Volunteer History</string>
+    <string name="dialog_pickup_pickupRequest_title">Did you pick up this donation?</string>
+    <string name="dialog_pickup_pickupRequest_message">This will notify the donor and remove it from your Dashboard.</string>
+    <string name="dialog_pickup_pickupRequest_positiveButton">Yes, I picked it up</string>
+    <string name="dialog_pickup_pickupRequest_negativeButton">@string/no</string>
 
 </resources>

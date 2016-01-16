@@ -3,7 +3,9 @@ package io.givenow.app.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +27,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.helpers.ErrorDialogs;
-import io.givenow.app.models.Donation;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 import rx.android.schedulers.AndroidSchedulers;
@@ -148,25 +149,22 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
             //TODO: change card view to donation picked up view
             // could change status to Picked Up
 
-//            new AlertDialog.Builder(mContext).setTitle("Finish dropoff")
-            // DONATION CREATION
-            final Donation newDonation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationCategories());
-            ParseObservable.save(newDonation).subscribe(
-                    donation -> {
-                        //send push to donor
-                        pickupRequest.generatePickupCompleteNotif(mContext);
-                        //create donation, and set it in the PickupRequest
-                        pickupRequest.setDonation(newDonation);
-                        // loadObjects();
-                        ParseObservable.save(pickupRequest)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(
-                                        r -> {
-                                            remove(vh.getAdapterPosition());
-                                        },
-                                        error -> ErrorDialogs.connectionFailure(mContext, error));
-                    },
-                    error -> ErrorDialogs.connectionFailure(mContext, error));
+            String address = "<font color='#858585'>" + pickupRequest.getAddress() + "</font><br><br>";
+
+            //TODO excise this dialog and do this inline in the card instead. Then change card to picked up view with categories etc to aid in dropoff
+            new AlertDialog.Builder(mContext)
+                    .setTitle(mContext.getString(R.string.dialog_pickup_pickupRequest_title))
+                    .setMessage(Html.fromHtml(address + mContext.getString(R.string.dialog_pickup_pickupRequest_message)))
+                    .setPositiveButton(R.string.dialog_pickup_pickupRequest_positiveButton, (dialog, which) -> {
+                        pickupRequest.pickUp().subscribe(
+                                response -> {
+                                    Log.d("Cloud Response", response.toString());
+                                    remove(vh.getAdapterPosition());
+                                },
+                                error -> ErrorDialogs.connectionFailure(mContext, error));
+                    })
+                    .setNegativeButton(R.string.dialog_pickup_pickupRequest_negativeButton, null)
+                    .show();
         });
         //TODO: Make Report Problem do something
     }
