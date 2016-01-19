@@ -649,15 +649,10 @@ public class RequestPickupFragment extends MapHostingFragment
     private void buildCategoryGrid() {
         //get categories from parse
         mDonationCategoryAdapter.clearItems();
-        DonationCategory.getTop9().findInBackground((categoryList, error) -> {
-            if (error == null) {
-                for (DonationCategory category : categoryList) {
-                    mDonationCategoryAdapter.addItem(category);
-                }
-            } else {
-                Log.d("RPDF", "Error fetching categories: " + error.getMessage());
-            }
-        });
+        ParseObservable.find(DonationCategory.fetchTop9()).observeOn(mainThread()).subscribe(
+                mDonationCategoryAdapter::addItem,
+                error -> ErrorDialogs.connectionFailure(getActivity(), error)
+        );
     }
 
     @NonNull
