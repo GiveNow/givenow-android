@@ -59,7 +59,7 @@ public class GiveNowApplication extends Application {
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()
-                    .penaltyDeath()
+//                    .penaltyDeath()
                     .build());
         } else {
             Log.d("Application", "BuildConfig.DEBUG is false. Running in release mode.");
