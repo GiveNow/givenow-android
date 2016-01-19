@@ -320,7 +320,9 @@ public class RequestPickupFragment extends MapHostingFragment
                                 .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
                                 .setOnDismissListener(d -> {
                                     mPickupRequest.setActive(false);
-                                    mPickupRequest.saveInBackground();
+                                    ParseObservable.save(mPickupRequest)
+                                            .flatMap(pr -> hideCurrentRequestLayout())
+                                            .subscribe();
                                 })
                                 .show();
                         //TODO: Share on facebook/twitter etc for bragging rights
