@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -148,7 +149,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private DonationCategoryAdapter mDonationCategoryAdapter;
     private boolean mCategoryLayoutShowing = false;
     private GridLayoutManager mGridLayoutManager;
-    private PickupRequest mPickupRequest;
+    @Nullable private PickupRequest mPickupRequest;
     private DonationCategoryAdapter mCurrentRequestCategoriesAdapter;
     private boolean mCurrentRequestLayoutShowing = false;
     private Tracker mTracker;
@@ -319,10 +320,18 @@ public class RequestPickupFragment extends MapHostingFragment
                                 .setPositiveButton(R.string.done, null)
                                 .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
                                 .setOnDismissListener(d -> {
-                                    mPickupRequest.setActive(false);
-                                    ParseObservable.save(mPickupRequest)
-                                            .flatMap(pr -> hideCurrentRequestLayout())
-                                            .subscribe();
+                                    mPickupRequest.markComplete()
+                                            .flatMap(response -> {
+                                                Log.d("Cloud Response", response.toString());
+                                                return Observable.just(response);
+                                            })
+                                            .flatMap(p -> mCurrentRequestLayoutShowing ?
+                                                    hideCurrentRequestLayout() : Observable.just(null)
+                                            )
+                                            .subscribe(
+                                                    v -> mPickupRequest = null,
+                                                    error -> ErrorDialogs.connectionFailure(getActivity(), error));
+
                                 })
                                 .show();
                         //TODO: Share on facebook/twitter etc for bragging rights

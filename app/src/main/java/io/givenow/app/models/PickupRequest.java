@@ -279,6 +279,13 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<Object> markComplete() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pickupRequestId", getObjectId());
+        return ParseObservable.callFunction("markComplete", params)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     @Override
     public LatLng getPosition() {
         ParseGeoPoint loc = getLocation();
