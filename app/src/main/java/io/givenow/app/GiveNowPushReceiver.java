@@ -88,10 +88,11 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
     /* Copied from ParsePushBroadcastReceiver, enhanced with alert localization. */
     @Override
     protected Notification getNotification(Context context, Intent intent) {
-        JSONObject pushData = getPushData(intent);
-        if (pushData == null || (!pushData.has("alert") && !pushData.has("title"))) {
+        JSONObject pushDataObject = getPushData(intent);
+        if (pushDataObject == null || (!pushDataObject.has("data"))) {
             return null;
         }
+        JSONObject pushData = pushDataObject.optJSONObject("data");
 
         String defaultTitle = pushData.optString("title", context.getPackageManager().getApplicationLabel(context.getApplicationInfo()).toString());
         String defaultAlert = pushData.optString("alert", "Notification received.");
@@ -121,6 +122,19 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
                 alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
                         getLocalizedStringFromObject(context,
                                 alertObject))
+                        .orSome(defaultAlert);
+                break;
+            case "pickupDonation":
+                // build title
+                title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                        getLocalizedStringFromObject(context, titleObject))
+                        .orSome(defaultTitle);
+                // build alert
+                alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                        getLocalizedStringFromObject(context,
+                                alertObject,
+                                Collections.singletonList(context.getString(
+                                        R.string.push_notif_volunteer_default_name))))
                         .orSome(defaultAlert);
                 break;
             default:
