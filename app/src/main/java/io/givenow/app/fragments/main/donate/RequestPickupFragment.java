@@ -320,18 +320,20 @@ public class RequestPickupFragment extends MapHostingFragment
                                 .setPositiveButton(R.string.done, null)
                                 .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
                                 .setOnDismissListener(d -> {
-                                    mPickupRequest.markComplete()
-                                            .flatMap(response -> {
-                                                Log.d("Cloud Response", response.toString());
-                                                return Observable.just(response);
-                                            })
-                                            .flatMap(p -> mCurrentRequestLayoutShowing ?
-                                                    hideCurrentRequestLayout() : Observable.just(null)
-                                            )
-                                            .subscribe(
-                                                    v -> mPickupRequest = null,
-                                                    error -> ErrorDialogs.connectionFailure(getActivity(), error));
+                                    if (mPickupRequest != null) {
+                                        mPickupRequest.markComplete()
+                                                .flatMap(response -> {
+                                                    Log.d("Cloud Response", response.toString());
+                                                    return Observable.just(response);
+                                                })
+                                                .flatMap(p -> mCurrentRequestLayoutShowing ?
+                                                        hideCurrentRequestLayout() : Observable.just(null)
+                                                )
+                                                .subscribe(
+                                                        v -> mPickupRequest = null,
+                                                        error -> ErrorDialogs.connectionFailure(getActivity(), error));
 
+                                    }
                                 })
                                 .show();
                         //TODO: Share on facebook/twitter etc for bragging rights
