@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity implements
                                 name = ParseUserHelper.getFirstName(volunteer).orSome(name);
                             }
                             String title = name + getString(R.string.push_notif_volunteer_is_ready_to_pickup);
-                            String address = "<br><br><font color='#858585'>Address: " + pickupRequest.getAddress() + "</font>";
+                            String address = "<br><br><font color='#858585'>" + pickupRequest.getAddress() + "</font>";
 
 
                             if (acceptPendingDialog != null && acceptPendingDialog.isShowing()) {
