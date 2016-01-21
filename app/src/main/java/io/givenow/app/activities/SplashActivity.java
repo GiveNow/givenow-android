@@ -15,11 +15,20 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent targetIntent;
         if (isFirstTime()) {
-            startActivity(new Intent(this, OnboardingActivity.class));
+            targetIntent = new Intent(this, OnboardingActivity.class);
         } else {
-            startActivity(new Intent(this, MainActivity.class));
+            targetIntent = new Intent(this, MainActivity.class);
         }
+        // So push notification data gets passed on:
+        if (getIntent() != null) {
+            if (getIntent().getExtras() != null) {
+                targetIntent.putExtras(getIntent().getExtras());
+            }
+        }
+
+        startActivity(targetIntent);
         finish();
     }
 

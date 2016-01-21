@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.location.Address;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -39,9 +40,9 @@ import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 import fj.data.Option;
 import io.givenow.app.GiveNowApplication;
+import io.givenow.app.GiveNowPushReceiver;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.VolunteerFragment;
 import io.givenow.app.fragments.main.common.DropOffLocationsFragment;
@@ -49,7 +50,6 @@ import io.givenow.app.fragments.main.donate.RequestPickupFragment;
 import io.givenow.app.fragments.main.profile.ProfileFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestsFragment;
-import io.givenow.app.helpers.CroutonHelper;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -107,8 +107,8 @@ public class MainActivity extends BaseActivity implements
             Log.d("MainActivity", "OnCreate state restored. mSelectedItemId=" + mSelectedItemId + " fragToHide=" + fragToHide.getTag());
             selectItem(mSelectedItemId);
         } else {
-            mSelectedItemId = R.id.navigation_give;
-            selectItem(mSelectedItemId);
+//            mSelectedItemId = chooseItemFromPushNotif();
+            selectItem(chooseItemFromPushNotif());
         }
     }
 
@@ -131,58 +131,25 @@ public class MainActivity extends BaseActivity implements
         mTracker.setScreenName("MainActivity");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        //if the user resumed the app by entering through a Volunteer push notif, show dashboard
-        boolean isPushNotif = handlePushNotifResume();
 
-        if (isPushNotif) {
-            selectItem(R.id.navigation_volunteer);
-        } else {
-            checkForPendingRequests();
-//            selectItem(mSelectedItemId);
-        }
+//        selectItem(chooseItemFromPushNotif());
     }
 
-    private boolean handlePushNotifResume() {
+    @IdRes
+    private int chooseItemFromPushNotif() {
 //        Log.d("detectPushNotificationMessage", "handlePushNotif");
-        String notificationData = getIntent().getStringExtra("com.parse.Data");
-        if (notificationData != null) {
-//                Log.d("detectPushNotificationMessage", "notificationData =" + notificationData);
-
-            try {
-                JSONObject json = new JSONObject(notificationData);
-//                    Log.d("detectPushNotificationMessage", "made json object " + json.toString());
-
-                String notifType = json.getString("type");
-//                    Log.d("detectPushNotificationMessage", "notifType = " + notifType);
-                if (notifType.equals(PickupRequest.VOLUNTEER_CONFIRMED)) {
-//                        Log.d("detectPushNotificationMessage", "switch to volunteer fragment");
-
-                    //remove the push notif data, so we don't process it next app resume
-                    getIntent().removeExtra("com.parse.Data");
-
-                    //try setting us to the Volunteer fragment
-//                    selectItem(POSITION_VOLUNTEER);
-                    //move to dashboard duey
-//                    VolunteerFragment volunteerFragment = (VolunteerFragment) getFragmentManager().findFragmentByTag("vol");
-                    //0 means dashboard
-//                    volunteerFragment.setCurrentItem(0);
-
-                    return true;
-                } else if (notifType.equals(PickupRequest.PICKUP_COMPLETE)) {
-                    //remove the push notif data, so we don't process it next app resume
-                    getIntent().removeExtra("com.parse.Data");
-
-                    String title = getResources().getString(R.string.donate_success);
-                    String message = getResources().getString(R.string.donate_pickup_complete);
-
-                    Crouton crouton = CroutonHelper.createInfoCrouton(this, title, message);
-                    crouton.show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+        return GiveNowPushReceiver.getPushData(getIntent()).map(pushData -> {
+            switch (pushData.optString("type")) {
+                case "claimPickupRequest":
+                    return R.id.navigation_give;
+                case "confirmVolunteer":
+                    return R.id.navigation_volunteer; // donation ready for pickup. show volunteer dashboard
+                case "pickupDonation":
+                    return R.id.navigation_give;
+                default:
+                    return R.id.navigation_give;
             }
-        }
-        return false;
+        }).orSome(R.id.navigation_give);
     }
 
     @Override
@@ -372,7 +339,7 @@ public class MainActivity extends BaseActivity implements
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void selectItem(int itemId) {
+    private void selectItem(@IdRes int itemId) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out); //not supported by SupportFM
 //        ft.setTransition();
@@ -397,6 +364,7 @@ public class MainActivity extends BaseActivity implements
                     ft.show(requestPickupFragment);
                 }
                 fragToHide = requestPickupFragment;
+                checkForPendingRequests();
                 break;
             case R.id.navigation_volunteer: //Volunteer
                 if (volunteerFragment == null) {

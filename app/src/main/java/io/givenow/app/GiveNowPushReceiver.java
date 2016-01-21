@@ -31,6 +31,21 @@ import io.givenow.app.helpers.ResourceHelper;
 public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
     private final String TAG = getClass().getSimpleName();
 
+    @NonNull
+    public static Option<JSONObject> getPushData(Intent intent) {
+        try {
+            if (intent.getStringExtra(KEY_PUSH_DATA) != null) {
+                JSONObject fullPushData = new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
+                return Option.some(fullPushData.getJSONObject("data"));
+            } else {
+                return Option.none();
+            }
+        } catch (JSONException e) {
+            Log.e("getPushData", "Unexpected JSONException when receiving push data: ", e);
+            return Option.none();
+        }
+    }
+
     @Override
     public void onPushReceive(Context context, Intent intent) {
 
@@ -72,115 +87,103 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
             broadcastIntent.setPackage(context.getPackageName());
             context.sendBroadcast(broadcastIntent);
         }
-        Option.fromNull(getNotification(context, intent)).foreachDoEffect(notification ->
+        getNotificationOption(context, intent).foreachDoEffect(notification ->
                 GiveNowNotificationManager.getInstance().showNotification(context, notification));
     }
 
-    private JSONObject getPushData(Intent intent) {
-        try {
-            return new JSONObject(intent.getStringExtra(KEY_PUSH_DATA));
-        } catch (JSONException e) {
-            Log.e(TAG, "Unexpected JSONException when receiving push data: ", e);
-            return null;
-        }
-    }
-
     /* Copied from ParsePushBroadcastReceiver, enhanced with alert localization. */
-    @Override
-    protected Notification getNotification(Context context, Intent intent) {
-        JSONObject pushDataObject = getPushData(intent);
-        if (pushDataObject == null || (!pushDataObject.has("data"))) {
-            return null;
-        }
-        JSONObject pushData = pushDataObject.optJSONObject("data");
+//    @Override
+    @NonNull
+    protected Option<Notification> getNotificationOption(Context context, Intent intent) {
+        return getPushData(intent).map(pushData -> {
+            String defaultTitle = pushData.optString("title", context.getPackageManager().getApplicationLabel(context.getApplicationInfo()).toString());
+            String defaultAlert = pushData.optString("alert", "Notification received.");
 
-        String defaultTitle = pushData.optString("title", context.getPackageManager().getApplicationLabel(context.getApplicationInfo()).toString());
-        String defaultAlert = pushData.optString("alert", "Notification received.");
+            String title;
+            String alert;
+            switch (pushData.optString("type")) {
+                case "claimPickupRequest":
+                    // build title
+                    title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                            getLocalizedStringFromObject(context, titleObject))
+                            .orSome(defaultTitle);
+                    // build alert
+                    alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                            getLocalizedStringFromObject(context,
+                                    alertObject,
+                                    Collections.singletonList(context.getString(
+                                            R.string.push_notif_volunteer_default_name))))
+                            .orSome(defaultAlert);
+                    break;
+                case "confirmVolunteer":
+                    // build title
+                    title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                            getLocalizedStringFromObject(context, titleObject))
+                            .orSome(defaultTitle);
+                    // build alert
+                    alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                            getLocalizedStringFromObject(context,
+                                    alertObject))
+                            .orSome(defaultAlert);
+                    break;
+                case "pickupDonation":
+                    // build title
+                    title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
+                            getLocalizedStringFromObject(context, titleObject))
+                            .orSome(defaultTitle);
+                    // build alert
+                    alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
+                            getLocalizedStringFromObject(context,
+                                    alertObject,
+                                    Collections.singletonList(context.getString(
+                                            R.string.push_notif_volunteer_default_name))))
+                            .orSome(defaultAlert);
+                    break;
+                default:
+                    title = defaultTitle;
+                    alert = defaultAlert;
+            }
 
-        String title;
-        String alert;
-        switch (pushData.optString("type")) {
-            case "claimPickupRequest":
-                // build title
-                title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                        getLocalizedStringFromObject(context, titleObject))
-                        .orSome(defaultTitle);
-                // build alert
-                alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                        getLocalizedStringFromObject(context,
-                                alertObject,
-                                Collections.singletonList(context.getString(
-                                        R.string.push_notif_volunteer_default_name))))
-                        .orSome(defaultAlert);
-                break;
-            case "confirmVolunteer":
-                // build title
-                title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                        getLocalizedStringFromObject(context, titleObject))
-                        .orSome(defaultTitle);
-                // build alert
-                alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                        getLocalizedStringFromObject(context,
-                                alertObject))
-                        .orSome(defaultAlert);
-                break;
-            case "pickupDonation":
-                // build title
-                title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                        getLocalizedStringFromObject(context, titleObject))
-                        .orSome(defaultTitle);
-                // build alert
-                alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                        getLocalizedStringFromObject(context,
-                                alertObject,
-                                Collections.singletonList(context.getString(
-                                        R.string.push_notif_volunteer_default_name))))
-                        .orSome(defaultAlert);
-                break;
-            default:
-                title = defaultTitle;
-                alert = defaultAlert;
-        }
+            String tickerText = String.format(Locale.getDefault(), "%s: %s", title, alert);
 
-        String tickerText = String.format(Locale.getDefault(), "%s: %s", title, alert);
+            Bundle extras = intent.getExtras();
 
-        Bundle extras = intent.getExtras();
+            Random random = new Random();
+            int contentIntentRequestCode = random.nextInt();
+            int deleteIntentRequestCode = random.nextInt();
 
-        Random random = new Random();
-        int contentIntentRequestCode = random.nextInt();
-        int deleteIntentRequestCode = random.nextInt();
+            // Security consideration: To protect the app from tampering, we require that intent filters
+            // not be exported. To protect the app from information leaks, we restrict the packages which
+            // may intercept the push intents.
+            String packageName = context.getPackageName();
 
-        // Security consideration: To protect the app from tampering, we require that intent filters
-        // not be exported. To protect the app from information leaks, we restrict the packages which
-        // may intercept the push intents.
-        String packageName = context.getPackageName();
+            Intent contentIntent = new Intent(ParsePushBroadcastReceiver.ACTION_PUSH_OPEN);
+            contentIntent.putExtras(extras);
+            contentIntent.setPackage(packageName);
 
-        Intent contentIntent = new Intent(ParsePushBroadcastReceiver.ACTION_PUSH_OPEN);
-        contentIntent.putExtras(extras);
-        contentIntent.setPackage(packageName);
+            Intent deleteIntent = new Intent(ParsePushBroadcastReceiver.ACTION_PUSH_DELETE);
+            deleteIntent.putExtras(extras);
+            deleteIntent.setPackage(packageName);
 
-        Intent deleteIntent = new Intent(ParsePushBroadcastReceiver.ACTION_PUSH_DELETE);
-        deleteIntent.putExtras(extras);
-        deleteIntent.setPackage(packageName);
+            PendingIntent pContentIntent = PendingIntent.getBroadcast(context, contentIntentRequestCode,
+                    contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pDeleteIntent = PendingIntent.getBroadcast(context, deleteIntentRequestCode,
+                    deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        PendingIntent pContentIntent = PendingIntent.getBroadcast(context, contentIntentRequestCode,
-                contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pDeleteIntent = PendingIntent.getBroadcast(context, deleteIntentRequestCode,
-                deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // The purpose of setDefaults(Notification.DEFAULT_ALL) is to inherit notification properties
-        // from system defaults
-        NotificationCompat.Builder parseBuilder = new NotificationCompat.Builder(context);
-        parseBuilder.setContentTitle(title)
-                .setContentText(alert)
-                .setTicker(tickerText)
-                .setSmallIcon(this.getSmallIconId(context, intent))
-                .setLargeIcon(this.getLargeIcon(context, intent))
-                .setContentIntent(pContentIntent)
-                .setDeleteIntent(pDeleteIntent)
-                .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL);
-        return parseBuilder.build();
+            // The purpose of setDefaults(Notification.DEFAULT_ALL) is to inherit notification properties
+            // from system defaults
+            NotificationCompat.Builder parseBuilder = new NotificationCompat.Builder(context);
+            parseBuilder.setContentTitle(title)
+                    .setContentText(alert)
+                    .setTicker(tickerText)
+                    .setSmallIcon(this.getSmallIconId(context, intent))
+                    .setLargeIcon(this.getLargeIcon(context, intent))
+                    .setContentIntent(pContentIntent)
+                    .setDeleteIntent(pDeleteIntent)
+                    .setAutoCancel(true)
+                    .setDefaults(Notification.DEFAULT_ALL);
+            return parseBuilder.build();
+        });
     }
 
     @NonNull
