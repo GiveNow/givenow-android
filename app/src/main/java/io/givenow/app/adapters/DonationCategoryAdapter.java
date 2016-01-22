@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,21 +135,10 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         notifyItemInserted(mItems.size() - 1);
     }
 
-    public void setItems(Collection<DonationCategory> items) {
-        if (items.equals(mItems)) {
-            Log.i("DonationCategoryAdapter", "New DonationCategory list is the same as the current list.");
-            return;
-        }
-        mItems.clear();
-        mItems.addAll(items);
-        notifyItemRangeRemoved(0, items.size());
-        notifyDataSetChanged();
-    }
-
     public void clearItems() {
+        int oldSize = mItems.size();
         mItems.clear();
-//        notifyItem
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, oldSize);
     }
 
     public void setItemSelected(int position, boolean selected) {
