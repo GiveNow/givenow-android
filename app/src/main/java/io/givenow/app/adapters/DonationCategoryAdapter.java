@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.common.collect.Collections2;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -111,18 +109,7 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
             vh.tvDescription.setText(donationCategory.getDescription(mContext));
         }
 
-        Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(vh.imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                vh.progressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onError() {
-                // set a default or 'error' image
-                // imageView.setImageDrawable(R.id.);
-            }
-        });
+        Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(vh.imageView);
     }
 
     @Override
@@ -153,9 +140,6 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
 
         @Bind(R.id.image)
         public ImageView imageView;
-
-        @Bind(R.id.progressBar)
-        public ProgressBar progressBar;
 
         @Bind(R.id.tvName)
         public TextView tvName;
