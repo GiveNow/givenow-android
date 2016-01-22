@@ -1,10 +1,22 @@
-## GiveNow
-
+# GiveNow
+### Cloning instructions
+Make sure to grab the submodules!
+```
+git clone --recursive git@github.com:GiveNow/givenow-android.git
+```
+or 
+```
+git clone git@github.com:GiveNow/givenow-android.git
+cd givenow-android
+git submodule init
+git submodule update
+```
+# What is GiveNow?
 The GiveNow Android app is designed to make it easier for users to donate to donation centers, and to help organize volunteers.
 
 Some of these screenshots still need to be updated. Bear with us!
 
-#Donor
+## For Donors
 
 (Users can login annonymously, this reduces friction to prevent dropoff in a signup flow.)
 
@@ -28,15 +40,7 @@ When a volunteer accepts, the user is asked to confirm that the coats are availa
 
 ![Donation Pickup Confirmed](/assets/donor_pickup_confirmation.png?raw=true)
 
-Users can also donate cash directly to the charity.
-
-![Cash Donation](/assets/cash_donation.png?raw=true)
-
-They can enter their credit card details manually, or use a credit card scanner (needs screenshot).
-
-![Credit Card](/assets/credit_card_detail.png?raw=true)
-
-#Volunteer
+## For Volunteers
 
 A Volunteer can view all the Requested pickups in their area.
 
@@ -54,7 +58,7 @@ The Volunteer can now find and drive to a dropoff location.
 
 ![Dropoff Locations](/assets/dropoff_locations.png?raw=true)
 
-#Profile
+## Profile Page
 
 Donors can view their Donation History
 
