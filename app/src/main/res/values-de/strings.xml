@@ -20,7 +20,6 @@
     <string name="cancel">Abbrechen</string>
     <string name="donation_history">Alle Spenden</string>
     <string name="pickup_history">Alle Abholungen</string>
-    <!--<string name="donor_dialog_disclaimer">Diese Information wird nur verwendet, wenn Probleme bei der Abholung deiner Spenden auftreten.</string>-->
     <string name="volunteer_dialog_disclaimer">Dein Name und deine Telefonnummer werden nur zur Verifizierung verwendet.</string>
     <string name="anonymous">Unbekannt</string>
     <string name="address">Unbekannte Adresse</string>
@@ -64,7 +63,6 @@
     <string name="error_insufficient_categories_selected">Bitte mindestens eines auswählen.</string>
     <string name="dialog_phoneNumber_title">Wie können wir dich kontaktieren?</string>
     <string name="dialog_phoneNumber_hint">+49 123 456 7890</string>
-    <!--<string name="confirm_pickup_dialog_name_hint">Dein Name</string>-->
     <string name="anonymous_user_name">Unbekannt</string>
     <string name="request_pickup_info_confirm_address">Ist deine Adresse richtig?</string>
     <string name="request_pickup_info_select_categories">Was möchtest du spenden?</string>
@@ -72,7 +70,7 @@
     <string name="request_status_waiting">Es hat sich noch kein Helfer zur Abholung gefunden!</string>
     <string name="error_donation_not_canceled">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
     <string name="error_note_not_saved">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
-    <string name="error_connection_failure">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
+    <string name="error_connection_failure">Verbindung fehlgeschlagen. Bitte versuch es später noch einmal.</string>
     <string name="dialog_cancelDonation_message">Diese Spende zurückziehen?</string>
     <string name="dialog_cancelDonation_positiveButton">Spende zurückziehen</string>
     <string name="dialog_cancelDonation_negativeButton">Doch nicht</string>
@@ -91,9 +89,9 @@
     <string name="onboarding_3_title">Markiere den Abholort.</string>
     <string name="onboarding_3_description">Wähle einfach einen Ort auf der Karte aus. Zusätzlich können weitere Informationen wie Wohnungsnummer oder Tür-Code angegeben werden.</string>
     <string name="onboarding_4_title">Den Rest erledigen freiwillige Helfer.</string>
-    <string name="onboarding_4_description">Ein Helfer wird nun deine Spende abholen.\nEr wird sich bei dir melden um einen Termin mit dir zu vereinbaren.</string>
+    <string name="onboarding_4_description">Ein Helfer wird nun deine Spende abholen.\nEr wird sich bei dir melden, um einen Termin mit dir zu vereinbaren.</string>
     <string name="phone_number_verification_title">Telefonnummer hinzufügen</string>
-    <string name="phone_number_disclaimer">Diese wird nur benötigt, damit der Helfer dich zur Terminvereinbarung erreichen kann.\nDeine Telefonnummer wird nicht mit weiteren Personen oder Organisationen geteilt.</string>
+    <string name="phone_number_disclaimer">Diese wird nur von Helfern verwendet, um dich zur Terminvereinbarung erreichen zu können.\nDeine Telefonnummer wird nicht mit weiteren Personen oder Organisationen geteilt.</string>
     <string name="address_field_note_hint">Wohnungsnummer, Tür-Code, Name ...</string>
     <string name="phone_number_later">Du kannst die Telefonnummer auch später hinzufügen.</string>
     <string name="dialog_phoneNumber_negativeButton">Abbrechen</string>
@@ -115,19 +113,18 @@
     <string name="dialog_loggedin_existing_donation_found_message">Diese Spende wird stattdessen geladen.</string>
     <string name="dialog_loggedin_existing_donation_found_button">OK</string>
     <string name="request_status_volunteer_pending">Ein Helfer möchte deine Spende abholen!</string>
-    <string name="dialog_phoneNumber_for_volunteer">Wir werden dich unter dieser Nummer mit Details kontaktieren. \n Keine Sorge, wir werden sie mit niemandem teilen!</string>
-    <string name="dialog_volunteer_claim_pickuprequest_message">Dies wird dem Spender mitteilen das seine Spende abgeholt werden kann.</string>
-    <string name="dialog_volunteer_claim_pickuprequest_title">Akzeptierst du diese Abhol Anfrage?</string>
-    <string name="request_status_volunteer_confirmed">Dein freiwilliger Abholer wird dich bald unter %1$s kontaktieren.</string>
-    <string name="volunteer_button_user_has_applied">Du hast dich beworben freiwilliger Abholer zu sein.</string>
-    <string name="volunteer_button_user_has_not_applied">Ich möchte Spenden transportieren!</string>
-    <string name="volunteer_label_user_has_applied">Danke das du Spenden abholen willst!\n Wir werden dich bald unter %1$s kontaktieren.</string>
-    <string name="volunteer_label_user_has_not_applied">Möchtest du Spenden transportieren?\n Du brauchst nur Zeit und ein Auto!</string>
+    <string name="dialog_phoneNumber_for_volunteer">Wir werden dich unter dieser Nummer mit Details kontaktieren.\nKeine Sorge, wir werden sie mit niemandem teilen!</string>
+    <string name="dialog_volunteer_claim_pickuprequest_message">Dies wird dem Spender mitteilen, dass seine Spende abgeholt werden kann.</string>
+    <string name="dialog_volunteer_claim_pickuprequest_title">Akzeptierst du diese Abholanfrage?</string>
+    <string name="request_status_volunteer_confirmed">Der Helfer wird sich bald unter %1$s bei dir melden.</string>
+    <string name="volunteer_button_user_has_applied">Du hast dich beworben, ein Helfer zu werden.</string>
+    <string name="volunteer_button_user_has_not_applied">Ich möchte Spenden von Spendern abholen!</string>
+    <string name="volunteer_label_user_has_applied">Danke das du Spenden abholen möchtest!\n Wir werden dich bald unter %1$s kontaktieren.</string>
+    <string name="volunteer_label_user_has_not_applied">Möchtest du Spenden von Spendern abholen?\n Du brauchst nur Zeit und ein Auto!</string>
     <string name="phone_number_verification_error_no_country_code">Du musst die Ländervorwahl mit angeben.\nBeispiel: +49 123 456 7890</string>
     <string name="cancel_donation_button">Zurückziehen</string>
-    <string name="phone_number_verification_error_number_failed_to_parse">Die Telefonnummer sollte so angegeben werden:\n+49 123 456 7890</string>
+    <string name="phone_number_verification_error_number_failed_to_parse">Die Telefonnummer sollte wie folgt angegeben werden:\n+49 123 456 7890</string>
     <string name="phone_number_verification_error_number_invalid">Bitte eine gültige Telefonnummer angeben.\nBeispiel: +49 123 456 7890</string>
     <string name="volunteer_accept_request_marker_cta">Diese Spende abholen</string>
-
 
 </resources>
