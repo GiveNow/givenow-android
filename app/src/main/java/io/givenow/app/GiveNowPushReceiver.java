@@ -109,6 +109,11 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
     }
 
     @Override
+    protected int getSmallIconId(Context context, Intent intent) {
+        return R.drawable.ic_notification_small;
+    }
+
+    @Override
     protected Bitmap getLargeIcon(Context context, Intent intent) {
         return BitmapFactory.decodeResource(context.getResources(),
                 R.mipmap.ic_launcher);
