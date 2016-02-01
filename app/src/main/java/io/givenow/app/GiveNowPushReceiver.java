@@ -102,6 +102,7 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
                     .setContentIntent(pContentIntent)
                     .setDeleteIntent(pDeleteIntent)
                     .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setDefaults(Notification.DEFAULT_ALL);
             return parseBuilder.build();
         });
