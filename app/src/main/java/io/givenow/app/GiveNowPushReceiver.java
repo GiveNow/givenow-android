@@ -23,7 +23,6 @@ import fj.data.Option;
 
 /**
  * Created by aphex on 1/13/16.
- *
  */
 public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
     private final String TAG = getClass().getSimpleName();
@@ -45,46 +44,17 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     public void onPushReceive(Context context, Intent intent) {
+        getPushData(intent).foreachDoEffect(pushData -> {
+            Option.fromNull(pushData.optString("action", null)).foreachDoEffect(action -> {
+                Bundle extras = intent.getExtras();
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.putExtras(extras);
+                broadcastIntent.setAction(action);
+                broadcastIntent.setPackage(context.getPackageName());
+                context.sendBroadcast(broadcastIntent);
+            });
+        });
 
-        //TODO this seems duplicated logic with getPushData
-        String pushDataStr = intent.getStringExtra(KEY_PUSH_DATA);
-        if (pushDataStr == null) {
-            Log.e(TAG, "Can not get push data from intent.");
-            return;
-        }
-        Log.v(TAG, "Received push data: " + pushDataStr);
-
-        JSONObject pushData = null;
-        try {
-            pushData = new JSONObject(pushDataStr);
-        } catch (JSONException e) {
-            Log.e(TAG, "Unexpected JSONException when receiving push data: ", e);
-        }
-
-
-//        Option.fromNull(pushData).foreachDoEffect(push -> {
-//            Bundle extras = intent.getExtras();
-//            Intent broadcastIntent = new Intent();
-//            broadcastIntent.putExtras(extras);
-//            // If the push data includes an action string, that broadcast intent is fired.
-//            Option.fromNull(push.optString("action", null)).foreachDoEffect(
-//                    broadcastIntent::setAction);
-//            broadcastIntent.setPackage(context.getPackageName());
-//            context.sendBroadcast(broadcastIntent);
-//
-//        });
-        String action = null;
-        if (pushData != null) {
-            action = pushData.optString("action", null);
-        }
-        if (action != null) {
-            Bundle extras = intent.getExtras();
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.putExtras(extras);
-            broadcastIntent.setAction(action);
-            broadcastIntent.setPackage(context.getPackageName());
-            context.sendBroadcast(broadcastIntent);
-        }
         getNotificationOption(context, intent).foreachDoEffect(notification ->
                 GiveNowNotificationManager.getInstance().showNotification(context, notification));
     }
