@@ -16,17 +16,14 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import fj.data.Option;
-import io.givenow.app.helpers.JsonHelper;
-import io.givenow.app.helpers.ResourceHelper;
 
 /**
  * Created by aphex on 1/13/16.
+ *
  */
 public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
     private final String TAG = getClass().getSimpleName();
@@ -49,6 +46,7 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
     @Override
     public void onPushReceive(Context context, Intent intent) {
 
+        //TODO this seems duplicated logic with getPushData
         String pushDataStr = intent.getStringExtra(KEY_PUSH_DATA);
         if (pushDataStr == null) {
             Log.e(TAG, "Can not get push data from intent.");
@@ -91,59 +89,12 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
                 GiveNowNotificationManager.getInstance().showNotification(context, notification));
     }
 
-    /* Copied from ParsePushBroadcastReceiver, enhanced with alert localization. */
-//    @Override
+    /* Copied from ParsePushBroadcastReceiver*/
     @NonNull
     protected Option<Notification> getNotificationOption(Context context, Intent intent) {
         return getPushData(intent).map(pushData -> {
-            String defaultTitle = pushData.optString("title", context.getPackageManager().getApplicationLabel(context.getApplicationInfo()).toString());
-            String defaultAlert = pushData.optString("alert", "Notification received.");
-
-            String title;
-            String alert;
-            switch (pushData.optString("type")) {
-                case "claimPickupRequest":
-                    // build title
-                    title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                            getLocalizedStringFromObject(context, titleObject))
-                            .orSome(defaultTitle);
-                    // build alert
-                    alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                            getLocalizedStringFromObject(context,
-                                    alertObject,
-                                    Collections.singletonList(context.getString(
-                                            R.string.push_notif_volunteer_default_name))))
-                            .orSome(defaultAlert);
-                    break;
-                case "confirmVolunteer":
-                    // build title
-                    title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                            getLocalizedStringFromObject(context, titleObject))
-                            .orSome(defaultTitle);
-                    // build alert
-                    alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                            getLocalizedStringFromObject(context,
-                                    alertObject))
-                            .orSome(defaultAlert);
-                    break;
-                case "pickupDonation":
-                    // build title
-                    title = Option.fromNull(pushData.optJSONObject("title")).bind(titleObject ->
-                            getLocalizedStringFromObject(context, titleObject))
-                            .orSome(defaultTitle);
-                    // build alert
-                    alert = Option.fromNull(pushData.optJSONObject("alert")).bind(alertObject ->
-                            getLocalizedStringFromObject(context,
-                                    alertObject,
-                                    Collections.singletonList(context.getString(
-                                            R.string.push_notif_volunteer_default_name))))
-                            .orSome(defaultAlert);
-                    break;
-                default:
-                    title = defaultTitle;
-                    alert = defaultAlert;
-            }
-
+            String title = pushData.optString("title", context.getPackageManager().getApplicationLabel(context.getApplicationInfo()).toString());
+            String alert = pushData.optString("alert", "Notification received.");
             String tickerText = String.format(Locale.getDefault(), "%s: %s", title, alert);
 
             Bundle extras = intent.getExtras();
@@ -184,28 +135,6 @@ public class GiveNowPushReceiver extends ParsePushBroadcastReceiver {
                     .setDefaults(Notification.DEFAULT_ALL);
             return parseBuilder.build();
         });
-    }
-
-    @NonNull
-    private Option<String> getLocalizedStringFromObject(Context context, JSONObject jsonObject) {
-        return getLocalizedStringFromObject(context, jsonObject, Collections.emptyList());
-    }
-
-    @NonNull
-    private Option<String> getLocalizedStringFromObject(Context context, JSONObject jsonObject, List<String> defaultArgs) {
-        try {
-            String locKey = jsonObject.getString("loc-key");
-            List<String> locArgs = JsonHelper.toList(jsonObject.getJSONArray("loc-args"));
-            if (locArgs.isEmpty()) {
-                locArgs.addAll(defaultArgs);
-            }
-            return Option.some(ResourceHelper.getLocalizedString(context,
-                    locKey,
-                    locArgs.toArray()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return Option.none();
-        }
     }
 
     @Override
