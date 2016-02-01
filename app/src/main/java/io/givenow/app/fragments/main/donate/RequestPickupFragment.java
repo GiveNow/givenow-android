@@ -304,18 +304,25 @@ public class RequestPickupFragment extends MapHostingFragment
                 pickupRequest -> {
                     mPickupRequest = pickupRequest;
                     if (pickupRequest.getDonation().isNone()) {
-                        showCurrentRequestLayout().subscribe();
+                        if (isAdded()) { // In rare cases, we get here and we're still detached.
+                            showCurrentRequestLayout().subscribe();
+                        } else { // So if we're not added yet, post this as a runnable that will run when we are.
+                            rlCurrentRequestContainer.post(() -> showCurrentRequestLayout().subscribe());
+                        }
                     } else {
                         fj.data.List<DonationCategory> dc = fj.data.List.list(pickupRequest.getDonationCategories());
                         new AlertDialog.Builder(getActivity())
                                 .setIcon(R.mipmap.ic_launcher)
                                 .setTitle(R.string.donation_complete_title)
                                 .setMessage(getString(R.string.donation_complete_message_head) + " " +
-                                        dc.head().getName(getContext()) +
-                                        dc.tail().init().foldLeft(
-                                                (s, category) -> s + ", " + category.getName(getContext()),
-                                                "") +
-                                        " " + getString(R.string.and) + " " + dc.last().getName(getContext()) +
+                                        (dc.isSingle() ?
+                                                dc.head().getName(getContext())
+                                                : dc.head().getName(getContext()) +
+                                                dc.tail().init().foldLeft(
+                                                        (s, category) -> s + ", " + category.getName(getContext()),
+                                                        "") +
+                                                " " + getString(R.string.and) + " " + dc.last().getName(getContext())
+                                        ) +
                                         " " + getString(R.string.donation_complete_message_tail))
                                 .setPositiveButton(R.string.done, null)
                                 .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
