@@ -11,13 +11,13 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.parse.Parse;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import io.fabric.sdk.android.Fabric;
 import io.givenow.app.models.Donation;
 import io.givenow.app.models.DonationCategory;
+import io.givenow.app.models.ParseInstallationHelper;
 import io.givenow.app.models.PickupRequest;
 import io.givenow.app.models.Volunteer;
 
@@ -84,7 +84,7 @@ public class GiveNowApplication extends Application {
         Parse.initialize(this, getString(R.string.parse_application_id), getString(R.string.parse_client_key));
         ParseUser.enableAutomaticUser();
         ParseUser.enableRevocableSessionInBackground();
-        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParseInstallationHelper.updateInstallation();
     }
 
     @Override

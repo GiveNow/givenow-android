@@ -7,7 +7,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseFile;
-import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.HashMap;
@@ -25,13 +24,6 @@ public class ParseUserHelper {
 
     public static boolean isRegistered(ParseUser user) {
         return !ParseAnonymousUtils.isLinked(user); // isLinked() returns True if Anonymous.
-    }
-
-    public static void associateWithDevice(ParseUser user) {
-        // Associate the device with a user
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("user", user);
-        installation.saveInBackground();
     }
 
     public static Observable<Object> sendCode(String phoneNumber, String smsBody) {

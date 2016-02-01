@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.givenow.app.R;
 import io.givenow.app.helpers.CustomAnimations;
+import io.givenow.app.models.ParseInstallationHelper;
 import io.givenow.app.models.ParseUserHelper;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
@@ -285,7 +286,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                         ParseObservable.become(sessionToken.toString()).observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(becameUser -> {
                                     Log.d("PhoneVerification", "Became user " + becameUser.getUsername());
-                                    ParseUserHelper.associateWithDevice(becameUser);
+                                    ParseInstallationHelper.associateUserWithDevice(becameUser);
                                     userLoginComplete();
                                 });
                     },
