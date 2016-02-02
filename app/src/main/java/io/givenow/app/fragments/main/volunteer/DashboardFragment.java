@@ -76,11 +76,6 @@ public class DashboardFragment extends Fragment implements
     }
 
     private void loadDashboardItems() {
-//        if (mAdapter != null) {
-//            mAdapter.loadObjects();
-//        }
-//        mAdapter.clearItems();
-
         if (isResumed()) {
             swipeContainer.setRefreshing(true);
             Log.d("DashboardFragment", "Finding Dashboard items...");
@@ -103,24 +98,6 @@ public class DashboardFragment extends Fragment implements
         }
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dashboard_menu, menu);
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // handle item selection
-//        switch (item.getItemId()) {
-//            case R.id.action_refresh:
-//                loadDashboardItems();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-
     @Override
     public void onViewPagerShow() {
         if (isResumed()) {
@@ -136,18 +113,4 @@ public class DashboardFragment extends Fragment implements
         rvItems.scrollToPosition(i);
     }
 
-//    @Override
-//    public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
-//        for (int position : reverseSortedPositions) {
-//            //create the contextual view asking if complete
-//            Log.w("df", "dismiss");
-//        }
-//    }
-//
-//    @Override
-//    public void deleteItem(int position) {
-//        //pickup dropped off. complete
-//        Log.w("df", "delete");
-//
-//    }
 }
