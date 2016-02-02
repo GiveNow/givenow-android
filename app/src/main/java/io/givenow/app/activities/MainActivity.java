@@ -344,7 +344,9 @@ public class MainActivity extends BaseActivity implements
 //        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out); //not supported by SupportFM
 //        ft.setTransition();
 //        Fragment fragToHide = getFragmentManager().findFragmentById(R.id.content_frame);
+        Log.w("MainActivity", "Selecting item Id " + String.valueOf(itemId));
         if (fragToHide != null) {
+            Log.w("MainActivity", "FragToHide is not null. Will hide frag " + fragToHide.getTag());
             ft.hide(fragToHide);
         }
 
@@ -361,6 +363,7 @@ public class MainActivity extends BaseActivity implements
                             requestPickupFragment,
                             "don");
                 } else {
+                    Log.w("MainActivity", "Will show frag" + requestPickupFragment.getTag());
                     ft.show(requestPickupFragment);
                 }
                 fragToHide = requestPickupFragment;
@@ -374,6 +377,7 @@ public class MainActivity extends BaseActivity implements
                             volunteerFragment,
                             "vol");
                 } else {
+                    Log.w("MainActivity", "Will show frag" + volunteerFragment.getTag());
                     volunteerFragment.checkVolunteerEligibility(); //TODO minor optimization issue: this causes the check to be run twice.
                     ft.show(volunteerFragment);
                 }
@@ -387,6 +391,7 @@ public class MainActivity extends BaseActivity implements
                             dropoffFragment,
                             "drop");
                 } else {
+                    Log.w("MainActivity", "Will show frag" + dropoffFragment.getTag());
                     ft.show(dropoffFragment);
                 }
                 fragToHide = dropoffFragment;
@@ -399,6 +404,7 @@ public class MainActivity extends BaseActivity implements
                             profileFragment,
                             "prof");
                 } else {
+                    Log.w("MainActivity", "Will show frag" + profileFragment.getTag());
                     profileFragment.refreshProfile();
                     ft.show(profileFragment);
                 }
