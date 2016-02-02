@@ -59,7 +59,6 @@ public class GiveNowApplication extends Application {
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()
-//                    .penaltyDeath()
                     .build());
         } else {
             Log.d("Application", "BuildConfig.DEBUG is false. Running in release mode.");
@@ -71,6 +70,7 @@ public class GiveNowApplication extends Application {
 
         registerParseClasses();
         initializeParse();
+        logUserForCrashlytics(ParseUser.getCurrentUser());
     }
 
     private void registerParseClasses() {
@@ -87,6 +87,11 @@ public class GiveNowApplication extends Application {
         ParseInstallationHelper.updateInstallation();
     }
 
+    private void logUserForCrashlytics(ParseUser parseUser) {
+        Crashlytics.setUserIdentifier(parseUser.getObjectId());
+        Crashlytics.setUserName(parseUser.getUsername());
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -95,7 +100,6 @@ public class GiveNowApplication extends Application {
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
-     *
      * @return tracker
      */
     synchronized public Tracker getDefaultTracker() {
