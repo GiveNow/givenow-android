@@ -93,9 +93,9 @@ public class DashboardFragment extends Fragment implements
                             () -> { //OnComplete:
                                 Log.d("DashboardFragment", "queryMyDashboardPickups OnComplete");
                                 if (mAdapter.getItemCount() > 0) {
-                                    CustomAnimations.circularHide(emptyView);
+                                    CustomAnimations.circularHide(emptyView).start();
                                 } else {
-                                    CustomAnimations.circularReveal(emptyView);
+                                    CustomAnimations.circularReveal(emptyView).start();
                                 }
                                 swipeContainer.setRefreshing(false);
                             }
