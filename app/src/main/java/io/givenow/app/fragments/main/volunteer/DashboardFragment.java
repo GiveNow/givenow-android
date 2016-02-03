@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DashboardItemAdapter;
 import io.givenow.app.helpers.CustomAnimations;
+import io.givenow.app.interfaces.AnythingChangedDataObserver;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
 import io.givenow.app.models.PickupRequest;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
@@ -50,6 +51,17 @@ public class DashboardFragment extends Fragment implements
         ButterKnife.bind(this, v);
 
         mAdapter = new DashboardItemAdapter();
+
+        mAdapter.registerAdapterDataObserver(new AnythingChangedDataObserver() {
+            @Override
+            public void onAnythingChanged() {
+                if (mAdapter.getItemCount() > 0) {
+                    CustomAnimations.circularHide(emptyView).start();
+                } else {
+                    CustomAnimations.circularReveal(emptyView).start();
+                }
+            }
+        });
 
         //Grab the Recycler View and list all conversation objects in a vertical list
         rvItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -87,11 +99,6 @@ public class DashboardFragment extends Fragment implements
                             error -> Log.e("DashboardFragment", "Error getting dashboard pickups: " + error.getMessage()),
                             () -> { //OnComplete:
                                 Log.d("DashboardFragment", "queryMyDashboardPickups OnComplete");
-                                if (mAdapter.getItemCount() > 0) {
-                                    CustomAnimations.circularHide(emptyView).start();
-                                } else {
-                                    CustomAnimations.circularReveal(emptyView).start();
-                                }
                                 swipeContainer.setRefreshing(false);
                             }
                     );
