@@ -50,6 +50,7 @@ import io.givenow.app.fragments.main.donate.RequestPickupFragment;
 import io.givenow.app.fragments.main.profile.ProfileFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestDetailFragment;
 import io.givenow.app.fragments.main.volunteer.PickupRequestsFragment;
+import io.givenow.app.helpers.Analytics;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -209,8 +210,6 @@ public class MainActivity extends BaseActivity implements
                                 acceptPendingDialog.dismiss();
                             }
                             acceptPendingDialog = new AlertDialog.Builder(this)
-//                .setTitle(R.string.acceptRequest_submittedDialog_title)
-//                .setMessage(R.string.acceptRequest_submittedDialog_msg)
                                     .setTitle(Html.fromHtml(title)) //TODO: include in message?: + pickupRequest.getDonationCategories().toString() +
                                     .setMessage(Html.fromHtml(getString(R.string.dialog_accept_pending_volunteer) + address))
                                     .setPositiveButton(getString(R.string.yes), (dialog, which) -> pendingVolunteerConfirmed(pickupRequest))
@@ -221,24 +220,8 @@ public class MainActivity extends BaseActivity implements
                         error -> ErrorDialogs.connectionFailure(this, error)));
     }
 
-    private void cancelPendingVolunteer(PickupRequest pickupRequest) {
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("RequestPickup")
-                .setAction("PendingVolunteerCanceled")
-                .setLabel(ParseUser.getCurrentUser().getObjectId())
-                .build());
-
-        //donor doesn't accept volunteer request, so remove the pending volunteer
-        pickupRequest.remove("pendingVolunteer");
-        pickupRequest.saveInBackground();
-    }
-
     private void pendingVolunteerConfirmed(final PickupRequest pickupRequest) {
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("RequestPickup")
-                .setAction("PendingVolunteerConfirmed")
-                .setLabel(ParseUser.getCurrentUser().getObjectId())
-                .build());
+        Analytics.sendHit(mTracker, "RequestPickup", "PendingVolunteerConfirmed", ParseUser.getCurrentUser().getObjectId());
 
         pickupRequest.confirmVolunteer().subscribe(
                 response -> Log.d("Cloud Response", response.toString()),
@@ -246,15 +229,10 @@ public class MainActivity extends BaseActivity implements
         );
     }
 
-    //stupid helper method, can go away whenever
-    private String getId(ParseUser volunteer) {
-        String id = null;
-
-        if (volunteer != null) {
-            id = volunteer.getObjectId();
-        }
-
-        return id;
+    private void cancelPendingVolunteer(PickupRequest pickupRequest) {
+        //donor doesn't accept volunteer request, so remove the pending volunteer
+        Analytics.sendHit(mTracker, "RequestPickup", "PendingVolunteerCanceled", ParseUser.getCurrentUser().getObjectId());
+        pickupRequest.cancelPendingVolunteer();
     }
 
     private void initializeDrawer() {

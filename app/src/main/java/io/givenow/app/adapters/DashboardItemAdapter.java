@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -29,8 +30,9 @@ import io.givenow.app.R;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 
 public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdapter.ViewHolder> {
@@ -77,6 +79,37 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                 setupCardActionButtons(vh, pickupRequest);
             }
         });
+
+        PopupMenu popup = new PopupMenu(mContext, vh.btnMenu);
+        popup.inflate(R.menu.dashboard_card_waiting);
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_cancel:
+                    cancelItem(position);
+                    return true;
+                default:
+                    return true;
+            }
+        });
+        vh.btnMenu.setOnClickListener(btn -> popup.show());
+    }
+
+    private void cancelItem(int position) {
+        final PickupRequest pickupRequest = mItems.get(position);
+        new AlertDialog.Builder(mContext)
+                .setTitle(R.string.dialog_dashboard_cancel_pickup_title)
+                .setMessage(R.string.dialog_dashboard_cancel_pickup_message)
+                .setPositiveButton(R.string.dialog_dashboard_cancel_positiveButton, (dialog, which) -> {
+                    pickupRequest.cancelPendingVolunteer();
+                    ParseObservable.save(pickupRequest).observeOn(mainThread()).subscribe(
+                            pr -> {
+                                Log.d(getClass().getSimpleName(), "Removing pickupRequest " + pr.getObjectId() + " from dashboard");
+                                remove(position);
+                            },
+                            error -> ErrorDialogs.connectionFailure(mContext, error));
+                })
+                .setNegativeButton(R.string.dialog_dashboard_cancel_negativeButton, null)
+                .show();
     }
 
     private void setupStaticMap(ViewHolder vh, final PickupRequest pickupRequest) {
@@ -106,7 +139,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
     private void setupCardActionButtons(ViewHolder vh, final PickupRequest pickupRequest) {
         ParseObservable.fetchIfNeeded(pickupRequest.getDonor())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(
+                .observeOn(mainThread()).subscribe(
                 donor -> {
                     vh.btnCall.setOnClickListener(v -> {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);

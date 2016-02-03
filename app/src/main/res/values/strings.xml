@@ -147,5 +147,10 @@
     <string name="dialog_pickup_pickupRequest_message">This will notify the donor and remove it from your Dashboard.</string>
     <string name="dialog_pickup_pickupRequest_positiveButton">Yes, I picked it up</string>
     <string name="dialog_pickup_pickupRequest_negativeButton">@string/no</string>
+    <string name="action_dashboard_item_cancel">Cancel</string>
+    <string name="dialog_dashboard_cancel_pickup_title">Cancel this pickup?</string>
+    <string name="dialog_dashboard_cancel_pickup_message">This will notify the donor that you\'re no longer picking up their donation, and remove this pickup from your dashboard.</string>
+    <string name="dialog_dashboard_cancel_positiveButton">Yes, cancel it</string>
+    <string name="dialog_dashboard_cancel_negativeButton">No, keep it</string>
 
 </resources>

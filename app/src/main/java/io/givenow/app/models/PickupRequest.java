@@ -176,7 +176,9 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return q;
     }
 
-    /** Properties **/
+    /**
+     * Properties
+     **/
 
     public ParseGeoPoint getLocation() {
         return getParseGeoPoint("location");
@@ -225,6 +227,10 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     public void setPendingVolunteer(ParseUser value) {
         put("pendingVolunteer", value);
+    }
+
+    public void cancelPendingVolunteer() {
+        remove("pendingVolunteer");
     }
 
     @NonNull
@@ -292,7 +298,9 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
 
-    /** Push notifications **/
+    /**
+     * Push notifications
+     **/
 
     private void generatePushNotif(ParseUser target_user, String title, String message, String type) {
         ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
@@ -362,8 +370,12 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         PickupRequest that = (PickupRequest) o;
 
