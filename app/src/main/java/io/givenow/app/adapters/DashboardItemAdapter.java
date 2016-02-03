@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -69,6 +70,10 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
         vh.tvNote.setText(note);
         vh.tvNote.setVisibility(View.GONE);
 
+
+        PopupMenu popup = new PopupMenu(mContext, vh.btnMenu);
+        popup.inflate(R.menu.dashboard_card_waiting);
+
         pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
             //if there is a confirmed volunteer and it is me, then say it is ready for pickup
             if (confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
@@ -77,21 +82,24 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                 vh.readyLayout.setVisibility(View.VISIBLE);
                 setupStaticMap(vh, pickupRequest);
                 setupCardActionButtons(vh, pickupRequest);
+                // Can inflate a different menu here if needed
+                //popup.inflate(R.menu.dashboard_card_ready);
             }
         });
 
-        PopupMenu popup = new PopupMenu(mContext, vh.btnMenu);
-        popup.inflate(R.menu.dashboard_card_waiting);
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_cancel:
-                    cancelItem(position);
-                    return true;
-                default:
-                    return true;
-            }
-        });
+        popup.setOnMenuItemClickListener(item -> onMenuItemClick(item, position));
+
         vh.btnMenu.setOnClickListener(btn -> popup.show());
+    }
+
+    private boolean onMenuItemClick(MenuItem item, int position) {
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                cancelItem(position);
+                return true;
+            default:
+                return true;
+        }
     }
 
     private void cancelItem(int position) {
