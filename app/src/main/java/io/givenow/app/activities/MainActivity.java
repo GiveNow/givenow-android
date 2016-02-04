@@ -223,7 +223,7 @@ public class MainActivity extends BaseActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         // Initializing Drawer Layout and ActionBarToggle
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+        mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
             @Override
@@ -240,10 +240,10 @@ public class MainActivity extends BaseActivity implements
         };
 
         //Setting the actionbarToggle to drawer layout
-        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         //calling sync state is necessay or else your hamburger icon wont show up
-        actionBarDrawerToggle.syncState();
+        mDrawerToggle.syncState();
 
         View headerView = navigationView.getHeaderView(0);
         headerView.setOnClickListener(this::onProfileImageClick);
@@ -297,6 +297,10 @@ public class MainActivity extends BaseActivity implements
             mDrawerLayout.closeDrawers();
             return true;
         }
+    }
+
+    public void selectMenuItem(@IdRes int itemId) {
+        onNavigationItemSelected(navigationView.getMenu().findItem(itemId));
     }
 
     private void selectItem(@IdRes int itemId) {
