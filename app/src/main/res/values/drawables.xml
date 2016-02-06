@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="second_screen_bg_color" type="drawable">@color/second_screen_bg_color</item>
     <item name="selection_highlight_color" type="drawable">@color/selection_highlight_color</item>
-    <item name="selection_highlight_light" type="drawable">#bb4285f4</item>
-    <item name="empty" type="drawable">#00000000</item>
 </resources>

@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity implements
                 ParseObservable.fetchIfNeeded(pendingVolunteer).observeOn(mainThread()).subscribe(
                         volunteer -> {
                             Option<String> nameOption = ParseUserHelper.getName(volunteer);
-                            String name = getString(R.string.push_notif_volunteer_default_name);
+                            String name = getString(R.string.default_volunteer_name);
                             if (nameOption.isSome()) {
                                 name = ParseUserHelper.getFirstName(volunteer).orSome(name);
                             }

@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#ffdde8ed</color>
-    <color name="foreground">#ffffffff</color>
     <color name="accent">#ff00548e</color>
-    <color name="old_accent">#ff266e9f</color>
-    <color name="buttonFlashCTA">#FF246d9e</color>
-    <color name="owc_dark_gray">#ff858585</color>
     <color name="disabled">#ffa6a6a6</color>
-
-    <color name="tab_active">@color/accent</color>
-    <color name="tab_inactive">@color/owc_dark_gray</color>
 
     <color name="colorPrimary">#ff00b9e6</color>
     <color name="colorPrimaryDark">#ff0a89a7</color>

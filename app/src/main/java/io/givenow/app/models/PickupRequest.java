@@ -1,20 +1,14 @@
 package io.givenow.app.models;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import fj.data.Option;
-import io.givenow.app.R;
-import io.givenow.app.helpers.ErrorDialogs;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
@@ -296,76 +288,6 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
     public LatLng getPosition() {
         ParseGeoPoint loc = getLocation();
         return new LatLng(loc.getLatitude(), loc.getLongitude());
-    }
-
-    /**
-     * Push notifications
-     **/
-
-    private void generatePushNotif(ParseUser target_user, String title, String message, String type) {
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", target_user);
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", title);
-            data.put("alert", message);
-            data.put("type", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-        push.sendInBackground();
-    }
-
-    public void generatePendingVolunteerAssignedNotif(Context context) {
-        //send pickup response back to donor
-        generatePushNotif(this.getDonor(),
-                context.getString(R.string.notif_pickup_request_claimed_title),
-                context.getString(R.string.notif_pickup_request_claimed_msg,
-                        ParseUserHelper.getFirstName().orSome("A volunteer")),
-                "");
-    }
-
-    public void generateVolunteerConfirmedNotif(Context context) {
-        //send pickup confirmed notif to volunteer
-        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> generatePushNotif(volunteer,
-                                context.getString(R.string.notif_volunteer_confirmed_title),
-                                context.getString(R.string.notif_volunteer_confirmed_msg,
-                                        ParseUserHelper.getFirstName(volunteer).orSome("A donor")),
-                                VOLUNTEER_CONFIRMED),
-                        error -> ErrorDialogs.connectionFailure(context, error)));
-    }
-
-    public void generatePickupCompleteNotif(Context context) {
-        //send pickup complete notif back to donor
-        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> generatePushNotif(volunteer,
-                                context.getString(R.string.notif_pickup_complete_title),
-                                context.getString(R.string.notif_pickup_complete_msg,
-                                        ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
-                                PICKUP_COMPLETE),
-                        error -> ErrorDialogs.connectionFailure(context, error)));
-    }
-
-    public void reportProblem(Context context) {
-        //there's a problem. send a notif to the donor with the problem description.
-        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> generatePushNotif(volunteer,
-                                context.getResources().getString(R.string.notif_problem_reported_title),
-                                context.getResources().getString(R.string.notif_problem_reported_msg,
-                                        ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
-                                PROBLEM_REPORTED),
-                        error -> ErrorDialogs.connectionFailure(context, error)));
     }
 
     @Override

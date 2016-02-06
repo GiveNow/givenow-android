@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--xmlns:thegoogle="http://schemas.android.com/apk/res/com.google.android.googlequicksearchbox">-->
-    <item android:drawable="@drawable/ic_expand_arrows_white" android:state_activated="false" />
-    <!--thegoogle:state_loud="true" />-->
-    <item android:drawable="@drawable/ic_expand_arrows" android:state_activated="false" />
-    <!--thegoogle:state_loud="false" />-->
-    <item android:drawable="@drawable/ic_collapse_arrows" />
-</selector>

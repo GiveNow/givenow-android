@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="recurrence_picker_style">
-        <item name="android:textSize">15.0sp</item>
-    </style>
     <!--<style name="recurrence_day_of_week_style">-->
     <!--<item name="android:textSize">12.0sp</item>-->
     <!--<item name="android:textStyle">bold</item>-->
@@ -34,19 +31,6 @@
 
     <style name="AppBaseTheme" parent="@android:style/Theme.Light" />
     <!--<style name="AppTheme" parent="@style/AppBaseTheme" />-->
-    <style name="time_label">
-        <item name="android:textSize">@dimen/time_label_size</item>
-        <item name="android:textColor">@color/numbers_text_color</item>
-    </style>
-
-    <style name="ampm_label">
-        <item name="android:textSize">@dimen/ampm_label_size</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/ampm_text_color</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="day_of_week_label_condensed" />
 
     <style name="Theme.WallpaperCropper" parent="@android:style/Theme.Holo">
         <item name="android:windowFullscreen">true</item>
@@ -94,28 +78,6 @@
     <!--<item name="android:fontFamily">sans-serif-condensed</item>-->
     <!--</style>-->
 
-    <style name="ClingText">
-        <item name="android:textSize">@dimen/cling_text_size</item>
-        <item name="android:textColor">#80000000</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:lineSpacingMultiplier">1.1</item>
-    </style>
-
-    <style name="ClingAltTitleText">
-        <item name="android:textSize">@dimen/cling_alt_title_text_size</item>
-        <item name="android:textColor">#ff49c0ec</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="ClingAltText">
-        <item name="android:textSize">@dimen/cling_alt_text_size</item>
-        <item name="android:textColor">#ff49c0ec</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <!--<style name="ClingHintText">-->
     <!--<item name="android:textSize">@dimen/cling_hint_text_size</item>-->
     <!--<item name="android:textColor">#80ffffff</item>-->
@@ -149,75 +111,6 @@
     <!--<item name="android:drawablePadding">@dimen/dynamic_grid_icon_drawable_padding</item>-->
     <!--</style>-->
 
-    <style name="SearchDropTargetBar" />
-
-    <style name="SearchButton" />
-
-    <style name="DropTargetButtonContainer">
-        <item name="android:layout_width">0.0dip</item>
-        <item name="android:layout_height">fill_parent</item>
-    </style>
-
-    <style name="DropTargetButton">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">#ffffffff</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:paddingLeft">25.0dip</item>
-        <item name="android:paddingRight">25.0dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:shadowColor">#ff000000</item>
-        <item name="android:shadowDx">0.0</item>
-        <item name="android:shadowDy">1.0</item>
-        <item name="android:shadowRadius">4.0</item>
-        <item name="android:drawablePadding">7.5dip</item>
-    </style>
-
-    <style name="TabIndicator">
-        <item name="android:textSize">12.0sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/tab_widget_indicator_selector</item>
-        <item name="android:paddingLeft">20.0dip</item>
-        <item name="android:paddingRight">20.0dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="TabIndicator.AppsCustomize" parent="@style/TabIndicator" />
-
-    <style name="MarketButton">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textColor">@color/workspace_all_apps_and_delete_zone_text_color</item>
-        <item name="android:paddingLeft">5.0dip</item>
-        <item name="android:paddingRight">5.0dip</item>
-        <item name="android:shadowColor">
-            @color/workspace_all_apps_and_delete_zone_text_shadow_color
-        </item>
-        <item name="android:shadowDx">0.0</item>
-        <item name="android:shadowDy">0.0</item>
-        <item name="android:shadowRadius">2.0</item>
-    </style>
-
-    <style name="CustomClingTitleText" />
-
-    <style name="CustomClingText" />
-
-    <style name="PagedViewWidgetImageView">
-        <item name="android:paddingLeft">@dimen/app_widget_preview_padding_left</item>
-    </style>
-
-    <style name="SearchButton.WithPaddingStart" parent="@style/SearchButton">
-        <item name="android:paddingLeft">8.0dip</item>
-    </style>
-
     <style name="PhotoViewTheme" parent="@android:style/Theme.Holo">
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowNoTitle">false</item>
@@ -228,9 +121,6 @@
     <!--<style name="Holo.ActionBar" parent="@android:style/Widget.Holo.ActionBar">-->
     <!--<item name="android:background">@drawable/actionbar_translucent</item>-->
     <!--</style>-->
-    <style name="HandsFreeActionButtonDivider">
-        <item name="android:background">@color/dark_gray</item>
-    </style>
 
     <!--<style name="HandsFreeText">-->
     <!--<item name="android:textSize">25.0sp</item>-->
@@ -345,14 +235,6 @@
     <!--<style name="setup_wizard_single_button" parent="@style/setup_wizard_button">-->
     <!--<item name="android:layout_width">@dimen/setup_wizard_button_min_width</item>-->
     <!--</style>-->
-
-    <style name="setup_wizard_arrow_button">
-        <item name="android:layout_width">@dimen/setup_wizard_arrow_button_width</item>
-        <item name="android:layout_height">@dimen/setup_wizard_arrow_button_height</item>
-        <item name="android:minWidth">0.0dip</item>
-    </style>
-
-    <style name="setup_wizard_next_button" parent="@style/setup_wizard_arrow_button" />
 
     <!--<style name="setup_wizard_stacked_buttons">-->
     <!--<item name="android:orientation">vertical</item>-->
@@ -482,19 +364,6 @@
         <item name="android:maxLines">@null</item>
     </style>
 
-    <style name="CardTextBlock">
-        <item name="android:paddingLeft">@dimen/card_padding</item>
-        <item name="android:paddingTop">@dimen/text_block_top_padding</item>
-        <item name="android:paddingRight">@dimen/card_padding</item>
-        <item name="android:paddingBottom">@dimen/text_block_bottom_padding</item>
-    </style>
-
-    <style name="HeaderFooterButton">
-        <item name="android:textSize">@dimen/footer_button_text_size</item>
-        <item name="android:textColor">@android:color/secondary_text_light</item>
-        <item name="android:background">?android:selectableItemBackground</item>
-    </style>
-
     <style name="CardActionButton">
         <item name="android:textSize">@dimen/card_action_text</item>
         <item name="android:textColor">@color/card_text</item>
@@ -508,15 +377,6 @@
         <item name="android:drawablePadding">4.0dip</item>
         <!--<item name="android:drawableTint">@color/colorAccent</item>-->
 
-    </style>
-
-    <style name="CancelActionButton">
-        <item name="android:textSize">@dimen/card_action_text</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/cancel_action_text</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:background">@drawable/stateful_gray_background</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
     <style name="CardActionButtonWithIcon" parent="@style/CardActionButton">
@@ -617,78 +477,6 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="FiveStarRatingText">
-        <item name="android:textSize">12.0sp</item>
-        <item name="android:textColor">@color/five_star_rating_text_color</item>
-        <item name="android:maxLines">1</item>
-    </style>
-
-    <style name="TrainingTitleText">
-        <item name="android:textSize">@dimen/training_medium_text</item>
-        <item name="android:textColor">@color/training_question_title</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="TrainingSubtitleText">
-        <item name="android:textSize">@dimen/training_small_text</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/training_question_subtitle</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="TrainingModeTextButton">
-        <item name="android:textSize">@dimen/training_question_button_large_text</item>
-        <item name="android:textColor">@color/training_question_selectable_text</item>
-        <item name="android:background">@null</item>
-        <item name="android:padding">@dimen/training_large_spacer</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="TrainingModeTextButtonWithIcon">
-        <item name="android:textSize">@dimen/training_small_text</item>
-        <item name="android:textColor">@color/training_question_selectable_text</item>
-        <item name="android:background">@null</item>
-        <item name="android:layout_marginLeft">@dimen/training_option_margin</item>
-        <item name="android:layout_marginRight">@dimen/training_option_margin</item>
-        <item name="android:maxLines">3</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:layout_marginStart">@dimen/training_option_margin</item>
-        <item name="android:layout_marginEnd">@dimen/training_option_margin</item>
-    </style>
-
-    <style name="FirstRunButton">
-        <item name="android:textSize">25.0sp</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@drawable/first_run_button_color</item>
-        <item name="android:background">@drawable/first_run_button_background</item>
-        <item name="android:shadowColor">@color/first_run_text_shadow</item>
-        <item name="android:shadowDx">1.0</item>
-        <item name="android:shadowDy">1.0</item>
-        <item name="android:shadowRadius">1.25</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="FirstRunLink" parent="@style/FirstRunText">
-        <item name="android:textSize">25.0sp</item>
-        <item name="android:textColor">@drawable/first_run_link_color</item>
-        <item name="android:background">@null</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="FirstRunMaybeLater">
-        <item name="android:textSize">15.0sp</item>
-        <item name="android:textColor">@drawable/first_run_maybe_later_color</item>
-        <item name="android:background">@null</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="FirstRunExtraVerticalMargin">
-        <item name="android:layout_marginTop">@dimen/first_run_padding</item>
-    </style>
-
     <style name="PhotoAttribution" parent="@style/CardLightText">
         <item name="android:textSize">@dimen/card_action_small_text</item>
         <item name="android:textStyle">italic</item>
@@ -707,15 +495,6 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
-    <style name="VoiceOfGoogle">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingLeft">@dimen/text_block_side_padding</item>
-        <item name="android:paddingRight">@dimen/text_block_side_padding</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
     <!--<style name="VoiceOfGoogleBottom" parent="@style/VoiceOfGoogle">-->
     <!--<item name="android:textColor">@color/voice_of_google_loud_text</item>-->
     <!--<item name="android:textColorLink">@drawable/vog_button_color</item>-->
@@ -742,19 +521,7 @@
     <!--<item name="android:textAllCaps">true</item>-->
     <!--<item name="android:fontFamily">sans-serif-condensed</item>-->
     <!--</style>-->
-    <style name="TimeToLeaveTop" parent="@style/VoiceOfGoogle">
-        <item name="android:paddingLeft">@dimen/card_padding</item>
-        <item name="android:paddingTop">@dimen/card_padding</item>
-        <item name="android:paddingRight">@dimen/card_padding</item>
-        <item name="android:paddingBottom">@dimen/card_padding</item>
-    </style>
 
-    <style name="TimeToLeaveText">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@drawable/vog_cardlet_text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
     <!--<style name="TimeToLeaveUserState">-->
     <!--<item name="android:textSize">14.0sp</item>-->
     <!--<item name="android:textColor">@color/card_text</item>-->
@@ -770,60 +537,6 @@
     <!--<item name="android:paddingRight">@dimen/card_small_padding</item>-->
     <!--<item name="android:paddingBottom">@dimen/card_small_padding</item>-->
     <!--</style>-->
-    <style name="TransitAlarmVogText">
-        <item name="android:textSize">@dimen/card_medium_text</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/transit_alarm_vog_text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="FirstRunButtonSmall" parent="@style/FirstRunButton">
-        <item name="android:textSize">16.0sp</item>
-    </style>
-
-    <style name="FirstRunText">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textColor">#ff727272</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:background">@null</item>
-        <item name="android:layout_marginLeft">@dimen/first_run_padding</item>
-        <item name="android:layout_marginRight">@dimen/first_run_padding</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:layout_marginStart">@dimen/first_run_padding</item>
-        <item name="android:layout_marginEnd">@dimen/first_run_padding</item>
-    </style>
-
-    <style name="FirstRunTitle" parent="@style/FirstRunText">
-        <item name="android:textSize">36.0dip</item>
-        <item name="android:textColor">#ff727272</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:layout_marginTop">@dimen/first_run_padding</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="FirstRunSubtitle" parent="@style/FirstRunText">
-        <item name="android:textSize">18.0dip</item>
-        <item name="android:textColor">#ff727272</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:layout_marginTop">8.0dip</item>
-        <item name="android:layout_marginBottom">8.0dip</item>
-        <item name="android:fontFamily">sans-serif</item>
-    </style>
-
-    <style name="EntryItemStyle">
-        <item name="android:background">@drawable/entry_item_state_selector</item>
-        <item name="android:paddingLeft">8.0dip</item>
-        <item name="android:paddingTop">12.0dip</item>
-        <item name="android:paddingRight">8.0dip</item>
-        <item name="android:paddingBottom">12.0dip</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">64.0dip</item>
-    </style>
-
-    <style name="ShortEntryItemStyle" parent="@style/EntryItemStyle">
-        <item name="android:minHeight">48.0dip</item>
-    </style>
 
     <style name="EntryItemTitleText" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">#ff333333</item>
@@ -850,11 +563,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="WidgetCard">
-        <item name="android:background">@drawable/card_background</item>
-        <item name="android:padding">@dimen/widget_tile_padding</item>
-    </style>
-
     <style name="TimeToLeaveTitleMessage" parent="@android:style/Widget.Holo.Light.TextView">
         <item name="android:textSize">@dimen/card_action_text</item>
         <item name="android:textStyle">italic</item>
@@ -878,12 +586,6 @@
     <!--<style name="FeedbackActionButton" parent="@style/CardActionButtonNoHairline">-->
     <!--<item name="android:textColor">@drawable/feedback_button_color</item>-->
     <!--</style>-->
-    <style name="OfferExpirationStyle">
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/offer_expiration</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
 
     <style name="WidgetText" parent="@style/CardText">
         <item name="android:textSize">@dimen/widget_text</item>
@@ -899,14 +601,6 @@
 
     <style name="WidgetActionText" parent="@style/CardSmallLightText">
         <item name="android:textSize">@dimen/widget_action_text</item>
-    </style>
-
-    <style name="CardRevalationText">
-        <item name="android:textSize">@dimen/card_action_small_text</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/card_light_text</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
     <style name="TutorialCardTitle" parent="@style/CardText">
@@ -928,40 +622,6 @@
         <item name="android:paddingLeft">@dimen/card_padding</item>
         <item name="android:paddingRight">@dimen/card_padding</item>
         <item name="android:maxLines">3</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="FirstUseOutroCommute">
-        <item name="android:textSize">@dimen/card_action_text</item>
-        <item name="android:textColor">@color/outro_card_commute_text</item>
-        <item name="android:textColorLink">@color/link_text</item>
-        <item name="android:ellipsize">none</item>
-        <item name="android:gravity">center</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="OptInLinearContainer">
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="OptInSampleCards">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">0.0dip</item>
-        <item name="android:layout_weight">1.0</item>
-    </style>
-
-    <style name="OptInTextContainer">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/first_run_padding</item>
-    </style>
-
-    <style name="OptInButton">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@drawable/btn_positive</item>
-        <item name="android:padding">12.0dip</item>
-        <item name="android:minWidth">140.0dip</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
@@ -996,60 +656,14 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
-    <style name="SwipeIcon">
-        <item name="android:paddingLeft">@dimen/card_padding</item>
-    </style>
-
-    <style name="UndoToastText">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:shadowColor">#bb000000</item>
-        <item name="android:shadowRadius">2.75</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="InlineSpinnerTextStyle">
-        <item name="android:textAppearance">@style/InlineSpinnerTextAppearance</item>
-        <item name="android:textColor">@color/spinner_primary_text_color</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxLines">2</item>
-    </style>
-
     <style name="InlineSpinnerTextAppearance" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">16.0sp</item>
         <item name="android:textColor">@color/spinner_primary_text_color</item>
     </style>
 
-    <style name="SecondScreenTitle">
-        <item name="android:textSize">@dimen/second_screen_title_text</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:background">@drawable/second_screen_context_button</item>
-        <item name="android:paddingRight">32.0dip</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
-    <style name="SecondScreenTitleSmall" parent="@style/SecondScreenTitle">
-        <item name="android:textSize">12.0sp</item>
-        <item name="android:paddingRight">0.0dip</item>
-        <item name="android:fontFamily">sans-serif</item>
-    </style>
-
     <style name="SportEventTitle" parent="@style/CardText">
         <item name="android:textSize">24.0sp</item>
         <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
-    <style name="WithPaddingStartCardPadding">
-        <item name="android:paddingLeft">@dimen/card_padding</item>
-    </style>
-
-    <style name="WithPaddingStartTextBlockSidePadding">
-        <item name="android:paddingLeft">@dimen/text_block_side_padding</item>
     </style>
 
     <style name="CardText.WithPaddingStartCardPadding" parent="@style/CardText">
@@ -1064,14 +678,6 @@
         <item name="android:paddingLeft">@dimen/card_padding</item>
     </style>
 
-    <style name="WithPaddingStartUnits2">
-        <item name="android:paddingLeft">@dimen/units_2</item>
-    </style>
-
-    <style name="WithPaddingStart8dp">
-        <item name="android:paddingLeft">8.0dip</item>
-    </style>
-
     <style name="WidgetSmallText.WithPaddingStart8dp" parent="@style/WidgetSmallText">
         <item name="android:paddingLeft">8.0dip</item>
     </style>
@@ -1079,22 +685,6 @@
     <!--<style name="CardText.Large.WithPaddingStartTextBlockSidePadding" parent="@style/CardText.Large">-->
     <!--<item name="android:paddingLeft">@dimen/text_block_side_padding</item>-->
     <!--</style>-->
-
-    <style name="WithPaddingStartUnit">
-        <item name="android:paddingLeft">@dimen/unit</item>
-    </style>
-
-    <style name="WithPaddingStartCardSmallPadding">
-        <item name="android:paddingLeft">@dimen/card_small_padding</item>
-    </style>
-
-    <style name="WithPaddingStart12dp">
-        <item name="android:paddingLeft">12.0dip</item>
-    </style>
-
-    <style name="WithPaddingStart4dp">
-        <item name="android:paddingLeft">4.0dip</item>
-    </style>
 
     <style name="TextOrIconDefaultStyle" parent="@style/CardText">
         <item name="android:textSize">12.0sp</item>
@@ -1125,217 +715,11 @@
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
-    <style name="Relationship">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:fontFamily">Roboto</item>
-    </style>
-
-    <style name="Relationship.Icon" parent="@style/Relationship">
-        <item name="android:layout_width">112.0dip</item>
-        <item name="android:layout_height">104.0dip</item>
-    </style>
-
-    <style name="Relationship.EmptyTitle" parent="@style/Relationship">
-        <item name="android:textSize">18.0sp</item>
-        <item name="android:textColor">#ff545454</item>
-    </style>
-
-    <style name="Relationship.EmptySubTitle" parent="@style/Relationship">
-        <item name="android:textSize">14.0sp</item>
-        <item name="android:textColor">#ff999999</item>
-    </style>
-
-    <style name="Relationship.LearnMore" parent="@style/Relationship">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">#ff4688f1</item>
-        <item name="android:fontFamily">Roboto Medium</item>
-    </style>
-
-    <style name="Suggestion">
-        <item name="android:focusable">true</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/suggestion_view_height</item>
-    </style>
-
-    <style name="Suggestion.WebSearch" parent="@style/Suggestion">
-        <item name="android:focusable">false</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/web_suggestion_view_height</item>
-    </style>
-
-    <style name="Suggestion.Summons" parent="@style/Suggestion">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/suggestion_view_height</item>
-    </style>
-
-    <style name="Suggestion.Nav" parent="@style/Suggestion">
-        <item name="android:background">@drawable/bg_suggestion</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/web_suggestion_view_height</item>
-    </style>
-
-    <style name="SuggestionText1">
-        <item name="android:textAppearance">@style/SuggestionText1Appearance</item>
-        <item name="android:ellipsize">middle</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">@dimen/suggestion_text_padding</item>
-        <item name="android:paddingRight">@dimen/suggestion_text_padding</item>
-        <item name="android:duplicateParentState">true</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="SuggestionText1.Web" parent="@style/SuggestionText1">
-        <item name="android:textAppearance">@style/SuggestionText1Appearance.Web</item>
-        <item name="android:ellipsize">start</item>
-        <item name="android:paddingLeft">@dimen/suggestion_text_padding</item>
-        <item name="android:paddingRight">@dimen/suggestion_text_padding</item>
-        <item name="android:layout_width">0.0dip</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">@dimen/web_suggestion_view_height</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:layout_weight">1.0</item>
-    </style>
-
-    <style name="SuggestionText1.Nav" parent="@style/SuggestionText1">
-        <item name="android:textAppearance">@style/SuggestionText1Appearance.Nav</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="SuggestionText.VoiceCorrection" parent="@style/SuggestionText1.Web">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/voice_correction_text</item>
-        <item name="android:background">@drawable/stateful_gray_background</item>
-    </style>
-
-    <style name="SuggestionText2">
-        <item name="android:textAppearance">@style/SuggestionText2Appearance</item>
-        <item name="android:gravity">top</item>
-        <item name="android:paddingLeft">@dimen/suggestion_text_padding</item>
-        <item name="android:paddingRight">@dimen/suggestion_text_padding</item>
-        <item name="android:duplicateParentState">true</item>
-        <item name="android:singleLine">true</item>
-    </style>
-
-    <style name="SuggestionText2.Url" parent="@style/SuggestionText2">
-        <item name="android:textColor">@color/primary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionIcon1">
-        <item name="android:duplicateParentState">true</item>
-        <item name="android:layout_width">@dimen/suggestion_icon_size</item>
-        <item name="android:layout_height">fill_parent</item>
-    </style>
-
-    <style name="QueryBuilderIcon" />
-
-    <style name="SuggestionText1Appearance">
-        <item name="android:textSize">@dimen/search_bar_text_size</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/primary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionText1Appearance.Query" parent="@style/SuggestionText1Appearance">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/primary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionText1Appearance.Suggested" parent="@style/SuggestionText1Appearance">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/primary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionText1Appearance.MatchedQuery" parent="@style/SuggestionText1Appearance">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/primary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionText1Appearance.Web" parent="@style/SuggestionText1Appearance">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/primary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionText1Appearance.Nav" parent="@style/SuggestionText1Appearance">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/primary_text_nav_suggest</item>
-    </style>
-
-    <style name="SuggestionText2Appearance">
-        <item name="android:textSize">12.0sp</item>
-        <item name="android:textColor">@color/secondary_text_suggest</item>
-    </style>
-
-    <style name="SuggestionStripIcon">
-        <item name="android:textSize">@dimen/suggestion_strip_icon_text_size</item>
-        <item name="android:textColor">@color/primary_text_suggest</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:paddingLeft">3.0dip</item>
-        <item name="android:paddingTop">12.0dip</item>
-        <item name="android:paddingRight">3.0dip</item>
-        <item name="android:paddingBottom">10.0dip</item>
-        <item name="android:layout_width">0.0dip</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:layout_weight">1.0</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
     <style name="TravelModeSpinner" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">48.0dip</item>
         <item name="android:divider">@color/light_gray</item>
         <item name="android:dividerHeight">1.0dip</item>
-    </style>
-
-    <style name="ContactSubjectStyle">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">@color/dark_gray</item>
-        <item name="android:textColorHint">@color/gray</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:paddingTop">4.0dip</item>
-        <item name="android:paddingBottom">4.0dip</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/unit</item>
-        <item name="android:layout_marginRight">@dimen/unit</item>
-        <item name="android:minHeight">48.0dip</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:lineSpacingExtra">2.0sp</item>
-        <item name="android:layout_marginStart">@dimen/unit</item>
-        <item name="android:layout_marginEnd">@dimen/unit</item>
-        <item name="android:layout_alignParentStart">true</item>
-    </style>
-
-    <style name="ContactMessageStyle" parent="@style/ContactSubjectStyle">
-        <item name="android:minHeight">64.0dip</item>
-    </style>
-
-    <style name="ContactMessageImageStyle">
-        <item name="android:background">@color/translucent_black</item>
-        <item name="android:layout_width">@dimen/contact_avatar_width</item>
-        <item name="android:layout_height">@dimen/contact_avatar_height</item>
-        <item name="android:src">@drawable/ic_contact_ds</item>
-        <item name="android:scaleType">centerCrop</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentTop">true</item>
-        <item name="android:layout_alignParentStart">true</item>
-    </style>
-
-    <style name="ContactMessageWrapperStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/unit</item>
-        <item name="android:layout_marginTop">@dimen/unit</item>
-        <item name="android:layout_marginRight">8.0dip</item>
-        <item name="android:layout_marginStart">@dimen/unit</item>
-        <item name="android:layout_marginEnd">8.0dip</item>
-    </style>
-
-    <style name="ResultCard">
-        <item name="android:background">@drawable/card_background</item>
     </style>
 
     <style name="SuggestionFilter.NoMatch" parent="@android:style/TextAppearance.Medium">
@@ -1357,12 +741,6 @@
         <item name="android:layout_weight">1.0</item>
     </style>
 
-    <style name="VoicesearchLanguage">
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/voice_search_language_text</item>
-        <item name="android:gravity">center</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
     <!--<style name="LauncherSearchButton">-->
     <!--<item name="android:paddingLeft">6.0dip</item>-->
     <!--<item name="android:layout_marginLeft">4.0dip</item>-->
@@ -1378,61 +756,16 @@
     <!--<item name="android:layout_toLeftOf">@id/recognizer_mic_button</item>-->
     <!--<item name="android:fontFamily">sans-serif-condensed</item>-->
     <!--</style>-->
-    <style name="SuggestionListHeaderText">
-        <item name="android:textSize">25.0sp</item>
-        <item name="android:textColor">@color/suggest_header_primary_text_normal</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
 
     <style name="SuggestionListFooterText" parent="@style/CardActionButton">
         <item name="android:textColor">@color/primary_text_suggest_footer</item>
     </style>
 
-    <style name="CalendarEventCardTextBlock">
-        <item name="android:orientation">vertical</item>
-        <item name="android:paddingLeft">@dimen/card_padding</item>
-        <item name="android:paddingRight">@dimen/card_padding</item>
-        <item name="android:paddingBottom">@dimen/card_padding</item>
-        <item name="android:visibility">gone</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="SoundLevels">
-        <item name="android:layout_alignParentRight">true</item>
-    </style>
-
-    <style name="SpeakNowSpeechLogo">
-        <item name="android:layout_marginLeft">30.0dip</item>
-        <item name="android:layout_alignParentLeft">true</item>
-    </style>
     <!--<style name="ClearButton">-->
     <!--<item name="android:paddingLeft">@dimen/recognizer_view_padding</item>-->
     <!--<item name="android:paddingRight">@dimen/recognizer_view_padding</item>-->
     <!--<item name="android:layout_toLeftOf">@id/recognizer_mic_button</item>-->
     <!--</style>-->
-    <style name="WhatsThisSong">
-        <item name="android:layout_marginLeft">-16.0dip</item>
-        <item name="android:layout_marginRight">9.0dip</item>
-        <item name="android:layout_alignParentRight">true</item>
-    </style>
-
-    <style name="RecognizerView">
-        <item name="android:paddingLeft">@dimen/recognizer_view_padding</item>
-        <item name="android:paddingRight">@dimen/recognizer_view_padding</item>
-    </style>
-
-    <style name="AudioProgressRenderer">
-        <item name="android:layout_marginLeft">36.0dip</item>
-        <item name="android:layout_marginRight">36.0dip</item>
-        <item name="android:layout_alignParentLeft">true</item>
-    </style>
-
-    <style name="DummyFocusView">
-        <item name="android:layout_alignParentLeft">true</item>
-    </style>
-
-    <style name="SearchFooter" />
 
     <!--<style name="ModularActionArgumentTextStyle">-->
     <!--<item name="android:textColorHint">@color/gray</item>-->
@@ -1605,10 +938,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="SearchPlate">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
-
     <style name="SearchPlate.SearchBox" parent="@android:style/Widget.EditText">
         <item name="android:background">@android:color/transparent</item>
     </style>
@@ -1660,11 +989,6 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
-    <style name="sized_action_editor">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="answer_primary_text" parent="@android:style/TextAppearance">
         <item name="android:textSize">25.0sp</item>
         <item name="android:textColor">@color/dark_gray</item>
@@ -1692,11 +1016,6 @@
         <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/medium_gray</item>
         <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
-    <style name="local_icon">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:padding">8.0dip</item>
     </style>
 
     <style name="play_action_title" parent="@style/Theme.Velvet.Card.TextAppearance.Medium">
@@ -1728,28 +1047,6 @@
     <!--<item name="android:layout_marginStart">@dimen/text_block_side_padding</item>-->
     <!--<item name="android:layout_marginEnd">@dimen/text_block_side_padding</item>-->
     <!--</style>-->
-    <style name="main_text">
-        <item name="android:textSize">20.0sp</item>
-        <item name="android:textColor">#ff777777</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
-    <style name="radio_button_group">
-        <item name="android:paddingTop">20.0dip</item>
-        <item name="android:paddingBottom">20.0dip</item>
-    </style>
-
-    <style name="horizontal_divider">
-        <item name="android:background">#ffbbbbbb</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">1.0dip</item>
-    </style>
-
-    <style name="reminder_radio_button">
-        <item name="android:textSize">16.0sp</item>
-        <item name="android:textColor">@color/dark_gray</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
 
     <style name="reminder_edit_spinner" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:textSize">16.0sp</item>
