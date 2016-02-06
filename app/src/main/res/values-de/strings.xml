@@ -23,7 +23,6 @@
     <string name="volunteer_dialog_disclaimer">Dein Name und deine Telefonnummer werden nur zur Verifizierung verwendet.</string>
     <string name="anonymous">Unbekannt</string>
     <string name="address">Unbekannte Adresse</string>
-
     <string name="pickupRequest_retryDialog_message">Bitte überprüfe deine Internetverbindung und versuche es noch einmal.</string>
     <string name="pickupRequest_retryDialog_title">Es ist ein Fehler aufgetreten</string>
     <string name="pickupRequest_retryDialog_retryLabel">Wiederholen</string>
@@ -70,7 +69,8 @@
     <string name="request_status_waiting">Es hat sich noch kein Helfer zur Abholung gefunden!</string>
     <string name="error_donation_not_canceled">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
     <string name="error_note_not_saved">Verbindung fehlgeschlagen - bitte versuch es später noch einmal.</string>
-    <string name="error_connection_failure">Verbindung fehlgeschlagen. Bitte versuch es später noch einmal.</string>
+    <string name="error_connection_failure_title">Verbindung fehlgeschlagen</string>
+    <string name="error_connection_failure_message">Bitte versuch es später noch einmal.</string>
     <string name="dialog_cancelDonation_message">Diese Spende zurückziehen?</string>
     <string name="dialog_cancelDonation_positiveButton">Spende zurückziehen</string>
     <string name="dialog_cancelDonation_negativeButton">Doch nicht</string>
@@ -107,8 +107,8 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="donor_default_name">Unbekannt</string>
-    <string name="volunteer_dashboard_status_waiting">Auf Spender warten</string>
-    <string name="volunteer_dashboard_status_ready">Abholbereit</string>
+    <string name="dashboard_status_waiting">Auf Spender warten</string>
+    <string name="dashboard_status_ready">Abholbereit</string>
     <string name="dialog_loggedin_existing_donation_found_title">Eine weitere Spende gefunden!</string>
     <string name="dialog_loggedin_existing_donation_found_message">Diese Spende wird stattdessen geladen.</string>
     <string name="dialog_loggedin_existing_donation_found_button">OK</string>

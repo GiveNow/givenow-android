@@ -39,15 +39,6 @@
     <string name="action_refresh">Refresh</string>
     <string name="donate_pickup_complete">Your donation has been successfully picked up.  Thanks for making a difference!</string>
     <string name="donate_success">Donation Successful</string>
-    <string name="notif_pickup_request_claimed_title">Is your donation ready?</string>
-    <string name="notif_pickup_request_claimed_msg">%1$s wants to pick up your donation. Confirm?</string>
-    <string name="notif_volunteer_confirmed_title">Ready for Pickup</string>
-    <string name="notif_volunteer_confirmed_msg">%1$s\'s donation at %2$s is ready to be picked up.</string>
-    <string name="notif_volunteer_confirmed_msg_no_name">The donation at %1$s is ready to be picked up.</string>
-    <string name="notif_pickup_complete_title">Donation Picked Up</string>
-    <string name="notif_pickup_complete_msg">%1$s just picked up your donation. Thanks!</string>
-    <string name="notif_problem_reported_title">Problem Reported</string>
-    <string name="notif_problem_reported_msg">%1$s reported a problem picking up your donation.</string>
     <string name="navigate">Navigate</string>
     <!--<string name="get_directions">Get directions</string>-->
     <string name="call_donor">Call</string>
@@ -73,7 +64,6 @@
     <string name="your_donation_label">Your Donation</string>
     <string name="request_status_waiting">Waiting for a volunteer to accept your request!</string>
     <string name="error_donation_not_canceled">Couldn\'t connect - please try again later.</string>
-    <string name="error_note_not_saved">Couldn\'t connect - please try again later.</string>
     <string name="error_connection_failure_title">Couldn\'t connect</string>
     <string name="error_connection_failure_message">Please try again later!</string>
     <string name="cancel_donation_button">Cancel</string>
@@ -116,8 +106,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="donor_default_name">Anonymous</string>
-    <string name="volunteer_dashboard_status_waiting">Waiting for Donor</string>
-    <string name="volunteer_dashboard_status_ready">Ready for Pickup</string>
     <string name="dialog_loggedin_existing_donation_found_title">Existing donation found!</string>
     <string name="dialog_loggedin_existing_donation_found_message">Your existing donation request will be loaded instead.</string>
     <string name="dialog_loggedin_existing_donation_found_button">OK</string>
@@ -132,6 +120,7 @@
     <string name="dialog_volunteer_claim_pickuprequest_title">Claim this Pickup Request?</string>
     <string name="dialog_volunteer_claim_pickuprequest_message">This will notify the donor that you\'d like to pick their donation up.</string>
     <string name="dashboard_status_ready">Ready for Pickup</string>
+    <string name="dashboard_status_waiting">Waiting for Donor</string>
     <string name="dashboard_button_text_donor">Message</string>
     <string name="donation_complete_title">Thank you for your donation</string>
     <string name="donation_complete_message_head">Your generous donation of</string>

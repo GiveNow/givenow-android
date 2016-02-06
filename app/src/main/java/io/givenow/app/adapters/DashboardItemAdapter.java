@@ -60,7 +60,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
         //set this as default case
         ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
                 Picasso.with(mContext).load(parseFile.getUrl()).into(vh.ivProfile));
-        vh.tvStatus.setText(R.string.volunteer_dashboard_status_waiting);
+        vh.tvStatus.setText(R.string.dashboard_status_waiting);
         vh.readyLayout.setVisibility(View.GONE);
 //        vh.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
 //        vh.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(mContext.getResources().getString(R.string.donor_default_name)));
@@ -77,7 +77,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
         pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
             //if there is a confirmed volunteer and it is me, then say it is ready for pickup
             if (confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
-                vh.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
+                vh.tvStatus.setText(R.string.dashboard_status_ready);
                 vh.tvNote.setVisibility(note.isEmpty() ? View.GONE : View.VISIBLE);
                 vh.readyLayout.setVisibility(View.VISIBLE);
                 setupStaticMap(vh, pickupRequest);
