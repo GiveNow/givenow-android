@@ -91,5 +91,16 @@
     <string name="phone_number_verification_error_number_failed_to_parse">Die Telefonnummer sollte wie folgt angegeben werden:\n+49 123 456 7890</string>
     <string name="phone_number_verification_error_number_invalid">Bitte eine gültige Telefonnummer angeben.\nBeispiel: +49 123 456 7890</string>
     <string name="volunteer_accept_request_marker_cta">Diese Spende abholen</string>
+    <string name="action_dashboard_item_cancel">Abbrechen</string>
+    <string name="and">und</string>
+    <string name="dashboard_button_text_donor">Nachricht</string>
+    <string name="done">fertig</string>
+    <string name="rate_app">Bewerte die App mit 5 Sternen.</string>
+    <string name="dashboard_empty_view">Du hast bisher keine Spenden freiwillig abgeholt. Probiere es doch einfach mal aus!</string>
+    <string name="label_name">Dein Name</string>
+    <string name="donation_complete_message_head">Deine grosszügige Spende von</string>
+    <string name="donation_complete_message_tail">ist abgeschlossen.</string>
+    <string name="donation_complete_title">Danke für deine Spende</string>
+    <string name="dialog_pickup_pickupRequest_negativeButton">@string/no</string>
 
 </resources>
