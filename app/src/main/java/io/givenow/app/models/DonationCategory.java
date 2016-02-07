@@ -30,7 +30,7 @@ public class DonationCategory extends ParseObject {
         setDescription(description_en, description_de);
     }
 
-    public static ParseQuery<DonationCategory> getTop9() {
+    public static ParseQuery<DonationCategory> fetchTop9() {
         return ParseQuery.getQuery(DonationCategory.class)
                 .orderByAscending("priority")
                 .setLimit(9);

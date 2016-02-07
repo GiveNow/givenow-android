@@ -5,9 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,7 +23,6 @@ import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
-import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
 
 public class PickupRequestsFragment extends MapHostingFragment implements ClusterManager.OnClusterClickListener<PickupRequest>,
@@ -65,28 +61,9 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pickup_requests, container, false);
         ButterKnife.bind(this, v);
-        setHasOptionsMenu(true);
 
         // TODO: add a loading indicator of some sort to show map loading?
         return v;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.pickup_request_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                loadMarkers();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -201,13 +178,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
             Bitmap icon = mIconGenerator.makeIcon(""); //TODO: express categories in icon somehow?
 
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-            //set the title to the users name, and snippet to be number of coats
-            //TODO the following should never happen. I don't know why donor is null when the data browser shows there is a user there
-            if (pickupRequest.getDonor() == null) {
-                Log.e("PickupRequestsFragment", "Pickup request with id " + pickupRequest.getObjectId() + " has a null donor!");
-            } else {
-                markerOptions.title(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(pickupRequest.getAddress()));
-            }
+            markerOptions.title(pickupRequest.getAddress());
             markerOptions.snippet(getString(R.string.volunteer_accept_request_marker_cta));
         }
 

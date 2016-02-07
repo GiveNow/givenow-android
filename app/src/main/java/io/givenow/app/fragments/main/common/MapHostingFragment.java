@@ -7,11 +7,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -28,11 +31,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fj.data.Option;
 import io.givenow.app.R;
 import rx.Observable;
@@ -56,6 +59,7 @@ public class MapHostingFragment extends Fragment
     private boolean mZoomToLocation = true;
     private Geocoder mGeocoder;
     private CameraPosition mCameraPosition;
+    private View mMyLocationButton;
 
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
@@ -147,6 +151,12 @@ public class MapHostingFragment extends Fragment
         mGoogleMap = map;
         mGoogleMap.setMyLocationEnabled(true);
 
+        // Disabling the MyLocationButton this way apparently removes the button from the view hierarchy
+        // in a way that we can't perform clicks on it later. So let's just set the visibility to Gone instead.
+        //        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMyLocationButton = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent())
+                .findViewById(Integer.parseInt("2"));
+        mMyLocationButton.setVisibility(View.GONE);
     }
 
     public boolean isMapTouched() {
@@ -167,21 +177,21 @@ public class MapHostingFragment extends Fragment
     public Observable<Address> getAddressFromLatLng(LatLng pos) {
         return Observable
                 .defer(() -> {
-                    List<Address> addresses = null;
                     try {
                         if (isOnline()) {
-                            addresses = mGeocoder.getFromLocation(pos.latitude, pos.longitude, 1);
+                            return Option.fromNull(mGeocoder.getFromLocation(pos.latitude, pos.longitude, 1)).map(addresses -> {
+                                if (addresses.size() > 0)
+                                    return Observable.just(addresses.get(0));
+                                else
+                                    return Observable.<Address>empty();
+                            }).orSome(Observable.empty());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (addresses != null) {
-                        if (addresses.size() > 0)
-                            return Observable.just(addresses.get(0));
-                    }
                     return Observable.empty();
                 })
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -211,11 +221,16 @@ public class MapHostingFragment extends Fragment
             getLastLocation().foreachDoEffect(latLng -> {
 //                Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
-                mGoogleMap.animateCamera(cameraUpdate);
+                try {
+                    mGoogleMap.animateCamera(cameraUpdate);
+                } catch (NullPointerException npe) {
+                    Crashlytics.log("Can't animate map to location " + latLng.toString() + ", map is null!");
+                    Crashlytics.logException(npe);
+                }
+
                 mZoomToLocation = false;
             });
         }
-
     }
 
     @NonNull
@@ -233,6 +248,18 @@ public class MapHostingFragment extends Fragment
      */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    @OnClick(R.id.fabMyLocation)
+    public void onMyLocationClick(FloatingActionButton fabMyLocation) {
+        mMyLocationButton.performClick();
+        // More robust but less correct way: (doesn't replicate zoom level behavior of original myLocationButton)
+        //        getLastLocation().foreachDoEffect(latLng -> {
+        //            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
+        //            if (mGoogleMap != null) {
+        //                mGoogleMap.animateCamera(cameraUpdate);
+        //            }
+        //        });
     }
 
 }

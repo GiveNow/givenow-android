@@ -9,12 +9,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.givenow.app.R;
+import io.givenow.app.activities.MainActivity;
 import io.givenow.app.adapters.DonationHistoryAdapter;
 import io.givenow.app.fragments.main.BaseFragment;
+import io.givenow.app.helpers.CustomAnimations;
+import io.givenow.app.interfaces.AnythingChangedDataObserver;
 import io.givenow.app.models.Donation;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,7 +34,8 @@ public class DonationHistoryFragment extends BaseFragment {
 
     @Bind(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
-
+    @Bind(R.id.emptyView)
+    LinearLayout emptyView;
     private DonationHistoryAdapter mDonationHistoryAdapter;
 
     public DonationHistoryFragment() {
@@ -55,6 +62,18 @@ public class DonationHistoryFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
 
         mDonationHistoryAdapter = new DonationHistoryAdapter();
+
+        mDonationHistoryAdapter.registerAdapterDataObserver(new AnythingChangedDataObserver() {
+            @Override
+            public void onAnythingChanged() {
+                if (mDonationHistoryAdapter.getItemCount() > 0) {
+                    CustomAnimations.circularHide(emptyView).start();
+                } else {
+                    CustomAnimations.circularReveal(emptyView).start();
+                }
+            }
+        });
+
         rvDonations.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvDonations.setItemAnimator(new SlideInUpAnimator());
         rvDonations.setAdapter(mDonationHistoryAdapter);
@@ -110,5 +129,11 @@ public class DonationHistoryFragment extends BaseFragment {
                             }
                     );
         }
+    }
+
+    @OnClick(R.id.btnGoToDonate)
+    public void onGoToDonateClick(Button btn) {
+        //TODO maybe nice ripple transition
+        ((MainActivity) getActivity()).selectMenuItem(R.id.navigation_give);
     }
 }

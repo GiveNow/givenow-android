@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 
 import com.bartoszlipinski.viewpropertyobjectanimator.ViewPropertyObjectAnimator;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.ResultCallback;
@@ -65,10 +68,11 @@ import io.givenow.app.customviews.SlidingRelativeLayout;
 import io.givenow.app.fragments.PhoneNumberVerificationFragment;
 import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
-import io.givenow.app.helpers.AttributeGetter;
+import io.givenow.app.helpers.Analytics;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.helpers.RateApp;
+import io.givenow.app.helpers.ResourceHelper;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -136,13 +140,16 @@ public class RequestPickupFragment extends MapHostingFragment
     @BindDimen(R.dimen.icon_size)
     int iconSize;
 
+    @Bind(R.id.fabMyLocation)
+    FloatingActionButton fabMyLocation;
+
     private PlaceAutocompleteAdapter mAdapter;
     private boolean mConfirmAddressShowing = false;
     private boolean mKeyCodeBackEventHandled = false;
     private DonationCategoryAdapter mDonationCategoryAdapter;
     private boolean mCategoryLayoutShowing = false;
     private GridLayoutManager mGridLayoutManager;
-    private PickupRequest mPickupRequest;
+    @Nullable private PickupRequest mPickupRequest;
     private DonationCategoryAdapter mCurrentRequestCategoriesAdapter;
     private boolean mCurrentRequestLayoutShowing = false;
     private Tracker mTracker;
@@ -297,31 +304,50 @@ public class RequestPickupFragment extends MapHostingFragment
                 pickupRequest -> {
                     mPickupRequest = pickupRequest;
                     if (pickupRequest.getDonation().isNone()) {
-                        showCurrentRequestLayout().subscribe();
+                        if (isAdded()) { // In rare cases, we get here and we're still detached.
+                            showCurrentRequestLayout().subscribe();
+                        } else { // So if we're not added yet, post this as a runnable that will run when we are.
+                            rlCurrentRequestContainer.post(() -> showCurrentRequestLayout().subscribe());
+                        }
                     } else {
                         fj.data.List<DonationCategory> dc = fj.data.List.list(pickupRequest.getDonationCategories());
                         new AlertDialog.Builder(getActivity())
                                 .setIcon(R.mipmap.ic_launcher)
                                 .setTitle(R.string.donation_complete_title)
                                 .setMessage(getString(R.string.donation_complete_message_head) + " " +
-                                        dc.head().getName(getContext()) +
-                                        dc.tail().init().foldLeft(
-                                                (s, category) -> s + ", " + category.getName(getContext()),
-                                                "") +
-                                        " " + getString(R.string.and) + " " + dc.last().getName(getContext()) +
+                                        (dc.isSingle() ?
+                                                dc.head().getName(getContext())
+                                                : dc.head().getName(getContext()) +
+                                                dc.tail().init().foldLeft(
+                                                        (s, category) -> s + ", " + category.getName(getContext()),
+                                                        "") +
+                                                " " + getString(R.string.and) + " " + dc.last().getName(getContext())
+                                        ) +
                                         " " + getString(R.string.donation_complete_message_tail))
                                 .setPositiveButton(R.string.done, null)
                                 .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
                                 .setOnDismissListener(d -> {
-                                    mPickupRequest.setActive(false);
-                                    mPickupRequest.saveInBackground();
+                                    if (mPickupRequest != null) {
+                                        mPickupRequest.markComplete()
+                                                .flatMap(response -> {
+                                                    Log.d("Cloud Response", response.toString());
+                                                    return Observable.just(response);
+                                                })
+                                                .flatMap(p -> mCurrentRequestLayoutShowing ?
+                                                        hideCurrentRequestLayout() : Observable.just(null)
+                                                )
+                                                .subscribe(
+                                                        v -> mPickupRequest = null,
+                                                        error -> ErrorDialogs.connectionFailure(getActivity(), error));
+
+                                    }
                                 })
                                 .show();
                         //TODO: Share on facebook/twitter etc for bragging rights
                     }
                 },
                 error -> {
-                    Log.d("RPF", "fetchPickupRequest onError");
+                    Log.d(logTag(), "No outstanding pickup request.");
                 });
     }
 
@@ -359,25 +385,24 @@ public class RequestPickupFragment extends MapHostingFragment
 
     @OnClick(R.id.btnBottomSubmit)
     protected void onBottomSubmit(Button button) {
-        HitBuilders.EventBuilder hit = new HitBuilders.EventBuilder();
-        hit.setCategory("RequestPickup").setAction("BottomButtonClicked");
-
+        String label;
         btnBottomSubmit.setEnabled(false);
         if (!mConfirmAddressShowing) {
             showConfirmAddress().subscribe();
-            hit.setLabel("withSetPickupLocationShowing");
+            label = "withSetPickupLocationShowing";
         } else {
             if (!mCategoryLayoutShowing) {
                 showCategoryLayout().subscribe();
-                hit.setLabel("withConfirmAddressShowing");
+                label = "withConfirmAddressShowing";
             } else {
                 confirmPickupRequest();
-                hit.setLabel("withCategoryLayoutShowing");
-                mTracker.send(hit.build());
+                label = "withCategoryLayoutShowing";
+                Analytics.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
                 return; //leave button disabled
             }
         }
-        mTracker.send(hit.build());
+        Crashlytics.setString("RequestPickup.BottomButtonClicked", label);
+        Analytics.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
         btnBottomSubmit.setEnabled(true);
 
     }
@@ -450,11 +475,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void savePickupRequest() {
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("RequestPickup")
-                .setAction("PickupRequestTrySave")
-                .setLabel(ParseUser.getCurrentUser().getObjectId())
-                .build());
+        Analytics.sendHit(mTracker, "RequestPickup", "PickupRequestTrySave", ParseUser.getCurrentUser().getObjectId());
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
@@ -483,11 +504,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void onPickupRequestSaved() {
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("RequestPickup")
-                .setAction("PickupRequestSaved")
-                .setLabel(ParseUser.getCurrentUser().getObjectId())
-                .build());
+        Analytics.sendHit(mTracker, "RequestPickup", "PickupRequestSaved", ParseUser.getCurrentUser().getObjectId());
 
         hideCategoryLayout().subscribe(v -> {
             hideConfirmAddress(false).subscribe();
@@ -641,15 +658,10 @@ public class RequestPickupFragment extends MapHostingFragment
     private void buildCategoryGrid() {
         //get categories from parse
         mDonationCategoryAdapter.clearItems();
-        DonationCategory.getTop9().findInBackground((categoryList, error) -> {
-            if (error == null) {
-                for (DonationCategory category : categoryList) {
-                    mDonationCategoryAdapter.addItem(category);
-                }
-            } else {
-                Log.d("RPDF", "Error fetching categories: " + error.getMessage());
-            }
-        });
+        ParseObservable.find(DonationCategory.fetchTop9()).observeOn(mainThread()).subscribe(
+                mDonationCategoryAdapter::addItem,
+                error -> ErrorDialogs.connectionFailure(getActivity(), error)
+        );
     }
 
     @NonNull
@@ -697,7 +709,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
             slideUp.setInterpolator(new DecelerateInterpolator());
-            Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
+            Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
 
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
@@ -710,7 +722,7 @@ public class RequestPickupFragment extends MapHostingFragment
             //Disable map and address field
             actvAddress.setEnabled(false);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            Animator hideFab = CustomAnimations.circularHide(fabMyLocation);
 
             //Update address and note field
             actvAddress.setText(mPickupRequest.getAddress(), false);
@@ -721,6 +733,7 @@ public class RequestPickupFragment extends MapHostingFragment
             mGoogleMap.animateCamera(cameraUpdate);
 
             AnimatorSet set = new AnimatorSet();
+            set.play(hideFab);
             set.play(slideDown).before(slideUp).with(fade_in).with(growNote);
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
@@ -747,11 +760,8 @@ public class RequestPickupFragment extends MapHostingFragment
                     mPickupRequest.cancel();
                     mPickupRequest.saveInBackground(e -> {
                         if (e == null) {
-                            mTracker.send(new HitBuilders.EventBuilder()
-                                    .setCategory("RequestPickup")
-                                    .setAction("DonationCanceled")
-                                    .setLabel(ParseUser.getCurrentUser().getObjectId())
-                                    .build());
+                            Analytics.sendHit(mTracker, "RequestPickup", "DonationCanceled", ParseUser.getCurrentUser().getObjectId());
+
                             hideCurrentRequestLayout().subscribe();
                         } else {
                             ErrorDialogs.connectionFailure(getContext(), e);
@@ -768,11 +778,11 @@ public class RequestPickupFragment extends MapHostingFragment
             //Re-enable map and address field
             actvAddress.setEnabled(true);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            Animator showFab = CustomAnimations.circularReveal(fabMyLocation);
 
             Animator slideDown = CustomAnimations.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
-            Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, AttributeGetter.getDimensionAttr(getActivity(), R.attr.actionBarSize));
+            Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize));
             slideUp.setInterpolator(new DecelerateInterpolator());
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);
@@ -782,6 +792,7 @@ public class RequestPickupFragment extends MapHostingFragment
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    showFab.start();
                     adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
                     rlCurrentRequestContainer.setVisibility(View.GONE);
                     btnBottomSubmit.setEnabled(true);

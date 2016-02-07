@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DashboardItemAdapter;
 import io.givenow.app.helpers.CustomAnimations;
+import io.givenow.app.interfaces.AnythingChangedDataObserver;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
 import io.givenow.app.models.PickupRequest;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
@@ -51,6 +52,17 @@ public class DashboardFragment extends Fragment implements
 
         mAdapter = new DashboardItemAdapter();
 
+        mAdapter.registerAdapterDataObserver(new AnythingChangedDataObserver() {
+            @Override
+            public void onAnythingChanged() {
+                if (mAdapter.getItemCount() > 0) {
+                    CustomAnimations.circularHide(emptyView).start();
+                } else {
+                    CustomAnimations.circularReveal(emptyView).start();
+                }
+            }
+        });
+
         //Grab the Recycler View and list all conversation objects in a vertical list
         rvItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvItems.setItemAnimator(new SlideInUpAnimator());
@@ -76,11 +88,6 @@ public class DashboardFragment extends Fragment implements
     }
 
     private void loadDashboardItems() {
-//        if (mAdapter != null) {
-//            mAdapter.loadObjects();
-//        }
-//        mAdapter.clearItems();
-
         if (isResumed()) {
             swipeContainer.setRefreshing(true);
             Log.d("DashboardFragment", "Finding Dashboard items...");
@@ -92,34 +99,11 @@ public class DashboardFragment extends Fragment implements
                             error -> Log.e("DashboardFragment", "Error getting dashboard pickups: " + error.getMessage()),
                             () -> { //OnComplete:
                                 Log.d("DashboardFragment", "queryMyDashboardPickups OnComplete");
-                                if (mAdapter.getItemCount() > 0) {
-                                    CustomAnimations.circularHide(emptyView);
-                                } else {
-                                    CustomAnimations.circularReveal(emptyView);
-                                }
                                 swipeContainer.setRefreshing(false);
                             }
                     );
         }
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dashboard_menu, menu);
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // handle item selection
-//        switch (item.getItemId()) {
-//            case R.id.action_refresh:
-//                loadDashboardItems();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     @Override
     public void onViewPagerShow() {
@@ -136,18 +120,4 @@ public class DashboardFragment extends Fragment implements
         rvItems.scrollToPosition(i);
     }
 
-//    @Override
-//    public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
-//        for (int position : reverseSortedPositions) {
-//            //create the contextual view asking if complete
-//            Log.w("df", "dismiss");
-//        }
-//    }
-//
-//    @Override
-//    public void deleteItem(int position) {
-//        //pickup dropped off. complete
-//        Log.w("df", "delete");
-//
-//    }
 }

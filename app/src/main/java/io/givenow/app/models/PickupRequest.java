@@ -1,29 +1,24 @@
 package io.givenow.app.models;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import fj.data.Option;
-import io.givenow.app.R;
-import io.givenow.app.helpers.ErrorDialogs;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
 
 /**
@@ -173,7 +168,9 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         return q;
     }
 
-    /** Properties **/
+    /**
+     * Properties
+     **/
 
     public ParseGeoPoint getLocation() {
         return getParseGeoPoint("location");
@@ -224,6 +221,10 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         put("pendingVolunteer", value);
     }
 
+    public void cancelPendingVolunteer() {
+        remove("pendingVolunteer");
+    }
+
     @NonNull
     public Option<ParseUser> getConfirmedVolunteer() {
         return Option.fromNull(getParseUser("confirmedVolunteer"));
@@ -255,94 +256,60 @@ public class PickupRequest extends ParseObject implements ClusterItem, Serializa
         setActive(false);
     }
 
+    public Observable<Object> claim() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pickupRequestId", getObjectId());
+        return ParseObservable.callFunction("claimPickupRequest", params)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Object> confirmVolunteer() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pickupRequestId", getObjectId());
+        return ParseObservable.callFunction("confirmVolunteer", params)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Object> pickUp() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pickupRequestId", getObjectId());
+        return ParseObservable.callFunction("pickupDonation", params)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Object> markComplete() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pickupRequestId", getObjectId());
+        return ParseObservable.callFunction("markComplete", params)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     @Override
     public LatLng getPosition() {
         ParseGeoPoint loc = getLocation();
         return new LatLng(loc.getLatitude(), loc.getLongitude());
     }
 
-    /** Push notifications **/
-
-    private void generatePushNotif(ParseUser target_user, String title, String message, String type) {
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", target_user);
-
-        //create Parse Data
-        JSONObject data = new JSONObject();
-        try {
-            data.put("title", title);
-            data.put("alert", message);
-            data.put("type", type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
-        push.setData(data);
-        push.sendInBackground();
-    }
-
-    public void generatePendingVolunteerAssignedNotif(Context context) {
-        //send pickup response back to donor
-        generatePushNotif(this.getDonor(),
-                context.getString(R.string.notif_pending_volunteer_assigned_title),
-                context.getString(R.string.notif_pending_volunteer_assigned_msg,
-                        ParseUserHelper.getFirstName().orSome("A volunteer")),
-                "");
-    }
-
-    public void generateVolunteerConfirmedNotif(Context context) {
-        //send pickup confirmed notif to volunteer
-        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> generatePushNotif(volunteer,
-                                context.getString(R.string.notif_volunteer_confirmed_title),
-                                context.getString(R.string.notif_volunteer_confirmed_msg,
-                                        ParseUserHelper.getFirstName(volunteer).orSome("A donor")),
-                                VOLUNTEER_CONFIRMED),
-                        error -> ErrorDialogs.connectionFailure(context, error)));
-    }
-
-    public void generatePickupCompleteNotif(Context context) {
-        //send pickup complete notif back to donor
-        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> generatePushNotif(volunteer,
-                                context.getString(R.string.notif_pickup_complete_title),
-                                context.getString(R.string.notif_pickup_complete_msg,
-                                        ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
-                                PICKUP_COMPLETE),
-                        error -> ErrorDialogs.connectionFailure(context, error)));
-    }
-
-    public void reportProblem(Context context) {
-        //there's a problem. send a notif to the donor with the problem description.
-        this.getPendingVolunteer().foreachDoEffect(pendingVolunteer ->
-                ParseObservable.fetchIfNeeded(pendingVolunteer).subscribe(
-                        volunteer -> generatePushNotif(volunteer,
-                                context.getResources().getString(R.string.notif_problem_reported_title),
-                                context.getResources().getString(R.string.notif_problem_reported_msg,
-                                        ParseUserHelper.getFirstName(volunteer).orSome("A volunteer")),
-                                PROBLEM_REPORTED),
-                        error -> ErrorDialogs.connectionFailure(context, error)));
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         PickupRequest that = (PickupRequest) o;
 
         return getObjectId().equals(that.getObjectId())
-                && getActive() == that.getActive()
-                && getLocation().equals(that.getLocation())
-                && getAddress().equals(that.getAddress())
-                && getNote().equals(that.getNote())
-                && getDonor().equals(that.getDonor())
-                && getDonationCategories().equals(that.getDonationCategories());
+                && getUpdatedAt().equals(that.getUpdatedAt());
+//                && getActive() == that.getActive()
+//                && getLocation().getLatitude() == that.getLocation().getLatitude()
+//                && getLocation().getLongitude() == that.getLocation().getLongitude()
+//                && getAddress().equals(that.getAddress())
+//                && getNote().equals(that.getNote())
+//                && getDonor().getObjectId().equals(that.getDonor().getObjectId())
+//                && getDonationCategories().equals(that.getDonationCategories());
     }
 
     @Override

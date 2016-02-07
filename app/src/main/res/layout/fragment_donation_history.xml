@@ -17,5 +17,37 @@
             android:id="@+id/rvDonations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emptyViewDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:text="You haven't donated anything yet... Request your first pickup now!"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btnGoToDonate"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_margin="8dp"
+                android:background="@drawable/button_color_state_list"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="Give Now"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#ffffffff"/>
+        </LinearLayout>
     </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

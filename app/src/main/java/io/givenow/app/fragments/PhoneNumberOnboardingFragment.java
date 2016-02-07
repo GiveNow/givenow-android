@@ -35,8 +35,8 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
     private static final String ARG_COLOUR = "colour";
     @Bind(R.id.title)
     TextView tvTitle;
-    @Bind(R.id.description2)
-    TextView tvDescription2;
+    //    @Bind(R.id.description2)
+//    TextView tvDescription2;
     @Bind(R.id.main)
     LinearLayout llMain;
     private int colour;
@@ -73,7 +73,7 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
         ButterKnife.bind(this, v);
 
         tvTitle.setText(title);
-        tvDescription2.setText(R.string.phone_number_later);
+//        tvDescription2.setText(R.string.phone_number_later);
         llMain.setBackgroundColor(colour);
 
         PhoneNumberVerificationFragment phoneNumberVerificationFragment =

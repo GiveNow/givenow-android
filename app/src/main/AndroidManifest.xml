@@ -83,8 +83,13 @@
         <!-- Parse Push setup -->
         <service android:name="com.parse.PushService"/>
 
+        <!-- TODO change to monochromatic icon -->
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@mipmap/ic_launcher"/>
+
         <receiver
-            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:name=".GiveNowPushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE"/>
@@ -92,6 +97,7 @@
                 <action android:name="com.parse.push.intent.OPEN"/>
             </intent-filter>
         </receiver>
+
         <receiver
             android:name="com.parse.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">

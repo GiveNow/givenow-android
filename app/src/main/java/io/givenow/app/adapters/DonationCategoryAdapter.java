@@ -5,17 +5,14 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.common.collect.Collections2;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -112,18 +109,7 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
             vh.tvDescription.setText(donationCategory.getDescription(mContext));
         }
 
-        Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(vh.imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                vh.progressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onError() {
-                // set a default or 'error' image
-                // imageView.setImageDrawable(R.id.);
-            }
-        });
+        Picasso.with(mContext).load(donationCategory.getImage().getUrl()).into(vh.imageView);
     }
 
     @Override
@@ -136,21 +122,10 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
         notifyItemInserted(mItems.size() - 1);
     }
 
-    public void setItems(Collection<DonationCategory> items) {
-        if (items.equals(mItems)) {
-            Log.i("DonationCategoryAdapter", "New DonationCategory list is the same as the current list.");
-            return;
-        }
-        mItems.clear();
-        mItems.addAll(items);
-        notifyItemRangeRemoved(0, items.size());
-        notifyDataSetChanged();
-    }
-
     public void clearItems() {
+        int oldSize = mItems.size();
         mItems.clear();
-//        notifyItem
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, oldSize);
     }
 
     public void setItemSelected(int position, boolean selected) {
@@ -165,9 +140,6 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
 
         @Bind(R.id.image)
         public ImageView imageView;
-
-        @Bind(R.id.progressBar)
-        public ProgressBar progressBar;
 
         @Bind(R.id.tvName)
         public TextView tvName;

@@ -3,9 +3,13 @@ package io.givenow.app.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,11 +29,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.helpers.ErrorDialogs;
-import io.givenow.app.models.Donation;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.parse.ParseObservable;
+
+import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 
 public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdapter.ViewHolder> {
@@ -56,7 +60,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
         //set this as default case
         ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
                 Picasso.with(mContext).load(parseFile.getUrl()).into(vh.ivProfile));
-        vh.tvStatus.setText(R.string.volunteer_dashboard_status_waiting);
+        vh.tvStatus.setText(R.string.dashboard_status_waiting);
         vh.readyLayout.setVisibility(View.GONE);
 //        vh.tvNumCoats.setText(""); //String.valueOf(pickupRequest.getNumberOfCoats()));
 //        vh.tvName.setText(ParseUserHelper.getName(pickupRequest.getDonor()).orSome(mContext.getResources().getString(R.string.donor_default_name)));
@@ -66,16 +70,54 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
         vh.tvNote.setText(note);
         vh.tvNote.setVisibility(View.GONE);
 
+
+        PopupMenu popup = new PopupMenu(mContext, vh.btnMenu);
+        popup.inflate(R.menu.dashboard_card_waiting);
+
         pickupRequest.getConfirmedVolunteer().foreachDoEffect(confirmedVolunteer -> {
             //if there is a confirmed volunteer and it is me, then say it is ready for pickup
             if (confirmedVolunteer.hasSameId(ParseUser.getCurrentUser())) {
-                vh.tvStatus.setText(R.string.volunteer_dashboard_status_ready);
+                vh.tvStatus.setText(R.string.dashboard_status_ready);
                 vh.tvNote.setVisibility(note.isEmpty() ? View.GONE : View.VISIBLE);
                 vh.readyLayout.setVisibility(View.VISIBLE);
                 setupStaticMap(vh, pickupRequest);
                 setupCardActionButtons(vh, pickupRequest);
+                // Can inflate a different menu here if needed
+                //popup.inflate(R.menu.dashboard_card_ready);
             }
         });
+
+        popup.setOnMenuItemClickListener(item -> onMenuItemClick(item, position));
+
+        vh.btnMenu.setOnClickListener(btn -> popup.show());
+    }
+
+    private boolean onMenuItemClick(MenuItem item, int position) {
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                cancelItem(position);
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    private void cancelItem(int position) {
+        final PickupRequest pickupRequest = mItems.get(position);
+        new AlertDialog.Builder(mContext)
+                .setTitle(R.string.dialog_dashboard_cancel_pickup_title)
+                .setMessage(R.string.dialog_dashboard_cancel_pickup_message)
+                .setPositiveButton(R.string.dialog_dashboard_cancel_positiveButton, (dialog, which) -> {
+                    pickupRequest.cancelPendingVolunteer();
+                    ParseObservable.save(pickupRequest).observeOn(mainThread()).subscribe(
+                            pr -> {
+                                Log.d(getClass().getSimpleName(), "Removing pickupRequest " + pr.getObjectId() + " from dashboard");
+                                remove(position);
+                            },
+                            error -> ErrorDialogs.connectionFailure(mContext, error));
+                })
+                .setNegativeButton(R.string.dialog_dashboard_cancel_negativeButton, null)
+                .show();
     }
 
     private void setupStaticMap(ViewHolder vh, final PickupRequest pickupRequest) {
@@ -105,7 +147,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
     private void setupCardActionButtons(ViewHolder vh, final PickupRequest pickupRequest) {
         ParseObservable.fetchIfNeeded(pickupRequest.getDonor())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(
+                .observeOn(mainThread()).subscribe(
                 donor -> {
                     vh.btnCall.setOnClickListener(v -> {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -148,25 +190,22 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
             //TODO: change card view to donation picked up view
             // could change status to Picked Up
 
-//            new AlertDialog.Builder(mContext).setTitle("Finish dropoff")
-            // DONATION CREATION
-            final Donation newDonation = new Donation(pickupRequest.getDonor(), pickupRequest.getDonationCategories());
-            ParseObservable.save(newDonation).subscribe(
-                    donation -> {
-                        //send push to donor
-                        pickupRequest.generatePickupCompleteNotif(mContext);
-                        //create donation, and set it in the PickupRequest
-                        pickupRequest.setDonation(newDonation);
-                        // loadObjects();
-                        ParseObservable.save(pickupRequest)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(
-                                        r -> {
-                                            remove(vh.getAdapterPosition());
-                                        },
-                                        error -> ErrorDialogs.connectionFailure(mContext, error));
-                    },
-                    error -> ErrorDialogs.connectionFailure(mContext, error));
+            String address = "<font color='#858585'>" + pickupRequest.getAddress() + "</font><br><br>";
+
+            //TODO excise this dialog and do this inline in the card instead. Then change card to picked up view with categories etc to aid in dropoff
+            new AlertDialog.Builder(mContext)
+                    .setTitle(mContext.getString(R.string.dialog_pickup_pickupRequest_title))
+                    .setMessage(Html.fromHtml(address + mContext.getString(R.string.dialog_pickup_pickupRequest_message)))
+                    .setPositiveButton(R.string.dialog_pickup_pickupRequest_positiveButton, (dialog, which) -> {
+                        pickupRequest.pickUp().subscribe(
+                                response -> {
+                                    Log.d("Cloud Response", response.toString());
+                                    remove(vh.getAdapterPosition());
+                                },
+                                error -> ErrorDialogs.connectionFailure(mContext, error));
+                    })
+                    .setNegativeButton(R.string.dialog_pickup_pickupRequest_negativeButton, null)
+                    .show();
         });
         //TODO: Make Report Problem do something
     }
@@ -183,8 +222,12 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
             Log.i("DashboardItemAdapter", "New list is the same as the current list.");
             return;
         }
-        mItems.clear();
-        notifyItemRangeRemoved(0, items.size());
+        // Attempt to fix crash:
+        // java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid item position 3(offset:5).state:4
+        // https://code.google.com/p/android/issues/detail?can=1&q=77846&colspec=ID%20Type%20Status%20Owner%20Summary%20Stars&id=77846
+//        mItems.clear();
+//        notifyItemRangeRemoved(0, items.size()); <--- lol i was using items here, not mItems. probably the cause
+        clearItems();
         fj.data.List.list(items)
                 .foreachDoEffect(this::addItem);
         Log.i("DashboardItemAdapter", items.size() + " dashboard items added.");
@@ -216,8 +259,9 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
     }
 
     public void clearItems() {
+        int oldSize = mItems.size();
         mItems.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, oldSize);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
