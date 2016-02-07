@@ -163,10 +163,12 @@ public class MainActivity extends BaseActivity implements
 
     private void checkForPendingRequests() {
         //only want to get 1 at a time (there shouldn't be more than 1 anyway)
-        ParseObservable.first(PickupRequest.queryMyPendingRequests()).observeOn(mainThread()).subscribe(
-                this::createAcceptPendingVolunteerDialog,
-                Throwable::printStackTrace
-        );
+        if (ParseUserHelper.isRegistered()) {
+            ParseObservable.first(PickupRequest.queryMyPendingRequests()).observeOn(mainThread()).subscribe(
+                    this::createAcceptPendingVolunteerDialog,
+                    Throwable::printStackTrace
+            );
+        }
     }
 
     private void createAcceptPendingVolunteerDialog(final PickupRequest pickupRequest) {
