@@ -126,4 +126,5 @@ Keine Sorge, wir werden sie mit niemandem teilen!"</string>
 <string name="dialog_dashboard_cancel_pickup_message">"Dadurch wird der Spender benachrichtigt, dass Sie nicht mehr ihre Spende Heben, und entfernen Sie diese Abholung vom Armaturenbrett."</string>
 <string name="dialog_dashboard_cancel_positiveButton">"Ja, es abzubrechen"</string>
 <string name="dialog_dashboard_cancel_negativeButton">"Nein, halten es"</string>
+ <string name="phone_number_verification_error_sms_code"> Das SMS-Code nicht richtig zu sein. Versuch es noch einmal!</string>
 </resources>
