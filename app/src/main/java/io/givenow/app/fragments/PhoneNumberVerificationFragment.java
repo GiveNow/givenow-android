@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -210,16 +211,20 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     @OnClick(R.id.back)
     public void onIbBackPressed(ImageButton ibBack) {
         uiPhoneNumber();
-        if (getPhoneNumber().length() > 0) {
-            CustomAnimations.circularReveal(ibDone).start();
-        }
     }
 
     private void uiPhoneNumber() {
+        uiPhoneNumber(mMessageResource);
+    }
+
+    private void uiPhoneNumber(@StringRes int messageResource) {
         vsPhoneSMS.setDisplayedChild(0);
         mPhoneNumberFieldShowing = true;
         CustomAnimations.circularHide(ibBack).start();
-        tsDescription.setText(getString(mMessageResource));
+        if (getPhoneNumber().length() > 0) {
+            CustomAnimations.circularReveal(ibDone).start();
+        }
+        tsDescription.setText(getString(messageResource));
         ibDone.setClickable(true);
     }
 
@@ -252,7 +257,6 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                                 },
                                 error -> {
                                     Log.d("Cloud Response", "Error received from sendCode cloud function: ", error);
-                                    CustomAnimations.circularReveal(ibDone).start();
                                     uiPhoneNumber();
                                 });
                     } else {
@@ -292,7 +296,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                     },
                     error -> {
                         Log.d("Cloud Response", "Error received from logIn cloud function: ", error);
-                        uiPhoneNumber();
+                        uiPhoneNumber(R.string.phone_number_verification_error_sms_code);
                     }
             );
         }

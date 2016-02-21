@@ -115,5 +115,6 @@
     <string name="dialog_dashboard_cancel_pickup_message">This will notify the donor that you\'re no longer picking up their donation, and remove this pickup from your dashboard.</string>
     <string name="dialog_dashboard_cancel_positiveButton">Yes, cancel it</string>
     <string name="dialog_dashboard_cancel_negativeButton">No, keep it</string>
+    <string name="phone_number_verification_error_sms_code">That SMS code didn\'t seem right. Try again!</string>
 
 </resources>
