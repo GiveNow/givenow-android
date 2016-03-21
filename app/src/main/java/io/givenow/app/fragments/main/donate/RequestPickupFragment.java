@@ -73,6 +73,7 @@ import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.helpers.ErrorDialogs;
 import io.givenow.app.helpers.RateApp;
 import io.givenow.app.helpers.ResourceHelper;
+import io.givenow.app.helpers.ViewHelper;
 import io.givenow.app.models.DonationCategory;
 import io.givenow.app.models.ParseUserHelper;
 import io.givenow.app.models.PickupRequest;
@@ -639,7 +640,7 @@ public class RequestPickupFragment extends MapHostingFragment
             tsInfo.setText(getString(R.string.request_pickup_info_select_categories));
             actvAddress.setEnabled(false);
             btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
-            slidingRLContainer.setVisibility(View.VISIBLE);
+            ViewHelper.safeVisible(slidingRLContainer);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
             slideDownFromTop.setInterpolator(new DecelerateInterpolator());
             slideDownFromTop.setTarget(slidingRLContainer);
@@ -676,7 +677,7 @@ public class RequestPickupFragment extends MapHostingFragment
             slideUpToTop.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    slidingRLContainer.setVisibility(View.INVISIBLE);
+                    ViewHelper.safeInvisible(slidingRLContainer);
                     actvAddress.setEnabled(true);
                     mCategoryLayoutShowing = false;
                     subscriber.onNext(null);
@@ -738,7 +739,7 @@ public class RequestPickupFragment extends MapHostingFragment
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    btnBottomSubmit.setVisibility(View.GONE);
+                    ViewHelper.safeGone(btnBottomSubmit);
                     for (DonationCategory item : items) {
                         item.setSelected(true);
                         item.setClickable(false);
@@ -794,7 +795,7 @@ public class RequestPickupFragment extends MapHostingFragment
                 public void onAnimationEnd(Animator animation) {
                     showFab.start();
                     adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
-                    rlCurrentRequestContainer.setVisibility(View.GONE);
+                    ViewHelper.safeGone(rlCurrentRequestContainer);
                     btnBottomSubmit.setEnabled(true);
                     tsInfo.setText(getString(R.string.request_pickup_choose_location));
                     mCurrentRequestLayoutShowing = false;
