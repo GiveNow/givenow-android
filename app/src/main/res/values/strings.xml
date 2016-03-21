@@ -116,5 +116,6 @@
     <string name="dialog_dashboard_cancel_positiveButton">Yes, cancel it</string>
     <string name="dialog_dashboard_cancel_negativeButton">No, keep it</string>
     <string name="phone_number_verification_error_sms_code">That SMS code didn\'t seem right. Try again!</string>
+    <string name="address_field_error">Address unavailable</string>
 
 </resources>

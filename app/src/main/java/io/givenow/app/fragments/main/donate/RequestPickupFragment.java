@@ -272,11 +272,15 @@ public class RequestPickupFragment extends MapHostingFragment
         map.setOnCameraChangeListener(cameraPosition -> {
             if (!isMapTouched()) {
                 // save cpu cycles, only recalculate if we're not pressed, ie the user lifted their finger off
-                getAddressFromMapTarget().subscribe(address -> {
-                    Log.i(logTag(), "Map OnCameraChanged: Setting address in input field: " + address.getAddressLine(0));
-                    setAddressFieldText(address.getAddressLine(0));
-//                    mListener.updateAddress(address);
-                });
+                getAddressFromMapTarget().subscribe(
+                        address -> {
+                            Log.i(logTag(), "Map OnCameraChanged: Setting address in input field: " + address.getAddressLine(0));
+                            setAddressFieldText(address.getAddressLine(0));
+                        },
+                        error -> {
+                            error.printStackTrace();
+                            setAddressFieldText(getString(R.string.address_field_error));
+                        });
             } else {
                 //can remove the detail fragment here, but per uber UX we keep it displayed
             }

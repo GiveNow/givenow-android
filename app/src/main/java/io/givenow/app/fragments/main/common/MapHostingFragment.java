@@ -180,16 +180,18 @@ public class MapHostingFragment extends Fragment
                     try {
                         if (isOnline()) {
                             return Option.fromNull(mGeocoder.getFromLocation(pos.latitude, pos.longitude, 1)).map(addresses -> {
-                                if (addresses.size() > 0)
+                                if (addresses.size() > 0) {
                                     return Observable.just(addresses.get(0));
-                                else
+                                } else {
                                     return Observable.<Address>empty();
+                                }
                             }).orSome(Observable.empty());
+                        } else {
+                            return Observable.empty();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        return Observable.error(e);
                     }
-                    return Observable.empty();
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
