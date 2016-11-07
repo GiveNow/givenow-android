@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.givenow.app.R;
 import io.givenow.app.activities.MainActivity;
 import io.givenow.app.adapters.DonationHistoryAdapter;
@@ -29,14 +30,15 @@ import rx.parse.ParseObservable;
 
 public class DonationHistoryFragment extends BaseFragment {
 
-    @Bind(R.id.rvDonations)
+    @BindView(R.id.rvDonations)
     RecyclerView rvDonations;
 
-    @Bind(R.id.swipeContainer)
+    @BindView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
-    @Bind(R.id.emptyView)
+    @BindView(R.id.emptyView)
     LinearLayout emptyView;
     private DonationHistoryAdapter mDonationHistoryAdapter;
+    private Unbinder unbinder;
 
     public DonationHistoryFragment() {
         // Required empty public constructor
@@ -59,7 +61,7 @@ public class DonationHistoryFragment extends BaseFragment {
         final View rootView = inflater.inflate(R.layout.fragment_donation_history, container,
                 false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         mDonationHistoryAdapter = new DonationHistoryAdapter();
 
@@ -94,6 +96,12 @@ public class DonationHistoryFragment extends BaseFragment {
         super.onResume();
         loadList();
     }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
 //    @Override
 //    public void onViewPagerShow() {
 //        refreshList();

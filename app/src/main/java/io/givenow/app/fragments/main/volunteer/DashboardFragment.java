@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DashboardItemAdapter;
@@ -26,12 +26,12 @@ import rx.parse.ParseObservable;
 public class DashboardFragment extends Fragment implements
         ViewPagerChangeListener {
 
-    @Bind(R.id.emptyView)
+    @BindView(R.id.emptyView)
     LinearLayout emptyView;
-    @Bind(R.id.rvItems)
+    @BindView(R.id.rvItems)
     RecyclerView rvItems;
 
-    @Bind(R.id.swipeContainer)
+    @BindView(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
 
     private DashboardItemAdapter mAdapter;

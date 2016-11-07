@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.helpers.ErrorDialogs;
@@ -113,13 +113,13 @@ public class DonationHistoryAdapter extends RecyclerView.Adapter<DonationHistory
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private final DonationCategoryAdapter mCategoriesAdapter;
-        @Bind(R.id.ivProfile)
+        @BindView(R.id.ivProfile)
         ImageView ivProfile;
-        @Bind(R.id.tvDonationDate)
+        @BindView(R.id.tvDonationDate)
         TextView tvDonationDate;
-        @Bind(R.id.tvAddress)
+        @BindView(R.id.tvAddress)
         TextView tvAddress;
-        @Bind(R.id.rvCategories)
+        @BindView(R.id.rvCategories)
         RecyclerView rvCategories;
 
         public ViewHolder(View itemView) {

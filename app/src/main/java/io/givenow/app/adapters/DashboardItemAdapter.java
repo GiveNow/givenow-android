@@ -25,7 +25,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.givenow.app.R;
 import io.givenow.app.helpers.ErrorDialogs;
@@ -265,31 +265,31 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.ivProfile)
+        @BindView(R.id.ivProfile)
         ImageView ivProfile;
-        @Bind(R.id.tvStatus)
+        @BindView(R.id.tvStatus)
         TextView tvStatus;
-        @Bind(R.id.btnMenu)
+        @BindView(R.id.btnMenu)
         ImageButton btnMenu;
-        //        @Bind(R.id.tvName)
+        //        @BindView(R.id.tvName)
 //        TextView tvName;
-        @Bind(R.id.tvAddress)
+        @BindView(R.id.tvAddress)
         TextView tvAddress;
-        @Bind(R.id.tvNote)
+        @BindView(R.id.tvNote)
         TextView tvNote;
-        @Bind(R.id.readyLayout)
+        @BindView(R.id.readyLayout)
         LinearLayout readyLayout;
-        @Bind(R.id.map_container)
+        @BindView(R.id.map_container)
         ImageView ivMapContainer;
-        @Bind(R.id.btnCall)
+        @BindView(R.id.btnCall)
         Button btnCall;
-        @Bind(R.id.btnText)
+        @BindView(R.id.btnText)
         Button btnText;
-        @Bind(R.id.btnMap)
+        @BindView(R.id.btnMap)
         Button btnMap;
-        //        @Bind(R.id.btnProblem)
+        //        @BindView(R.id.btnProblem)
 //        Button btnProblem;
-        @Bind(R.id.btnFinishPickup)
+        @BindView(R.id.btnFinishPickup)
         Button btnFinishPickup;
 
         public ViewHolder(View itemView) {

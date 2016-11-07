@@ -18,9 +18,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.BindDimen;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fj.data.Option;
@@ -138,19 +138,19 @@ public class DonationCategoryAdapter extends RecyclerView.Adapter<DonationCatego
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.image)
+        @BindView(R.id.image)
         public ImageView imageView;
 
-        @Bind(R.id.tvName)
+        @BindView(R.id.tvName)
         public TextView tvName;
 
-        @Bind(R.id.tvDescription)
+        @BindView(R.id.tvDescription)
         public TextView tvDescription;
 
-        @Bind(R.id.cvRoot)
+        @BindView(R.id.cvRoot)
         CardView cvRoot;
 
-        @Bind(R.id.vPalette)
+        @BindView(R.id.vPalette)
         View vPalette;
 
         @BindColor(R.color.white)

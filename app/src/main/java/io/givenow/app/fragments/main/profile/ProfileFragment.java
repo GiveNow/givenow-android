@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.givenow.app.R;
 import io.givenow.app.adapters.ViewPagerAdapter;
 import io.givenow.app.fragments.main.BaseFragment;
@@ -27,21 +28,22 @@ import static rx.android.schedulers.AndroidSchedulers.mainThread;
 
 public class ProfileFragment extends BaseFragment {
 
-    @Bind(R.id.silhouette)
+    @BindView(R.id.silhouette)
     ImageView profileIV;
-    @Bind(R.id.username)
+    @BindView(R.id.username)
     TextView usernameTV;
-    @Bind(R.id.phoneno)
+    @BindView(R.id.phoneno)
     TextView phonenoTV;
-    @Bind(R.id.viewpager)
+    @BindView(R.id.viewpager)
     ViewPager mViewPager;
-    @Bind(R.id.tablayout)
+    @BindView(R.id.tablayout)
     TabLayout tabLayout;
 
     private ViewPagerAdapter mAdapter;
 
     private DonationHistoryFragment dhFragment;
     private PickupHistoryFragment phFragment;
+    private Unbinder unbinder;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -58,7 +60,7 @@ public class ProfileFragment extends BaseFragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         phonenoTV.setText(ParseUserHelper.getPhoneNumber());
         usernameTV.setText(ParseUserHelper.getName().orSome(""));
@@ -103,5 +105,10 @@ public class ProfileFragment extends BaseFragment {
     public void refreshProfile() {
 //        dhFragment.refreshList(); //TODO crahses
 //        phFragment.refreshList();
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

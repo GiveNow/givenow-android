@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.givenow.app.R;
@@ -30,11 +30,11 @@ import rx.parse.ParseObservable;
 public class VolunteerFragment extends PageSlidingTabStripFragment
         implements PhoneNumberVerificationFragment.OnUserLoginCompleteListener {
 
-    @Bind(R.id.button)
+    @BindView(R.id.button)
     Button button;
-    @Bind(R.id.description)
+    @BindView(R.id.description)
     TextView tvDescription;
-    @Bind((R.id.overlay))
+    @BindView((R.id.overlay))
     LinearLayout llOverlay;
     private PickupRequestsFragment pickupRequestsFragment;
     private DropOffLocationsFragment dropOffLocationsFragment;

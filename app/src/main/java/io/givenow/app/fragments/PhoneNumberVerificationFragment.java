@@ -39,9 +39,10 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.givenow.app.R;
 import io.givenow.app.helpers.CustomAnimations;
 import io.givenow.app.models.ParseInstallationHelper;
@@ -58,25 +59,26 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     @Arg(required = false) //optiona args with an initializer here doesn't seem to work, the initializer seems to clobber whatever magic fragmentargs is doing
             int mMessageResource = R.string.phone_number_disclaimer;
 
-    @Bind(R.id.llContainer)
+    @BindView(R.id.llContainer)
     LinearLayout llContainer;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView tvTitle;
-    @Bind(R.id.tsDescription)
+    @BindView(R.id.tsDescription)
     TextSwitcher tsDescription;
-    @Bind(R.id.etPhoneNumber)
+    @BindView(R.id.etPhoneNumber)
     EditText etPhoneNumber;
-    @Bind(R.id.etSMSCode)
+    @BindView(R.id.etSMSCode)
     EditText etSMSCode;
-    @Bind(R.id.back)
+    @BindView(R.id.back)
     ImageButton ibBack;
-    @Bind(R.id.done)
+    @BindView(R.id.done)
     ImageButton ibDone;
-    @Bind(R.id.vsPhoneSMS)
+    @BindView(R.id.vsPhoneSMS)
     ViewSwitcher vsPhoneSMS;
-    @Bind(R.id.progressIndicator)
+    @BindView(R.id.progressIndicator)
     ProgressBar progressIndicator;
     private boolean mPhoneNumberFieldShowing = true;
+    private Unbinder unbinder;
 
 //    private OnUserLoginCompleteListener mListener;
 
@@ -99,7 +101,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_phone_verification, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
 
 //        llMain.setBackgroundColor(colour);
         etPhoneNumber.addTextChangedListener(new android.telephony.PhoneNumberFormattingTextWatcher()); //new PhoneNumberFormattingTextWatcher(Locale.getDefault().getCountry()));
@@ -334,7 +336,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     public interface OnUserLoginCompleteListener {

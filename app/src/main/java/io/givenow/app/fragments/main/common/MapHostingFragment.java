@@ -33,8 +33,7 @@ import com.google.maps.android.SphericalUtil;
 import java.io.IOException;
 import java.util.Locale;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import butterknife.BindView;
 import butterknife.OnClick;
 import fj.data.Option;
 import io.givenow.app.R;
@@ -52,7 +51,7 @@ public class MapHostingFragment extends Fragment
     protected SupportMapFragment mapFragment;
     protected boolean mMapIsTouched;
 
-    @Bind(R.id.flMapLayout)
+    @BindView(R.id.flMapLayout)
     protected FrameLayout flMapLayout;
 
     private GoogleApiClient mGoogleApiClient;
@@ -127,12 +126,6 @@ public class MapHostingFragment extends Fragment
 
         Log.w(this.getClass().getSimpleName(), "onActivityCreated: Calling attachMapFragment.");
         attachMapFragment();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
     public void onMapReady(GoogleMap map) {

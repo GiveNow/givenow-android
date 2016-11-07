@@ -55,10 +55,11 @@ import com.parse.ParseUser;
 
 import java.util.Collection;
 
-import butterknife.Bind;
 import butterknife.BindDimen;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.givenow.app.GiveNowApplication;
 import io.givenow.app.R;
 import io.givenow.app.adapters.DonationCategoryAdapter;
@@ -93,46 +94,46 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private static final double AUTOCOMPLETE_BIAS_RADIUS_METERS = 10000;
 
-    @Bind(R.id.btnBottomSubmit)
+    @BindView(R.id.btnBottomSubmit)
     Button btnBottomSubmit;
 
-    @Bind(R.id.llAddressInfoContainer)
+    @BindView(R.id.llAddressInfoContainer)
     LinearLayout llAddressInfoContainer;
 
-    @Bind(R.id.actvAddress)
+    @BindView(R.id.actvAddress)
     AutoCompleteTextView actvAddress;
 
-    @Bind(R.id.btnClearAddress)
+    @BindView(R.id.btnClearAddress)
     ImageButton btnClearAddress;
 
-    @Bind(R.id.agrv)
+    @BindView(R.id.agrv)
     AdaptableGradientRectView adaptableGradientRectView;
 
-    @Bind(R.id.rvDonationCategories)
+    @BindView(R.id.rvDonationCategories)
     RecyclerView rvDonationCategories;
 
-    @Bind(R.id.slidingRLContainer)
+    @BindView(R.id.slidingRLContainer)
     SlidingRelativeLayout slidingRLContainer;
 
-    @Bind(R.id.rlCurrentRequestContainer)
+    @BindView(R.id.rlCurrentRequestContainer)
     SlidingRelativeLayout rlCurrentRequestContainer;
 
-    @Bind(R.id.rvCurrentRequestCategories)
+    @BindView(R.id.rvCurrentRequestCategories)
     RecyclerView rvCurrentRequestCategories;
 
-    @Bind(R.id.tsInfo)
+    @BindView(R.id.tsInfo)
     TextSwitcher tsInfo;
 
-    @Bind(R.id.ivNote)
+    @BindView(R.id.ivNote)
     ImageView ivNote;
 
-    @Bind(R.id.ivNoteSubmit)
+    @BindView(R.id.ivNoteSubmit)
     ImageView ivNoteSubmit;
 
-    @Bind(R.id.llNote)
+    @BindView(R.id.llNote)
     LinearLayout llNote;
 
-    @Bind(R.id.etNote)
+    @BindView(R.id.etNote)
     EditText etNote;
 
     @BindDimen(R.dimen.bottom_container_height)
@@ -141,7 +142,7 @@ public class RequestPickupFragment extends MapHostingFragment
     @BindDimen(R.dimen.icon_size)
     int iconSize;
 
-    @Bind(R.id.fabMyLocation)
+    @BindView(R.id.fabMyLocation)
     FloatingActionButton fabMyLocation;
 
     private PlaceAutocompleteAdapter mAdapter;
@@ -154,6 +155,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private DonationCategoryAdapter mCurrentRequestCategoriesAdapter;
     private boolean mCurrentRequestLayoutShowing = false;
     private Tracker mTracker;
+    private Unbinder unbinder;
 
     public RequestPickupFragment() {
         // Required empty public constructor
@@ -190,7 +192,7 @@ public class RequestPickupFragment extends MapHostingFragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View viewRoot = inflater.inflate(R.layout.fragment_request_pickup, container, false);
-        ButterKnife.bind(this, viewRoot);
+        unbinder = ButterKnife.bind(this, viewRoot);
 
         btnClearAddress.setVisibility(View.INVISIBLE);
         // Register a listener that receives callbacks when a suggestion has been selected
@@ -869,5 +871,10 @@ public class RequestPickupFragment extends MapHostingFragment
                 .setTitle(R.string.help_title)
                 .setMessage(info)
                 .show();
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

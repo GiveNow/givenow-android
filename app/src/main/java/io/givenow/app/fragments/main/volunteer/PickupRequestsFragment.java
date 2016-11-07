@@ -20,6 +20,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.parse.ParseQuery;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.givenow.app.R;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.interfaces.ViewPagerChangeListener;
@@ -32,6 +33,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 
     private ClusterManager<PickupRequest> mClusterManager;
     private PickupRequestDetailInteractionListener mListener;
+    private Unbinder unbinder;
 
     public PickupRequestsFragment() {
         // Required empty public constructor
@@ -60,7 +62,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_pickup_requests, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
 
         // TODO: add a loading indicator of some sort to show map loading?
         return v;
@@ -187,5 +189,10 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
             // always be clustering
             return cluster.getSize() > 2;
         }
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

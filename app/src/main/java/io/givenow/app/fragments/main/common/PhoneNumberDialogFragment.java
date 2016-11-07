@@ -16,20 +16,22 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.givenow.app.R;
 
 
 public class PhoneNumberDialogFragment extends DialogFragment implements TextWatcher {
-    @Bind(R.id.etPhone)
+    @BindView(R.id.etPhone)
     EditText etPhone;
-    @Bind(R.id.tvDisclaimer)
+    @BindView(R.id.tvDisclaimer)
     TextView tvDisclaimer;
 
     AlertDialog dialog;
     DialogInterface.OnDismissListener mDismissListener = dialog -> {
     };
+    private Unbinder unbinder;
 
     public PhoneNumberDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -51,7 +53,7 @@ public class PhoneNumberDialogFragment extends DialogFragment implements TextWat
         String title = getArguments().getString("title");
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity()); // R.style.Theme_Onewarmcoat_Dialog); //??
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_confirm_request_dialog, null);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         alertDialogBuilder.setView(view);
         alertDialogBuilder.setTitle(title);
@@ -93,7 +95,7 @@ public class PhoneNumberDialogFragment extends DialogFragment implements TextWat
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener dismissListener) {

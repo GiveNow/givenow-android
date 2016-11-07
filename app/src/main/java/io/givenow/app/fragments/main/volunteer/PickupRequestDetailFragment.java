@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -31,13 +31,13 @@ import io.givenow.app.models.PickupRequest;
 
 public class PickupRequestDetailFragment extends Fragment {
 
-    @Bind(R.id.rlInfoContainer)
+    @BindView(R.id.rlInfoContainer)
     SlidingRelativeLayout rlInfoContainer;
-    @Bind(R.id.rlButtonContainer)
+    @BindView(R.id.rlButtonContainer)
     SlidingRelativeLayout rlButtonContainer;
-    @Bind(R.id.tvDonorAddress)
+    @BindView(R.id.tvDonorAddress)
     TextView tvDonorAddress;
-    @Bind(R.id.btnClaim)
+    @BindView(R.id.btnClaim)
     Button btnAccept;
 
     private PickupRequest mPickupRequest;

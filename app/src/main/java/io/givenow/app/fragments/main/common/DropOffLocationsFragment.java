@@ -18,9 +18,12 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.givenow.app.R;
 
 public class DropOffLocationsFragment extends MapHostingFragment {
+
+    private Unbinder unbinder;
 
     public DropOffLocationsFragment() {
         // Required empty public constructor
@@ -38,7 +41,7 @@ public class DropOffLocationsFragment extends MapHostingFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_drop_off, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
 
         Log.w(((Object) this).getClass().getSimpleName(), "onCreateView completed.");
         return v;
@@ -100,5 +103,10 @@ public class DropOffLocationsFragment extends MapHostingFragment {
 
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri );
         startActivity( intent );
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

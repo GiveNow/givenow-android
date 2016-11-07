@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.parse.ParseUser;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.givenow.app.GiveNowApplication;
@@ -33,11 +33,11 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
 
     private static final String ARG_TITLE = "title";
     private static final String ARG_COLOUR = "colour";
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView tvTitle;
-    //    @Bind(R.id.description2)
+    //    @BindView(R.id.description2)
 //    TextView tvDescription2;
-    @Bind(R.id.main)
+    @BindView(R.id.main)
     LinearLayout llMain;
     private int colour;
     private String title;

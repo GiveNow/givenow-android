@@ -13,7 +13,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.google.gms.google-services'
 
 repositories {
@@ -125,9 +124,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.3.0'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
 
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    kapt 'com.jakewharton:butterknife-compiler:8.4.0'
+
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.0'
-    apt 'com.hannesdorfmann.fragmentargs:processor:3.0.0'
+    kapt 'com.hannesdorfmann.fragmentargs:processor:3.0.0'
 
     compile 'com.google.maps.android:android-maps-utils:0.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
