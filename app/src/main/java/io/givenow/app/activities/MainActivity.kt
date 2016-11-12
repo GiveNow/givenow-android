@@ -55,6 +55,8 @@ class MainActivity : BaseActivity(),
         PickupRequestDetailFragment.PickupRequestConfirmedListener,
         NavigationView.OnNavigationItemSelectedListener {
 
+    override val layoutResource: Int = R.layout.activity_main
+
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
 
     @BindView(R.id.navigation_view)
@@ -106,9 +108,6 @@ class MainActivity : BaseActivity(),
         savedInstanceState.putString("fragToHideTag", fragToHide!!.tag)
     }
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_main
-    }
 
     override fun onResume() {
         super.onResume()
