@@ -119,7 +119,7 @@ public class DonationHistoryFragment extends BaseFragment {
         if (isResumed()) {
             swipeContainer.setRefreshing(true);
             Log.d("DashboardFragment", "Finding Dashboard items...");
-            ParseObservable.find(Donation.queryAllMyDonations()) //todo possible hang is here
+            ParseObservable.find(Donation.Companion.queryAllMyDonations()) //todo possible hang is here
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
