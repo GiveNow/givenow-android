@@ -537,7 +537,7 @@ public class RequestPickupFragment extends MapHostingFragment
             Animator fadeInGradient = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
             fadeInGradient.setTarget(adaptableGradientRectView);
 
-            Animator growNote = CustomAnimations.growWidthAndShake(ivNote, 0, iconSize);
+            Animator growNote = CustomAnimations.INSTANCE.growWidthAndShake(ivNote, 0, iconSize);
 
             AnimatorSet set = new AnimatorSet();
             set.addListener(new AnimatorListenerAdapter() {
@@ -561,10 +561,10 @@ public class RequestPickupFragment extends MapHostingFragment
         Animator dropIvNoteDown = ViewPropertyObjectAnimator.animate(ivNote).translationY(llNote.getBottom()).setInterpolator(new AccelerateInterpolator()).get();
 
         //shrink ivNote
-        Animator shrinkIvNote = CustomAnimations.circularHide(ivNote);
+        Animator shrinkIvNote = CustomAnimations.INSTANCE.circularHide(ivNote);
 
         //grow ivNoteSubmit
-        Animator growIvNoteSubmit = CustomAnimations.circularReveal(ivNoteSubmit);
+        Animator growIvNoteSubmit = CustomAnimations.INSTANCE.circularReveal(ivNoteSubmit);
 
         //or maybe animate ivNote left to where ivNoteOpen is
         AnimatorSet set = new AnimatorSet();
@@ -590,9 +590,9 @@ public class RequestPickupFragment extends MapHostingFragment
 
     private void hideNoteField() {
         //shrink ivNoteSubmit
-        Animator shrinkIvNoteSubmit = CustomAnimations.circularHide(ivNoteSubmit);
+        Animator shrinkIvNoteSubmit = CustomAnimations.INSTANCE.circularHide(ivNoteSubmit);
         //grow ivNote
-        Animator growIvNote = CustomAnimations.circularReveal(ivNote);
+        Animator growIvNote = CustomAnimations.INSTANCE.circularReveal(ivNote);
         //animate ivNote up to height of llAddress
         Animator flyIvNoteUp = ViewPropertyObjectAnimator.animate(ivNote).translationY(0).setInterpolator(new AccelerateDecelerateInterpolator()).get();
 
@@ -627,7 +627,7 @@ public class RequestPickupFragment extends MapHostingFragment
             });
 
             if (shrinkNoteButton) {
-                Animator shrinkNote = CustomAnimations.animateWidth(ivNote, iconSize, 0);
+                Animator shrinkNote = CustomAnimations.INSTANCE.animateWidth(ivNote, iconSize, 0);
                 shrinkNote.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
                 set.play(fadeOutGradient).with(shrinkNote);
             } else {
@@ -714,9 +714,9 @@ public class RequestPickupFragment extends MapHostingFragment
                 tsInfo.setText(getString(R.string.request_status_volunteer_confirmed, ParseUserHelper.INSTANCE.getPhoneNumber()));
             }
 
-            Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
+            Animator slideUp = CustomAnimations.INSTANCE.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
             slideUp.setInterpolator(new DecelerateInterpolator());
-            Animator slideDown = CustomAnimations.animateHeight(btnBottomSubmit, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
+            Animator slideDown = CustomAnimations.INSTANCE.animateHeight(btnBottomSubmit, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
 
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
@@ -724,12 +724,12 @@ public class RequestPickupFragment extends MapHostingFragment
             adaptableGradientRectView.setAlpha(0);
             adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryDark));
 
-            Animator growNote = CustomAnimations.growWidthAndShake(ivNote, 0, iconSize);
+            Animator growNote = CustomAnimations.INSTANCE.growWidthAndShake(ivNote, 0, iconSize);
 
             //Disable map and address field
             actvAddress.setEnabled(false);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
-            Animator hideFab = CustomAnimations.circularHide(fabMyLocation);
+            Animator hideFab = CustomAnimations.INSTANCE.circularHide(fabMyLocation);
 
             //Update address and note field
             actvAddress.setText(mPickupRequest.getAddress(), false);
@@ -785,11 +785,11 @@ public class RequestPickupFragment extends MapHostingFragment
             //Re-enable map and address field
             actvAddress.setEnabled(true);
             mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-            Animator showFab = CustomAnimations.circularReveal(fabMyLocation);
+            Animator showFab = CustomAnimations.INSTANCE.circularReveal(fabMyLocation);
 
-            Animator slideDown = CustomAnimations.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
+            Animator slideDown = CustomAnimations.INSTANCE.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
-            Animator slideUp = CustomAnimations.animateHeight(btnBottomSubmit, 0, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize));
+            Animator slideUp = CustomAnimations.INSTANCE.animateHeight(btnBottomSubmit, 0, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize));
             slideUp.setInterpolator(new DecelerateInterpolator());
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);

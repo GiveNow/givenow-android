@@ -104,7 +104,7 @@ public class PickupRequestDetailFragment extends Fragment {
             }
         });
 
-        mBtnAnim = CustomAnimations.buttonFlashCTA(btnAccept);
+        mBtnAnim = CustomAnimations.INSTANCE.buttonFlashCTA(btnAccept);
 
         tvDonorAddress.setText(mPickupRequest.getAddress());
 

@@ -56,9 +56,9 @@ public class DashboardFragment extends Fragment implements
             @Override
             public void onAnythingChanged() {
                 if (mAdapter.getItemCount() > 0) {
-                    CustomAnimations.circularHide(emptyView).start();
+                    CustomAnimations.INSTANCE.circularHide(emptyView).start();
                 } else {
-                    CustomAnimations.circularReveal(emptyView).start();
+                    CustomAnimations.INSTANCE.circularReveal(emptyView).start();
                 }
             }
         });

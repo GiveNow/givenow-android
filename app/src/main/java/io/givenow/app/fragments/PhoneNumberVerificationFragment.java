@@ -118,12 +118,12 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) { //TODO or if valid phone number
                     if (ibDone.getVisibility() != View.VISIBLE) {
-                        CustomAnimations.circularReveal(ibDone).start();
+                        CustomAnimations.INSTANCE.circularReveal(ibDone).start();
                     }
                     progressIndicator.setVisibility(View.VISIBLE);
                 } else {
                     if (ibDone.getVisibility() == View.VISIBLE) {
-                        CustomAnimations.circularHide(ibDone).start();
+                        CustomAnimations.INSTANCE.circularHide(ibDone).start();
                     }
                     progressIndicator.setVisibility(View.INVISIBLE);
                 }
@@ -143,11 +143,11 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
             public void afterTextChanged(Editable s) {
                 if (s.length() == 4) {
                     if (ibDone.getVisibility() != View.VISIBLE) {
-                        CustomAnimations.circularReveal(ibDone).start();
+                        CustomAnimations.INSTANCE.circularReveal(ibDone).start();
                     }
                 } else {
                     if (ibDone.getVisibility() == View.VISIBLE) {
-                        CustomAnimations.circularHide(ibDone).start();
+                        CustomAnimations.INSTANCE.circularHide(ibDone).start();
                     }
                 }
             }
@@ -222,9 +222,9 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     private void uiPhoneNumber(@StringRes int messageResource) {
         vsPhoneSMS.setDisplayedChild(0);
         mPhoneNumberFieldShowing = true;
-        CustomAnimations.circularHide(ibBack).start();
+        CustomAnimations.INSTANCE.circularHide(ibBack).start();
         if (getPhoneNumber().length() > 0) {
-            CustomAnimations.circularReveal(ibDone).start();
+            CustomAnimations.INSTANCE.circularReveal(ibDone).start();
         }
         tsDescription.setText(getString(messageResource));
         ibDone.setClickable(true);
@@ -234,7 +234,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
         vsPhoneSMS.setDisplayedChild(1);
         mPhoneNumberFieldShowing = false;
         tsDescription.setText(getString(R.string.validate_sms_code, phoneNumber));
-        CustomAnimations.circularReveal(ibBack).start();
+        CustomAnimations.INSTANCE.circularReveal(ibBack).start();
         ibDone.setClickable(true);
     }
 
@@ -249,7 +249,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                     if (phoneUtil.isValidNumber(pn)) {
                         //phone number is valid
                         //change done button to spinner
-                        CustomAnimations.circularHide(ibDone).start();
+                        CustomAnimations.INSTANCE.circularHide(ibDone).start();
                         //request a code
                         ParseUserHelper.INSTANCE.sendCode(phoneNumber, getString(R.string.sms_body_javascript)).subscribe(
                                 response -> {
@@ -283,7 +283,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
 
     private void doLogin() {
         if (etSMSCode.getText().toString().length() == 4) {
-            CustomAnimations.circularHide(ibDone).start();
+            CustomAnimations.INSTANCE.circularHide(ibDone).start();
 
             String phoneNumber = getPhoneNumber();
             int code = Integer.parseInt(etSMSCode.getText().toString());
@@ -307,7 +307,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
     private void userLoginComplete() {
         //change done button to givenow smiley
         ibDone.setImageResource(R.mipmap.ic_launcher);
-        Animator reveal = CustomAnimations.circularReveal(ibDone);
+        Animator reveal = CustomAnimations.INSTANCE.circularReveal(ibDone);
         reveal.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

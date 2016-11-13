@@ -69,9 +69,9 @@ public class DonationHistoryFragment extends BaseFragment {
             @Override
             public void onAnythingChanged() {
                 if (mDonationHistoryAdapter.getItemCount() > 0) {
-                    CustomAnimations.circularHide(emptyView).start();
+                    CustomAnimations.INSTANCE.circularHide(emptyView).start();
                 } else {
-                    CustomAnimations.circularReveal(emptyView).start();
+                    CustomAnimations.INSTANCE.circularReveal(emptyView).start();
                 }
             }
         });
