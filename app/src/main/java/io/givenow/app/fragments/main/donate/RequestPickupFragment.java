@@ -404,12 +404,12 @@ public class RequestPickupFragment extends MapHostingFragment
             } else {
                 confirmPickupRequest();
                 label = "withCategoryLayoutShowing";
-                Analytics.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
+                Analytics.INSTANCE.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
                 return; //leave button disabled
             }
         }
         Crashlytics.setString("RequestPickup.BottomButtonClicked", label);
-        Analytics.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
+        Analytics.INSTANCE.sendHit(mTracker, "RequestPickup", "BottomButtonClicked", label);
         btnBottomSubmit.setEnabled(true);
 
     }
@@ -482,7 +482,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void savePickupRequest() {
-        Analytics.sendHit(mTracker, "RequestPickup", "PickupRequestTrySave", ParseUser.getCurrentUser().getObjectId());
+        Analytics.INSTANCE.sendHit(mTracker, "RequestPickup", "PickupRequestTrySave", ParseUser.getCurrentUser().getObjectId());
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
@@ -511,7 +511,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void onPickupRequestSaved() {
-        Analytics.sendHit(mTracker, "RequestPickup", "PickupRequestSaved", ParseUser.getCurrentUser().getObjectId());
+        Analytics.INSTANCE.sendHit(mTracker, "RequestPickup", "PickupRequestSaved", ParseUser.getCurrentUser().getObjectId());
 
         hideCategoryLayout().subscribe(v -> {
             hideConfirmAddress(false).subscribe();
@@ -767,7 +767,7 @@ public class RequestPickupFragment extends MapHostingFragment
                     mPickupRequest.cancel();
                     mPickupRequest.saveInBackground(e -> {
                         if (e == null) {
-                            Analytics.sendHit(mTracker, "RequestPickup", "DonationCanceled", ParseUser.getCurrentUser().getObjectId());
+                            Analytics.INSTANCE.sendHit(mTracker, "RequestPickup", "DonationCanceled", ParseUser.getCurrentUser().getObjectId());
 
                             hideCurrentRequestLayout().subscribe();
                         } else {
