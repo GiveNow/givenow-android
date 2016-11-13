@@ -665,7 +665,7 @@ public class RequestPickupFragment extends MapHostingFragment
     private void buildCategoryGrid() {
         //get categories from parse
         mDonationCategoryAdapter.clearItems();
-        ParseObservable.find(DonationCategory.fetchTop9()).observeOn(mainThread()).subscribe(
+        ParseObservable.find(DonationCategory.Companion.fetchTop9()).observeOn(mainThread()).subscribe(
                 mDonationCategoryAdapter::addItem,
                 error -> ErrorDialogs.connectionFailure(getActivity(), error)
         );
