@@ -13,6 +13,8 @@ class Donation : ParseObject {
     }
 
     constructor(donor: ParseUser, donationCategories: Collection<DonationCategory>) : super() {
+        this.donor = donor
+        this.donationCategories = donationCategories
     }
 
     var donor: ParseUser?

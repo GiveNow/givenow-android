@@ -91,7 +91,7 @@ public class DashboardFragment extends Fragment implements
         if (isResumed()) {
             swipeContainer.setRefreshing(true);
             Log.d("DashboardFragment", "Finding Dashboard items...");
-            ParseObservable.find(PickupRequest.queryMyDashboardPickups()) //todo possible hang is here
+            ParseObservable.find(PickupRequest.Companion.queryMyDashboardPickups()) //todo possible hang is here
                     .toList()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

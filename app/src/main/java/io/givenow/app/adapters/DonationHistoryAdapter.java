@@ -58,7 +58,7 @@ public class DonationHistoryAdapter extends RecyclerView.Adapter<DonationHistory
 
         vh.mCategoriesAdapter.clearItems();
         //TODO: messy and inefficient to run a query on every ViewHolder bind!
-        ParseObservable.first(PickupRequest.queryPickupRequestForDonation(donation)).observeOn(mainThread()).subscribe(
+        ParseObservable.first(PickupRequest.Companion.queryPickupRequestForDonation(donation)).observeOn(mainThread()).subscribe(
                 pickupRequest -> {
                     vh.tvAddress.setText(pickupRequest.getAddress());
 

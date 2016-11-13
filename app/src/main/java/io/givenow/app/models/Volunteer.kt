@@ -20,6 +20,8 @@ class Volunteer : ParseObject {
     }
 
     constructor(user: ParseUser, isApproved: Boolean) : super() {
+        this.user = user
+        this.isApproved = isApproved
     }
 
     var user: ParseUser

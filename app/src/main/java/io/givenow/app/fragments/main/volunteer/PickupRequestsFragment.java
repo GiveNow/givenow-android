@@ -90,7 +90,7 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
     public void loadMarkers() {
         if (mClusterManager != null) {
             Log.d("PickupRequestsFragment", "Loading markers...");
-            ParseQuery<PickupRequest> query = PickupRequest.queryAllOpenRequests();
+            ParseQuery<PickupRequest> query = PickupRequest.Companion.queryAllOpenRequests();
 
 //            mPullToRefreshLayout.setRefreshing(true);
             query.findInBackground((list, e) -> {
@@ -158,6 +158,11 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
 //        selectedPickupReq.saveInBackground();
 //    }
 
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     // Container Activity must implement this interface
     public interface PickupRequestDetailInteractionListener {
         void onLaunchPickupRequestDetail(PickupRequest pickupRequest);
@@ -189,10 +194,5 @@ public class PickupRequestsFragment extends MapHostingFragment implements Cluste
             // always be clustering
             return cluster.getSize() > 2;
         }
-    }
-
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }
