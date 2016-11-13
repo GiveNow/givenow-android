@@ -332,7 +332,7 @@ public class RequestPickupFragment extends MapHostingFragment
                                         ) +
                                         " " + getString(R.string.donation_complete_message_tail))
                                 .setPositiveButton(R.string.done, null)
-                                .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.rateNow(getActivity()))
+                            .setNeutralButton(R.string.rate_app, (d, w) -> RateApp.INSTANCE.rateNow(getActivity()))
                                 .setOnDismissListener(d -> {
                                     if (mPickupRequest != null) {
                                         mPickupRequest.markComplete()
