@@ -151,7 +151,7 @@ class MainActivity : BaseActivity(),
 
     private fun checkForPendingRequests() {
         //only want to get 1 at a time (there shouldn't be more than 1 anyway)
-        if (ParseUserHelper.isRegistered()) {
+        if (ParseUserHelper.isRegistered) {
             ParseObservable.first(PickupRequest.queryMyPendingRequests()).observeOn(mainThread()).subscribe(
                     { this.createAcceptPendingVolunteerDialog(it) },
                     { it.printStackTrace() })
@@ -233,8 +233,8 @@ class MainActivity : BaseActivity(),
         val labelPhone = drawerView.findViewById(R.id.navigation_label_phone) as TextView
 
         labelUsername.text = Option.fromNull(ParseUser.getCurrentUser().get("name")).orSome(getString(R.string.navigation_your_profile)).toString()
-        labelPhone.text = ParseUserHelper.getPhoneNumber()
-        ParseUserHelper.getProfileImage().foreachDoEffect { parseFile -> Picasso.with(applicationContext).load(parseFile.url).into(mProfileImage) }
+        labelPhone.text = ParseUserHelper.phoneNumber
+        ParseUserHelper.profileImage.foreachDoEffect { parseFile -> Picasso.with(applicationContext).load(parseFile.url).into(mProfileImage) }
     }
 
     fun onProfileImageClick(v: View) {

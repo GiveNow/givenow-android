@@ -22,7 +22,7 @@ public class Analytics {
     public static void mixpanelTrackIsRegisteredUser(MixpanelAPI mixpanel, String eventName) {
         try {
             JSONObject props = new JSONObject();
-            props.put("IsRegistered", ParseUserHelper.isRegistered());
+            props.put("IsRegistered", ParseUserHelper.INSTANCE.isRegistered());
             mixpanel.track(eventName, props);
         } catch (JSONException e) {
             Log.e("MYAPP", "Unable to add properties to JSONObject", e);

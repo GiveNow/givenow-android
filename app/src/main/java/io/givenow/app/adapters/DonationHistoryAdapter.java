@@ -47,7 +47,7 @@ public class DonationHistoryAdapter extends RecyclerView.Adapter<DonationHistory
     public void onBindViewHolder(ViewHolder vh, int position) {
         final Donation donation = mItems.get(position);
 
-        ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
+        ParseUserHelper.INSTANCE.getProfileImage().foreachDoEffect(parseFile ->
                 Picasso.with(mContext).load(parseFile.getUrl()).into(vh.ivProfile));
 
         Date d = donation.getCreatedAt();

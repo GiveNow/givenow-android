@@ -58,7 +58,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
         final PickupRequest pickupRequest = mItems.get(position);
 
         //set this as default case
-        ParseUserHelper.getProfileImage().foreachDoEffect(parseFile ->
+        ParseUserHelper.INSTANCE.getProfileImage().foreachDoEffect(parseFile ->
                 Picasso.with(mContext).load(parseFile.getUrl()).into(vh.ivProfile));
         vh.tvStatus.setText(R.string.dashboard_status_waiting);
         vh.readyLayout.setVisibility(View.GONE);
@@ -151,7 +151,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                 donor -> {
                     vh.btnCall.setOnClickListener(v -> {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        String donorPhoneNum = ParseUserHelper.getPhoneNumber(pickupRequest.getDonor());
+                        String donorPhoneNum = ParseUserHelper.INSTANCE.getPhoneNumber(pickupRequest.getDonor());
                         donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
                         String uriStr = "tel:" + donorPhoneNum;
                         callIntent.setData(Uri.parse(uriStr));
@@ -162,7 +162,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
 
                     vh.btnText.setOnClickListener(v -> { //TODO send text intent
                         Intent textMsgIntent = new Intent(Intent.ACTION_VIEW);
-                        String donorPhoneNum = ParseUserHelper.getPhoneNumber(pickupRequest.getDonor());
+                        String donorPhoneNum = ParseUserHelper.INSTANCE.getPhoneNumber(pickupRequest.getDonor());
                         donorPhoneNum = donorPhoneNum.replaceAll("[^0-9]", "");
                         String uriStr = "sms:" + donorPhoneNum;
                         textMsgIntent.setData(Uri.parse(uriStr));

@@ -62,8 +62,8 @@ public class ProfileFragment extends BaseFragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
-        phonenoTV.setText(ParseUserHelper.getPhoneNumber());
-        usernameTV.setText(ParseUserHelper.getName().orSome(""));
+        phonenoTV.setText(ParseUserHelper.INSTANCE.getPhoneNumber());
+        usernameTV.setText(ParseUserHelper.INSTANCE.getName().orSome(""));
 
         usernameTV.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -94,7 +94,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void saveName() {
-        ParseUserHelper.setName(usernameTV.getText().toString());
+        ParseUserHelper.INSTANCE.setName(usernameTV.getText().toString());
         ParseObservable.save(ParseUser.getCurrentUser()).observeOn(mainThread()).subscribe(
                 parseUser -> {
                     Log.d("ProfileFragment", "Name saved");

@@ -251,7 +251,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                         //change done button to spinner
                         CustomAnimations.circularHide(ibDone).start();
                         //request a code
-                        ParseUserHelper.sendCode(phoneNumber, getString(R.string.sms_body_javascript)).subscribe(
+                        ParseUserHelper.INSTANCE.sendCode(phoneNumber, getString(R.string.sms_body_javascript)).subscribe(
                                 response -> {
                                     Log.d("Cloud Response", response.toString());
                                     //switch to sendSMS edittext
@@ -287,7 +287,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
 
             String phoneNumber = getPhoneNumber();
             int code = Integer.parseInt(etSMSCode.getText().toString());
-            ParseUserHelper.logIn(phoneNumber, code).subscribe(
+            ParseUserHelper.INSTANCE.logIn(phoneNumber, code).subscribe(
                     sessionToken -> {
                         ParseObservable.become(sessionToken.toString()).observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(becameUser -> {

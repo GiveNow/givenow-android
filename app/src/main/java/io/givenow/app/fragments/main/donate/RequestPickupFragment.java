@@ -423,7 +423,7 @@ public class RequestPickupFragment extends MapHostingFragment
             tsInfo.setText(getString(R.string.error_insufficient_categories_selected));
             btnBottomSubmit.setEnabled(true);
         } else {
-            if (!ParseUserHelper.isRegistered()) {
+            if (!ParseUserHelper.INSTANCE.isRegistered()) {
                 //user is still anonymous
                 hit.setLabel("ByAnonymousUser");
                 showPhoneNumberDialog();
@@ -711,7 +711,7 @@ public class RequestPickupFragment extends MapHostingFragment
             } else if (mPickupRequest.getPendingVolunteer().isSome() && mPickupRequest.getConfirmedVolunteer().isNone()) {
                 tsInfo.setText(getString(R.string.request_status_volunteer_pending));
             } else if (mPickupRequest.getPendingVolunteer().isSome() && mPickupRequest.getConfirmedVolunteer().isSome()) {
-                tsInfo.setText(getString(R.string.request_status_volunteer_confirmed, ParseUserHelper.getPhoneNumber()));
+                tsInfo.setText(getString(R.string.request_status_volunteer_confirmed, ParseUserHelper.INSTANCE.getPhoneNumber()));
             }
 
             Animator slideUp = CustomAnimations.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);

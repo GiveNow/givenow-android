@@ -92,7 +92,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
 
     @OnClick(R.id.button)
     public void onClick(Button btn) {
-        if (ParseUserHelper.isRegistered()) {
+        if (ParseUserHelper.INSTANCE.isRegistered()) {
             applyToVolunteer();
         } else {
             //show phone number dialog
@@ -137,7 +137,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
     private void uiAwaitingApproval() {
         Log.d("VolunteerFragment", "Awaiting approval");
         llOverlay.setVisibility(View.VISIBLE);
-        tvDescription.setText(getString(R.string.volunteer_label_user_has_applied, ParseUserHelper.getPhoneNumber()));
+        tvDescription.setText(getString(R.string.volunteer_label_user_has_applied, ParseUserHelper.INSTANCE.getPhoneNumber()));
         button.setText(R.string.volunteer_button_user_has_applied);
         button.setEnabled(false);
     }
