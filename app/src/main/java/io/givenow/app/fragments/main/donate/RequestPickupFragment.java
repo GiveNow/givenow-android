@@ -646,7 +646,7 @@ public class RequestPickupFragment extends MapHostingFragment
             tsInfo.setText(getString(R.string.request_pickup_info_select_categories));
             actvAddress.setEnabled(false);
             btnBottomSubmit.setText(getString(R.string.button_confirm_donation_label));
-            ViewHelper.safeVisible(slidingRLContainer);
+            ViewHelper.INSTANCE.safeVisible(slidingRLContainer);
             Animator slideDownFromTop = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_down_from_top);
             slideDownFromTop.setInterpolator(new DecelerateInterpolator());
             slideDownFromTop.setTarget(slidingRLContainer);
@@ -683,7 +683,7 @@ public class RequestPickupFragment extends MapHostingFragment
             slideUpToTop.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    ViewHelper.safeInvisible(slidingRLContainer);
+                    ViewHelper.INSTANCE.safeInvisible(slidingRLContainer);
                     actvAddress.setEnabled(true);
                     mCategoryLayoutShowing = false;
                     subscriber.onNext(null);
@@ -745,7 +745,7 @@ public class RequestPickupFragment extends MapHostingFragment
             set.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    ViewHelper.safeGone(btnBottomSubmit);
+                    ViewHelper.INSTANCE.safeGone(btnBottomSubmit);
                     for (DonationCategory item : items) {
                         item.setSelected(true);
                         item.setClickable(false);
@@ -801,7 +801,7 @@ public class RequestPickupFragment extends MapHostingFragment
                 public void onAnimationEnd(Animator animation) {
                     showFab.start();
                     adaptableGradientRectView.setGradientColorTo(getResources().getColor(R.color.colorPrimaryLight));
-                    ViewHelper.safeGone(rlCurrentRequestContainer);
+                    ViewHelper.INSTANCE.safeGone(rlCurrentRequestContainer);
                     btnBottomSubmit.setEnabled(true);
                     tsInfo.setText(getString(R.string.request_pickup_choose_location));
                     mCurrentRequestLayoutShowing = false;
