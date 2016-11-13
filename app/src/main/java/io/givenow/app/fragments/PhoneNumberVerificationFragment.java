@@ -292,7 +292,7 @@ public class PhoneNumberVerificationFragment extends DialogFragment {
                         ParseObservable.become(sessionToken.toString()).observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(becameUser -> {
                                     Log.d("PhoneVerification", "Became user " + becameUser.getUsername());
-                                    ParseInstallationHelper.associateUserWithDevice(becameUser);
+                                    ParseInstallationHelper.INSTANCE.associateUserWithDevice(becameUser);
                                     userLoginComplete();
                                 });
                     },
