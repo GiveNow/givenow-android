@@ -79,7 +79,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
 
     public void checkVolunteerEligibility() {
         Log.d("VolunteerFragment", "Checking volunteer eligibility...");
-        Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
+        Volunteer.Companion.findUser(ParseUser.getCurrentUser()).subscribe(
                 this::uiVolunteerApplied,
                 error -> {
                     //Never applied to be a volunteer
@@ -109,7 +109,7 @@ public class VolunteerFragment extends PageSlidingTabStripFragment
     }
 
     private void applyToVolunteer() {
-        Volunteer.findUser(ParseUser.getCurrentUser()).subscribe(
+        Volunteer.Companion.findUser(ParseUser.getCurrentUser()).subscribe(
                 this::uiVolunteerApplied,
                 error -> {
                     // User logged in, and they never applied to be a volunteer before.
