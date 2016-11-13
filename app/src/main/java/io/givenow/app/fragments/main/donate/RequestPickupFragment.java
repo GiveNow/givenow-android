@@ -716,7 +716,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator slideUp = CustomAnimations.INSTANCE.animateHeight(rlCurrentRequestContainer, 0, bottomContainerHeight);
             slideUp.setInterpolator(new DecelerateInterpolator());
-            Animator slideDown = CustomAnimations.INSTANCE.animateHeight(btnBottomSubmit, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
+            Animator slideDown = CustomAnimations.INSTANCE.animateHeight(btnBottomSubmit, ResourceHelper.INSTANCE.getDimensionAttr(getActivity(), R.attr.actionBarSize), 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
 
             Animator fade_in = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_in);
@@ -789,7 +789,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
             Animator slideDown = CustomAnimations.INSTANCE.animateHeight(rlCurrentRequestContainer, bottomContainerHeight, 0);
             slideDown.setInterpolator(new AccelerateInterpolator());
-            Animator slideUp = CustomAnimations.INSTANCE.animateHeight(btnBottomSubmit, 0, ResourceHelper.getDimensionAttr(getActivity(), R.attr.actionBarSize));
+            Animator slideUp = CustomAnimations.INSTANCE.animateHeight(btnBottomSubmit, 0, ResourceHelper.INSTANCE.getDimensionAttr(getActivity(), R.attr.actionBarSize));
             slideUp.setInterpolator(new DecelerateInterpolator());
             Animator fade_out = AnimatorInflater.loadAnimator(getActivity(), R.animator.fade_out);
             fade_out.setTarget(adaptableGradientRectView);
