@@ -114,7 +114,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                                 Log.d(getClass().getSimpleName(), "Removing pickupRequest " + pr.getObjectId() + " from dashboard");
                                 remove(position);
                             },
-                            error -> ErrorDialogs.connectionFailure(mContext, error));
+                        error -> ErrorDialogs.INSTANCE.connectionFailure(mContext, error));
                 })
                 .setNegativeButton(R.string.dialog_dashboard_cancel_negativeButton, null)
                 .show();
@@ -171,7 +171,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                         mContext.startActivity(textMsgIntent);
                     });
                 },
-                error -> ErrorDialogs.connectionFailure(mContext, error));
+            error -> ErrorDialogs.INSTANCE.connectionFailure(mContext, error));
 
         // regular map intent:
         // String uriBegin = "geo:" + gp.getLatitude() + "," + gp.getLongitude();
@@ -202,7 +202,7 @@ public class DashboardItemAdapter extends RecyclerView.Adapter<DashboardItemAdap
                                     Log.d("Cloud Response", response.toString());
                                     remove(vh.getAdapterPosition());
                                 },
-                                error -> ErrorDialogs.connectionFailure(mContext, error));
+                            error -> ErrorDialogs.INSTANCE.connectionFailure(mContext, error));
                     })
                     .setNegativeButton(R.string.dialog_pickup_pickupRequest_negativeButton, null)
                     .show();

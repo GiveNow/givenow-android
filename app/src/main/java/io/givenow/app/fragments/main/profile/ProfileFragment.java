@@ -99,7 +99,7 @@ public class ProfileFragment extends BaseFragment {
                 parseUser -> {
                     Log.d("ProfileFragment", "Name saved");
                 },
-                error -> ErrorDialogs.connectionFailure(getContext(), error));
+            error -> ErrorDialogs.INSTANCE.connectionFailure(getContext(), error));
     }
 
     public void refreshProfile() {

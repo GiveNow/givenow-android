@@ -69,7 +69,7 @@ public class DonationHistoryAdapter extends RecyclerView.Adapter<DonationHistory
                     }
                 },
                 error -> {
-                    ErrorDialogs.connectionFailure(mContext, error);
+                    ErrorDialogs.INSTANCE.connectionFailure(mContext, error);
                 }
         );
 

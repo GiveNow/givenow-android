@@ -345,7 +345,7 @@ public class RequestPickupFragment extends MapHostingFragment
                                                 )
                                                 .subscribe(
                                                         v -> mPickupRequest = null,
-                                                        error -> ErrorDialogs.connectionFailure(getActivity(), error));
+                                                    error -> ErrorDialogs.INSTANCE.connectionFailure(getActivity(), error));
 
                                     }
                                 })
@@ -583,7 +583,7 @@ public class RequestPickupFragment extends MapHostingFragment
                     pickupRequest -> {
                         hideNoteField();
                     },
-                    error -> ErrorDialogs.connectionFailure(getContext(), error));
+                error -> ErrorDialogs.INSTANCE.connectionFailure(getContext(), error));
         }
     }
 
@@ -667,7 +667,7 @@ public class RequestPickupFragment extends MapHostingFragment
         mDonationCategoryAdapter.clearItems();
         ParseObservable.find(DonationCategory.Companion.fetchTop9()).observeOn(mainThread()).subscribe(
                 mDonationCategoryAdapter::addItem,
-                error -> ErrorDialogs.connectionFailure(getActivity(), error)
+            error -> ErrorDialogs.INSTANCE.connectionFailure(getActivity(), error)
         );
     }
 
@@ -771,7 +771,7 @@ public class RequestPickupFragment extends MapHostingFragment
 
                             hideCurrentRequestLayout().subscribe();
                         } else {
-                            ErrorDialogs.connectionFailure(getContext(), e);
+                            ErrorDialogs.INSTANCE.connectionFailure(getContext(), e);
                         }
                     });
                 })

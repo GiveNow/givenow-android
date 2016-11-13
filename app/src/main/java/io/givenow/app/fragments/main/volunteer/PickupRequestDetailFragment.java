@@ -208,7 +208,7 @@ public class PickupRequestDetailFragment extends Fragment {
                     // detach this detail fragment, we're done here
                     animateAndDetach();
                 },
-                error -> ErrorDialogs.connectionFailure(getActivity(), error) //TODO: maybe implement Retry dialog here?
+            error -> ErrorDialogs.INSTANCE.connectionFailure(getActivity(), error) //TODO: maybe implement Retry dialog here?
         );
     }
 
