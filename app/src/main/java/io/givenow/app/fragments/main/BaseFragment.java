@@ -19,19 +19,4 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this); // read @Arg fields
     }
-
-//    @CallSuper
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        View view = super.onCreateView(inflater, container, savedInstanceState);
-//        ButterKnife.bind(this, view);
-//        return view;
-//    }
-
-//    @CallSuper
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        unbinder.unbind()
-//    }
 }
