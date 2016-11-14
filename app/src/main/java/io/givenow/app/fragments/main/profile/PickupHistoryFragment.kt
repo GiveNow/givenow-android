@@ -47,8 +47,7 @@ class PickupHistoryFragment : Fragment(), ViewPagerChangeListener {
     companion object {
 
         fun newInstance(): PickupHistoryFragment {
-            val f = PickupHistoryFragment()
-            return f
+            return PickupHistoryFragment()
         }
     }
 }
