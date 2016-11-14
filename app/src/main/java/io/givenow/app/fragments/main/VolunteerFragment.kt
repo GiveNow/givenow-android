@@ -15,13 +15,13 @@ import com.parse.ParseUser
 import io.givenow.app.R
 import io.givenow.app.fragments.PageSlidingTabStripFragment
 import io.givenow.app.fragments.PhoneNumberVerificationFragment
-import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder
 import io.givenow.app.fragments.SuperAwesomeCardFragment
 import io.givenow.app.fragments.main.volunteer.DashboardFragment
 import io.givenow.app.fragments.main.volunteer.PickupRequestsFragment
 import io.givenow.app.models.ParseUserHelper
 import io.givenow.app.models.PickupRequest
 import io.givenow.app.models.Volunteer
+import org.jetbrains.anko.support.v4.withArguments
 import rx.android.schedulers.AndroidSchedulers
 import rx.parse.ParseObservable
 
@@ -82,9 +82,8 @@ class VolunteerFragment : PageSlidingTabStripFragment(), PhoneNumberVerification
             applyToVolunteer()
         } else {
             //show phone number dialog
-            PhoneNumberVerificationFragmentBuilder()
-                    .messageResource(R.string.dialog_phoneNumber_for_volunteer)
-                    .build()
+            PhoneNumberVerificationFragment()
+                    .withArguments("messageResource" to R.string.dialog_phoneNumber_for_volunteer)
                     .show(childFragmentManager, "phdialog")
         }
     }

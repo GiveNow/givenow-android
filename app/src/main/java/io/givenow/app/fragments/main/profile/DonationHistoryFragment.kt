@@ -2,6 +2,7 @@ package io.givenow.app.fragments.main.profile
 
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,7 +19,6 @@ import butterknife.Unbinder
 import io.givenow.app.R
 import io.givenow.app.activities.MainActivity
 import io.givenow.app.adapters.DonationHistoryAdapter
-import io.givenow.app.fragments.main.BaseFragment
 import io.givenow.app.helpers.CustomAnimations
 import io.givenow.app.interfaces.AnythingChangedDataObserver
 import io.givenow.app.models.Donation
@@ -27,7 +27,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.parse.ParseObservable
 
 
-class DonationHistoryFragment : BaseFragment() {
+class DonationHistoryFragment : Fragment() {
 
     @BindView(R.id.rvDonations)
     lateinit var rvDonations: RecyclerView

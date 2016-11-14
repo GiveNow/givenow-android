@@ -67,7 +67,6 @@ import io.givenow.app.adapters.PlaceAutocompleteAdapter;
 import io.givenow.app.customviews.AdaptableGradientRectView;
 import io.givenow.app.customviews.SlidingRelativeLayout;
 import io.givenow.app.fragments.PhoneNumberVerificationFragment;
-import io.givenow.app.fragments.PhoneNumberVerificationFragmentBuilder;
 import io.givenow.app.fragments.main.common.MapHostingFragment;
 import io.givenow.app.helpers.Analytics;
 import io.givenow.app.helpers.CustomAnimations;
@@ -437,8 +436,7 @@ public class RequestPickupFragment extends MapHostingFragment
     }
 
     private void showPhoneNumberDialog() {
-        new PhoneNumberVerificationFragmentBuilder()
-                .build()
+        PhoneNumberVerificationFragment.Companion.newInstance()
                 .show(getChildFragmentManager(), "phdialog");
     }
 

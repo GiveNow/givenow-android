@@ -77,8 +77,7 @@ public class PhoneNumberOnboardingFragment extends Fragment implements
         llMain.setBackgroundColor(colour);
 
         PhoneNumberVerificationFragment phoneNumberVerificationFragment =
-                new PhoneNumberVerificationFragmentBuilder()
-                        .build();
+            PhoneNumberVerificationFragment.Companion.newInstance();
         getChildFragmentManager().beginTransaction()
                 .add(R.id.phoneNumberFragmentContainer,
                         phoneNumberVerificationFragment,

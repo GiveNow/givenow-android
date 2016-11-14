@@ -2,6 +2,7 @@ package io.givenow.app.fragments.main.profile
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,14 +17,13 @@ import butterknife.Unbinder
 import com.parse.ParseUser
 import io.givenow.app.R
 import io.givenow.app.adapters.ViewPagerAdapter
-import io.givenow.app.fragments.main.BaseFragment
 import io.givenow.app.helpers.ErrorDialogs
 import io.givenow.app.models.ParseUserHelper
 import rx.android.schedulers.AndroidSchedulers.mainThread
 import rx.parse.ParseObservable
 
 
-class ProfileFragment : BaseFragment() {
+class ProfileFragment : Fragment() {
 
     @BindView(R.id.silhouette)
     lateinit var profileIV: ImageView
