@@ -127,10 +127,10 @@ class PhoneNumberVerificationFragment : DialogFragment() {
 
             tsDescription.setFactory {
                 //Dialogs show their text left-justified rather than centered.
-                val tv = tvFactory()
-                tv.gravity = Gravity.START
-                tv.textSize = 18f
-                tv
+                tvFactory().apply {
+                    gravity = Gravity.START
+                    textSize = 18f
+                }
             }
         } else {
             tsDescription.setFactory { this.tvFactory() }
